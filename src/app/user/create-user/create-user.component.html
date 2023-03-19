@@ -1,0 +1,111 @@
+<p></p>
+<div class="w-96">
+  <div class="">
+    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-md">
+      <div *ngIf="disabled" class="flex justify-between">
+        <div class="flex ">
+          <p>ID: </p>
+          <p class="text-blue-700 font-bold">{{userId}}</p>
+        </div>
+        <div class="flex">
+          <p>CreatedAt: </p>
+          <p class="text-blue-700 font-bold">{{createdDate}}</p>
+        </div>
+      </div>
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2">
+          <mat-form-field class="example-full-width" >
+            <mat-label>First Name</mat-label>
+            <input class="placeholder-red-300" *ngIf="disabled" readonly matInput formControlName="first_name" placeholder="First Name" value="">
+            <input class="placeholder-red-300" *ngIf="!disabled" matInput formControlName="first_name" placeholder="First Name" value="">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Last Name</mat-label>
+            <input *ngIf="disabled" readonly matInput formControlName="last_name" placeholder="Ex. Pizza" value="">
+            <input *ngIf="!disabled" matInput formControlName="last_name" placeholder="Ex. Pizza" value="">
+          </mat-form-field>
+        </div>
+        <mat-form-field class="w-full" >
+        <!-- <mat-form-field class="example-full-width" > -->
+          <mat-label>Email</mat-label>
+          <input *ngIf="disabled" readonly matInput formControlName="email" placeholder="Email" value="">
+          <input *ngIf="!disabled" matInput formControlName="email" placeholder="Email" value="">
+        </mat-form-field>
+        <div class="">
+          <div class="">
+            <mat-form-field>
+              <mat-label>Choose a birth date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="bod">
+              <!-- <input *ngIf="disabled" readonly matInput [matDatepicker]="picker" formControlName="bod"> -->
+              <!-- <input *ngIf="!disabled" matInput [matDatepicker]="picker" formControlName="bod"> -->
+              <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="gender">
+            <div class="ml-3">
+              <mat-label>Gender</mat-label>
+              <mat-radio-group  aria-label="Select an option" formControlName="gender">
+                <mat-radio-button value="Male">Male</mat-radio-button>
+                <mat-radio-button value="Female">Female</mat-radio-button>
+                <mat-radio-button value="GenderX">GenderX</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <mat-form-field class="example-full-width" >
+            <mat-label>Zip Code</mat-label>
+            <input *ngIf="disabled" readonly matInput formControlName="zipcode" placeholder="Zip Code" value="">
+            <input *ngIf="!disabled" matInput formControlName="zipcode" placeholder="Zip Code" value="">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Phone No</mat-label>
+            <input *ngIf="disabled" readonly matInput formControlName="phone_no" placeholder="Phone No" value="">
+            <input *ngIf="!disabled" matInput formControlName="phone_no" placeholder="Phone No" value="">
+          </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <mat-form-field class="example-full-width" >
+            <mat-label>Address 1</mat-label>
+            <input *ngIf="disabled" readonly matInput formControlName="address1" placeholder="Address 1" value="">
+            <input *ngIf="!disabled" matInput formControlName="address1" placeholder="Address 1" value="">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Address 2</mat-label>
+            <input *ngIf="disabled" readonly matInput formControlName="address2" placeholder="Address 2" value="">
+            <input *ngIf="!disabled" matInput formControlName="address2" placeholder="Address 2" value="">
+          </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <mat-form-field class="example-full-width" >
+            <mat-label>Point</mat-label>
+            <input *ngIf="disabled" readonly matInput formControlName="point" placeholder="Point" value="">
+            <input *ngIf="!disabled" matInput formControlName="point" placeholder="Point" value="">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Status</mat-label>
+            <input *ngIf="disabled" readonly matInput formControlName="status" placeholder="Status" value="">
+            <input *ngIf="!disabled" matInput formControlName="status" placeholder="Status" value="">
+          </mat-form-field>
+        </div>
+        <section class="example-section">
+          <mat-checkbox formControlName="subscribe" class="">I Have read the terms and conditions and agreed!</mat-checkbox>
+        </section>
+        <div *ngIf="!disabled" class="flex justify-center">
+          <div class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
+            <button  type="submit">{{mode}}</button>
+            <!-- <button mat-raised-button color="primary" type="submit">{{mode}}</button> -->
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="">
+  <ng-template #tmplateName>
+    <p>Are you sure?</p>
+  </ng-template>
+
+</div>

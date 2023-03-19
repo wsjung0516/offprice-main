@@ -1,0 +1,39 @@
+table {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td,
+th {
+  width: 25%;
+}
+.mat-mdc-header-row,
+.mat-mdc-row {
+  height: 25px;
+  background-color: #fefefe;
+  cursor: pointer;
+  text-align: left;
+}
+.mat-mdc-header-row {
+  background-color: lightgray;
+}
+.mat-mdc-cell,
+.mat-mdc-row {
+  /* border: 1px solid blue; */
+}
+.mat-mdc-row:nth-child(even) {
+  background-color: rgb(219 234 254);
+}
+
+.mat-mdc-row:nth-child(odd) {
+  /* background-color: black; */
+}
+.mat-mdc-form-field {
+  height: 70px;
+  font-size: 14px;
+  padding: 0px;
+}

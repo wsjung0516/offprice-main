@@ -2,30 +2,60 @@
   <!-- Header -->
   <div class="fixed z-20 w-full">
     <app-nft-header></app-nft-header>
-
   </div>
   <!-- end Header -->
 
-  <div class="mt-12 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-    <ng-container *ngFor="let image of images">
-    <div class="h-88 bg-green-100">
-        <mat-card>
-          <mat-card-content>
-            <div class="">
-              <img [src]="image.url" alt="" class="w-full h-64 object-cover">
+  <div class="">
+    <ng-container *ngIf="currentScreenSize ==='XSmall'">
+     <div class="mt-40 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <ng-container *ngFor="let image of images">
+          <div class="h-88 bg-green-100">
+              <mat-card>
+                <mat-card-content>
+                  <div class="">
+                    <img [src]="image.url" alt="" class="w-full h-64 object-cover">
+                  </div>
+                </mat-card-content>
+                <mat-card-footer>
+                  <div class="text-center">
+                    <p>{{image.Vendor}}</p>
+                    <p>{{image.Size}}</p>
+                    <p>{{image.Price}}</p>
+                  </div>
+                </mat-card-footer>
+              </mat-card>
             </div>
-          </mat-card-content>
-          <mat-card-footer>
-            <div class="text-center">
-              <p>{{image.Vendor}}</p>
-              <p>{{image.Size}}</p>
-              <p>{{image.Price}}</p>
+          </ng-container>
+   
+    </div> 
 
-            </div>
-          </mat-card-footer>
-        </mat-card>
+    </ng-container>
+    <ng-container *ngIf="currentScreenSize !=='XSmall'">
+      <div class="mt-20 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          <ng-container *ngFor="let image of images">
+          <div class="h-88 bg-green-100">
+            <mat-card>
+              <mat-card-content>
+                <div class="">
+                  <img [src]="image.url" alt="" class="w-full h-64 object-cover">
+                </div>
+              </mat-card-content>
+              <mat-card-footer>
+                <div class="text-center">
+                  <p>{{image.Vendor}}</p>
+                  <p>{{image.Size}}</p>
+                  <p>{{image.Price}}</p>
+    
+                </div>
+              </mat-card-footer>
+            </mat-card>
+    
+          </div>
 
-      </div>
+        </ng-container>
+        </div>
+    
+
     </ng-container>
   </div>
 </div>

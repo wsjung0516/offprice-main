@@ -6,13 +6,22 @@ import { ThemeService } from 'src/app/core/services/theme.service';
 import { MenuService } from '../../services/menu.service';
 import { CommonModule } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-
+import { CategoryComponent } from './category/category.component';
+import { SelectSizeComponent } from './select-size/select-size.component';
+import { PriceRangeComponent } from './price-range/price-range.component';
+import { MaterialComponent } from './material/material.component';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [
-    CommonModule,
-    AngularSvgIconModule
+CommonModule,
+    AngularSvgIconModule,
+    CategoryComponent,
+    SelectSizeComponent,
+    PriceRangeComponent,
+    MaterialComponent,
+    MatIconModule
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],

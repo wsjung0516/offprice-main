@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     RouterModule
   ],
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
+  template: `<router-outlet></router-outlet>`,
 })
 export class DashboardComponent implements OnInit {
   constructor() {}

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
-import { ECategory } from 'src/app/interfaces/data-define';
+import { ECategory } from 'src/app/core/constants/data-define';
 
 @Component({
   selector: 'app-discount-value',

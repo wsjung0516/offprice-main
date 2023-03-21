@@ -2,28 +2,27 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
-import { ECategory } from 'src/app/core/constants/data-define';
+import { ESearchPeriod } from 'src/app/core/constants/data-define';
 import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
 
 @Component({
-  selector: 'app-category',
+  selector: 'app-search-period',
   standalone: true,
   imports: [CommonModule, MatRadioModule, FormsModule],
-template: `
-
+  template: `
       <div class="">
         <div class="">
-          <!-- [(ngModel)]="favoriteSeason" -->
           <mat-radio-group 
             class="discount-radio-group"
+            [(ngModel)]="favoritePeriod"
           >
             <mat-radio-button
               class=""
-              *ngFor="let category of categories | keyvalue"
-              [value]="category"
-              (change)="selectValue(category)"
+              *ngFor="let period of periods"
+              [value]="period"
+              (change)="selectValue(period)"
             >
-              {{ category.value }}
+              {{ period.key }}
             </mat-radio-button>
           </mat-radio-group>
         </div>
@@ -41,13 +40,12 @@ template: `
   ],
 })
 
-export class CategoryComponent {
-  favoriteSeason: string | undefined;
-  // seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
-  categories: typeof ECategory = ECategory;
+export class SearchPeriodComponent {
+  favoritePeriod: string | undefined;
+  periods: typeof ESearchPeriod = ESearchPeriod;
   constructor(private searchKeywordService: SearchKeywordService) {}
   selectValue(data: any) {
-    const value = {key: 'category', value: data.value};
+    const value = {key: 'SearchPeriod', value: data.key};
     this.searchKeywordService.removeSearchKeyword(value);
     this.searchKeywordService.addSearchKeyword(value);
     // this.favoriteSeason = data;

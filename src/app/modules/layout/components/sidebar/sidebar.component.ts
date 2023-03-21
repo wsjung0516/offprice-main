@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 // import { MenuItem } from 'src/app/core/models/menu.model';
 import { ThemeService } from 'src/app/core/services/theme.service';
 // import packageJson from '../../../../../../package.json';
-import { MenuService } from '../../services/menu.service';
+import { MenuService } from '../../../../core/services/menu.service';
 import { CommonModule } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CategoryComponent } from './category/category.component';
@@ -11,17 +11,19 @@ import { SelectSizeComponent } from './select-size/select-size.component';
 import { PriceRangeComponent } from './price-range/price-range.component';
 import { MaterialComponent } from './material/material.component';
 import { MatIconModule } from '@angular/material/icon';
+import { SearchPeriodComponent } from './search-period/search-period.component';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     AngularSvgIconModule,
     CategoryComponent,
     SelectSizeComponent,
     PriceRangeComponent,
     MaterialComponent,
-    MatIconModule
+    SearchPeriodComponent,
+    MatIconModule,
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
@@ -31,7 +33,10 @@ export class SidebarComponent implements OnInit {
   // public pagesMenu$: Observable<MenuItem[]> = new Observable<MenuItem[]>();
   // public appJson: any = packageJson;
 
-  constructor(public themeService: ThemeService, private menuService: MenuService) {
+  constructor(
+    public themeService: ThemeService,
+    private menuService: MenuService
+  ) {
     this.showSideBar$ = this.menuService.showSideBar$;
     // this.pagesMenu$ = this.menuService.pagesMenu$;
   }

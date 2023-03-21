@@ -45,6 +45,17 @@ export enum ECategory {
   Sportswear = 'Sportswear',
   Etc = 'Etc',  
 }
+export const ESearchPeriod = [
+  {key: 'All', value: 9999},
+  {key: 'Today', value: 0},
+  {key: 'Yesterday', value: 1},
+  {key: 'Last 2 days', value: 2},
+  {key: 'Last 7 days', value: 7},
+  {key: 'Last 30 days', value: 30},
+  {key: 'Last 2 months', value: 60},
+  {key: 'Last 6 months', value: 180},
+  {key: 'Last year', value: 365}
+]
 
 export const APrice = [
   { key: 'Under $10', value: '0, 10' },

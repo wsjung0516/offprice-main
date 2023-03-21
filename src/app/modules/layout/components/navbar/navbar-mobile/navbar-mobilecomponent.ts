@@ -1,14 +1,26 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MenuService } from '../../../services/menu.service';
+import { MenuService } from '../../../../../core/services/menu.service';
 import { CommonModule } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { CategoryComponent } from './../../sidebar/category/category.component';
+import { SelectSizeComponent } from '../../sidebar/select-size/select-size.component';
+import { SearchPeriodComponent } from '../../sidebar/search-period/search-period.component';
+import { PriceRangeComponent } from '../../sidebar/price-range/price-range.component';
+import { PatternComponent } from '../../sidebar/pattern/pattern.component';
+import { MaterialComponent } from '../../sidebar/material/material.component';
 
 @Component({
   standalone: true,
   imports: [
-CommonModule,
-  AngularSvgIconModule
+    CommonModule,
+    AngularSvgIconModule,
+    CategoryComponent,
+    SelectSizeComponent,
+    SearchPeriodComponent,
+    PriceRangeComponent,
+    PatternComponent,
+    MaterialComponent,
   ],
   selector: 'app-navbar-mobile',
   templateUrl: './navbar-mobile.component.html',

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EMaterial } from 'src/app/core/constants/data-define';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
 @Component({
   selector: 'app-material',
   standalone: true,
@@ -11,9 +12,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     <div class="">
       <div class="discount-radio-group">
         <mat-checkbox
-          class="" *ngFor="let material of materials | keyvalue"
+          class="" *ngFor="let material of materials"
           (change)="selectValue(material)"
-          >{{ material.value }}
+          >{{ material.key }}
         </mat-checkbox>
       </div>
     </div>
@@ -32,8 +33,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class MaterialComponent {
   favoriteMaterial: string | undefined;
   materials: typeof EMaterial = EMaterial;
-  selectValue(value: any) {
-    console.log('material: ', value);
-    this.favoriteMaterial = value;
+  constructor(private searchKeywordService: SearchKeywordService) {}
+  selectValue(data: any) {
+    const value = {key: 'Material', value: data.key};
+    this.searchKeywordService.removeSearchKeyword(value);
+    this.searchKeywordService.addSearchKeyword(value);
+    // this.favoriteSeason = data;
   }
 }

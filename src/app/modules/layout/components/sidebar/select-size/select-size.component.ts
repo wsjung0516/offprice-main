@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ESize } from 'src/app/core/constants/data-define';
+import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
 
 @Component({
   selector: 'app-select-size',
   standalone: true,
   imports: [CommonModule],
-  template: `
+template: `
     <div class="flex flex-wrap">
       <ng-container *ngFor="let size of sizes | keyvalue">
         <button
@@ -39,9 +40,11 @@ import { ESize } from 'src/app/core/constants/data-define';
 export class SelectSizeComponent {
   sizes: typeof ESize = ESize;
   selected_category: string = '';
-
-  selectSize(size: any) {
-    console.log(size);
-    this.selected_category = size.value;
+  constructor(private searchKeywordService: SearchKeywordService) {}
+  selectSize(data: any) {
+    const value = {key: 'Size', value: data.key};
+    this.searchKeywordService.removeSearchKeyword(value);
+    this.searchKeywordService.addSearchKeyword(value);
+    // this.favoriteSeason = data;
   }
 }

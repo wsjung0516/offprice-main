@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MenuService } from 'src/app/modules/layout/services/menu.service';
+import { MenuService } from 'src/app/core/services/menu.service';
 import { MenuItem, SubMenuItem } from 'src/app/core/models/menu.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -10,10 +10,10 @@ import { NavbarMobileSubmenuComponent } from './../navbar-mobile-submenu/navbar-
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+    CommonModule,
     RouterModule,
     AngularSvgIconModule,
-    NavbarMobileSubmenuComponent
+    NavbarMobileSubmenuComponent,
   ],
 
   selector: 'app-navbar-mobile-menu',

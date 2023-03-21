@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MenuItem, SubMenuItem } from 'src/app/core/models/menu.model';
-import { MenuService } from '../../../services/menu.service';
+import { MenuService } from '../../../../../core/services/menu.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -10,10 +10,10 @@ import { SidebarSubmenuComponent } from './../sidebar-submenu/sidebar-submenu.co
 @Component({
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     RouterModule,
     AngularSvgIconModule,
-    SidebarSubmenuComponent
+    SidebarSubmenuComponent,
   ],
 
   selector: 'app-sidebar-menu',

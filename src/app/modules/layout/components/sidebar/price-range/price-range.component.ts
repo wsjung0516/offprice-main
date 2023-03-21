@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { APrice } from 'src/app/core/constants/data-define';
-
+import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
 @Component({
   selector: 'app-price',
   standalone: true,
@@ -45,8 +45,11 @@ import { APrice } from 'src/app/core/constants/data-define';
 export class PriceRangeComponent {
   priceRange: any;
   priceRanges = [...APrice];
-  selectValue(price: any) {
-    console.log('priceRange: ', price.value);
-    this.priceRange = price.value;
+  constructor(private searchKeywordService: SearchKeywordService) {}
+  selectValue(data: any) {
+    const value = {key: 'Price', value: data.key};
+    this.searchKeywordService.removeSearchKeyword(value);
+    this.searchKeywordService.addSearchKeyword(value);
+    // this.favoriteSeason = data;
   }
 }

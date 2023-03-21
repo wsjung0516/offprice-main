@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { map, takeUntil } from 'rxjs';
+import { map, Observable, takeUntil } from 'rxjs';
 import { Nft } from '../../models/nft';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { NftHeaderComponent } from './../../components/nft/nft-header/nft-header.component';
-import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layout';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -14,7 +14,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   CommonModule,
     MatCardModule,
     NftHeaderComponent,
-    LayoutModule,
   ],
 
   selector: 'app-nft',
@@ -22,15 +21,14 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 })
 export class NftComponent implements OnInit {
   nft: Array<Nft>;
-  displayNameMap = new Map([
-    [Breakpoints.XSmall, 'XSmall'],
-    [Breakpoints.Small, 'Small'],
-    [Breakpoints.Medium, 'Medium'],
-    [Breakpoints.Large, 'Large'],
-    [Breakpoints.XLarge, 'XLarge'],
-  ]);
   currentScreenSize: string;
-  constructor(private http: HttpClient, private breakpointObserver: BreakpointObserver) {
+  public screenSize$: Observable<any>;
+  sSize: string;
+
+  constructor(private http: HttpClient,
+    public screenSizeService: ScreenSizeService
+    ) {
+      this.screenSize$ = this.screenSizeService.screenSize$;
   }
   images: any;
 
@@ -39,22 +37,12 @@ export class NftComponent implements OnInit {
       this.images = res.data;
       console.log(res);
     });
-    // this.breakpointObserver.pipe().subscribe((val:any)=>console.log('breakPoint',val));
-    this.breakpointObserver
-    .observe([
-      Breakpoints.XSmall,
-      Breakpoints.Small,
-      Breakpoints.Medium,
-      Breakpoints.Large,
-      Breakpoints.XLarge,
-    ])
-    .pipe(untilDestroyed(this))
-    .subscribe(result => {
-      for (const query of Object.keys(result.breakpoints)) {
-        if (result.breakpoints[query]) {
-          this.currentScreenSize = this.displayNameMap.get(query) ?? 'Unknown';
-        }
-      }
-    });
+    this.screenSize$.pipe(
+      untilDestroyed(this),
+      )
+      .subscribe((result) => {
+        this.sSize = result;
+      })
+
   }
 }

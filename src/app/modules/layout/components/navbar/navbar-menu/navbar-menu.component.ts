@@ -1,14 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MenuItem } from 'src/app/core/models/menu.model';
-import { MenuService } from '../../../services/menu.service';
+import { MenuService } from '../../../../../core/services/menu.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   selector: 'app-navbar-menu',
   templateUrl: './navbar-menu.component.html',
   styleUrls: ['./navbar-menu.component.scss'],
@@ -16,8 +14,18 @@ import { CommonModule } from '@angular/common';
 export class NavbarMenuComponent implements OnInit {
   public pagesMenu$: Observable<MenuItem[]> = new Observable<MenuItem[]>();
 
-  private showMenuClass = ['scale-100', 'animate-fade-in-up', 'opacity-100', 'pointer-events-auto'];
-  private hideMenuClass = ['scale-95', 'animate-fade-out-down', 'opacity-0', 'pointer-events-none'];
+  private showMenuClass = [
+    'scale-100',
+    'animate-fade-in-up',
+    'opacity-100',
+    'pointer-events-auto',
+  ];
+  private hideMenuClass = [
+    'scale-95',
+    'animate-fade-out-down',
+    'opacity-0',
+    'pointer-events-none',
+  ];
 
   constructor(private menuService: MenuService) {
     this.pagesMenu$ = this.menuService.pagesMenu$;

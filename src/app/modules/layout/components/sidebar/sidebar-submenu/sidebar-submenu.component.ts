@@ -1,19 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { SubMenuItem } from 'src/app/core/models/menu.model';
-import { MenuService } from '../../../services/menu.service';
+import { MenuService } from '../../../../../core/services/menu.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 @Component({
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    AngularSvgIconModule
-
-  ],
+  imports: [CommonModule, RouterModule, AngularSvgIconModule],
   selector: 'app-sidebar-submenu',
   templateUrl: './sidebar-submenu.component.html',
   styleUrls: ['./sidebar-submenu.component.scss'],

@@ -1,0 +1,63 @@
+<ng-container *ngIf="sSize !== 'XSmall'">
+  <div class="">
+    <div class="flex items-center sm:justify-start">
+      <div class="w-80">
+        <div class="relative">
+          <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
+        </div>
+      </div>
+      <div class="mt-2 ml-5 mb-4">
+        <div
+          class="space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"
+        >
+          <ng-container *ngTemplateOutlet="showChips"></ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<!-- <ng-container *ngIf="currentScreenSize === 'XSmall'"> -->
+<ng-container *ngIf="sSize === 'XSmall'">
+  <div *ngIf="!(showMobileMenu$ | async)" class="w-4/5">
+    <div class="relative">
+      <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
+    </div>
+  </div>
+  <div class="ml-5 mb-4">
+    <div
+      class="mt-2 space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"
+    >
+      <ng-container *ngTemplateOutlet="showChips"></ng-container>
+    </div>
+  </div>
+</ng-container>
+<!-- Search input button -->
+<ng-template #showInputButton>
+  <div
+    class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
+  ></div>
+  <input
+    type="search" #inputSearch
+    id="default-search"
+    class="block p-4 w-full  text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    placeholder="Search"
+    required
+  />
+  <button
+    type="submit"
+    class="text-white absolute right-1 bottom-1.5 bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    (click)="onSearchKeyword(inputSearch.value)"
+  >
+    <mat-icon>search</mat-icon>
+  </button>
+</ng-template>
+<!-- chips -->
+<ng-template #showChips>
+  <mat-chip-set>
+    <mat-chip
+      *ngFor="let keyword of keywords"
+    >
+      {{ keyword }}
+    </mat-chip>
+  </mat-chip-set>
+</ng-template>

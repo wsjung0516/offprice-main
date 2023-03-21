@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuService } from '../../services/menu.service';
+import { MenuService } from '../../../../core/services/menu.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CommonModule } from '@angular/common';
 import { NavbarMenuComponent } from './navbar-menu/navbar-menu.component';
@@ -8,10 +8,10 @@ import { NavbarMobileComponent } from './navbar-mobile/navbar-mobilecomponent';
 @Component({
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     AngularSvgIconModule,
     NavbarMenuComponent,
-    NavbarMobileComponent
+    NavbarMobileComponent,
   ],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',

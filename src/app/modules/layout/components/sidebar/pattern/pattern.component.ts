@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
-import { EPattern } from 'src/app/interfaces/data-define';
+import { EPattern } from 'src/app/core/constants/data-define';
 
 @Component({
   selector: 'app-pattern',

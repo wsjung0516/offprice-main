@@ -1,18 +1,18 @@
-export enum ESize {
-  XSS = 'XSS',
-  XS = 'XS',
-  SM = 'SM',
-  MD = 'MD',
-  LG = 'LG',
-  XL = 'XL',
-  XXL = 'XXL',
-  X2 = '2X',
-  X3 = '3X',
-  X4 = '4X',
-  X5 = '5X',
-  OX = 'OX',
-  ONE = 'ONE'
-}
+export const Sizes = [
+  {key: 'All', value: false},
+  {key: 'XSS', value: false},
+  {key: 'XS', value: false},
+  {key: 'SM', value: false},
+  {key: 'MD', value: false},
+  {key: 'LG', value: false},
+  {key: 'XL', value: false},
+  {key: 'XXL', value: false},
+  {key: '2X', value: false},
+  {key: '3X', value: false},
+  {key: '4X', value: false},
+  {key: '5X', value: false},
+  {key: 'OX', value: false},
+]
 export enum EWaist {
   w23 = '23',
   w24 = '24',
@@ -30,21 +30,22 @@ export enum EWaist {
   w36 = '36',
   w37 = '37',
 }
-export enum ECategory {
-  Women = 'Women',
-  Clothing = 'Clothing',
-  Dresses = 'Dresses',
-  Tops = 'Tops',
-  Sweaters = 'Sweaters',
-  Jackets = 'Jackets',
-  Jeans = 'Jeans',
-  Pants = 'Pants',
-  Shorts = 'Shorts',
-  Skirts = 'Skirts',
-  Swimwear = 'Swimwear',
-  Sportswear = 'Sportswear',
-  Etc = 'Etc',  
-}
+export const Categories = [
+  {key:'Women', value: false},
+  {key:'Clothing', value: false},
+  {key:'Dresses', value: false},
+  {key:'Tops', value: false},
+  {key:'Sweaters', value: false},
+  {key:'Jackets', value: false},
+  {key:'Jeans', value: false},
+  {key:'Pants', value: false},
+  {key:'Shorts', value: false},
+  {key:'Skirts', value: false},
+  {key:'Swimwear', value: false},
+  {key:'Sportswear', value: false},
+  {key:'All', value: false},
+]
+
 export const ESearchPeriod = [
   {key: 'All', value: 9999},
   {key: 'Today', value: 0},
@@ -58,6 +59,7 @@ export const ESearchPeriod = [
 ]
 
 export const APrice = [
+  { key: 'All', value: '0, 10000' },
   { key: 'Under $10', value: '0, 10' },
   { key: '$10 - $25', value: '10, 25' },
   { key: '$25 - $50', value: '25, 50' },
@@ -75,6 +77,7 @@ export enum ECondition {
 }
 
 export const EMaterial = [
+  { key: 'All', value: false },
   { key: 'Cotton', value: false },
   { key: 'Polyester', value: false },
   { key: 'Rayon', value: false },

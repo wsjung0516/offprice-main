@@ -23,6 +23,10 @@
       <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
     </div>
   </div>
+  <div *ngIf="showMobileMenu$ | async" class="w-full">
+    <div class="-mt-12">
+    </div>
+  </div>
   <div class="ml-5 mb-4">
     <div
       class="mt-2 space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
-import { ECategory } from 'src/app/core/constants/data-define';
+import { Categories } from 'src/app/core/constants/data-define';
 import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
 
 @Component({
@@ -19,7 +19,7 @@ template: `
           >
             <mat-radio-button
               class=""
-              *ngFor="let category of categories | keyvalue"
+              *ngFor="let category of categories"
               [value]="category"
               (change)="selectValue(category)"
             >
@@ -44,7 +44,7 @@ template: `
 export class CategoryComponent {
   favoriteSeason: string | undefined;
   // seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
-  categories: typeof ECategory = ECategory;
+  categories = Categories;
   constructor(private searchKeywordService: SearchKeywordService) {}
   selectValue(data: any) {
     const value = {key: 'category', value: data.value};

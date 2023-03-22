@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ESize } from 'src/app/core/constants/data-define';
+import { Sizes } from 'src/app/core/constants/data-define';
 import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
 
 @Component({
@@ -9,13 +9,13 @@ import { SearchKeywordService } from 'src/app/core/services/search-keyword.servi
   imports: [CommonModule],
 template: `
     <div class="flex flex-wrap">
-      <ng-container *ngFor="let size of sizes | keyvalue">
+      <ng-container *ngFor="let size of sizes">
         <button
           class="box-size flex items-center justify-center cursor-pointer"
-          [ngClass]="{ sel_class: size.value === selected_category }"
+          [ngClass]="{ sel_class: size.key === selected_category }"
           (click)="selectSize(size)"
         >
-          {{ size.value }}
+          {{ size.key }}
         </button>
       </ng-container>
     </div>
@@ -32,19 +32,21 @@ template: `
         border-radius: 0.25rem;
       }
       .sel_class {
-        background-color: lightgray;
+        background-color: #2962FF;
+        color: white;
       }
     `,
   ],
 })
 export class SelectSizeComponent {
-  sizes: typeof ESize = ESize;
+  sizes = Sizes;
   selected_category: string = '';
   constructor(private searchKeywordService: SearchKeywordService) {}
   selectSize(data: any) {
     const value = {key: 'Size', value: data.key};
     this.searchKeywordService.removeSearchKeyword(value);
     this.searchKeywordService.addSearchKeyword(value);
+    this.selected_category = data.key;
     // this.favoriteSeason = data;
   }
 }

@@ -7,13 +7,15 @@ import { CommonModule } from '@angular/common';
 import { NftHeaderComponent } from './../../components/nft/nft-header/nft-header.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
+import { CategoryMenuComponent } from './../../category-menu/category-menu.component';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+CommonModule,
     MatCardModule,
     NftHeaderComponent,
+    CategoryMenuComponent
   ],
 
   selector: 'app-nft',

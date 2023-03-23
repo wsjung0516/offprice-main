@@ -9,33 +9,48 @@ import { SearchKeywordService } from 'src/app/core/services/search-keyword.servi
   standalone: true,
   imports: [CommonModule, FormsModule, MatCheckboxModule],
   template: `
-    <div class="">
-      <div class="discount-radio-group">
-        <mat-checkbox
-          class="" *ngFor="let material of materials"
-          (change)="selectValue(material)"
-          >{{ material.key }}
-        </mat-checkbox>
-      </div>
+    <div class="flex_wrap">
+        <ng-container *ngFor="let material of materials">
+          <button
+          class="box-size flex items-center justify-center cursor-pointer"
+          [ngClass]="{ sel_class: material.key === selected_material }"
+            (click)="selectValue(material)"
+            >{{ material.key }}
+          </button>
+        </ng-container>
     </div>
   `,
   styles: [
     `
-      .discount-radio-group {
+      .flex_wrap {
         display: flex;
-        flex-direction: column;
-        margin: 15px 0;
-        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+     .box-size {
+        width: auto;
+        padding: 0.5rem;
+        height: 2rem;
+        margin: 0.25rem;
+        border: 1px;
+        border-style: solid;
+        border-color: gray;
+        border-radius: 0.25rem;
+      }
+      .sel_class {
+        background-color: #2962FF;
+        color: white;
       }
     `,
   ],
 })
 export class MaterialComponent {
-  favoriteMaterial: string | undefined;
+  selected_material: string | undefined;
   materials: typeof EMaterial = EMaterial;
   constructor(private searchKeywordService: SearchKeywordService) {}
   selectValue(data: any) {
     const value = {key: 'Material', value: data.key};
+    this.selected_material = data.key;
     this.searchKeywordService.removeSearchKeyword(value);
     this.searchKeywordService.addSearchKeyword(value);
     // this.favoriteSeason = data;

@@ -24,7 +24,7 @@ template: `
     `
       .box-size {
         width: 3rem;
-        height: 3rem;
+        height: 2rem;
         margin: 0.25rem;
         border: 1px;
         border-style: solid;

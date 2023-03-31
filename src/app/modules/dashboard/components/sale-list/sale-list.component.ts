@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
 import {CategoryMenuComponent} from "../../category-menu/category-menu.component";
-import {SaleListHeaderComponent} from "../../components/sale-list-header/sale-list-header.component";
+import {SaleListHeaderComponent} from "../sale-list-header/sale-list-header.component";
 // import {ISaleList} from "../../models/sale-list";
 @UntilDestroy()
 @Component({

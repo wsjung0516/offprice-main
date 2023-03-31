@@ -20,9 +20,9 @@ import { SearchKeywordService } from 'src/app/core/services/search-keyword.servi
     ReactiveFormsModule,
   ],
   selector: 'app-sale-list-header',
-  templateUrl: './nft-header.component.html',
+  templateUrl: './sale-list-header.component.html',
 })
-export class NftHeaderComponent implements OnInit {
+export class SaleListHeaderComponent implements OnInit {
   // keywords = ['angular', 'how-to', 'tutorial', 'accessibility'];
   keywords: string[] = [];
   public showMobileMenu$: Observable<boolean> = new Observable<boolean>();

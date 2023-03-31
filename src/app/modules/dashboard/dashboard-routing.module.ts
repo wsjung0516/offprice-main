@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
-import { NftComponent } from './pages/nft/nft.component';
+import { SaleListComponent } from './components/sale-list/sale-list.component';
 
 const routes: Routes = [
   {
@@ -9,7 +9,7 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: 'nfts', pathMatch: 'full' },
-      { path: 'nfts', component: NftComponent },
+      { path: 'nfts', component: SaleListComponent },
       { path: '**', redirectTo: 'error/404' },
     ],
   },

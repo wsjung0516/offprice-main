@@ -1,28 +1,29 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map, Observable, takeUntil } from 'rxjs';
-import { Nft } from '../../models/nft';
+// import { Nft } from '../../models/sale-list';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-import { NftHeaderComponent } from './../../components/nft/nft-header/nft-header.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
-import { CategoryMenuComponent } from './../../category-menu/category-menu.component';
+import {CategoryMenuComponent} from "../../category-menu/category-menu.component";
+import {SaleListHeaderComponent} from "../../components/sale-list-header/sale-list-header.component";
+// import {ISaleList} from "../../models/sale-list";
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
 CommonModule,
     MatCardModule,
-    NftHeaderComponent,
+    SaleListHeaderComponent,
     CategoryMenuComponent
   ],
 
-  selector: 'app-nft',
-  templateUrl: './nft.component.html',
+  selector: 'app-sale-list',
+  templateUrl: './sale-list.component.html',
 })
-export class NftComponent implements OnInit {
-  nft: Array<Nft>;
+export class SaleListComponent implements OnInit {
+  // nft: Array<ISaleList>;
   currentScreenSize: string;
   public screenSize$: Observable<any>;
   sSize: string;

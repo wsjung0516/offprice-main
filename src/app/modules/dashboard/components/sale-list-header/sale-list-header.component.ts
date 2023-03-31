@@ -19,7 +19,7 @@ import { SearchKeywordService } from 'src/app/core/services/search-keyword.servi
     MatFormFieldModule,
     ReactiveFormsModule,
   ],
-  selector: 'app-nft-header',
+  selector: 'app-sale-list-header',
   templateUrl: './nft-header.component.html',
 })
 export class NftHeaderComponent implements OnInit {

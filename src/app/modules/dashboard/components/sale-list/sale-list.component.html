@@ -2,7 +2,7 @@
   <app-category-menu></app-category-menu>
   <!-- Header -->
   <div class="fixed z-20 w-full">
-    <app-nft-header></app-nft-header>
+    <app-sale-list-header></app-sale-list-header>
   </div>
   <!-- end Header -->
 
@@ -11,7 +11,7 @@
     <ng-container *ngIf="sSize ==='XSmall'">
      <div class="mt-40 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
       <ng-container *ngTemplateOutlet="showImage"></ng-container>
-    </div> 
+    </div>
     <!-- Desktop Device -->
     </ng-container>
     <ng-container *ngIf="sSize !=='XSmall'">

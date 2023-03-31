@@ -4,14 +4,16 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CommonModule } from '@angular/common';
 import { NavbarMenuComponent } from './navbar-menu/navbar-menu.component';
 import { NavbarMobileComponent } from './navbar-mobile/navbar-mobilecomponent';
+import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
 
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     AngularSvgIconModule,
     NavbarMenuComponent,
     NavbarMobileComponent,
+    ProfileMenuComponent
   ],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',

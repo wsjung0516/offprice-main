@@ -1,12 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MenuItem } from 'src/app/core/models/menu.model';
-import { MenuService } from '../../../../../core/services/menu.service';
+import { MenuService } from 'src/app/core/services/menu.service';
 import { CommonModule } from '@angular/common';
+import { NavbarSubmenuComponent } from './../navbar-submenu/navbar-submenu.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    NavbarSubmenuComponent
+  ],
   selector: 'app-navbar-menu',
   templateUrl: './navbar-menu.component.html',
   styleUrls: ['./navbar-menu.component.scss'],

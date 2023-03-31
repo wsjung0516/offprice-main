@@ -1,9 +1,6 @@
-<div class="h-10">
-
-</div>
-<!-- <div class="dropdown relative inline-block" *ngFor="let menu of pagesMenu$ | async"> -->
+<div class="dropdown relative inline-block" *ngFor="let menu of pagesMenu$ | async">
   <!-- Button -->
-  <!-- <button
+  <button
     [ngClass]="
       menu.selected || menu.active
         ? 'bg-primary-500 text-white'
@@ -11,11 +8,11 @@
     "
     class="mr-2 inline-flex rounded-md px-3 py-2 text-sm font-medium">
     <span>{{ menu.group }}</span>
-  </button> -->
+  </button>
   <!-- Dropdown  -->
   <!-- <div
     class="dropdown-content absolute top-[100%] min-w-[200px] origin-top-left"
     navbar-submenu
     [submenu]="menu.items">
   </div> -->
-<!-- </div> -->
+</div>

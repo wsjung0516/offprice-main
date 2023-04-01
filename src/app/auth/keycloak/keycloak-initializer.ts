@@ -8,9 +8,12 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<boo
         config: environment.keycloak,
         loadUserProfileAtStartUp: true,
         initOptions: {
+          pkceMethod: 'S256',
+          redirectUri: 'http://localhost:4200/',
+          checkLoginIframe: false,
           onLoad: 'check-sso',
-          silentCheckSsoRedirectUri:
-            window.location.origin + '/assets/silent-check-sso.html'
+          // silentCheckSsoRedirectUri:
+          //   window.location.origin + 'assets/silent-check-sso.html'
           }
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

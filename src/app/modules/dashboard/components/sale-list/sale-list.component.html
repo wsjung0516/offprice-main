@@ -9,35 +9,42 @@
   <div class="">
     <!-- Mobile Device -->
     <ng-container *ngIf="sSize ==='XSmall'">
-     <div class="mt-40 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-      <ng-container *ngTemplateOutlet="showImage"></ng-container>
+      <div class="container">
+        <!-- <div class="mt-40 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"> -->
+
+          <ng-container *ngTemplateOutlet="showImage"></ng-container>
     </div>
     <!-- Desktop Device -->
     </ng-container>
     <ng-container *ngIf="sSize !=='XSmall'">
-      <div class="mt-20 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+      <div class="">
+      <!-- <div class="mt-20 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"> -->
         <ng-container *ngTemplateOutlet="showImage"></ng-container>
       </div>
     </ng-container>
   </div>
 </div>
 <ng-template #showImage>
-  <ng-container *ngFor="let image of images">
-    <div class="h-88 bg-green-100">
-      <mat-card>
-        <mat-card-content>
-          <div class="">
-            <img [src]="image.url" alt="" class="w-full h-64 object-cover">
+  <cdk-virtual-scroll-viewport  (scrolledIndexChange)="onScroll($event)" [itemSize]="itemSize" class="viewport">
+    <div class="mt-20 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+      <div *cdkVirtualFor="let image of images" class="image-container">
+        <div class="h-88 bg-green-100">
+          <mat-card>
+            <mat-card-content>
+              <div class="">
+                <img [src]="image.url" alt="" class="w-full h-64 object-cover">
+              </div>
+            </mat-card-content>
+            <mat-card-footer>
+              <div class="text-center">
+                <p>{{image.vendor}}</p>
+                <p>{{image.size}}</p>
+                <p>{{image.price}}</p>
+              </div>
+            </mat-card-footer>
+          </mat-card>
+        </div>
           </div>
-        </mat-card-content>
-        <mat-card-footer>
-          <div class="text-center">
-            <p>{{image.Vendor}}</p>
-            <p>{{image.Size}}</p>
-            <p>{{image.Price}}</p>
-          </div>
-        </mat-card-footer>
-      </mat-card>
     </div>
-  </ng-container>
+  </cdk-virtual-scroll-viewport>  
 </ng-template>

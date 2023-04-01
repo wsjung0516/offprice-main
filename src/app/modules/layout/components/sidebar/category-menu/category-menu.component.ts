@@ -5,6 +5,8 @@ import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Categories } from 'src/app/core/constants/data-define';
 import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
+import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 
 @Component({
   selector: 'app-category-menu',
@@ -18,7 +20,7 @@ import { SearchKeywordService } from 'src/app/core/services/search-keyword.servi
             <button
               mat-button-toggle
               class="border-2 border-transparent rounded-full py-2 px-4 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
-              [ngClass]="{ selected: selectedButton.key === button.key }"
+              [ngClass]="{ selected: selected_category.key === button.key }"
               [value]="button"
               (click)="onSelect(button)"
             >
@@ -60,10 +62,12 @@ export class CategoryMenuComponent implements OnInit {
   buttonWidth = 40;
   scrollDistance = 200;
   scrollOffset = 0;
-  selectedButton: any = { key: 'Women', value: 'Women' };
-  constructor(private searchKeywordService: SearchKeywordService) {}
+  selected_category: any = { key: 'All', value: 'All' };
+  constructor(    private showMenuDialogService: ShowMenuDialogService,
+    private chipsKeywordService: ChipsKeywordService
+) {}
   ngOnInit() {
-    this.onSelect(this.selectedButton);
+    this.onSelect(this.selected_category);
   }
   onScroll(distance: number) {
     const scrollEl = document.querySelector('.scroll-container') as HTMLElement;
@@ -75,10 +79,16 @@ export class CategoryMenuComponent implements OnInit {
       behavior: 'smooth',
     });
   }
-  onSelect(button: any) {
-    this.selectedButton = button;
-    const value = { key: 'Category', value: button.key };
-    this.searchKeywordService.removeSearchKeyword(value);
-    this.searchKeywordService.addSearchKeyword(value);
+  onSelect(category: any) {
+    this.selected_category = category;
+    const value = { key: 'category', value: category.key };
+    // this.selected_category = value.key;
+    this.showMenuDialogService.category.next(category.key);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
+
+    // const value = { key: 'Category', value: button.key };
+    // this.searchKeywordService.removeSearchKeyword(value);
+    // this.searchKeywordService.addSearchKeyword(value);
   }
 }

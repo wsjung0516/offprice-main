@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { APrice } from 'src/app/core/constants/data-define';
-import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
+import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 @Component({
   selector: 'app-price',
   standalone: true,
@@ -45,11 +46,16 @@ import { SearchKeywordService } from 'src/app/core/services/search-keyword.servi
 export class PriceRangeComponent {
   priceRange: any;
   priceRanges = [...APrice];
-  constructor(private searchKeywordService: SearchKeywordService) {}
-  selectValue(data: any) {
-    const value = {key: 'Price', value: data.key};
-    this.searchKeywordService.removeSearchKeyword(value);
-    this.searchKeywordService.addSearchKeyword(value);
+  constructor(
+    private showMenuDialogService: ShowMenuDialogService,
+    private chipsKeywordService: ChipsKeywordService
+  ) {}
+  selectValue(price: any) {
+    const value = { key: 'price', value: price.key };
+    this.priceRange = price.value;
+    this.showMenuDialogService.price.next(price.value);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
     // this.favoriteSeason = data;
   }
 }

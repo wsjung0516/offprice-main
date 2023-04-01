@@ -3,11 +3,11 @@ import { Observable } from 'rxjs';
 import { MenuService } from '../../../../../core/services/menu.service';
 import { CommonModule } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { CategoryComponent } from './../../sidebar/category/category.component';
+// import { CategoryComponent } from './../../sidebar/category/category.component';
 import { SelectSizeComponent } from '../../sidebar/select-size/select-size.component';
 import { SearchPeriodComponent } from '../../sidebar/search-period/search-period.component';
 import { PriceRangeComponent } from '../../sidebar/price-range/price-range.component';
-import { PatternComponent } from '../../sidebar/pattern/pattern.component';
+// import { PatternComponent } from '../../sidebar/pattern/pattern.component';
 import { MaterialComponent } from '../../sidebar/material/material.component';
 
 @Component({
@@ -15,11 +15,11 @@ import { MaterialComponent } from '../../sidebar/material/material.component';
   imports: [
     CommonModule,
     AngularSvgIconModule,
-    CategoryComponent,
+    // CategoryComponent,
     SelectSizeComponent,
     SearchPeriodComponent,
     PriceRangeComponent,
-    PatternComponent,
+    // PatternComponent,
     MaterialComponent,
   ],
   selector: 'app-navbar-mobile',

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sizes } from 'src/app/core/constants/data-define';
-import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
+import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 
 @Component({
   selector: 'app-select-size',
@@ -12,7 +13,7 @@ template: `
       <ng-container *ngFor="let size of sizes">
         <button
           class="box-size flex items-center justify-center cursor-pointer"
-          [ngClass]="{ sel_class: size.key === selected_category }"
+          [ngClass]="{ sel_class: size.key === selected_size }"
           (click)="selectSize(size)"
         >
           {{ size.key }}
@@ -40,13 +41,15 @@ template: `
 })
 export class SelectSizeComponent {
   sizes = Sizes;
-  selected_category: string = '';
-  constructor(private searchKeywordService: SearchKeywordService) {}
-  selectSize(data: any) {
-    const value = {key: 'Size', value: data.key};
-    this.searchKeywordService.removeSearchKeyword(value);
-    this.searchKeywordService.addSearchKeyword(value);
-    this.selected_category = data.key;
-    // this.favoriteSeason = data;
+  selected_size: string = '';
+  constructor(    private showMenuDialogService: ShowMenuDialogService,
+    private chipsKeywordService: ChipsKeywordService
+) {}
+  selectSize(size: any) {
+    const value = { key: 'size', value: size.key };
+    this.selected_size = size.key;
+    this.showMenuDialogService.size.next(size.key);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
   }
 }

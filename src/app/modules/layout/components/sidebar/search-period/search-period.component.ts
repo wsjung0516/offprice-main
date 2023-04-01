@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { ESearchPeriod } from 'src/app/core/constants/data-define';
-import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
+import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
+
 
 @Component({
   selector: 'app-search-period',
@@ -43,11 +45,16 @@ import { SearchKeywordService } from 'src/app/core/services/search-keyword.servi
 export class SearchPeriodComponent {
   favoritePeriod: string | undefined;
   periods: typeof ESearchPeriod = ESearchPeriod;
-  constructor(private searchKeywordService: SearchKeywordService) {}
+  constructor(
+    private showMenuDialogService: ShowMenuDialogService,
+    private chipsKeywordService: ChipsKeywordService
+
+  ) {}
   selectValue(data: any) {
-    const value = {key: 'SearchPeriod', value: data.key};
-    this.searchKeywordService.removeSearchKeyword(value);
-    this.searchKeywordService.addSearchKeyword(value);
+    const value = { key: 'search_period', value: data.key };
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
+    this.showMenuDialogService.search_period.next(data.value);
     // this.favoriteSeason = data;
   }
 

@@ -11,6 +11,8 @@
           class="space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"
         >
           <ng-container *ngTemplateOutlet="showChips"></ng-container>
+          <p>{{searchItemLength}}</p>
+
         </div>
       </div>
     </div>
@@ -32,6 +34,7 @@
       class="mt-2 space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"
     >
       <ng-container *ngTemplateOutlet="showChips"></ng-container>
+      <p>{{searchItemLength}}</p>
     </div>
   </div>
 </ng-container>
@@ -57,11 +60,10 @@
 </ng-template>
 <!-- chips -->
 <ng-template #showChips>
-  <mat-chip-set>
-    <mat-chip
-      *ngFor="let keyword of keywords"
-    >
-      {{ keyword }}
-    </mat-chip>
-  </mat-chip-set>
+  <mat-chip-row *ngFor="let keyword of keywords" (removed)="removeChipsKeyword(keyword)">
+    {{keyword['value']}}
+    <button matChipRemove aria-label="'remove ' + keyword">
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </mat-chip-row>
 </ng-template>

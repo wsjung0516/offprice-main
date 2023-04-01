@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EMaterial } from 'src/app/core/constants/data-define';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
+import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 @Component({
   selector: 'app-material',
   standalone: true,
@@ -47,12 +48,15 @@ import { SearchKeywordService } from 'src/app/core/services/search-keyword.servi
 export class MaterialComponent {
   selected_material: string | undefined;
   materials: typeof EMaterial = EMaterial;
-  constructor(private searchKeywordService: SearchKeywordService) {}
-  selectValue(data: any) {
-    const value = {key: 'Material', value: data.key};
-    this.selected_material = data.key;
-    this.searchKeywordService.removeSearchKeyword(value);
-    this.searchKeywordService.addSearchKeyword(value);
-    // this.favoriteSeason = data;
+  constructor(
+    private showMenuDialogService: ShowMenuDialogService,
+    private chipsKeywordService: ChipsKeywordService
+  ) {}
+  selectValue(material: any) {
+    const value = { key: 'material', value: material.key };
+    this.selected_material = value.key;
+    this.showMenuDialogService.material.next(material.key);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
   }
 }

@@ -8,43 +8,60 @@
 
   <div class="">
     <!-- Mobile Device -->
-    <ng-container *ngIf="sSize ==='XSmall'">
-      <div class="container">
-        <!-- <div class="mt-40 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"> -->
-
-          <ng-container *ngTemplateOutlet="showImage"></ng-container>
-    </div>
-    <!-- Desktop Device -->
-    </ng-container>
-    <ng-container *ngIf="sSize !=='XSmall'">
+    <ng-container *ngIf="sSize === 'XSmall'">
       <div class="">
-      <!-- <div class="mt-20 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"> -->
+        <div *ngIf="keywords.length > 0">
+          <div class="xsmall_box">
+          </div>
+        </div>
+
+        <ng-container *ngTemplateOutlet="showImage"></ng-container>
+      </div>
+      <!-- Desktop Device -->
+    </ng-container>
+    <ng-container *ngIf="sSize !== 'XSmall'">
+      <div class="">
         <ng-container *ngTemplateOutlet="showImage"></ng-container>
       </div>
     </ng-container>
   </div>
 </div>
 <ng-template #showImage>
-  <cdk-virtual-scroll-viewport  (scrolledIndexChange)="onScroll($event)" [itemSize]="itemSize" class="viewport">
-    <div class="mt-20 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-      <div *cdkVirtualFor="let image of images" class="image-container">
-        <div class="h-88 bg-green-100">
-          <mat-card>
-            <mat-card-content>
-              <div class="">
-                <img [src]="image.url" alt="" class="w-full h-64 object-cover">
-              </div>
-            </mat-card-content>
-            <mat-card-footer>
-              <div class="text-center">
-                <p>{{image.vendor}}</p>
-                <p>{{image.size}}</p>
-                <p>{{image.price}}</p>
-              </div>
-            </mat-card-footer>
-          </mat-card>
-        </div>
+  <!-- <div class="mt-40" > -->
+
+  <!-- <div [ngClass]="sSize === 'XSmall' ? 'xsmall_size' : 'small_size'"> -->
+  <div>
+    <cdk-virtual-scroll-viewport
+      (scrolledIndexChange)="onScroll($event)"
+      [itemSize]="itemSize"
+      class="viewport"
+    >
+      <div
+        class="mt-20 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+      >
+        <div *cdkVirtualFor="let image of images" class="image-container">
+          <div class="h-88 bg-green-100">
+            <mat-card>
+              <mat-card-content>
+                <div class="">
+                  <img
+                    [src]="image.url"
+                    alt=""
+                    class="w-full h-64 object-cover"
+                  />
+                </div>
+              </mat-card-content>
+              <mat-card-footer>
+                <div class="text-center">
+                  <p>{{ image.vendor }}</p>
+                  <p>{{ image.size }}</p>
+                  <p>{{ image.price }}</p>
+                </div>
+              </mat-card-footer>
+            </mat-card>
           </div>
-    </div>
-  </cdk-virtual-scroll-viewport>  
+        </div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
 </ng-template>

@@ -1,20 +1,26 @@
 <ng-container *ngIf="sSize !== 'XSmall'">
-  <div class="">
-    <div class="flex items-center sm:justify-start">
+  <div class="mt-3">
+    <div class="flex items-center sm:justify-start space-x-2">
       <div class="w-80">
         <div class="relative">
           <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
         </div>
       </div>
-      <div class="mt-2 ml-5 mb-4">
+      <!-- <div class="mt-2 ml-5 mb-4">
         <div
           class="space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"
         >
-          <ng-container *ngTemplateOutlet="showChips"></ng-container>
-          <p>{{searchItemLength}}</p>
-
+          <div >
+          </div>
         </div>
-      </div>
+      </div> -->
+
+      <ng-container *ngIf="sSize === 'XSmall'" >
+
+      </ng-container>
+  
+      <ng-container *ngTemplateOutlet="showChips"></ng-container>
+      <p class="font-bold">{{ searchItemLength }}</p>
     </div>
   </div>
 </ng-container>
@@ -26,15 +32,16 @@
     </div>
   </div>
   <div *ngIf="showMobileMenu$ | async" class="w-full">
-    <div class="-mt-12">
-    </div>
+    <div class="-mt-12"></div>
   </div>
   <div class="ml-5 mb-4">
     <div
       class="mt-2 space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"
     >
-      <ng-container *ngTemplateOutlet="showChips"></ng-container>
-      <p>{{searchItemLength}}</p>
+      <div class="flex justify-start space-x-2">
+        <ng-container *ngTemplateOutlet="showChips"></ng-container>
+        <p class="font-bold">{{ searchItemLength }}</p>
+      </div>
     </div>
   </div>
 </ng-container>
@@ -44,9 +51,10 @@
     class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
   ></div>
   <input
-    type="search" #inputSearch
+    type="search"
+    #inputSearch
     id="default-search"
-    class="block p-4 w-full  text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    class="block p-4 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
     placeholder="Search"
     required
   />
@@ -60,10 +68,16 @@
 </ng-template>
 <!-- chips -->
 <ng-template #showChips>
-  <mat-chip-row *ngFor="let keyword of keywords" (removed)="removeChipsKeyword(keyword)">
-    {{keyword['value']}}
-    <button matChipRemove aria-label="'remove ' + keyword">
-      <mat-icon>cancel</mat-icon>
-    </button>
-  </mat-chip-row>
+  <mat-chip-list>
+    
+    <mat-chip
+      *ngFor="let keyword of keywords"
+      (removed)="removeChipsKeyword(keyword)"
+    >
+      {{ keyword["value"] }}
+      <button matChipRemove aria-label="'remove ' + keyword">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+  </mat-chip-list>
 </ng-template>

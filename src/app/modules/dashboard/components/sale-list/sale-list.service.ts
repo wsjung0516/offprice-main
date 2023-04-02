@@ -12,7 +12,7 @@ export class SaleListService {
   baseUrl = environment.url;
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
   headers = { 'content-type': 'application/json'}; // 'Accept': 'application/json'
-  getSaleLists(skip: number, take: number,  where?: any, whereOR?: any): Observable<SaleList[]> {
+  getSaleLists(scroll:any = {},  where?: any, whereOR?: any): Observable<SaleList[]> {
     let url: string;
     const data = {key: {where, whereOR}};
         /** data = {key: {
@@ -24,7 +24,9 @@ export class SaleListService {
 
     const whereData = JSON.stringify(data);
     const order = JSON.stringify({created_at: 'desc'});
-    console.log('whereData: ', where);
+    const skip = scroll.skip;
+    const take = scroll.take;
+    console.log(' skip, take,scroll ', skip, take, scroll);
     // console.log('where: ', where);
 
     if( where && where.length > 0 || whereOR && whereOR.length > 0){

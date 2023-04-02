@@ -17,6 +17,7 @@ import {
   Subject,
   switchMap,
   takeUntil,
+  tap,
 } from 'rxjs';
 // import { Nft } from '../../models/sale-list';
 import { MatCardModule } from '@angular/material/card';
@@ -33,12 +34,13 @@ import {
 import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
 import { SaleListService } from './sale-list.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+
 // import {ISaleList} from "../../models/sale-list";
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+    CommonModule,
     MatCardModule,
     SaleListHeaderComponent,
     CategoryMenuComponent,
@@ -60,6 +62,10 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
         flex-direction: column;
         align-items: center;
       }
+      .xsmall_box {
+        margin-top: 2rem;
+      }
+      
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,7 +76,9 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   public screenSize$: Observable<any>;
   sSize: string;
   keywords: SearchKeyword[] = [];
-  scrollObservable = new BehaviorSubject<any>({ scroll: { skip: 0, take: 20 } });
+  scrollObservable = new BehaviorSubject<any>({
+     skip: 0, take: 20,
+  });
   scrollObservable$ = this.scrollObservable.asObservable();
 
   constructor(
@@ -105,6 +113,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     //
     this.screenSize$.pipe(untilDestroyed(this)).subscribe((result) => {
       this.sSize = result;
+      this.cd.detectChanges();
     });
   }
   ngAfterViewInit() {
@@ -134,8 +143,9 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   onScroll(index: number) {
     // 이미지 로딩이 필요한지 확인하고, 필요한 경우 추가 이미지를 로드합니다.
     if (index + 20 > this.images.length) {
+      console.log('onScroll', index, this.images.length)
       this.scrollObservable.next({
-        scroll: { skip: this.images.length, take: 20 },
+        skip: this.images.length, take: 20,
       });
     }
   }
@@ -150,7 +160,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   5:{search_period: 2}
   6:{keyword: 'aaa'}
   */
-
+  eventCount = 0;
   searchConditionObservable$: Observable<any>;
   private makeWhereObservable() {
     let andArray: any[] = [];
@@ -161,13 +171,15 @@ export class SaleListComponent implements OnInit, AfterViewInit {
      * 3. get the value from the behavior subject as below.
      * 4. combine all the behavior subject and make the where condition.
      */
-    const vendor$ = this.showMenuDialogService.vendor$;
-    const price$ = this.showMenuDialogService.price$;
-    const category$ = this.showMenuDialogService.category$;
-    const size$ = this.showMenuDialogService.size$;
-    const material$ = this.showMenuDialogService.material$;
-    const search_period$ = this.showMenuDialogService.search_period$;
-    const keywords$ = this.showMenuDialogService.keywords$;
+    const {
+      vendor$,
+      price$,
+      category$,
+      size$,
+      material$,
+      search_period$,
+      keywords$,
+    } = this.showMenuDialogService;
 
     this.searchConditionObservable$ = combineLatest([
       vendor$,
@@ -177,86 +189,171 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       material$,
       search_period$,
       keywords$,
-    ]).pipe(
-      untilDestroyed(this),
-      map(
-        ([vendor, price, category, size, material, search_period, keyword]) => {
-          andArray = [];
-          orArray = [];
-          if (vendor !== 'All') andArray.push({ vendor: vendor });
-          if (price !== 'All') {
-            const pric = price.split(',');
-            andArray.push({ price: { gt: +pric[0], lt: +pric[1] } });
-          }
-          if (category !== 'All') andArray.push({ category: category });
-          if (size !== 'All') andArray.push({ size: size });
-          if (material !== 'All') andArray.push({ material: material });
-          if (search_period !== 'All') {
-            console.log('search_period', search_period, andArray);
-            const day: number = +search_period;
-            andArray.push({
-              updated_at: {
-                gte: new Date(
-                  new Date(new Date().setDate(new Date().getDate() - day))
-                    .toISOString()
-                    .substring(0, 10)
-                ),
-              },
-            });
-          }
-          if (keyword !== '') {
-            // This value used for OR condition
-            orArray.push({ vendor: { contains: keyword } });
-            orArray.push({ description: { contains: keyword } });
-          }
-          return { where: { and: andArray, or: orArray } };
-        }
-      )
-    );
+    ]).pipe(untilDestroyed(this), map(this.buildWhereCondition),
+    tap(() => {
+      this.eventCount++;
+      if( this.eventCount > 0) {
+        this.images = [];
+        this.oldScroll = { skip: 0, take: 20 };
+      }
+    }));
   }
+
+  private buildWhereCondition([
+    vendor,
+    price,
+    category,
+    size,
+    material,
+    search_period,
+    keyword,
+  ]: [string, string, string, string, string, string, string]): {
+    where: { and: any[]; or: any[] };
+  } {
+    const andArray: any[] = [];
+    const orArray: any[] = [];
+
+    if (vendor !== 'All') andArray.push({ vendor: vendor });
+    if (price !== 'All') {
+      const pric = price.split(',');
+      andArray.push({ price: { gt: +pric[0], lt: +pric[1] } });
+    }
+    if (category !== 'All') andArray.push({ category: category });
+    if (size !== 'All') andArray.push({ size: size });
+    if (material !== 'All') andArray.push({ material: material });
+    if (search_period !== 'All') {
+      const day: number = +search_period;
+      andArray.push({
+        updated_at: {
+          gte: new Date(
+            new Date(new Date().setDate(new Date().getDate() - day))
+              .toISOString()
+              .substring(0, 10)
+          ),
+        },
+      });
+    }
+    if (keyword !== '') {
+      orArray.push({ vendor: { contains: keyword } });
+      orArray.push({ description: { contains: keyword } });
+    }
+    return { where: { and: andArray, or: orArray } };
+  }
+
   oldScroll: any = null;
   private makeSortNWhereCondition(): Observable<any> {
+    return combineLatest([
+      this.scrollObservable$,
+      this.searchConditionObservable$,
+    ]).pipe(
+      untilDestroyed(this),
+      map(([scrollData, searchData]) =>
+        this.extractWhereAndScrollData(scrollData, searchData)
+      ),
+      switchMap((data: any) => this.fetchSaleLists(data))
+    );
+  }
+
+  private extractWhereAndScrollData(
+    scrollData: any,
+    searchData: any
+  ): {
+    where: any[];
+    whereOR: any[];
+    scroll: {};
+  } {
+    // console.log('scrollData, searchData', scrollData, searchData)
+    let where: any[] = [];
+    let whereOR: any[] = [];
+    let scroll: {skip:0, take:20};
+
+    if (searchData.where && searchData.where['and'].length > 0) {
+      where = searchData.where['and'];
+      // this.images = [];
+    } else if (searchData.where && searchData.where['and'].length === 0) {
+      where = null;
+    }
+
+    if (searchData.where && searchData.where['or'].length > 0) {
+      whereOR = searchData.where['or'];
+      // this.images = [];
+    } else if (searchData.where && searchData.where['or'].length === 0) {
+      whereOR = null;
+    }
+
+    if (scrollData) {
+      scroll = scrollData;
+    } else {
+      scroll = { skip: 0, take: 20 };
+    }
+    console.log('scroll', scroll);
+    return { where, whereOR, scroll };
+  }
+
+  private fetchSaleLists(data: any): Observable<any> {
+    const { where, scroll, whereOR } = data;
+    console.log(' where, scroll, whereOR', data)
+
+    return this.saleListService.getSaleLists(
+      scroll,
+      where,
+      whereOR
+    );
+  }
+  /*   private makeSortNWhereCondition(): Observable<any> {
+    return merge(this.scrollObservable$, this.searchConditionObservable$).pipe(
+      untilDestroyed(this),
+      map((data: any) => this.extractWhereAndScrollData(data)),
+      switchMap((data: any) => this.fetchSaleLists(data))
+    );
+  }
+
+  private extractWhereAndScrollData(data: any): {
+    where: any[];
+    whereOR: any[];
+    scroll: {};
+  } {
     let where: any[] = [];
     let whereOR: any[] = [];
     let scroll: {} = null;
-    return merge(this.scrollObservable$, this.searchConditionObservable$).pipe(
-      untilDestroyed(this),
-      map((data: any) => {
-        // console.log('data', data);
-        // where and condition event is triggered. (price, category, size, material, search_period)
-        if (data.where && data.where['and'].length > 0) {
-          where = data.where['and'];
-          // Reset the image array when the where condition is changed.
-          this.images = [];
-        } else if (data.where && data.where['and'].length === 0) {
-          where = null;
-        }
-        // where or condition event is triggered. (vendor, description)
-        if (data.where && data.where['or'].length > 0) {
-          whereOR = data.where['or'];
-        } else if (data.where && data.where['or'].length === 0) {
-          whereOR = null;
-        }
-        // scroll event is triggered.
-        if (data.scroll) {
-          scroll = data.scroll;
-          this.oldScroll = data.scroll;
-        } else {
-          scroll = this.oldScroll;
-        }
-        return { where, whereOR, scroll };
-      }),
-      switchMap((data: any) => {
-        const { where, scroll, whereOR } = data;
-        return this.saleListService.getSaleLists(
-          scroll.skip, // skip
-          scroll.take, // take
-          where, // where is used for AND condition (price, category, size, material, search_period)
-          whereOR // whereOR is used for OR condition (vendor, description)
-        );
-      })
+
+    if (data.where && data.where['and'].length > 0) {
+      where = data.where['and'];
+       this.images = [];
+      // this.oldScroll = {skip:0, take:20};
+    } else if (data.where && data.where['and'].length === 0) {
+      where = null;
+    }
+
+    if (data.where && data.where['or'].length > 0) {
+      whereOR = data.where['or'];
+       this.images = [];
+      // this.oldScroll = {skip:0, take:20};
+    } else if (data.where && data.where['or'].length === 0) {
+      whereOR = null;
+    }
+
+    if (data.scroll) {
+      scroll = data.scroll;
+      this.oldScroll = data.scroll;
+    } else {
+      scroll = {skip:0, take:20};
+      // scroll = this.oldScroll;
+    }
+    console.log('scroll', scroll);
+    return { where, whereOR, scroll };
+  }
+
+  private fetchSaleLists(data: any): Observable<any> {
+    const { where, scroll, whereOR } = data;
+    return this.saleListService.getSaleLists(
+      scroll.skip,
+      scroll.take,
+      where,
+      whereOR
     );
   }
+ */
   onSearchKeyword(val: string) {
     this.showMenuDialogService.keywords.next(val);
     const value = { key: 'keyword', value: val };
@@ -264,27 +361,31 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     this.chipsKeywordService.addChipKeyword(value);
   }
   inputKeyword: string = '';
+  // When the user clicks all buttion in the sidemenu.
   removeChipsKeyword(keyword: SearchKeyword) {
     const value = { key: keyword['key'], value: keyword['value'] };
     // Remove chip from the chips array
     this.chipsKeywordService.removeChipKeyword(value);
-    // console.log('removeChipsKeyword', keyword['key']);
-    if (keyword['key'] === 'price') {
-      this.showMenuDialogService.price.next('All');
-    } else if (keyword['key'] === 'category') {
-      this.showMenuDialogService.category.next('All');
-    } else if (keyword['key'] === 'size') {
-      this.showMenuDialogService.size.next('All');
-    } else if (keyword['key'] === 'material') {
-      this.showMenuDialogService.material.next('All');
-    } else if (keyword['key'] === 'search_period') {
-      this.showMenuDialogService.search_period.next('All');
-    } else if (keyword['key'] === 'keyword') {
-      this.showMenuDialogService.keywords.next('');
-      // clear search keyword
-      console.log('clear search keyword');
-      this.inputKeyword = '';
-      this.cd.detectChanges();
+
+    const keywordResetMap: { [key: string]: () => void } = {
+      price: () => this.showMenuDialogService.price.next('All'),
+      category: () => this.showMenuDialogService.category.next('All'),
+      size: () => this.showMenuDialogService.size.next('All'),
+      material: () => this.showMenuDialogService.material.next('All'),
+      search_period: () => this.showMenuDialogService.search_period.next('All'),
+      keyword: () => {
+        this.showMenuDialogService.keywords.next('');
+        // clear search keyword
+        console.log('clear search keyword');
+        this.inputKeyword = '';
+        this.cd.detectChanges();
+      },
+    };
+
+    const key = keyword['key'];
+
+    if (keywordResetMap.hasOwnProperty(key)) {
+      keywordResetMap[key]();
     }
   }
   ngOnDestroy() {

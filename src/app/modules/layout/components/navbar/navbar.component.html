@@ -32,6 +32,17 @@
 
       <!-- Profile menu -->
       <div class="items-center justify-end sm:order-4 md:flex md:flex-1 lg:w-0 ">
+        <!-- Toggle display mode grid or list -->
+        <button class="w-10 h-10 rounded-md bg-blue-800 text-white" mat-icon-button aria-label="off price store" (click)="toggleDisplayMode()">
+          <div class="mt-2">
+            <ng-container *ngIf="displayMode === 'grid';else list">
+              <mat-icon>grid_on</mat-icon>
+            </ng-container>
+            <ng-template #list>
+              <mat-icon>format_list_numbered</mat-icon>
+            </ng-template>
+          </div>
+        </button>
         <app-profile-menu></app-profile-menu>
       </div>
     </div>

@@ -26,8 +26,6 @@ export class SaleListService {
     const order = JSON.stringify({created_at: 'desc'});
     const skip = scroll.skip;
     const take = scroll.take;
-    console.log(' skip, take,scroll ', skip, take, scroll);
-    // console.log('where: ', where);
 
     if( where && where.length > 0 || whereOR && whereOR.length > 0){
       url = `${this.baseUrl}/sale-list?skip=${skip}&take=${take}&orderBy=${order}&where=${whereData}`;

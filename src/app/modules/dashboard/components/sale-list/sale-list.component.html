@@ -9,14 +9,13 @@
   <div class="">
     <!-- Mobile Device -->
     <ng-container *ngIf="sSize === 'XSmall'">
-      <div class="">
+      <!-- If chips are exist, space is expended to show chips -->
         <div *ngIf="keywords.length > 0">
           <div class="xsmall_box">
           </div>
         </div>
 
         <ng-container *ngTemplateOutlet="showImage"></ng-container>
-      </div>
       <!-- Desktop Device -->
     </ng-container>
     <ng-container *ngIf="sSize !== 'XSmall'">

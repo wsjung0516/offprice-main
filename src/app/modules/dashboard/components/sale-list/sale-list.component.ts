@@ -76,6 +76,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   public screenSize$: Observable<any>;
   sSize: string;
   keywords: SearchKeyword[] = [];
+  displayMode: string = 'grid || list';
   scrollObservable = new BehaviorSubject<any>({
      skip: 0, take: 20,
   });
@@ -125,7 +126,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
         size: obj.size,
       }));
       this.images = [...this.images, ...newImages];
-      // console.log('result - image', this.images);
+      // 
       this.cd.detectChanges();
       this.getConditionalSaleListLength();
     });
@@ -134,7 +135,6 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     this.saleListService
       .getConditionalSaleListLength()
       .subscribe((res: number) => {
-        console.log('getConditionalSaleListLength', res);
         // This value is used to display the number of items, which is searched.
         // And used at the sale-list-header.component.ts
         this.localStorageService.setItem('searchItemsLength', res.toString());
@@ -143,14 +143,12 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   onScroll(index: number) {
     // 이미지 로딩이 필요한지 확인하고, 필요한 경우 추가 이미지를 로드합니다.
     if (index + 20 > this.images.length) {
-      console.log('onScroll', index, this.images.length)
       this.scrollObservable.next({
         skip: this.images.length, take: 20,
       });
     }
   }
 
-  loadImages(skip: number, take: number) {}
   /**
   0:{vendor: 'All'}
   1:{price: '10, 25'}
@@ -286,14 +284,11 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     } else {
       scroll = { skip: 0, take: 20 };
     }
-    console.log('scroll', scroll);
     return { where, whereOR, scroll };
   }
 
   private fetchSaleLists(data: any): Observable<any> {
     const { where, scroll, whereOR } = data;
-    console.log(' where, scroll, whereOR', data)
-
     return this.saleListService.getSaleLists(
       scroll,
       where,

@@ -6,18 +6,6 @@
           <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
         </div>
       </div>
-      <!-- <div class="mt-2 ml-5 mb-4">
-        <div
-          class="space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"
-        >
-          <div >
-          </div>
-        </div>
-      </div> -->
-
-      <ng-container *ngIf="sSize === 'XSmall'" >
-
-      </ng-container>
   
       <ng-container *ngTemplateOutlet="showChips"></ng-container>
       <p class="font-bold">{{ searchItemLength }}</p>
@@ -68,8 +56,7 @@
 </ng-template>
 <!-- chips -->
 <ng-template #showChips>
-  <mat-chip-list>
-    
+  <mat-chip-listbox class="mat-chip-list-wrapper">
     <mat-chip
       *ngFor="let keyword of keywords"
       (removed)="removeChipsKeyword(keyword)"
@@ -79,5 +66,5 @@
         <mat-icon>cancel</mat-icon>
       </button>
     </mat-chip>
-  </mat-chip-list>
+  </mat-chip-listbox>
 </ng-template>

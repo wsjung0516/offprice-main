@@ -35,14 +35,16 @@ import { MatBadgeModule } from '@angular/material/badge';
   ],
   selector: 'app-sale-list-header',
   templateUrl: './sale-list-header.component.html',
+  styles: [
+    `
+      .mat-chip-list-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
-.mat-chip-list-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-  `]
 })
 export class SaleListHeaderComponent implements OnInit, OnDestroy {
   keywords: SearchKeyword[] = [];

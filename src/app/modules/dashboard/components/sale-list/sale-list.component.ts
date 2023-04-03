@@ -10,13 +10,8 @@ import {
   BehaviorSubject,
   combineLatest,
   map,
-  merge,
   Observable,
-  skip,
-  startWith,
-  Subject,
   switchMap,
-  takeUntil,
   tap,
 } from 'rxjs';
 // import { Nft } from '../../models/sale-list';
@@ -53,7 +48,7 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
     `
       .viewport {
         width: 100%;
-        height: 86vh;
+        height: 84vh;
         overflow-y: auto;
       }
 
@@ -97,6 +92,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
 
   ngOnInit(): void {
+    localStorage.setItem('dispalyMode', 'grid');
     this.makeWhereObservable();
     // make chips for display in the DOM
     this.chipsKeywordService.searchKeyword$
@@ -295,60 +291,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       whereOR
     );
   }
-  /*   private makeSortNWhereCondition(): Observable<any> {
-    return merge(this.scrollObservable$, this.searchConditionObservable$).pipe(
-      untilDestroyed(this),
-      map((data: any) => this.extractWhereAndScrollData(data)),
-      switchMap((data: any) => this.fetchSaleLists(data))
-    );
-  }
-
-  private extractWhereAndScrollData(data: any): {
-    where: any[];
-    whereOR: any[];
-    scroll: {};
-  } {
-    let where: any[] = [];
-    let whereOR: any[] = [];
-    let scroll: {} = null;
-
-    if (data.where && data.where['and'].length > 0) {
-      where = data.where['and'];
-       this.images = [];
-      // this.oldScroll = {skip:0, take:20};
-    } else if (data.where && data.where['and'].length === 0) {
-      where = null;
-    }
-
-    if (data.where && data.where['or'].length > 0) {
-      whereOR = data.where['or'];
-       this.images = [];
-      // this.oldScroll = {skip:0, take:20};
-    } else if (data.where && data.where['or'].length === 0) {
-      whereOR = null;
-    }
-
-    if (data.scroll) {
-      scroll = data.scroll;
-      this.oldScroll = data.scroll;
-    } else {
-      scroll = {skip:0, take:20};
-      // scroll = this.oldScroll;
-    }
-    console.log('scroll', scroll);
-    return { where, whereOR, scroll };
-  }
-
-  private fetchSaleLists(data: any): Observable<any> {
-    const { where, scroll, whereOR } = data;
-    return this.saleListService.getSaleLists(
-      scroll.skip,
-      scroll.take,
-      where,
-      whereOR
-    );
-  }
- */
+  
   onSearchKeyword(val: string) {
     this.showMenuDialogService.keywords.next(val);
     const value = { key: 'keyword', value: val };

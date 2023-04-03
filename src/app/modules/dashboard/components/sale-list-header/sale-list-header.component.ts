@@ -121,14 +121,19 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
 
     const keywordResetMap: { [key: string]: () => void } = {
       price: () => this.showMenuDialogService.price.next('All'),
-      category: () => this.showMenuDialogService.category.next('All'),
+      category: () => {
+        this.showMenuDialogService.category.next('All');
+        // To set 'All' button to active whenever remove chips keyword in category menu
+        // This value will be used in category menu component
+        this.localStorageService.setItem('category', 'All');
+    
+      },
       size: () => this.showMenuDialogService.size.next('All'),
       material: () => this.showMenuDialogService.material.next('All'),
       search_period: () => this.showMenuDialogService.search_period.next('All'),
       keyword: () => {
         this.showMenuDialogService.keywords.next('');
         // clear search keyword
-        // console.log('clear search keyword');
         this.inputKeyword = '';
         this.cd.detectChanges();
       },

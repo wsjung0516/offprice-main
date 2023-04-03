@@ -5,6 +5,8 @@ import {
   OnInit,
   AfterViewInit,
   ChangeDetectionStrategy,
+  HostListener,
+  ViewChild,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -21,7 +23,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
 import { CategoryMenuComponent } from '../../../layout/components/sidebar/category-menu/category-menu.component';
 import { SaleListHeaderComponent } from '../sale-list-header/sale-list-header.component';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import {
   ChipsKeywordService,
   SearchKeyword,
@@ -66,7 +68,8 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaleListComponent implements OnInit, AfterViewInit {
-  // nft: Array<ISaleList>;
+  @ViewChild('viewport',{static: false}) viewport: CdkVirtualScrollViewport;
+  // 
   currentScreenSize: string;
   public screenSize$: Observable<any>;
   sSize: string;
@@ -76,6 +79,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
      skip: 0, take: 20,
   });
   scrollObservable$ = this.scrollObservable.asObservable();
+  showScrollToTop = true;
 
   constructor(
     private http: HttpClient,
@@ -92,7 +96,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
 
   ngOnInit(): void {
-    localStorage.setItem('dispalyMode', 'grid');
+    localStorage.setItem('displayMode', 'grid');
     this.makeWhereObservable();
     // make chips for display in the DOM
     this.chipsKeywordService.searchKeyword$
@@ -137,12 +141,13 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       });
   }
   onScroll(index: number) {
-    // 이미지 로딩이 필요한지 확인하고, 필요한 경우 추가 이미지를 로드합니다.
+    // 
     if (index + 20 > this.images.length) {
       this.scrollObservable.next({
         skip: this.images.length, take: 20,
       });
     }
+    index > 1 ? (this.showScrollToTop = true) : (this.showScrollToTop = false);
   }
 
   /**
@@ -188,7 +193,9 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       this.eventCount++;
       if( this.eventCount > 0) {
         this.images = [];
-        this.oldScroll = { skip: 0, take: 20 };
+        this.scrollObservable.next({
+          skip: 0, take: 20,
+        });        // this.oldScroll = { skip: 0, take: 20 };
       }
     }));
   }
@@ -234,7 +241,6 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     return { where: { and: andArray, or: orArray } };
   }
 
-  oldScroll: any = null;
   private makeSortNWhereCondition(): Observable<any> {
     return combineLatest([
       this.scrollObservable$,
@@ -291,46 +297,20 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       whereOR
     );
   }
-  
+
   onSearchKeyword(val: string) {
     this.showMenuDialogService.keywords.next(val);
     const value = { key: 'keyword', value: val };
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }
-  inputKeyword: string = '';
-  // When the user clicks all buttion in the sidemenu.
-  removeChipsKeyword(keyword: SearchKeyword) {
-    const value = { key: keyword['key'], value: keyword['value'] };
-    // Remove chip from the chips array
-    this.chipsKeywordService.removeChipKeyword(value);
-
-    const keywordResetMap: { [key: string]: () => void } = {
-      price: () => this.showMenuDialogService.price.next('All'),
-      category: () => this.showMenuDialogService.category.next('All'),
-      size: () => this.showMenuDialogService.size.next('All'),
-      material: () => this.showMenuDialogService.material.next('All'),
-      search_period: () => this.showMenuDialogService.search_period.next('All'),
-      keyword: () => {
-        this.showMenuDialogService.keywords.next('');
-        // clear search keyword
-        console.log('clear search keyword');
-        this.inputKeyword = '';
-        this.cd.detectChanges();
-      },
-    };
-
-    const key = keyword['key'];
-
-    if (keywordResetMap.hasOwnProperty(key)) {
-      keywordResetMap[key]();
-    }
-  }
   ngOnDestroy() {
-    console.log('sale list destroy');
-    // localStorage.setItem(
-    //   'whereValue',
-    //   JSON.stringify(this.where)
-    // );
+    // console.log('sale list destroy');
   }
+
+  scrollToTop() {
+    console.log('scrollToTop clicked')
+    this.viewport.scrollToIndex(0);
+    }
+
 }

@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.displayMode = localStorage.getItem('displayMode') || 'grid';
     this.screenSizeService.screenSize$.pipe(untilDestroyed(this)).subscribe((size) => {
-      console.log('size', size)
+      // console.log('size', size)
       this.sSize = size;
       this.cd.detectChanges();
     });

@@ -5,7 +5,7 @@
   </div>
 </div> -->
 <div>
-  <div class="">
+  <div>
     <!-- Mobile Device -->
     <ng-container *ngIf="sSize === 'XSmall'">
       <!-- If chips are exist, space is expended to show -->
@@ -23,16 +23,20 @@
       </div>
     </ng-container>
   </div>
+  <button *ngIf="showScrollToTop" id="scrollToTop" class="fixed bottom-4 right-4 z-50 p-2 bg-blue-500 text-white rounded-full focus:outline-none" title="Scroll to Top" (click)="scrollToTop()">
+    ↑
+  </button>
+  
 </div>
 <ng-template #showImage>
   <!-- <div class="mt-40" > -->
 
   <!-- <div [ngClass]="sSize === 'XSmall' ? 'xsmall_size' : 'small_size'"> -->
-  <div>
+  <div >
     <cdk-virtual-scroll-viewport
       (scrolledIndexChange)="onScroll($event)"
       [itemSize]="itemSize"
-      class="viewport"
+      class="viewport" #viewport
     >
       <div
         class="mt-20 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
@@ -63,3 +67,4 @@
     </cdk-virtual-scroll-viewport>
   </div>
 </ng-template>
+

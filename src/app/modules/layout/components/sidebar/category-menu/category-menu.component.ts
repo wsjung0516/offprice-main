@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Categories } from 'src/app/core/constants/data-define';
-import { SearchKeywordService } from 'src/app/core/services/search-keyword.service';
 import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
+import { Subscription } from 'rxjs';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Component({
   selector: 'app-category-menu',
   standalone: true,
   imports: [CommonModule, MatIconModule],
-  template: `
+template: `
     <div class="bg-gray-200 px-4 py-2 flex items-center">
       <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide">
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
@@ -63,11 +64,16 @@ export class CategoryMenuComponent implements OnInit {
   scrollDistance = 200;
   scrollOffset = 0;
   selected_category: any = { key: 'All', value: 'All' };
+  private storageItemSubscription: Subscription | undefined;
   constructor(    private showMenuDialogService: ShowMenuDialogService,
-    private chipsKeywordService: ChipsKeywordService
+    private chipsKeywordService: ChipsKeywordService,
+    private localStorageService: LocalStorageService,
+    private cd: ChangeDetectorRef
+
 ) {}
   ngOnInit() {
     this.onSelect(this.selected_category);
+    this.subscribeToLocalStorageItem()
   }
   onScroll(distance: number) {
     const scrollEl = document.querySelector('.scroll-container') as HTMLElement;
@@ -86,9 +92,23 @@ export class CategoryMenuComponent implements OnInit {
     this.showMenuDialogService.category.next(category.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
-
-    // const value = { key: 'Category', value: button.key };
-    // this.searchKeywordService.removeSearchKeyword(value);
-    // this.searchKeywordService.addSearchKeyword(value);
+  }
+  // This method is called from localStorage when the user clicks remove button chip of chips,
+  // Where save 'All' to localStorage
+  // Which is sale-list-header.component.ts
+  subscribeToLocalStorageItem(): void {
+    this.storageItemSubscription =
+      this.localStorageService.storageItem$.subscribe((item) => {
+        // console.log('category-- called from localstorage', item)
+        if (item && item.key === 'category') {
+          this.onSelect({key:'All',value:'All'});
+          this.cd.markForCheck();
+        }
+      });
+  }
+  ngOnDestroy() {
+    if (this.storageItemSubscription) {
+      this.storageItemSubscription.unsubscribe();
+    }
   }
 }

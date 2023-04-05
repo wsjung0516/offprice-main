@@ -22,6 +22,7 @@ import {
 } from 'src/app/core/services/chips-keyword.service';
 import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
 import { MatBadgeModule } from '@angular/material/badge';
+import { FormsModule } from '@angular/forms';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -32,6 +33,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatBadgeModule,
+    FormsModule
   ],
   selector: 'app-sale-list-header',
   templateUrl: './sale-list-header.component.html',
@@ -55,7 +57,7 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
   constructor(
     private menuService: MenuService,
     public screenSizeService: ScreenSizeService,
-    private searchKeywordService: SearchKeywordService,
+    // private searchKeywordService: SearchKeywordService,
     private localStorageService: LocalStorageService,
     private cd: ChangeDetectorRef,
     private chipsKeywordService: ChipsKeywordService,
@@ -85,8 +87,8 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
       .subscribe((result: any[]) => {
         this.keywords = result.filter(
           (obj) =>
-            (obj.value !== '' && obj.key === 'keyword') ||
-            (obj.value !== 'All' && obj.key !== 'keyword')
+            (obj.value !== '' && obj.key === 'input_keyword') ||
+            (obj.value !== 'All' && obj.key !== 'input_keyword')
         );
         this.cd.markForCheck();
       });
@@ -101,15 +103,17 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
         }
       });
   }
-  onSearchKeyword(data: string): void {
+  onInputSearchKeyword(data: string): void {
     if (data === '') {
-      const value = { key: 'Search', value: data };
-      this.searchKeywordService.removeSearchKeyword(value);
+      const value = { key: 'input_keyword', value: data };
+      this.chipsKeywordService.removeChipKeyword(value);
       return;
     }
-    const value = { key: 'Search', value: data };
-    this.searchKeywordService.removeSearchKeyword(value);
-    this.searchKeywordService.addSearchKeyword(value);
+    const value = { key: 'input_keyword', value: data };
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
+    // To make observable value change, which will be used make-where-condition.service.ts
+    this.showMenuDialogService.input_keyword.next(data);
     // this.favoriteSeason = data;
   }
   inputKeyword: string = '';
@@ -131,8 +135,8 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
       size: () => this.showMenuDialogService.size.next('All'),
       material: () => this.showMenuDialogService.material.next('All'),
       search_period: () => this.showMenuDialogService.search_period.next('All'),
-      keyword: () => {
-        this.showMenuDialogService.keywords.next('');
+      input_keyword: () => {
+        this.showMenuDialogService.input_keyword.next('');
         // clear search keyword
         this.inputKeyword = '';
         this.cd.detectChanges();

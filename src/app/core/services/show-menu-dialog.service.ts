@@ -5,7 +5,7 @@ import { BehaviorSubject } from "rxjs";
   providedIn: 'root'
 })
 export class ShowMenuDialogService {
-  keywords = new BehaviorSubject<string>('');
+  input_keyword = new BehaviorSubject<string>('');
   vendor = new BehaviorSubject<string>('All');
   price = new BehaviorSubject<string>('All');
   category = new BehaviorSubject<string>('All');
@@ -13,8 +13,8 @@ export class ShowMenuDialogService {
   material = new BehaviorSubject<string>('All');
   search_period = new BehaviorSubject<string>('All');
 
-  get keywords$() {
-    return this.keywords.asObservable();
+  get input_keyword$() {
+    return this.input_keyword.asObservable();
   }
   get vendor$() {
     return this.vendor.asObservable();

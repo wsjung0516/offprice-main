@@ -71,7 +71,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     private saleListService: SaleListService,
     private cd: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
-    private makeWhereConditionService: MakeWhereConditionService
+    private makeWhereConditionService: MakeWhereConditionService,
   ) {
     this.screenSize$ = this.screenSizeService.screenSize$;
   }
@@ -110,12 +110,14 @@ export class SaleListComponent implements OnInit, AfterViewInit {
         price: obj.price,
         size: obj.size,
       }));
+      // console.log('newImages', newImages)
       this.images = [...this.images, ...newImages];
       // 
       this.cd.detectChanges();
       this.getConditionalSaleListLength();
 
     })
+    // this.makeObservableService.resetImages$.pipe(untilDestroyed(this))
     this.makeWhereConditionService.resetImages$.pipe(untilDestroyed(this))
     .subscribe((data:any) => {
       this.images = [];

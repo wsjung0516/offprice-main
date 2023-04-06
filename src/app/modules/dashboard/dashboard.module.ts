@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
-import { TableListComponent } from './components/table-list/table-list.component';
 
 @NgModule({
   declarations: [
   
-    TableListComponent
+    // TableListComponent
   ],
   imports: [
     CommonModule,

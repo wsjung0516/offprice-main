@@ -12,32 +12,42 @@ export class SaleListService {
   baseUrl = environment.url;
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
   headers = { 'content-type': 'application/json'}; // 'Accept': 'application/json'
-  getSaleLists(scroll:any = {},  where?: any, whereOR?: any): Observable<SaleList[]> {
-    let url: string;
-    const data = {key: {where, whereOR}};
-        /** data = {key: {
-                        where:[{ category: 'pants', size:'SM'],
-                        whereOR:[{vendor:{ contains: 'test'}}, {description:{ contains: 'test'}}]
-                      }
-                    }
-        */
-
-    const whereData = JSON.stringify(data);
-    const order = JSON.stringify({created_at: 'desc'});
-    const skip = scroll.skip;
-    const take = scroll.take;
-
-    if( where && where.length > 0 || whereOR && whereOR.length > 0){
-      url = `${this.baseUrl}/sale-list?skip=${skip}&take=${take}&orderBy=${order}&where=${whereData}`;
+  getSaleLists(
+    skip: number,
+    take: number,
+    orderBy?: any,
+    where?: any,
+    whereOR?: any
+  ): Observable<SaleList[]> {
+    console.log('getSaleList', skip, take, orderBy, where, whereOR)
+    const whereData = this.buildWhereData(where, whereOR);
+    
+    const order = JSON.stringify(orderBy);
+    let url = `${this.baseUrl}/sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
+    if (whereData) {
+      url += `&where=${JSON.stringify(whereData)}`;
     }
-    else{
-      url = `${this.baseUrl}/sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
-    }
-    return this.http.get(url).pipe(
-      map((data: any) => data ),
+    // console.log('saleLists', url)
+    return this.http.get<SaleList[]>(url).pipe(
+      // tap(data => console.log('data: ', data)),
       shareReplay(1)
-    )
+    );
   }
+
+  private buildWhereData(
+    where: any[],
+    whereOR: any[]
+  ): { and?: any[]; or?: any[] } | null {
+    if (where && where.length > 0 && whereOR && whereOR.length > 0) {
+      return { and: where, or: whereOR };
+    } else if (where && where.length > 0) {
+      return { and: where };
+    } else if (whereOR && whereOR.length > 0) {
+      return { or: whereOR };
+    }
+    return null;
+  }
+
   getSaleList(id: string): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list/${id}`;
 

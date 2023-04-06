@@ -11,7 +11,7 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<boo
           pkceMethod: 'S256',
           redirectUri: 'http://localhost:4200/',
           checkLoginIframe: false,
-          onLoad: 'check-sso',
+          // onLoad: 'check-sso',
           // silentCheckSsoRedirectUri:
           //   window.location.origin + 'assets/silent-check-sso.html'
           }

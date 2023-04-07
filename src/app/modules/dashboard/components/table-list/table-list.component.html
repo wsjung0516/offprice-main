@@ -13,7 +13,8 @@
             *ngIf="
               column !== 'action' &&
               column !== 'image_url' &&
-              column !== 'updated_at'
+              column !== 'created_at' &&
+              column !== 'first_name'
             "
           >
             <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
@@ -25,15 +26,32 @@
                 imageDetail
                 [image]="row[column]"
               >
-                <img [src]="row[column]" alt="user" />
+                <img [src]="row[column]" alt="offprice.store" />
               </div>
             </td>
           </ng-container>
-          <ng-container *ngIf="column === 'updated_at'">
+          <ng-container *ngIf="column === 'created_at'">
             <td mat-cell *matCellDef="let row">
               {{ row[column] | date: 'yyyy-MM-dd' }}
             </td>
           </ng-container>
+          <ng-container *ngIf="column === 'first_name'">
+            <td mat-cell *matCellDef="let row">
+              {{ row[column] }}  {{ row['last_name'] }}
+            </td>
+          </ng-container>
+          <ng-container *ngIf="column === 'action'">
+            <td mat-cell *matCellDef="let row">
+              <a
+                mat-icon-button
+                class="text-green-600"
+                matTooltip="Edit List"
+              >
+                <mat-icon (click)="detailSaleItem(row)">search</mat-icon>
+              </a>
+            </td>
+          </ng-container>
+     
         </ng-container>
       </ng-container>
   

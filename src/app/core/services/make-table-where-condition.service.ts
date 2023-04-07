@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { combineLatest, filter, map, merge, Observable, skip, startWith, Subject, switchMap, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ShowMenuDialogService } from './show-menu-dialog.service';
-import { SaleListService } from '../../modules/dashboard/components/sale-list/sale-list.service';
+import { UserSaleListService } from '../../modules/dashboard/components/sale-list/user-sale-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { SaleList } from '../models/sale-list.model';
+import { UserSaleList } from '../models/user-sale-list.model';
 
 @UntilDestroy()
 @Injectable({
@@ -23,12 +23,12 @@ export class MakeTableWhereConditionService {
 constructor(
   //private makeObservableService: MakeObservableService,
   private showMenuDialogService: ShowMenuDialogService,
-  private saleListService: SaleListService,
+  private userSaleListService: UserSaleListService,
   ) {}
   eventCount = 0;
   searchConditionObservable$: Observable<any>;;
 
-  get searchResult$(): Observable<SaleList[]> {
+  get searchResult$(): Observable<UserSaleList[]> {
     return this.searchResult.asObservable();
   }
   initializeWhereCondition(sort: MatSort, paginator: MatPaginator) {
@@ -37,8 +37,8 @@ constructor(
 
     this.makeWhereObservable();
     setTimeout(() => {
-      this.makeTableWhereCondition().subscribe((data: SaleList[]) => {
-        // console.log('data-2', data);
+      this.makeTableWhereCondition().subscribe((data: UserSaleList[]) => {
+        console.log('data-2', data);
         this.searchResult.next(data);
       });
     }, 100);
@@ -121,7 +121,7 @@ constructor(
     if (search_period !== 'All') {
       const day: number = +search_period;
       andArray.push({
-        updated_at: {
+        created_at: {
           gte: new Date(
             new Date(new Date().setDate(new Date().getDate() - day))
               .toISOString()
@@ -133,6 +133,8 @@ constructor(
     if (input_keyword !== '') {
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ description: { contains: input_keyword } });
+      orArray.push({ last_name: { contains: input_keyword } });
+      orArray.push({ first_name: { contains: input_keyword } });
     }
 
     return { where: { and: andArray, or: orArray } };
@@ -183,7 +185,7 @@ constructor(
       }),
       switchMap((data: any) => {
         const { where, orderBy, whereOR } = data;
-        return this.saleListService.getSaleLists(
+        return this.userSaleListService.getUserSaleLists(
           this.paginator.pageIndex * this.paginator.pageSize, // skip
           this.paginator.pageSize, // take
           orderBy,

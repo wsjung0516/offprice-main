@@ -93,7 +93,7 @@ export class MakeObservableService {
     if (search_period !== 'All') {
       const day: number = +search_period;
       andArray.push({
-        updated_at: {
+        created_at: {
           gte: new Date(
             new Date(new Date().setDate(new Date().getDate() - day))
               .toISOString()

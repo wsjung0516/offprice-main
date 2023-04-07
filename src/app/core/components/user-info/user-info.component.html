@@ -1,0 +1,82 @@
+<h2 class="text-3xl font-bold mb-4">
+  {{ isEditMode ? "Edit Mode" : "Create Mode" }}
+</h2>
+
+<form [formGroup]="userInfoForm" class="grid-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Company Name *</mat-label>
+    <input matInput formControlName="companyName" />
+    <mat-error *ngIf="userInfoForm.get('companyName').invalid">
+      Please enter company name.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Representative Name *</mat-label>
+    <input matInput formControlName="representativeName" />
+    <mat-error *ngIf="userInfoForm.get('representativeName').invalid">
+      Please enter representative name.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Registration Number *</mat-label>
+    <input matInput formControlName="registrationNumber" />
+    <mat-error *ngIf="userInfoForm.get('registrationNumber').invalid">
+      Please enter registration number.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Address *</mat-label>
+    <input matInput formControlName="address.addressLine1" placeholder="Address Line 1" />
+    <input matInput formControlName="address.addressLine2" placeholder="Address Line 2" />
+    <input matInput formControlName="address.city" placeholder="City" />
+    <input matInput formControlName="address.state" placeholder="State/Province" />
+    <input matInput formControlName="address.country" placeholder="Country" />
+    <input matInput formControlName="address.postalCode" placeholder="Postal Code" />
+    <mat-error *ngIf="userInfoForm.get('address').invalid">Please enter address.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input matInput placeholder="Email" formControlName="email" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>First Name</mat-label>
+    <input matInput placeholder="First Name" formControlName="firstName" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Last Name</mat-label>
+    <input matInput placeholder="Last Name" formControlName="lastName">
+  </mat-form-field>
+  
+  <!-- Password -->
+  <mat-form-field appearance="fill" class="col-span-2">
+    <mat-label>Password</mat-label>
+    <input matInput placeholder="Password" formControlName="password" type="password">
+    <mat-error *ngIf="userInfoForm.get('password').invalid">
+      Please enter password.
+    </mat-error>
+  </mat-form-field>
+  
+  <!-- Agreement Checkbox -->
+  <div class="col-span-2">
+    <mat-checkbox formControlName="agreement" required>Agree to terms and conditions</mat-checkbox>
+    <mat-error *ngIf="userInfoForm.get('agreement').invalid">
+      You must agree to the terms and conditions.
+    </mat-error>
+  </div>
+  
+  <!-- Buttons -->
+  <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="16px" class="mt-4">
+    <button mat-flat-button color="primary" type="button" (click)="onCancel()" class="cancel-button">
+      Cancel
+    </button>
+    <button mat-flat-button color="accent" type="submit" [disabled]="userInfoForm.invalid" class="submit-button">
+      {{ submitButtonText }}
+    </button>
+  </div>
+</form>  

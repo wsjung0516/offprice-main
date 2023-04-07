@@ -59,6 +59,7 @@ import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/con
     MatCheckboxModule,
     MatTooltipModule,
     ConfirmDialogComponent,
+    
     // NzModalModule,
   ],
   templateUrl: './create-user.component.html',
@@ -101,10 +102,13 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
   ngOnInit() {
   }
   ngAfterViewInit() {
-    this.mode = this.ref.data.mode;
-    this.user = this.ref.data.user;
-    this.disabled = this.ref.data.disabled;
-    this.displayUser(this.user);
+    setTimeout(() => {
+      this.mode = this.ref.data.mode;
+      this.user = this.ref.data.user;
+      this.disabled = this.ref.data.disabled;
+      this.displayUser(this.user);
+
+    }, 0);
   }
   onSubmit() {
     console.log('this.mode', this.mode);

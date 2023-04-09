@@ -63,7 +63,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   public screenSize$: Observable<any>;
   sSize: string;
   keywords: SearchKeyword[] = [];
-  displayMode: string = 'grid || list';
   showScrollToTop = true;
 
   constructor(
@@ -80,9 +79,10 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
 
   ngOnInit(): void {
-    localStorage.setItem('displayMode', 'grid');
     // 
     // make chips for display in the DOM
+    localStorage.setItem('displayMode', 'grid');
+
     this.chipsKeywordService.searchKeyword$
       .pipe(untilDestroyed(this))
       .subscribe((result: any[]) => {

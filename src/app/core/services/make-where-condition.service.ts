@@ -109,7 +109,7 @@ export class MakeWhereConditionService {
     } = this.showMenuDialogService;
 
     this.searchConditionObservable$ = combineLatest([
-      displayMode$,
+      // displayMode$,
       vendor$,
       price$,
       category$,
@@ -121,7 +121,7 @@ export class MakeWhereConditionService {
       untilDestroyed(this),
       tap((val) => {
         this.displayMode = localStorage.getItem('displayMode');
-        // console.log('make-where : ', val, this.displayMode);
+        // console.log('make-where-observable : ', val, this.displayMode);
       }),
       filter(() => this.displayMode === 'grid'),
       // filter(([displayMode]) => displayMode === 'grid'),
@@ -144,7 +144,6 @@ export class MakeWhereConditionService {
   }
 
   private buildWhereCondition([
-    ,
     vendor,
     price,
     category,
@@ -152,7 +151,7 @@ export class MakeWhereConditionService {
     material,
     search_period,
     input_keyword,
-  ]: [string, string, string, string, string, string, string, string]): {
+  ]: [string, string, string, string, string, string, string]): {
     where: { and: any[]; or: any[] };
   } {
     const andArray: any[] = [];
@@ -245,6 +244,6 @@ export class MakeWhereConditionService {
     );
   }
   resetService() {
-    this.showMenuDialogService.resetService();
+    // this.showMenuDialogService
   }
 }

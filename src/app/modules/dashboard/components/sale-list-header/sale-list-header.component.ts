@@ -4,6 +4,7 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -53,8 +54,8 @@ CommonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SaleListHeaderComponent implements OnInit, OnDestroy {
-  displayMode = 'grid';
+export class SaleListHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
+  displayMode = '';
   keywords: SearchKeyword[] = [];
   searchItemLength: number = 0;
   private storageItemSubscription: Subscription | undefined;
@@ -82,7 +83,10 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
     this.subscribeToSearchKeywords();
     this.subscribeToLocalStorageItem();
   }
-
+  ngAfterViewInit() {
+    this.displayMode = localStorage.getItem('displayMode');
+    this.cd.detectChanges();
+  }
   subscribeToScreenSize(): void {
     this.screenSize$.pipe(untilDestroyed(this)).subscribe((result) => {
       this.sSize = result;
@@ -130,6 +134,7 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
       this.displayMode = 'grid';
       this.router.navigate(['dashboard/sale_list']);
     }
+    this.cd.detectChanges();
     localStorage.setItem('displayMode', this.displayMode);
     // this.localStorageService.setItem('displayMode', this.displayMode);
     this.showMenuDialogService.gotoHome.next('')

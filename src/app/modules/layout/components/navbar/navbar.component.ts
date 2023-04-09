@@ -33,7 +33,6 @@ CommonModule,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent implements OnInit {
-  displayMode: string = 'grid | list';
   sSize: string;
   // public screenSize$: Observable<any>;
   constructor(private menuService: MenuService, 
@@ -43,7 +42,6 @@ export class NavbarComponent implements OnInit {
     private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.displayMode = localStorage.getItem('displayMode') || 'grid';
     this.screenSizeService.screenSize$.pipe(untilDestroyed(this)).subscribe((size) => {
       // console.log('size', size)
       this.sSize = size;

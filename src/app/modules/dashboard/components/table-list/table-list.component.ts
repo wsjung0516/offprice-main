@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, AfterViewInit, ViewChild, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  AfterViewInit,
+  ViewChild,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -6,10 +13,10 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
 import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service' ;
+import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { Subject } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SearchKeyword } from 'src/app/core/services/chips-keyword.service';
 import { MatIconModule } from '@angular/material/icon';
 import { SaleListModule } from 'src/app/modules/dashboard/components/sale-list/sale-list.module';
@@ -18,29 +25,29 @@ import { ConfirmDialogComponent } from 'src/app/core/components/confirm-dialog/c
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 // import { CreatUserComponent } from './../../../../core/components/user-info/user-info.component';
 import { CreateUserComponent } from 'src/app/user/create-user/create-user.component';
-import { DialogService } from '@ngneat/dialog';
+import { DialogConfig, DialogService } from '@ngneat/dialog';
 import { User } from 'src/app/user/models/user.model';
 
 @UntilDestroy()
 @Component({
   selector: 'app-table-list',
   standalone: true,
-  imports: [CommonModule,
-MatSortModule,
+  imports: [
+    CommonModule,
+    MatSortModule,
     MatPaginatorModule,
     MatTableModule,
     RouterModule,
     MatIconModule,
     MatDialogModule,
     ConfirmDialogComponent,
-    SaleListModule
-
+    SaleListModule,
   ],
   templateUrl: './table-list.component.html',
-  styleUrls: ['./table-list.component.css'  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./table-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableListComponent implements OnInit, AfterViewInit{
+export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = [
@@ -50,11 +57,12 @@ export class TableListComponent implements OnInit, AfterViewInit{
     'category',
     'size',
     'material',
+    'description',
     'created_at',
     'image_url',
     'first_name',
-    'action'
-    
+    'action',
+
     // 'action',
   ];
   displayedTitle: string[] = [
@@ -65,6 +73,7 @@ export class TableListComponent implements OnInit, AfterViewInit{
     'Category',
     'Size',
     'Material',
+    'Description',
     'CreatedAt',
     'Image',
     'Name',
@@ -93,24 +102,25 @@ export class TableListComponent implements OnInit, AfterViewInit{
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
-    this.makeTableWhereConditionService.initializeWhereCondition(this.sort, this.paginator);
-    this.makeTableWhereConditionService.setRefreshObservable(this.refreshObservable);
-    // 
+    this.makeTableWhereConditionService.initializeWhereCondition(
+      this.sort,
+      this.paginator
+    );
+    this.makeTableWhereConditionService.setRefreshObservable(
+      this.refreshObservable
+    );
+    //
     this.makeTableWhereConditionService.searchResult$
-    .pipe(untilDestroyed(this))
-    .subscribe((data: UserSaleList[]) => {
-      console.log('condition$', data)
-      this.dataSource.sort = this.sort;
-      this.dataSource.data = data;
-      this.getConditionalUserSaleListLength();
-      this.cd.detectChanges();
-
-    })  
-
+      .pipe(untilDestroyed(this))
+      .subscribe((data: UserSaleList[]) => {
+        // console.log('condition$', data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.data = data;
+        this.getConditionalUserSaleListLength();
+        this.cd.detectChanges();
+      });
   }
   private getConditionalUserSaleListLength() {
     this.userSaleListService
@@ -131,20 +141,39 @@ export class TableListComponent implements OnInit, AfterViewInit{
     });
   }
   detailSaleItem(id: string) {
-    const dialogRef = this.dialogService
-      .open(CreateUserComponent, {
-        data: {
-          user: resetUser,
-          disabled: false,
-          mode: 'Create',
-        },
-      })
-      .afterClosed$.subscribe((data: any) => {
-        if (data) {
-          this.refreshObservable.next({}); // trigger the observable for updating the table}
-        }
-      });
-    // console.log('onCreatedUser', this.userForm.value);
+    const dialogRef = this.dialog.open(CreateUserComponent, {
+      data: 
+      {
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    })
+    // const dialogRef = this.dialogService
+    //   .open(CreateUserComponent, {
+    //     data: {
+    //       user: resetUser,
+    //       disabled: false,
+    //       mode: 'Create',
+    //     },
+    //     backdrop: false,
+    //     //...config,
+    //     width: '800px',
+    //     height: '800px',
+    //   })
+    //   .afterClosed$.subscribe((data: any) => {
+    //     if (data) {
+    //       this.refreshObservable.next({}); // trigger the observable for updating the table}
+    //     }
+    //   });
+  }
+  putIntoCart(id: string) {
+    
+  }
+  ngOnDestroy(): void {
+    console.log('table-list destroy');
+    this.makeTableWhereConditionService.resetService();
   }
 }
 export const resetUser: User = {

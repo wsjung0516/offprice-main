@@ -19,7 +19,7 @@ export class UserSaleListService {
     where?: any,
     whereOR?: any
   ): Observable<UserSaleList[]> {
-    console.log('getUserSaleList', skip, take, orderBy, where, whereOR)
+    // console.log('getUserSaleList', skip, take, orderBy, where, whereOR)
     const whereData = this.buildWhereData(where, whereOR);
     
     const order = JSON.stringify(orderBy);
@@ -30,7 +30,7 @@ export class UserSaleListService {
     // console.log('saleLists', url)
     return this.http.get<UserSaleList[]>(url).pipe(
       // tap(data => console.log('data: ', data)),
-      shareReplay(1)
+      // shareReplay(1)
     );
   }
 

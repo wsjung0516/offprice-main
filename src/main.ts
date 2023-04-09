@@ -13,6 +13,27 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthModule } from './app/auth/keycloak/auth.module';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { RouterModule, Routes, RouteReuseStrategy } from '@angular/router';
+
+class NoReuseStrategy implements RouteReuseStrategy {
+  shouldDetach(): boolean {
+    return false;
+  }
+
+  store(): void {}
+
+  shouldAttach(): boolean {
+    return false;
+  }
+
+  retrieve(): null {
+    return null;
+  }
+
+  shouldReuseRoute(): boolean {
+    return false;
+  }
+}
 if (environment.production) {
   enableProdMode();
 }
@@ -37,6 +58,7 @@ bootstrapApplication(AppComponent, {
       multi: true,
    },
    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+   { provide: RouteReuseStrategy, useClass: NoReuseStrategy },
    MatSnackBar
   ]
 }).catch((err) => console.error(err));

@@ -8,16 +8,19 @@ import {
   map,
   merge,
   Observable,
+  of,
   skip,
   startWith,
   Subject,
   switchMap,
   tap,
+  zip,
 } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ShowMenuDialogService } from './show-menu-dialog.service';
 import { SaleListService } from './../../modules/dashboard/components/sale-list/sale-list.service';
 import { SaleList } from '../models/sale-list.model';
+import { LocalStorageService } from './local-storage.service';
 
 @UntilDestroy()
 @Injectable({
@@ -28,7 +31,10 @@ export class MakeWhereConditionService {
 
   resetImages = new Subject<any>();
   refreshObservable$: Observable<any>;
-  displayMode = 'grid | list';
+  private displayModeSubject = new Subject<number>();
+  displayMode$: Observable<number> = this.displayModeSubject.asObservable();
+  displayMode = '';
+
 
   //scrollObservable: BehaviorSubject<any>;
   // scrollObservable$: Observable<any>;
@@ -41,16 +47,23 @@ export class MakeWhereConditionService {
 
   constructor(
     private saleListService: SaleListService,
-    private showMenuDialogService: ShowMenuDialogService
+    private showMenuDialogService: ShowMenuDialogService,
+    private localStorageService: LocalStorageService,
   ) {
     // this.makeObservableService.makeWhereObservable();
     this.makeWhereObservable();
     setTimeout(() => {
       this.makeSortNWhereCondition().subscribe((data: any) => {
-        // console.log('data:--------- ', data)
+        // console.log('make-where data:--------- ', data)
         this.condition.next(data);
       });
-    }, 1000);
+      this.localStorageService.storageItem$.subscribe((item) => {
+        if (item && item.key === 'displayMode') {
+          this.displayModeSubject.next(item.value);
+        }
+      });
+
+    }, 100);
   }
   eventCount = 0;
   searchConditionObservable$: Observable<any>;
@@ -78,7 +91,7 @@ export class MakeWhereConditionService {
   private makeWhereObservable() {
     let andArray: any[] = [];
     let orArray: any[] = [];
-
+    const displayMode$ = of(localStorage.getItem('displayMode'));
     /**
      * 1. display dialog menu (category, size, price, material, search period)
      * 2. select one item and call the behavior subject, which is at the service( show-menu-dialog.service)
@@ -96,6 +109,7 @@ export class MakeWhereConditionService {
     } = this.showMenuDialogService;
 
     this.searchConditionObservable$ = combineLatest([
+      displayMode$,
       vendor$,
       price$,
       category$,
@@ -105,11 +119,12 @@ export class MakeWhereConditionService {
       input_keyword$,
     ]).pipe(
       untilDestroyed(this),
-      tap(() => {
+      tap((val) => {
         this.displayMode = localStorage.getItem('displayMode');
-        console.log('make-when displayMode', this.displayMode);
+        // console.log('make-where : ', val, this.displayMode);
       }),
       filter(() => this.displayMode === 'grid'),
+      // filter(([displayMode]) => displayMode === 'grid'),
       map(this.buildWhereCondition),
       tap((val) => {
         this.eventCount++;
@@ -129,6 +144,7 @@ export class MakeWhereConditionService {
   }
 
   private buildWhereCondition([
+    ,
     vendor,
     price,
     category,
@@ -136,12 +152,11 @@ export class MakeWhereConditionService {
     material,
     search_period,
     input_keyword,
-  ]: [string, string, string, string, string, string, string]): {
+  ]: [string, string, string, string, string, string, string, string]): {
     where: { and: any[]; or: any[] };
   } {
     const andArray: any[] = [];
     const orArray: any[] = [];
-    // console.log('input_keyword', input_keyword)
 
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
@@ -167,6 +182,7 @@ export class MakeWhereConditionService {
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ description: { contains: input_keyword } });
     }
+
     return { where: { and: andArray, or: orArray } };
   }
 
@@ -191,7 +207,7 @@ export class MakeWhereConditionService {
     whereOR: any[];
     scroll: {};
   } {
-    // console.log('scrollData, searchData', scrollData, searchData)
+    console.log('make-where data-----------' );
     let where: any[] = [];
     let whereOR: any[] = [];
     let scroll: { skip: 0; take: 20 };
@@ -227,5 +243,8 @@ export class MakeWhereConditionService {
       where,
       whereOR
     );
+  }
+  resetService() {
+    this.showMenuDialogService.resetService();
   }
 }

@@ -5,8 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { ESearchPeriod } from 'src/app/core/constants/data-define';
 import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-
+@UntilDestroy()
 @Component({
   selector: 'app-search-period',
   standalone: true,
@@ -50,12 +51,26 @@ export class SearchPeriodComponent {
     private chipsKeywordService: ChipsKeywordService
 
   ) {}
+  ngOnInit() {
+    this.showMenuDialogService.reset_search_period$.pipe(untilDestroyed(this))
+    .subscribe(() => {
+      this.reset();
+    });
+  }
+
   selectValue(data: any) {
     const value = { key: 'search_period', value: data.key };
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     this.showMenuDialogService.search_period.next(data.value);
+    if( data.key === 'All' ) {
+      this.reset();
+    }
     // this.favoriteSeason = data;
+  }
+  reset() {
+    // this.selectValue({key: 'All'});
+    this.favoritePeriod = 'All';
   }
 
 }

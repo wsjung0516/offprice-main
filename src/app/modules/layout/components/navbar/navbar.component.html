@@ -24,31 +24,23 @@
           >Off<span class="text-3xl text-blue-700">Price</span></span
         >
       </div>
-
+      <div class="flex items-center justify-center w-10 h-10 rounded bg-blue-800">
+        <button mat-icon-button (click)="gotoHome()">
+          <mat-icon class="text-white mt-2">home</mat-icon>
+        </button>
+      </div>
       <!-- Desktop Menu -->
       <div class="hidden space-x-10 sm:order-3 md:flex">
-        <app-navbar-menu></app-navbar-menu>
+        <!-- <app-navbar-menu></app-navbar-menu> -->
       </div>
 
       <!-- Profile menu -->
       <div class="items-center justify-end sm:order-4 md:flex md:flex-1 lg:w-0">
         <!-- Toggle display mode grid or list -->
         <ng-container *ngIf="sSize !== 'XSmall'">
-          <button
-            class="w-10 h-10 rounded-md bg-blue-800 text-white"
-            mat-icon-button
-            aria-label="off price store"
-            (click)="toggleDisplayMode()"
-          >
-            <div class="mt-2">
-              <ng-container *ngIf="displayMode === 'grid'; else list">
-                <mat-icon>format_list_numbered</mat-icon>
-              </ng-container>
-              <ng-template #list>
-                <mat-icon>grid_on</mat-icon>
-              </ng-template>
-            </div>
-          </button>
+          <div class="text-white mr-4 mt-3 ">
+            <mat-icon matBadge="15" matBadgeColor="warn">add_shopping_cart</mat-icon>
+          </div>
         </ng-container>
         <app-profile-menu></app-profile-menu>
       </div>

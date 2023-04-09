@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 // import { MenuItem } from 'src/app/core/models/menu.model';
 import { ThemeService } from 'src/app/core/services/theme.service';
@@ -27,6 +27,7 @@ import { SearchPeriodComponent } from './search-period/search-period.component';
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent implements OnInit {
   public showSideBar$: Observable<boolean> = new Observable<boolean>();

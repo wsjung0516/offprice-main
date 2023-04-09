@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MenuItem } from 'src/app/core/models/menu.model';
 import { MenuService } from 'src/app/core/services/menu.service';
@@ -14,6 +14,7 @@ import { NavbarSubmenuComponent } from './../navbar-submenu/navbar-submenu.compo
   selector: 'app-navbar-menu',
   templateUrl: './navbar-menu.component.html',
   styleUrls: ['./navbar-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarMenuComponent implements OnInit {
   public pagesMenu$: Observable<MenuItem[]> = new Observable<MenuItem[]>();

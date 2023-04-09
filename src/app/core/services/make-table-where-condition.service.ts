@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, filter, map, merge, Observable, skip, startWith, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, merge, Observable, of, skip, startWith, Subject, switchMap, tap, zip, distinctUntilChanged } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ShowMenuDialogService } from './show-menu-dialog.service';
 import { UserSaleListService } from '../../modules/dashboard/components/sale-list/user-sale-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserSaleList } from '../models/user-sale-list.model';
+import { LocalStorageService } from './local-storage.service';
 
 @UntilDestroy()
 @Injectable({
@@ -17,13 +18,16 @@ export class MakeTableWhereConditionService {
   sort: MatSort;
   paginator: MatPaginator;
   refreshObservable$: Observable<any>;
-  displayMode = 'grid | list';
+  private displayModeSubject = new BehaviorSubject<string>('grid');
+  displayMode$: Observable<string> = this.displayModeSubject.asObservable();
+  displayMode = '';
 
 
 constructor(
   //private makeObservableService: MakeObservableService,
   private showMenuDialogService: ShowMenuDialogService,
   private userSaleListService: UserSaleListService,
+  private localStorageService: LocalStorageService,
   ) {}
   eventCount = 0;
   searchConditionObservable$: Observable<any>;;
@@ -36,11 +40,24 @@ constructor(
     this.paginator = paginator;
 
     this.makeWhereObservable();
+
     setTimeout(() => {
-      this.makeTableWhereCondition().subscribe((data: UserSaleList[]) => {
-        console.log('data-2', data);
+      this.makeTableWhereCondition()
+      .pipe(untilDestroyed(this))
+      .subscribe((data: UserSaleList[]) => {
+        // console.log('make-table-where', data);
         this.searchResult.next(data);
       });
+      this.localStorageService.storageItem$.pipe(
+        tap((item) => {
+        })
+        ).subscribe((item) => {
+          if (item && item.key === 'displayMode') {
+          // console.log('item', item);
+          this.displayModeSubject.next(item.value);
+        }
+      });
+
     }, 100);
   }
   setRefreshObservable(refreshObservable: Observable<any>) {
@@ -60,6 +77,8 @@ constructor(
   private makeWhereObservable() {
     let andArray: any[] = [];
     let orArray: any[] = [];
+    // const displayMode$ = of(localStorage.getItem('displayMode'));
+    // const displayMode$ = new BehaviorSubject<string>(localStorage.getItem('displayMode') || 'list');
 
     /**
      * 1. display dialog menu (category, size, price, material, search period)
@@ -78,6 +97,7 @@ constructor(
     } = this.showMenuDialogService;
 
     this.searchConditionObservable$ = combineLatest([
+      // this.displayMode$,
       vendor$,
       price$,
       category$,
@@ -85,17 +105,19 @@ constructor(
       material$,
       search_period$,
       input_keyword$,
-    ]).pipe(untilDestroyed(this),
-      tap(() => {
+    ]).pipe( untilDestroyed(this),
+      tap((val) => {
         this.displayMode = localStorage.getItem('displayMode');
-        console.log('make table displayMode', this.displayMode);
+        // console.log('make-table tap', val,this.displayMode);
       }),
       filter(() => this.displayMode === 'list'),
+      // filter(([displayMode]) => displayMode === 'list'),
       map(this.buildWhereCondition),
     );
   }
 
   private buildWhereCondition([
+    
     vendor,
     price,
     category,
@@ -156,7 +178,7 @@ constructor(
       skip(1),
       startWith({}),
       map((data: any) => {
-        // console.log('data', data);
+        console.log('make-table data *********', data);
         // where and condition event is triggered. (price, category, size, material, search_period)
         if (data.where && data.where['and'].length > 0) {
           where = data.where['and'];
@@ -194,6 +216,9 @@ constructor(
         );
       })
     );
+  }
+  resetService() {
+    this.showMenuDialogService.resetService();
   }
 
 }

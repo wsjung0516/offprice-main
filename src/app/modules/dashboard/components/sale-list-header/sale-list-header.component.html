@@ -1,15 +1,35 @@
 <ng-container *ngIf="sSize !== 'XSmall'">
-  <div class="mt-3">
-    <div class="flex items-center sm:justify-start space-x-2">
-      <div class="w-80">
-        <div class="relative">
-          <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
+  <div class="w-full">
+
+    <div class="w-full mt-3 flex justify-between">
+      <div class="flex items-center justify-start space-x-2 " >
+        <div class="w-80">
+          <div class="relative">
+            <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
+          </div>
         </div>
-      </div>
   
-      <ng-container *ngTemplateOutlet="showChips"></ng-container>
-      <p class="font-bold">{{ searchItemLength }}</p>
-    </div>
+        <ng-container *ngTemplateOutlet="showChips"></ng-container>
+        <p class="font-bold">{{ searchItemLength }}</p>
+      </div>
+      <div class="flex items-center" >
+        <button
+          class="w-10 h-10 rounded-md bg-blue-600 text-white"
+          mat-icon-button
+          aria-label="off price store"
+          (click)="toggleDisplayMode()"
+        >
+          <div class="mt-2">
+            <ng-container *ngIf="displayMode === 'grid'; else list">
+              <mat-icon>format_list_numbered</mat-icon>
+            </ng-container>
+            <ng-template #list>
+              <mat-icon>grid_on</mat-icon>
+            </ng-template>
+          </div>
+        </button>
+      </div>
+  </div>
   </div>
 </ng-container>
 <!-- <ng-container *ngIf="currentScreenSize === 'XSmall'"> -->
@@ -35,11 +55,13 @@
 </ng-container>
 <!-- Search input button -->
 <ng-template #showInputButton>
-  <div
+  <app-input-keyword></app-input-keyword>
+  <!-- <div
     class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
   ></div>
   <input
-    type="search" [(ngModel)]="inputKeyword"
+    type="search"
+    [(ngModel)]="inputKeyword"
     #inputSearch
     id="default-search"
     class="block p-4 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -52,7 +74,7 @@
     (click)="onInputSearchKeyword(inputSearch.value)"
   >
     <mat-icon>search</mat-icon>
-  </button>
+  </button> -->
 </ng-template>
 <!-- chips -->
 <ng-template #showChips>
@@ -68,4 +90,3 @@
     </mat-chip>
   </mat-chip-listbox>
 </ng-template>
-

@@ -8,7 +8,8 @@ import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.se
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+@UntilDestroy()
 @Component({
   selector: 'app-category-menu',
   standalone: true,
@@ -74,6 +75,11 @@ export class CategoryMenuComponent implements OnInit {
   ngOnInit() {
     this.onSelect(this.selected_category);
     this.subscribeToLocalStorageItem()
+    this.showMenuDialogService.reset_category$.pipe(untilDestroyed(this))
+    .subscribe(() => {
+      this.reset();
+    });
+
   }
   onScroll(distance: number) {
     const scrollEl = document.querySelector('.scroll-container') as HTMLElement;
@@ -101,7 +107,7 @@ export class CategoryMenuComponent implements OnInit {
       this.localStorageService.storageItem$.subscribe((item) => {
         // console.log('category-- called from localstorage', item)
         if (item && item.key === 'category') {
-          this.onSelect({key:'All',value:'All'});
+          this.onSelect({key:'All'});
           this.cd.markForCheck();
         }
       });
@@ -110,5 +116,8 @@ export class CategoryMenuComponent implements OnInit {
     if (this.storageItemSubscription) {
       this.storageItemSubscription.unsubscribe();
     }
+  }
+  reset() {
+    
   }
 }

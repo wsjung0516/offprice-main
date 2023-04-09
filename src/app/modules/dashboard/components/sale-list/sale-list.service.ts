@@ -19,7 +19,7 @@ export class SaleListService {
     where?: any,
     whereOR?: any
   ): Observable<SaleList[]> {
-    console.log('getSaleList', skip, take, orderBy, where, whereOR)
+    // console.log('getSaleList', skip, take, orderBy, where, whereOR)
     const whereData = this.buildWhereData(where, whereOR);
     
     const order = JSON.stringify(orderBy);
@@ -27,10 +27,10 @@ export class SaleListService {
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
     }
-    // console.log('saleLists', url)
+    // console.log('getSaleLists- url', url)
     return this.http.get<SaleList[]>(url).pipe(
       // tap(data => console.log('data: ', data)),
-      shareReplay(1)
+      // shareReplay(1)
     );
   }
 
@@ -53,7 +53,7 @@ export class SaleListService {
 
     return this.http.get(url).pipe(
       map((data: any) => data ),
-      shareReplay(1)
+      // shareReplay(1)
     )
   }
   // getConditionalSaleListLength(where: any): Observable<SaleList[]> {

@@ -1,4 +1,4 @@
-<div class="w-full mt-20">
+<div class="w-full mt-4">
   <div class="ml-2 overflow-auto rounded-lg shadow mat-elevation-z8">
     <table class="w-full" mat-table [dataSource]="dataSource" matSort>
       <!--  -->
@@ -14,10 +14,21 @@
               column !== 'action' &&
               column !== 'image_url' &&
               column !== 'created_at' &&
-              column !== 'first_name'
+              column !== 'first_name' &&
+              column !== 'description'
             "
           >
             <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
+          </ng-container>
+          <ng-container *ngIf="column === 'description'">
+            <td mat-cell *matCellDef="let row">
+              <div
+                class="w-10 h-10 rounded-full"
+                descriptionDetail
+                [html]="row[column]"
+              > {{ row[column] }}
+              </div>
+            </td>
           </ng-container>
           <ng-container *ngIf="column === 'image_url'">
             <td mat-cell *matCellDef="let row">
@@ -45,9 +56,17 @@
               <a
                 mat-icon-button
                 class="text-green-600"
-                matTooltip="Edit List"
+                matTooltip="Details Item"
               >
                 <mat-icon (click)="detailSaleItem(row)">search</mat-icon>
+              </a>
+              
+              <a
+                mat-icon-button
+                class="text-blue-600"
+                matTooltip="Put Into Cart"
+              >
+                <mat-icon (click)="putIntoCart(row)">add_shopping_cart</mat-icon>
               </a>
             </td>
           </ng-container>

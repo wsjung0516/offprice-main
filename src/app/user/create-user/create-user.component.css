@@ -3,3 +3,12 @@
     margin-left: auto;
     margin-right: auto;
 }
+.mat-mdc-select {
+    z-index: 1001 !important;
+}
+.mat-mdc-form-field {
+    z-index: 1001 !important;
+}
+.cdk-overlay-container {
+    z-index: 9999 !important;
+}

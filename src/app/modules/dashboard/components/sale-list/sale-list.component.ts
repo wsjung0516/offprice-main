@@ -5,6 +5,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
 import {
   Observable,
@@ -55,7 +56,7 @@ import { SaleList } from 'src/app/core/models/sale-list.model';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SaleListComponent implements OnInit, AfterViewInit {
+export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('viewport',{static: false}) viewport: CdkVirtualScrollViewport;
   // 
   currentScreenSize: string;
@@ -117,7 +118,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       this.getConditionalSaleListLength();
 
     })
-    // this.makeObservableService.resetImages$.pipe(untilDestroyed(this))
+    //
     this.makeWhereConditionService.resetImages$.pipe(untilDestroyed(this))
     .subscribe((data:any) => {
       this.images = [];
@@ -144,6 +145,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy() {
     // console.log('sale list destroy');
+    this.makeWhereConditionService.resetService()
   }
 
   scrollToTop() {

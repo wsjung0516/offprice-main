@@ -23,17 +23,22 @@ import {
 import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
 import { MatBadgeModule } from '@angular/material/badge';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
+import { InputKeywordComponent } from './../../../layout/components/sidebar/input-keyword/input-keyword.component';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
+CommonModule,
     MatIconModule,
     MatChipsModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatBadgeModule,
-    FormsModule
+    FormsModule,
+    RouterModule,
+    InputKeywordComponent
   ],
   selector: 'app-sale-list-header',
   templateUrl: './sale-list-header.component.html',
@@ -49,6 +54,7 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaleListHeaderComponent implements OnInit, OnDestroy {
+  displayMode = 'grid';
   keywords: SearchKeyword[] = [];
   searchItemLength: number = 0;
   private storageItemSubscription: Subscription | undefined;
@@ -61,7 +67,10 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private cd: ChangeDetectorRef,
     private chipsKeywordService: ChipsKeywordService,
-    private showMenuDialogService: ShowMenuDialogService
+    private showMenuDialogService: ShowMenuDialogService,
+    private router: Router,
+    private removeChipsKeywordService: RemoveChipsKeywordService
+
   ) {
     this.showMobileMenu$ = this.menuService.showMobileMenu$;
     this.screenSize$ = this.screenSizeService.screenSize$;
@@ -96,58 +105,34 @@ export class SaleListHeaderComponent implements OnInit, OnDestroy {
 
   subscribeToLocalStorageItem(): void {
     this.storageItemSubscription =
-      this.localStorageService.storageItem$.subscribe((item) => {
+      this.localStorageService.storageItem$.pipe(untilDestroyed(this)).subscribe((item) => {
         if (item && item.key === 'searchItemsLength') {
           this.searchItemLength = +item.value;
           this.cd.markForCheck();
         }
       });
   }
-  onInputSearchKeyword(data: string): void {
-    if (data === '') {
-      const value = { key: 'input_keyword', value: data };
-      this.chipsKeywordService.removeChipKeyword(value);
-      return;
-    }
-    const value = { key: 'input_keyword', value: data };
-    this.chipsKeywordService.removeChipKeyword(value);
-    this.chipsKeywordService.addChipKeyword(value);
-    // To make observable value change, which will be used make-where-condition.service.ts
-    this.showMenuDialogService.input_keyword.next(data);
-    // this.favoriteSeason = data;
-  }
-  inputKeyword: string = '';
   // When the user clicks close buttion in the chips.
   removeChipsKeyword(keyword: SearchKeyword) {
-    const value = { key: keyword['key'], value: keyword['value'] };
-    // Remove chip from the chips array
-    this.chipsKeywordService.removeChipKeyword(value);
-
-    const keywordResetMap: { [key: string]: () => void } = {
-      price: () => this.showMenuDialogService.price.next('All'),
-      category: () => {
-        this.showMenuDialogService.category.next('All');
-        // To set 'All' button to active whenever remove chips keyword in category menu
-        // This value will be used in category menu component
-        this.localStorageService.setItem('category', 'All');
-    
-      },
-      size: () => this.showMenuDialogService.size.next('All'),
-      material: () => this.showMenuDialogService.material.next('All'),
-      search_period: () => this.showMenuDialogService.search_period.next('All'),
-      input_keyword: () => {
-        this.showMenuDialogService.input_keyword.next('');
-        // clear search keyword
-        this.inputKeyword = '';
-        this.cd.detectChanges();
-      },
-    };
-
-    const key = keyword['key'];
-
-    if (keywordResetMap.hasOwnProperty(key)) {
-      keywordResetMap[key]();
+    this.removeChipsKeywordService.resetSearchKeyword(keyword);
+    if( keyword['key'] === 'input_keyword' ) {
+      // To clear the input field.
+      // this.inputKeyword = '';
+      // this.cd.detectChanges();
     }
+  }
+
+  toggleDisplayMode(): void {
+    if( this.displayMode === 'grid' ) {
+      this.displayMode = 'list';
+      this.router.navigate(['dashboard/table_list']);
+    } else {
+      this.displayMode = 'grid';
+      this.router.navigate(['dashboard/sale_list']);
+    }
+    localStorage.setItem('displayMode', this.displayMode);
+    // this.localStorageService.setItem('displayMode', this.displayMode);
+    this.showMenuDialogService.gotoHome.next('')
   }
 
   ngOnDestroy() {

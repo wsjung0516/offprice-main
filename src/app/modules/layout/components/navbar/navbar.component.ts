@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { MenuService } from '../../../../core/services/menu.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CommonModule } from '@angular/common';
@@ -10,17 +10,22 @@ import { Observable } from 'rxjs';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Router, RouterModule } from '@angular/router';
+import { MatBadgeModule } from '@angular/material/badge';
+import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
+import { PriceRangeComponent } from './../sidebar/price-range/price-range.component';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+CommonModule,
     AngularSvgIconModule,
     NavbarMenuComponent,
     NavbarMobileComponent,
     ProfileMenuComponent,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    MatBadgeModule
   ],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -33,7 +38,8 @@ export class NavbarComponent implements OnInit {
   // public screenSize$: Observable<any>;
   constructor(private menuService: MenuService, 
     private screenSizeService: ScreenSizeService,
-    private router: Router,
+    private showMenuDialogService: ShowMenuDialogService,
+    private removeChipsKeywordService: RemoveChipsKeywordService,
     private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -43,20 +49,41 @@ export class NavbarComponent implements OnInit {
       this.sSize = size;
       this.cd.detectChanges();
     });
+    this.showMenuDialogService.gotoHome$
+    .pipe(untilDestroyed(this))
+    .subscribe(() => {
+      this.gotoHome();
+    });
 
   }
 
   public toggleMobileMenu(): void {
     this.menuService.showMobileMenu = true;
   }
-  toggleDisplayMode(): void {
-    if( this.displayMode === 'grid' ) {
-      this.displayMode = 'list';
-      this.router.navigate(['dashboard/table_list']);
-    } else {
-      this.displayMode = 'grid';
-      this.router.navigate(['dashboard/sale_list']);
-    }
-    localStorage.setItem('displayMode', this.displayMode);
+  gotoHome() {
+    // To reset the search keyword and positioned selection button to the 'All'.
+    this.resetKeyword();
+    
+  }
+  resetKeyword() {
+    const service = this.showMenuDialogService;
+    const filters: any[] = [
+    //   { name: 'vendor', subject: service.vendor, defaultValue: 'All' },
+      { reset: service.reset_input_keyword ,name: 'input_keyword', subject: service.input_keyword, defaultValue: '' },
+      { reset: service.reset_price, name: 'price', subject: service.price, defaultValue: 'All' },
+      { reset: service.reset_category, name: 'category', subject: service.category, defaultValue: 'All' },
+      { reset: service.reset_size, name: 'size', subject: service.size, defaultValue: 'All' },
+      { reset: service.reset_material,name: 'material', subject: service.material, defaultValue: 'All' },
+      { reset: service.reset_search_period, name: 'search_period', subject: service.search_period, defaultValue: 'All' }
+    ];
+    filters.forEach( filter => {
+      const { subject, defaultValue, name } = filter;
+      // console.log('subject', subject.value, name)
+      if (subject.value !== defaultValue) {
+        filter.reset.next({});
+        this.removeChipsKeywordService.resetSearchKeyword({ key: name, value: '' });
+      }
+    });
+
   }
 }

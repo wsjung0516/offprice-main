@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { APrice } from 'src/app/core/constants/data-define';
 import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+@UntilDestroy()
 @Component({
   selector: 'app-price',
   standalone: true,
@@ -50,6 +52,13 @@ export class PriceRangeComponent {
     private showMenuDialogService: ShowMenuDialogService,
     private chipsKeywordService: ChipsKeywordService
   ) {}
+  ngOnInit() {
+    this.showMenuDialogService.reset_price$.pipe(untilDestroyed(this))
+    .subscribe(() => {
+      this.reset();
+    });
+  }
+
   selectValue(price: any) {
     const value = { key: 'price', value: price.key };
     this.priceRange = price.value;
@@ -57,5 +66,10 @@ export class PriceRangeComponent {
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     // this.favoriteSeason = data;
+  }
+  reset() {
+    // this.selectValue({ key: 'all'});
+    
+    this.priceRange = 'All';
   }
 }

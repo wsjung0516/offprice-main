@@ -30,19 +30,18 @@ import { User } from '../models/user.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { format } from 'date-fns';
 import { UserService } from '../user.service';
-import { DialogRef, DialogService } from '@ngneat/dialog';
+// import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   Observable,
 } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 interface Data {
   user: Partial<User>;
   disabled: boolean;
   mode: string;
 }
 import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
-@UntilDestroy()
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 @Component({
   selector: 'app-create-user',
   standalone: true,
@@ -59,7 +58,8 @@ import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/con
     MatCheckboxModule,
     MatTooltipModule,
     ConfirmDialogComponent,
-    
+    MatSelectModule,
+    MatDialogModule
     // NzModalModule,
   ],
   templateUrl: './create-user.component.html',
@@ -67,7 +67,7 @@ import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/con
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateUserComponent implements OnInit, AfterViewInit {
-  ref: DialogRef<Data> = inject(DialogRef);
+  // ref: DialogRef<Data> = inject(DialogRef);
 
   title: string = 'Create User';
   userId: string;
@@ -94,8 +94,10 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
   });
   constructor(
     private userService: UserService,
+    public dialogRef: MatDialogRef<CreateUserComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData,
   ) {}
-  private dialog = inject(DialogService);
+  // private dialog = inject(DialogService);
   isDirty$: Observable<boolean>;
 
   beforeClose$: Observable<boolean>;
@@ -103,9 +105,9 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     setTimeout(() => {
-      this.mode = this.ref.data.mode;
-      this.user = this.ref.data.user;
-      this.disabled = this.ref.data.disabled;
+      // this.mode = this.ref.data.mode;
+      // this.user = this.ref.data.user;
+      // this.disabled = this.ref.data.disabled;
       this.displayUser(this.user);
 
     }, 0);
@@ -130,7 +132,8 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
       .createUser(this.contactForm.value)
       .subscribe((response: any) => {
         console.log('response', response);
-        this.ref.close(true);
+        this.dialogRef.close(true);
+        // this.ref.close(true);
       });
   }
   updateUser() {
@@ -139,7 +142,8 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
       .updateUser(this.user.user_id, this.contactForm.value)
       .subscribe((response: any) => {
         console.log('response', response);
-        this.ref.close(true);
+        this.dialogRef.close(true);
+        // this.ref.close(true);
       });
   }
   deleteUser() {

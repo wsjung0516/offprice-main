@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
@@ -41,6 +41,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class SearchPeriodComponent {
@@ -48,7 +49,8 @@ export class SearchPeriodComponent {
   periods: typeof ESearchPeriod = ESearchPeriod;
   constructor(
     private showMenuDialogService: ShowMenuDialogService,
-    private chipsKeywordService: ChipsKeywordService
+    private chipsKeywordService: ChipsKeywordService,
+    private cd: ChangeDetectorRef
 
   ) {}
   ngOnInit() {
@@ -71,6 +73,7 @@ export class SearchPeriodComponent {
   reset() {
     // this.selectValue({key: 'All'});
     this.favoritePeriod = 'All';
+    this.cd.detectChanges();
   }
 
 }

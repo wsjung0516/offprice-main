@@ -206,7 +206,6 @@ export class MakeWhereConditionService {
     whereOR: any[];
     scroll: {};
   } {
-    console.log('make-where data-----------' );
     let where: any[] = [];
     let whereOR: any[] = [];
     let scroll: { skip: 0; take: 20 };

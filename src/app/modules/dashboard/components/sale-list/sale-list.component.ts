@@ -55,6 +55,7 @@ import { SaleList } from 'src/app/core/models/sale-list.model';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MakeWhereConditionService, SaleListService],
 })
 export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('viewport',{static: false}) viewport: CdkVirtualScrollViewport;

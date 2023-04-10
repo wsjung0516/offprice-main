@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
@@ -44,13 +44,15 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PriceRangeComponent {
   priceRange: any;
   priceRanges = [...APrice];
   constructor(
     private showMenuDialogService: ShowMenuDialogService,
-    private chipsKeywordService: ChipsKeywordService
+    private chipsKeywordService: ChipsKeywordService,
+    private cd: ChangeDetectorRef
   ) {}
   ngOnInit() {
     this.showMenuDialogService.reset_price$.pipe(untilDestroyed(this))
@@ -71,5 +73,6 @@ export class PriceRangeComponent {
     // this.selectValue({ key: 'all'});
     
     this.priceRange = 'All';
+    this.cd.detectChanges();
   }
 }

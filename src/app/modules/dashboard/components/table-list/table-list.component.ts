@@ -46,6 +46,7 @@ import { User } from 'src/app/user/models/user.model';
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MakeTableWhereConditionService, UserSaleListService]
 })
 export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -102,7 +103,8 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
   ngAfterViewInit(): void {
     this.makeTableWhereConditionService.initializeWhereCondition(
       this.sort,

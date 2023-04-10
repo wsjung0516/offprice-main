@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, map, merge, Observable, of, skip, startWith, Subject, switchMap, tap, zip, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, merge, Observable, of, skip, startWith, Subject, switchMap, tap, zip, distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ShowMenuDialogService } from './show-menu-dialog.service';
 import { UserSaleListService } from '../../modules/dashboard/components/sale-list/user-sale-list.service';
@@ -62,6 +62,13 @@ constructor(
   }
   setRefreshObservable(refreshObservable: Observable<any>) {
     this.refreshObservable$ = refreshObservable;
+  }
+  resetSort() {
+    if( !!this.sort) {
+      this.sort.active = 'created_at';
+      this.sort.direction = 'desc';
+      this.sort.sortChange.emit({ active: this.sort.active, direction: this.sort.direction });
+    }
   }
 
   /**
@@ -175,10 +182,10 @@ constructor(
       this.refreshObservable$
     ).pipe(
       untilDestroyed(this),
+      distinctUntilKeyChanged('where'),
       skip(1),
       startWith({}),
       map((data: any) => {
-        console.log('make-table data *********', data);
         // where and condition event is triggered. (price, category, size, material, search_period)
         if (data.where && data.where['and'].length > 0) {
           where = data.where['and'];

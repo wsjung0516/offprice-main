@@ -1,4 +1,4 @@
-import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sizes } from 'src/app/core/constants/data-define';
 import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
@@ -40,6 +40,7 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectSizeComponent {
   sizes = Sizes;

@@ -13,7 +13,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
-import { PriceRangeComponent } from './../sidebar/price-range/price-range.component';
+import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -39,6 +39,7 @@ export class NavbarComponent implements OnInit {
     private screenSizeService: ScreenSizeService,
     private showMenuDialogService: ShowMenuDialogService,
     private removeChipsKeywordService: RemoveChipsKeywordService,
+    private makeTableWhereConditionService: MakeTableWhereConditionService,
     private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -61,6 +62,7 @@ export class NavbarComponent implements OnInit {
   gotoHome() {
     // To reset the search keyword and positioned selection button to the 'All'.
     this.resetKeyword();
+    this.makeTableWhereConditionService.resetSort();
     
   }
   resetKeyword() {

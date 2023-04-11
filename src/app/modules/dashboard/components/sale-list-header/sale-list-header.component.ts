@@ -21,7 +21,7 @@ import {
   ChipsKeywordService,
   SearchKeyword,
 } from 'src/app/core/services/chips-keyword.service';
-import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { MatBadgeModule } from '@angular/material/badge';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -31,7 +31,7 @@ import { InputKeywordComponent } from './../../../layout/components/sidebar/inpu
 @Component({
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     MatIconModule,
     MatChipsModule,
     MatFormFieldModule,
@@ -39,7 +39,7 @@ CommonModule,
     MatBadgeModule,
     FormsModule,
     RouterModule,
-    InputKeywordComponent
+    InputKeywordComponent,
   ],
   selector: 'app-sale-list-header',
   templateUrl: './sale-list-header.component.html',
@@ -50,11 +50,13 @@ CommonModule,
         flex-wrap: wrap;
         align-items: center;
       }
-      `,
+    `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SaleListHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SaleListHeaderComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   displayMode = '';
   keywords: SearchKeyword[] = [];
   searchItemLength: number = 0;
@@ -68,10 +70,9 @@ export class SaleListHeaderComponent implements OnInit, AfterViewInit, OnDestroy
     private localStorageService: LocalStorageService,
     private cd: ChangeDetectorRef,
     private chipsKeywordService: ChipsKeywordService,
-    private showMenuDialogService: ShowMenuDialogService,
+    private SharedMenuObservableService: SharedMenuObservableService,
     private router: Router,
     private removeChipsKeywordService: RemoveChipsKeywordService
-
   ) {
     this.showMobileMenu$ = this.menuService.showMobileMenu$;
     this.screenSize$ = this.screenSizeService.screenSize$;
@@ -108,8 +109,9 @@ export class SaleListHeaderComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   subscribeToLocalStorageItem(): void {
-    this.storageItemSubscription =
-      this.localStorageService.storageItem$.pipe(untilDestroyed(this)).subscribe((item) => {
+    this.storageItemSubscription = this.localStorageService.storageItem$
+      .pipe(untilDestroyed(this))
+      .subscribe((item) => {
         if (item && item.key === 'searchItemsLength') {
           this.searchItemLength = +item.value;
           this.cd.markForCheck();
@@ -119,7 +121,7 @@ export class SaleListHeaderComponent implements OnInit, AfterViewInit, OnDestroy
   // When the user clicks close buttion in the chips.
   removeChipsKeyword(keyword: SearchKeyword) {
     this.removeChipsKeywordService.resetSearchKeyword(keyword);
-    if( keyword['key'] === 'input_keyword' ) {
+    if (keyword['key'] === 'input_keyword') {
       // To clear the input field.
       // this.inputKeyword = '';
       // this.cd.detectChanges();
@@ -127,7 +129,7 @@ export class SaleListHeaderComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   toggleDisplayMode(): void {
-    if( this.displayMode === 'grid' ) {
+    if (this.displayMode === 'grid') {
       this.displayMode = 'list';
       this.router.navigate(['dashboard/table_list']);
     } else {
@@ -137,7 +139,7 @@ export class SaleListHeaderComponent implements OnInit, AfterViewInit, OnDestroy
     this.cd.detectChanges();
     localStorage.setItem('displayMode', this.displayMode);
     // this.localStorageService.setItem('displayMode', this.displayMode);
-    this.showMenuDialogService.gotoHome.next('')
+    this.SharedMenuObservableService.gotoHome.next('');
   }
 
   ngOnDestroy() {

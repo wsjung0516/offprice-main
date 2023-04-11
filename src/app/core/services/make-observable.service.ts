@@ -1,26 +1,36 @@
 import { Injectable } from '@angular/core';
-import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
-import { BehaviorSubject, combineLatest, map, Observable, Subject, tap } from 'rxjs';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  Subject,
+  tap,
+} from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 @UntilDestroy()
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MakeObservableService {
-  searchConditionObservable$: Observable<any>
+  searchConditionObservable$: Observable<any>;
   resetImages = new Subject<any>();
   get resetImages$(): Observable<any> {
     return this.resetImages.asObservable();
   }
   scrollObservable = new BehaviorSubject<any>({
-    skip: 0, take: 20,
+    skip: 0,
+    take: 20,
   });
   scrollObservable$ = this.scrollObservable.asObservable();
   setScrollObservable(value: any) {
     this.scrollObservable.next(value);
   }
   eventCount = 0;
-  constructor(private showMenuDialogService: ShowMenuDialogService) { }
+  constructor(
+    private SharedMenuObservableService: SharedMenuObservableService
+  ) {}
   makeWhereObservable() {
     let andArray: any[] = [];
     let orArray: any[] = [];
@@ -39,7 +49,7 @@ export class MakeObservableService {
       material$,
       search_period$,
       input_keyword$,
-    } = this.showMenuDialogService;
+    } = this.SharedMenuObservableService;
 
     this.searchConditionObservable$ = combineLatest([
       vendor$,
@@ -49,21 +59,24 @@ export class MakeObservableService {
       material$,
       search_period$,
       input_keyword$,
-    ]).pipe(untilDestroyed(this), map(this.buildWhereCondition),
-    tap((val) => {
-
-      this.eventCount++;
-      // Whenever the where condition is changed, the scrollObservable is reset to the initial value.
-      if( this.eventCount > 0) {
-        // this.images = [];
-        this.resetImages.next({
-          images: [],
-        });
-        this.scrollObservable.next({
-          skip: 0, take: 20,
-        });        // this.oldScroll = { skip: 0, take: 20 };
-      }
-    }));
+    ]).pipe(
+      untilDestroyed(this),
+      map(this.buildWhereCondition),
+      tap((val) => {
+        this.eventCount++;
+        // Whenever the where condition is changed, the scrollObservable is reset to the initial value.
+        if (this.eventCount > 0) {
+          // this.images = [];
+          this.resetImages.next({
+            images: [],
+          });
+          this.scrollObservable.next({
+            skip: 0,
+            take: 20,
+          }); // this.oldScroll = { skip: 0, take: 20 };
+        }
+      })
+    );
   }
 
   private buildWhereCondition([
@@ -79,8 +92,7 @@ export class MakeObservableService {
   } {
     const andArray: any[] = [];
     const orArray: any[] = [];
-    console.log('input_keyword', input_keyword)
-
+    console.log('input_keyword', input_keyword);
 
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
@@ -108,6 +120,4 @@ export class MakeObservableService {
     }
     return { where: { and: andArray, or: orArray } };
   }
-
 }
-

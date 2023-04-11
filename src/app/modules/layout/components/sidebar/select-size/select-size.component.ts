@@ -1,7 +1,13 @@
-import { Component, ElementRef, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChildren,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sizes } from 'src/app/core/constants/data-define';
-import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 @UntilDestroy()
@@ -50,11 +56,11 @@ export class SelectSizeComponent {
   >;
 
   constructor(
-    private showMenuDialogService: ShowMenuDialogService,
+    private SharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService
   ) {}
   ngOnInit() {
-    this.showMenuDialogService.reset_size$
+    this.SharedMenuObservableService.reset_size$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
@@ -65,7 +71,7 @@ export class SelectSizeComponent {
     // console.log('selectSize', size);
     const value = { key: 'size', value: size.key };
     this.selected_size = size.key;
-    this.showMenuDialogService.size.next(size.key);
+    this.SharedMenuObservableService.size.next(size.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     if (size.key === 'All') {

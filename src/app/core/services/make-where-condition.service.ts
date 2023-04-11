@@ -17,7 +17,7 @@ import {
   zip,
 } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ShowMenuDialogService } from './show-menu-dialog.service';
+import { SharedMenuObservableService } from './shared-menu-observable.service';
 import { SaleListService } from './../../modules/dashboard/components/sale-list/sale-list.service';
 import { SaleList } from '../models/sale-list.model';
 import { LocalStorageService } from './local-storage.service';
@@ -35,7 +35,6 @@ export class MakeWhereConditionService {
   displayMode$: Observable<number> = this.displayModeSubject.asObservable();
   displayMode = '';
 
-
   //scrollObservable: BehaviorSubject<any>;
   // scrollObservable$: Observable<any>;
 
@@ -47,8 +46,8 @@ export class MakeWhereConditionService {
 
   constructor(
     private saleListService: SaleListService,
-    private showMenuDialogService: ShowMenuDialogService,
-    private localStorageService: LocalStorageService,
+    private SharedMenuObservableService: SharedMenuObservableService,
+    private localStorageService: LocalStorageService
   ) {
     // this.makeObservableService.makeWhereObservable();
     this.makeWhereObservable();
@@ -62,7 +61,6 @@ export class MakeWhereConditionService {
           this.displayModeSubject.next(item.value);
         }
       });
-
     }, 100);
   }
   eventCount = 0;
@@ -106,7 +104,7 @@ export class MakeWhereConditionService {
       material$,
       search_period$,
       input_keyword$,
-    } = this.showMenuDialogService;
+    } = this.SharedMenuObservableService;
 
     this.searchConditionObservable$ = combineLatest([
       // displayMode$,
@@ -243,6 +241,6 @@ export class MakeWhereConditionService {
     );
   }
   resetService() {
-    // this.showMenuDialogService
+    // this.SharedMenuObservableService
   }
 }

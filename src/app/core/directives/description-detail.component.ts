@@ -1,8 +1,5 @@
 import {Component, OnInit, ChangeDetectionStrategy, Inject, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { DetailsModule } from './details.module';
-import { SecurityContext } from '@angular/core';
 import { HtmlContentComponent } from '../utils/html-content/html-content.component';
 
 @Component({

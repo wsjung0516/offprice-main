@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Categories } from 'src/app/core/constants/data-define';
-import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
@@ -14,7 +14,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   selector: 'app-category-menu',
   standalone: true,
   imports: [CommonModule, MatIconModule],
-template: `
+  template: `
     <div class="bg-gray-200 px-4 py-2 flex items-center">
       <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide">
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
@@ -66,20 +66,20 @@ export class CategoryMenuComponent implements OnInit {
   scrollOffset = 0;
   selected_category: any = { key: 'All', value: 'All' };
   private storageItemSubscription: Subscription | undefined;
-  constructor(    private showMenuDialogService: ShowMenuDialogService,
+  constructor(
+    private SharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
     private localStorageService: LocalStorageService,
     private cd: ChangeDetectorRef
-
-) {}
+  ) {}
   ngOnInit() {
     this.onSelect(this.selected_category);
-    this.subscribeToLocalStorageItem()
-    this.showMenuDialogService.reset_category$.pipe(untilDestroyed(this))
-    .subscribe(() => {
-      this.reset();
-    });
-
+    this.subscribeToLocalStorageItem();
+    this.SharedMenuObservableService.reset_category$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.reset();
+      });
   }
   onScroll(distance: number) {
     const scrollEl = document.querySelector('.scroll-container') as HTMLElement;
@@ -95,7 +95,7 @@ export class CategoryMenuComponent implements OnInit {
     this.selected_category = category;
     const value = { key: 'category', value: category.key };
     // this.selected_category = value.key;
-    this.showMenuDialogService.category.next(category.key);
+    this.SharedMenuObservableService.category.next(category.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }
@@ -107,7 +107,7 @@ export class CategoryMenuComponent implements OnInit {
       this.localStorageService.storageItem$.subscribe((item) => {
         // console.log('category-- called from localstorage', item)
         if (item && item.key === 'category') {
-          this.onSelect({key:'All'});
+          this.onSelect({ key: 'All' });
           this.cd.markForCheck();
         }
       });
@@ -117,7 +117,5 @@ export class CategoryMenuComponent implements OnInit {
       this.storageItemSubscription.unsubscribe();
     }
   }
-  reset() {
-    
-  }
+  reset() {}
 }

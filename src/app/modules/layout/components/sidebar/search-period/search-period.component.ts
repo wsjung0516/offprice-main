@@ -1,9 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { ESearchPeriod } from 'src/app/core/constants/data-define';
-import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -13,23 +17,23 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   standalone: true,
   imports: [CommonModule, MatRadioModule, FormsModule],
   template: `
+    <div class="">
       <div class="">
-        <div class="">
-          <mat-radio-group 
-            class="discount-radio-group"
-            [(ngModel)]="favoritePeriod"
+        <mat-radio-group
+          class="discount-radio-group"
+          [(ngModel)]="favoritePeriod"
+        >
+          <mat-radio-button
+            class=""
+            *ngFor="let period of periods"
+            [value]="period"
+            (change)="selectValue(period)"
           >
-            <mat-radio-button
-              class=""
-              *ngFor="let period of periods"
-              [value]="period"
-              (change)="selectValue(period)"
-            >
-              {{ period.key }}
-            </mat-radio-button>
-          </mat-radio-group>
-        </div>
+            {{ period.key }}
+          </mat-radio-button>
+        </mat-radio-group>
       </div>
+    </div>
   `,
   styles: [
     `
@@ -43,29 +47,28 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class SearchPeriodComponent {
   favoritePeriod: string | undefined;
   periods: typeof ESearchPeriod = ESearchPeriod;
   constructor(
-    private showMenuDialogService: ShowMenuDialogService,
+    private SharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
     private cd: ChangeDetectorRef
-
   ) {}
   ngOnInit() {
-    this.showMenuDialogService.reset_search_period$.pipe(untilDestroyed(this))
-    .subscribe(() => {
-      this.reset();
-    });
+    this.SharedMenuObservableService.reset_search_period$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.reset();
+      });
   }
 
   selectValue(data: any) {
     const value = { key: 'search_period', value: data.key };
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
-    this.showMenuDialogService.search_period.next(data.value);
-    if( data.key === 'All' ) {
+    this.SharedMenuObservableService.search_period.next(data.value);
+    if (data.key === 'All') {
       this.reset();
     }
     // this.favoriteSeason = data;
@@ -75,5 +78,4 @@ export class SearchPeriodComponent {
     this.favoritePeriod = 'All';
     this.cd.detectChanges();
   }
-
 }

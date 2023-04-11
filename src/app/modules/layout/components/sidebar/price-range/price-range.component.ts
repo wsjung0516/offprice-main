@@ -1,9 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { APrice } from 'src/app/core/constants/data-define';
-import { ShowMenuDialogService } from 'src/app/core/services/show-menu-dialog.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 @UntilDestroy()
@@ -50,28 +54,29 @@ export class PriceRangeComponent {
   priceRange: any;
   priceRanges = [...APrice];
   constructor(
-    private showMenuDialogService: ShowMenuDialogService,
+    private SharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
     private cd: ChangeDetectorRef
   ) {}
   ngOnInit() {
-    this.showMenuDialogService.reset_price$.pipe(untilDestroyed(this))
-    .subscribe(() => {
-      this.reset();
-    });
+    this.SharedMenuObservableService.reset_price$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.reset();
+      });
   }
 
   selectValue(price: any) {
     const value = { key: 'price', value: price.key };
     this.priceRange = price.value;
-    this.showMenuDialogService.price.next(price.value);
+    this.SharedMenuObservableService.price.next(price.value);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     // this.favoriteSeason = data;
   }
   reset() {
     // this.selectValue({ key: 'all'});
-    
+
     this.priceRange = 'All';
     this.cd.detectChanges();
   }

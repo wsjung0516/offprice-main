@@ -1,7 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, map, merge, Observable, of, skip, startWith, Subject, switchMap, tap, zip, distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  map,
+  merge,
+  Observable,
+  skip,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+  distinctUntilKeyChanged,
+} from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ShowMenuDialogService } from './show-menu-dialog.service';
+import { SharedMenuObservableService } from './shared-menu-observable.service';
 import { UserSaleListService } from '../../modules/dashboard/components/sale-list/user-sale-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -10,7 +23,7 @@ import { LocalStorageService } from './local-storage.service';
 
 @UntilDestroy()
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MakeTableWhereConditionService {
   searchResult = new Subject<any>();
@@ -22,15 +35,14 @@ export class MakeTableWhereConditionService {
   displayMode$: Observable<string> = this.displayModeSubject.asObservable();
   displayMode = '';
 
-
-constructor(
-  //private makeObservableService: MakeObservableService,
-  private showMenuDialogService: ShowMenuDialogService,
-  private userSaleListService: UserSaleListService,
-  private localStorageService: LocalStorageService,
+  constructor(
+    //private makeObservableService: MakeObservableService,
+    private SharedMenuObservableService: SharedMenuObservableService,
+    private userSaleListService: UserSaleListService,
+    private localStorageService: LocalStorageService
   ) {}
   eventCount = 0;
-  searchConditionObservable$: Observable<any>;;
+  searchConditionObservable$: Observable<any>;
 
   get searchResult$(): Observable<UserSaleList[]> {
     return this.searchResult.asObservable();
@@ -43,31 +55,32 @@ constructor(
 
     setTimeout(() => {
       this.makeTableWhereCondition()
-      .pipe(untilDestroyed(this))
-      .subscribe((data: UserSaleList[]) => {
-        // console.log('make-table-where', data);
-        this.searchResult.next(data);
-      });
-      this.localStorageService.storageItem$.pipe(
-        tap((item) => {
-        })
-        ).subscribe((item) => {
+        .pipe(untilDestroyed(this))
+        .subscribe((data: UserSaleList[]) => {
+          // console.log('make-table-where', data);
+          this.searchResult.next(data);
+        });
+      this.localStorageService.storageItem$
+        .pipe(tap((item) => {}))
+        .subscribe((item) => {
           if (item && item.key === 'displayMode') {
-          // console.log('item', item);
-          this.displayModeSubject.next(item.value);
-        }
-      });
-
+            // console.log('item', item);
+            this.displayModeSubject.next(item.value);
+          }
+        });
     }, 100);
   }
   setRefreshObservable(refreshObservable: Observable<any>) {
     this.refreshObservable$ = refreshObservable;
   }
   resetSort() {
-    if( !!this.sort) {
+    if (!!this.sort) {
       this.sort.active = 'created_at';
       this.sort.direction = 'desc';
-      this.sort.sortChange.emit({ active: this.sort.active, direction: this.sort.direction });
+      this.sort.sortChange.emit({
+        active: this.sort.active,
+        direction: this.sort.direction,
+      });
     }
   }
 
@@ -101,7 +114,7 @@ constructor(
       material$,
       search_period$,
       input_keyword$,
-    } = this.showMenuDialogService;
+    } = this.SharedMenuObservableService;
 
     this.searchConditionObservable$ = combineLatest([
       // this.displayMode$,
@@ -112,19 +125,19 @@ constructor(
       material$,
       search_period$,
       input_keyword$,
-    ]).pipe( untilDestroyed(this),
+    ]).pipe(
+      untilDestroyed(this),
       tap((val) => {
         this.displayMode = localStorage.getItem('displayMode');
         // console.log('make-table tap', val,this.displayMode);
       }),
       filter(() => this.displayMode === 'list'),
       // filter(([displayMode]) => displayMode === 'list'),
-      map(this.buildWhereCondition),
+      map(this.buildWhereCondition)
     );
   }
 
   private buildWhereCondition([
-    
     vendor,
     price,
     category,
@@ -137,7 +150,6 @@ constructor(
   } {
     const andArray: any[] = [];
     const orArray: any[] = [];
-
 
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
@@ -168,7 +180,6 @@ constructor(
 
     return { where: { and: andArray, or: orArray } };
   }
-
 
   oldOrderBy: any = {};
   private makeTableWhereCondition(): Observable<any> {
@@ -225,7 +236,6 @@ constructor(
     );
   }
   resetService() {
-    // this.showMenuDialogService.resetService();
+    // this.SharedMenuObservableService.resetService();
   }
-
 }

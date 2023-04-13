@@ -55,13 +55,13 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     'vendor',
     'price',
     'count',
+    'description',
     'category',
     'size',
     'material',
-    'description',
     'created_at',
     'image_url',
-    'first_name',
+    'store_name',
     'action',
 
     // 'action',
@@ -71,13 +71,13 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     'Vendor',
     'Price',
     'Count',
+    'Description',
     'Category',
     'Size',
     'Material',
-    'Description',
     'CreatedAt',
     'Image',
-    'Name',
+    'Store Name',
     'Detail',
   ];
 
@@ -178,6 +178,8 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.makeTableWhereConditionService.resetService();
   }
 }
+// make example data by using UserSaleList model
+
 export const resetUser: User = {
   user_id: '1', // string 1
   first_name: '', // string 'John'

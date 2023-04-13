@@ -129,6 +129,7 @@ export class MakeTableWhereConditionService {
       untilDestroyed(this),
       tap((val) => {
         this.displayMode = localStorage.getItem('displayMode');
+        this.paginator.firstPage();
         // console.log('make-table tap', val,this.displayMode);
       }),
       filter(() => this.displayMode === 'list'),
@@ -174,8 +175,7 @@ export class MakeTableWhereConditionService {
     if (input_keyword !== '') {
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ description: { contains: input_keyword } });
-      orArray.push({ last_name: { contains: input_keyword } });
-      orArray.push({ first_name: { contains: input_keyword } });
+      orArray.push({ store_name: { contains: input_keyword } });
     }
 
     return { where: { and: andArray, or: orArray } };
@@ -193,7 +193,6 @@ export class MakeTableWhereConditionService {
       this.refreshObservable$
     ).pipe(
       untilDestroyed(this),
-      distinctUntilKeyChanged('where'),
       skip(1),
       startWith({}),
       map((data: any) => {

@@ -7,13 +7,19 @@ export interface UserSaleList{
   count: number;
   price: string;
   created_at:  Date;
-  updated_at:  Date;
   category: string;
   size: string;
   material: string;
   status1: string;
   status2: string;
   status3: string;
-  first_name: string;
-  last_name: string;
+  store_address1: string;
+  store_address2: string;
+  store_city: string;
+  store_state: string;
+  store_country: string;
+  register_no: string;
+  representative_phone_no: string;
+  store_name: string;
+  representative_name: string;
 }

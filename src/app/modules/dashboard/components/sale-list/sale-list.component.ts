@@ -23,6 +23,9 @@ import { SaleListService } from './sale-list.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { MakeWhereConditionService } from 'src/app/core/services/make-where-condition.service';
 import { SaleList } from 'src/app/core/models/sale-list.model';
+import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 
 @UntilDestroy()
 @Component({
@@ -31,6 +34,7 @@ import { SaleList } from 'src/app/core/models/sale-list.model';
   CommonModule,
     MatCardModule,
     ScrollingModule,
+    MatDialogModule
   ],
 
   selector: 'app-sale-list',
@@ -73,6 +77,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
     private makeWhereConditionService: MakeWhereConditionService,
+    private dialog: MatDialog
   ) {
     this.screenSize$ = this.screenSizeService.screenSize$;
   }
@@ -106,15 +111,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     // 
     this.makeWhereConditionService.condition$
     .pipe(untilDestroyed(this)).subscribe((data:SaleList[]) => {
-      const newImages = data.map((obj: SaleList) => ({
-        url: obj.image_url,
-        vendor: obj.vendor,
-        price: obj.price,
-        size: obj.size,
-      }));
-      // console.log('newImages', newImages)
-      this.images = [...this.images, ...newImages];
-      // 
+      this.images = [...this.images, ...data];
       this.cd.detectChanges();
       this.getConditionalSaleListLength();
 
@@ -153,5 +150,20 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('scrollToTop clicked')
     this.viewport.scrollToIndex(0);
     }
+  selectImage(image: UserSaleList  ) {
+    // console.log('detailSaleItem', row);
+    const dialogRef = this.dialog.open(DetailsItemComponent, {
+      data: image
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if( result === 'save' ) {
+      // check if the item is already saved.
+
+      } else if( result === 'delete' ) {
+
+      }
+      console.log('The dialog was closed', result);
+    })
+  }
 }

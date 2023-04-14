@@ -1,0 +1,42 @@
+<ng-container *ngIf="this.item?.image_url">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row max-w-4xl">
+      <!-- Left Column: Image -->
+      <div class="w-1/2">
+        <img [src]="item.image_url" alt="Product Image" class="w-full object-cover object-center">
+      </div>
+  
+      <!-- Right Column: Product Details -->
+      <div class="w-full md:w-1/2 md:pl-4 flex flex-col">
+        <h1 class="text-xl font-bold mt-4 md:mt-0">{{item.category}}</h1>
+        <h2 class="text-lg font-semibold text-gray-600">{{item.product_name}}</h2>
+        <p><span class="">Price: </span><span class="text-xl font-semibold mt-2">${{item.price}}</span></p>
+        <p><span class="">Quantity: </span><span class="text-xl font-semibold">{{item.count}}</span></p>
+        <p class="mt-2">Size: <span class="font-bold">{{item.size}}</span></p>
+        <p class="mt-2">Vendor: <span class="font-bold">{{item.vendor}}</span></p>
+        <p class="mt-2">Store Name: <span class="font-bold">{{item.store_name}}</span></p>
+        <p class="mt-2">Email: <span class="font-bold">{{item.email}}</span></p>
+        <p class="mt-2">Phone No: <span class="font-bold">{{item.representative_phone_no}}</span></p>
+        <p class="mt-2">Representative: <span class="font-bold">{{item.representative_name}}</span></p>
+        <p class="mt-2">Store Address: <span class="font-bold">{{item.store_address1}} {{item.store_address2}} {{item.store_city}} {{item.store_state}} {{item.store_country}}</span></p>
+        <p class="mt">
+          <app-html-content [content]="item.description"></app-html-content>
+        </p>
+        <!-- <div class="mt-4 divide-y divide-solid">
+          <p class="hidden md:block mt-5">Description</p>
+        </div> -->
+        <div class="mt-4">
+          <button class="bg-green-600 text-white px-4 py-2 rounded mr-2"(click)="onSave()">
+            <!-- <div class="mt-2">
+              <mat-icon>add_shopping_cart</mat-icon>
+            </div> -->
+            Save to Cart
+          </button>
+          <button class="bg-red-400 text-white border-red-600 border-2 text-black px-4 py-2 rounded mr-2" (click)="onDelete()">Delete</button>
+          <button class="bg-white border-green-600 border-2 text-black px-4 py-2 rounded"(click)="onClose()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-container>

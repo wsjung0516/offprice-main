@@ -23,7 +23,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       notifier.showError(message);
     } else {
       // Client Error
-      // console.log('error',error)
+      console.log('error',error)
       message = errorService.getClientErrorMessage(error);
       notifier.showError(message);
     }

@@ -8,7 +8,7 @@ interface Data {
     selector: 'app-image-detail',
     template: `
         <div class="">
-           <img [src]="image" alt="offprice.store">
+           <img [src]="image" class="h-full object-cover" alt="offprice.store">
         </div>
     `,
     styles: [],

@@ -36,15 +36,14 @@
         class="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
       >
         <div *cdkVirtualFor="let image of images" class="image-container">
-          <div class="h-88 bg-green-100">
+          <div class="h-88 bg-green-100" (click)="selectImage(image)">
             <mat-card>
               <mat-card-content>
-                <div class="relative w-56 h-72 sm:w-72 sm:h-96 overflow-hidden">
+                <div class="relative w-56 h-64 md:w-60 md:h-80 2xl:w-72 2xl:h-96 overflow-hidden cursor-pointer">
                   <img
-                    [src]="image.url"
+                    [src]="image.image_url"
                     alt="offprice.store"
-                    height="300px" width="200px"
-                    class="absolute top-0 left-1/2 -translate-x-1/2 w-auto h-full object-cover object-center"
+                    class="rounded-md  absolute top-0 left-1/2 -translate-x-1/2 w-auto h-full object-cover object-center"
                   />
                 </div>
               </mat-card-content>

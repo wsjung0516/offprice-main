@@ -1,4 +1,5 @@
 export interface UserSaleList{
+  product_name: string;
   sale_list_id: string;
   user_id: string;
   description: string;
@@ -13,6 +14,7 @@ export interface UserSaleList{
   status1: string;
   status2: string;
   status3: string;
+  email: string;
   store_address1: string;
   store_address2: string;
   store_city: string;

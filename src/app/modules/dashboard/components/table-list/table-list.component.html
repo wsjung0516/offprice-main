@@ -53,21 +53,26 @@
           </ng-container>
           <ng-container *ngIf="column === 'action'">
             <td mat-cell *matCellDef="let row">
-              <a
-                mat-icon-button
-                class="text-green-600"
-                matTooltip="Details Item"
-              >
-                <mat-icon (click)="detailSaleItem(row)">search</mat-icon>
-              </a>
-              
-              <a
-                mat-icon-button
-                class="text-blue-600"
-                matTooltip="Put Into Cart"
-              >
-                <mat-icon (click)="putIntoCart(row)">add_shopping_cart</mat-icon>
-              </a>
+              <div class="flex justify-around">
+                <div class="">
+                  <a
+                    mat-icon-button
+                    class="text-green-600"
+                    matTooltip="Details Item"
+                  >
+                    <mat-icon (click)="detailSaleItem(row)">search</mat-icon>
+                  </a>
+                </div>
+                <div class="">
+                  <a
+                    mat-icon-button
+                    class="text-blue-600"
+                    matTooltip="Put Into Cart"
+                  >
+                    <mat-icon (click)="putIntoCart(row)">add_shopping_cart</mat-icon>
+                  </a>
+                </div>
+              </div>
             </td>
           </ng-container>
      

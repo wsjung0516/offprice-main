@@ -144,7 +144,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log(data);
     });
   }
-  detailSaleItem(row: UserSaleList) {
+  selectItem(row: UserSaleList) {
     // console.log('detailSaleItem', row);
     const dialogRef = this.dialog.open(DetailsItemComponent, {
       data: row

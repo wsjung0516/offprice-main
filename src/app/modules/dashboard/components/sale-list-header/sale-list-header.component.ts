@@ -22,7 +22,6 @@ import {
   SearchKeyword,
 } from 'src/app/core/services/chips-keyword.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
-import { MatBadgeModule } from '@angular/material/badge';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
@@ -36,7 +35,6 @@ import { InputKeywordComponent } from './../../../layout/components/sidebar/inpu
     MatChipsModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatBadgeModule,
     FormsModule,
     RouterModule,
     InputKeywordComponent,

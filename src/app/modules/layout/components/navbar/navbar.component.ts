@@ -20,11 +20,13 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
 import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
+import { DialogService } from '@ngneat/dialog';
+import { CartItemsComponent } from 'src/app/modules/dashboard/components/cart-items/cart-items.component';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
+CommonModule,
     AngularSvgIconModule,
     NavbarMenuComponent,
     NavbarMobileComponent,
@@ -32,6 +34,7 @@ import { MakeTableWhereConditionService } from 'src/app/core/services/make-table
     MatIconModule,
     RouterModule,
     MatBadgeModule,
+    CartItemsComponent
   ],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -40,14 +43,16 @@ import { MakeTableWhereConditionService } from 'src/app/core/services/make-table
 })
 export class NavbarComponent implements OnInit {
   sSize: string;
+  cart_badge_count = '0';
   // public screenSize$: Observable<any>;
   constructor(
     private menuService: MenuService,
     private screenSizeService: ScreenSizeService,
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private removeChipsKeywordService: RemoveChipsKeywordService,
     private makeTableWhereConditionService: MakeTableWhereConditionService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -58,11 +63,16 @@ export class NavbarComponent implements OnInit {
         this.sSize = size;
         this.cd.detectChanges();
       });
-    this.SharedMenuObservableService.gotoHome$
+    this.sharedMenuObservableService.gotoHome$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.gotoHome();
       });
+    this.sharedMenuObservableService.cart_badge_count$
+      .pipe(untilDestroyed(this)).subscribe((val)=>{
+        this.cart_badge_count = val;
+        this.cd.detectChanges();
+      })
   }
 
   public toggleMobileMenu(): void {
@@ -73,8 +83,14 @@ export class NavbarComponent implements OnInit {
     this.resetKeyword();
     this.makeTableWhereConditionService.resetSort();
   }
+  openCart() {
+    this.dialogService.open(CartItemsComponent, {
+      // width: '800px'
+    });
+
+  }
   resetKeyword() {
-    const service = this.SharedMenuObservableService;
+    const service = this.sharedMenuObservableService;
     const filters: any[] = [
       //   { name: 'vendor', subject: service.vendor, defaultValue: 'All' },
       {

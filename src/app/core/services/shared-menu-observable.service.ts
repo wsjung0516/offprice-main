@@ -28,7 +28,9 @@ export class SharedMenuObservableService {
   //
   gotoHome = new Subject<string>();
   gotoHome$ = this.gotoHome.asObservable();
-
+  cart_badge_count = new Subject<string>();
+  cart_badge_count$ = this.cart_badge_count.asObservable();
+ 
   get input_keyword$() {
     return this.input_keyword.asObservable();
   }

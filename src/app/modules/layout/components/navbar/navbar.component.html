@@ -16,32 +16,37 @@
         </button>
       </div>
 
-      <!-- Logo -->
-      <div
-        class="flex items-center justify-center mr-6 w-36 h-12 border-2 border-blue-600 rounded-md bg-slate-50 sm:hidden"
-      >
-        <span class="font-semibold text-2xl tracking-tight text-green-800"
-          >Off<span class="text-3xl text-blue-700">Price</span></span
-        >
-      </div>
       <div class="flex items-center justify-center w-10 h-10 rounded bg-blue-800">
         <button mat-icon-button (click)="gotoHome()">
           <mat-icon class="text-white mt-2">home</mat-icon>
         </button>
+      </div>
+      <!-- Logo -->
+      <div
+        class="flex items-center justify-center w-28 h-12 sm:mr-6 sm:w-36 sm:h-12 border-2 border-blue-600 rounded-md bg-slate-50 sm:hidden"
+      >
+        <span class="font-semibold text-xl sm:text-2xl tracking-tight text-green-800"
+          >Off<span class="text-2xl sm:text-3xl text-blue-700">Price</span></span
+        >
       </div>
       <!-- Desktop Menu -->
       <div class="hidden space-x-10 sm:order-3 md:flex">
         <!-- <app-navbar-menu></app-navbar-menu> -->
       </div>
 
+      <ng-container *ngIf="sSize === 'XSmall'">
+        <div class="text-white  -mr-3 mt-3  sm:mr-3 sm:mt-3 cursor-pointer" (click)="openCart()">
+          <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent">add_shopping_cart</mat-icon>
+        </div>
+      </ng-container>
       <!-- Profile menu -->
       <div class="items-center justify-end sm:order-4 md:flex md:flex-1 lg:w-0">
-        <!-- Toggle display mode grid or list -->
         <ng-container *ngIf="sSize !== 'XSmall'">
-          <div class="text-white mr-4 mt-3 ">
-            <mat-icon matBadge="15" matBadgeColor="warn">add_shopping_cart</mat-icon>
+          <div class="text-white  mt-3  sm:mr-3 sm:mt-3 cursor-pointer" (click)="openCart()">
+            <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent">add_shopping_cart</mat-icon>
           </div>
         </ng-container>
+          <!-- Toggle display mode grid or list -->
         <app-profile-menu></app-profile-menu>
       </div>
     </div>

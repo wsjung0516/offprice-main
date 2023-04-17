@@ -26,15 +26,17 @@ import { SaleList } from 'src/app/core/models/sale-list.model';
 import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
+import { CartItemsComponent } from 'src/app/modules/dashboard/components/cart-items/cart-items.component';
 
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+CommonModule,
     MatCardModule,
     ScrollingModule,
-    MatDialogModule
+    MatDialogModule,
+    CartItemsComponent
   ],
 
   selector: 'app-sale-list',

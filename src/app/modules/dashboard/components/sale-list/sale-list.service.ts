@@ -4,6 +4,7 @@ import { SaleList } from 'src/app/core/models/sale-list.model';
 import { map, Observable, shareReplay, tap } from 'rxjs';
 import { environment } from 'src/app/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,17 +19,17 @@ export class SaleListService {
     orderBy?: any,
     where?: any,
     whereOR?: any
-  ): Observable<SaleList[]> {
+  ): Observable<UserSaleList[]> {
     // console.log('getSaleList', skip, take, orderBy, where, whereOR)
     const whereData = this.buildWhereData(where, whereOR);
     
     const order = JSON.stringify(orderBy);
-    let url = `${this.baseUrl}/sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
+    let url = `${this.baseUrl}/user-sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
     }
     // console.log('getSaleLists- url', url)
-    return this.http.get<SaleList[]>(url).pipe(
+    return this.http.get<UserSaleList[]>(url).pipe(
       // tap(data => console.log('data: ', data)),
       // shareReplay(1)
     );

@@ -28,6 +28,9 @@ import { CreateUserComponent } from 'src/app/user/create-user/create-user.compon
 import { DialogConfig, DialogService } from '@ngneat/dialog';
 import { User } from 'src/app/user/models/user.model';
 import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
+import { AuthService } from 'src/app/auth/keycloak/auth.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
+import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
 
 @UntilDestroy()
 @Component({
@@ -43,12 +46,13 @@ import { DetailsItemComponent } from 'src/app/core/components/details-item/detai
     MatDialogModule,
     ConfirmDialogComponent,
     SaleListModule,
-    DetailsItemComponent
+    DetailsItemComponent,
+    CartItemsComponent,
   ],
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MakeTableWhereConditionService, UserSaleListService]
+  providers: [MakeTableWhereConditionService, UserSaleListService],
 })
 export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -101,12 +105,13 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private cd: ChangeDetectorRef,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private authService: AuthService,
+    private sessionStorageService: SessionStorageService
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.makeTableWhereConditionService.initializeWhereCondition(
       this.sort,
@@ -146,20 +151,42 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   selectItem(row: UserSaleList) {
     // console.log('detailSaleItem', row);
-    const dialogRef = this.dialog.open(DetailsItemComponent, {
-      data: row
+    const store = this.sessionStorageService.getItem('userProfile');
+    if (!store) {
+      this.authService.login();
+    }
+
+    const mobileMode = window.matchMedia('(max-width: 576px)').matches;
+    const width = mobileMode ? '100%' : '60%';
+    const dialogRef = this.dialogService.open(DetailsItemComponent, {
+       data: {
+        data: row,
+       },
+       width,
+       // height: 'auto',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if( result === 'save' ) {
+    dialogRef.afterClosed$.subscribe((result) => {
+      if (result === 'save') {
         // check if the item is already saved.
-  
-        } else if( result === 'delete' ) {
-  
-        }
-  
+      } else if (result === 'delete') {
+      }
       console.log('The dialog was closed', result);
-    })
+    });
+
+    // const dialogRef = this.dialog.open(DetailsItemComponent, {
+    //   data: row,
+    // });
+
+
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result === 'save') {
+    //     // check if the item is already saved.
+    //   } else if (result === 'delete') {
+    //   }
+
+    //   console.log('The dialog was closed', result);
+    // });
     // const dialogRef = this.dialogService
     //   .open(CreateUserComponent, {
     //     data: {
@@ -179,7 +206,24 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     //   });
   }
   putIntoCart(id: string) {
-    
+    const store = this.sessionStorageService.getItem('userProfile');
+    if (!store) {
+      this.authService.login();
+    }
+
+    const dialogRef = this.dialogService
+      .open(CartItemsComponent, {
+        data: {},
+        backdrop: false,
+        //...config,
+        // width: '800px',
+        // height: '800px',
+      })
+      .afterClosed$.subscribe((data: any) => {
+        if (data) {
+          this.refreshObservable.next({}); // trigger the observable for updating the table}
+        }
+      });
   }
   ngOnDestroy(): void {
     console.log('table-list destroy');
@@ -188,30 +232,32 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 // make example data by using UserSaleList model
 export const resetUserSaleList: Partial<UserSaleList> = {
-  category: "Tops",
+  category: 'Tops',
   count: 100,
   // created_at:"2023-04-13T19:32:54.000Z",
-  description: "<h1>Title</h1><p>1.test1</p><p>2.test2</p><p>3.test3</p><p>adkfjdasfkdasfdsafdasfdsafdasfdasfdasfasdfdsafasfasdfdasfasdfdsfdsafdasfsdafsd</p>",
-  image_url: "https://offprice_bucket.storage.googleapis.com/263e8818-c66e-11ec-9c47-027098eb172b_E_1681414372510.jpg",
-  material: "Polyester",
+  description:
+    '<h1>Title</h1><p>1.test1</p><p>2.test2</p><p>3.test3</p><p>adkfjdasfkdasfdsafdasfdsafdasfdasfdasfasdfdsafasfasdfdasfasdfdsfdsafdasfsdafsd</p>',
+  image_url:
+    'https://offprice_bucket.storage.googleapis.com/263e8818-c66e-11ec-9c47-027098eb172b_E_1681414372510.jpg',
+  material: 'Polyester',
   price: '100',
-  register_no:"1234567890",
-  representative_name:"Junsu",
-  representative_phone_no: "111-2222-3333",
+  register_no: '1234567890',
+  representative_name: 'Junsu',
+  representative_phone_no: '111-2222-3333',
   sale_list_id: '1032',
-  size: "XS",
+  size: 'XS',
   status1: null,
   status2: null,
   status3: null,
-  store_address1: "3416 manning ave Apt3813",
+  store_address1: '3416 manning ave Apt3813',
   store_address2: null,
-  store_city: "대방동",
-  store_country: "KR",
-  store_name: "ABC mart",
-  store_state: "서울특별시",
-  user_id: "25b85792-ac77-4433-97bb-a622e03f3241",
-  vendor: "BBB",
-}
+  store_city: '대방동',
+  store_country: 'KR',
+  store_name: 'ABC mart',
+  store_state: '서울특별시',
+  user_id: '25b85792-ac77-4433-97bb-a622e03f3241',
+  vendor: 'BBB',
+};
 
 export const resetUser: User = {
   user_id: '1', // string 1

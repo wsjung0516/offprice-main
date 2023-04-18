@@ -1,18 +1,18 @@
 <ng-container *ngIf="sSize !== 'XSmall'">
   <div class="w-full">
-
     <div class="w-full mt-3 flex justify-between">
-      <div class="flex items-center justify-start space-x-2 " >
+      <div class="flex items-center justify-start space-x-2">
         <div class="w-80">
           <div class="relative">
             <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
           </div>
         </div>
-  
+
         <ng-container *ngTemplateOutlet="showChips"></ng-container>
         <p class="font-bold">{{ searchItemLength }}</p>
       </div>
-      <div class="flex items-center" >
+      <!-- display mode toggle -->
+      <div class="flex items-center">
         <button
           class="w-10 h-10 rounded-md bg-blue-600 text-white"
           mat-icon-button
@@ -29,16 +29,39 @@
           </div>
         </button>
       </div>
-  </div>
+      <!-- display mode toggle -->
+    </div>
   </div>
 </ng-container>
 <!-- <ng-container *ngIf="currentScreenSize === 'XSmall'"> -->
 <ng-container *ngIf="sSize === 'XSmall'">
-  <div *ngIf="!(showMobileMenu$ | async)" class="w-4/5">
-    <div class="relative">
-      <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
+  <div class="flex justify-around">
+    <div *ngIf="!(showMobileMenu$ | async)" class="w-4/5">
+      <div class="relative">
+        <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
+      </div>
     </div>
+    <!-- display mode toggle -->
+    <div class="flex items-center">
+      <button
+        class="w-10 h-10 rounded-md bg-blue-600 text-white"
+        mat-icon-button
+        aria-label="off price store"
+        (click)="toggleDisplayMode()"
+      >
+        <div class="mt-2">
+          <ng-container *ngIf="displayMode === 'grid'; else list">
+            <mat-icon>format_list_numbered</mat-icon>
+          </ng-container>
+          <ng-template #list>
+            <mat-icon>grid_on</mat-icon>
+          </ng-template>
+        </div>
+      </button>
+    </div>
+    <!-- display mode toggle -->
   </div>
+
   <div *ngIf="showMobileMenu$ | async" class="w-full">
     <div class="-mt-12"></div>
   </div>

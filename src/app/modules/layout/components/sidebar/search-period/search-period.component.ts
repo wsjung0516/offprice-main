@@ -51,12 +51,12 @@ export class SearchPeriodComponent {
   favoritePeriod: string | undefined;
   periods: typeof ESearchPeriod = ESearchPeriod;
   constructor(
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
     private cd: ChangeDetectorRef
   ) {}
   ngOnInit() {
-    this.SharedMenuObservableService.reset_search_period$
+    this.sharedMenuObservableService.reset_search_period$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
@@ -67,7 +67,7 @@ export class SearchPeriodComponent {
     const value = { key: 'search_period', value: data.key };
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
-    this.SharedMenuObservableService.search_period.next(data.value);
+    this.sharedMenuObservableService.search_period.next(data.value);
     if (data.key === 'All') {
       this.reset();
     }

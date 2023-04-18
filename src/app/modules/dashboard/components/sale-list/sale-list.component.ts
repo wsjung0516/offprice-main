@@ -7,14 +7,15 @@ import {
   ViewChild,
   OnDestroy,
 } from '@angular/core';
-import {
-  Observable,
-} from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
-import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
+import {
+  CdkVirtualScrollViewport,
+  ScrollingModule,
+} from '@angular/cdk/scrolling';
 import {
   ChipsKeywordService,
   SearchKeyword,
@@ -26,17 +27,20 @@ import { SaleList } from 'src/app/core/models/sale-list.model';
 import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
-import { CartItemsComponent } from 'src/app/modules/dashboard/components/cart-items/cart-items.component';
-
+import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
+import { AuthService } from 'src/app/auth/keycloak/auth.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
+import { DialogService } from '@ngneat/dialog';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-CommonModule,
+  CommonModule,
     MatCardModule,
     ScrollingModule,
     MatDialogModule,
-    CartItemsComponent
+    CartItemsComponent,
+
   ],
 
   selector: 'app-sale-list',
@@ -57,15 +61,14 @@ CommonModule,
       .xsmall_box {
         margin-top: 2rem;
       }
-      
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MakeWhereConditionService, SaleListService],
 })
 export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('viewport',{static: false}) viewport: CdkVirtualScrollViewport;
-  // 
+  @ViewChild('viewport', { static: false }) viewport: CdkVirtualScrollViewport;
+  //
   currentScreenSize: string;
   public screenSize$: Observable<any>;
   sSize: string;
@@ -79,15 +82,19 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
     private makeWhereConditionService: MakeWhereConditionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private sessionStorageService: SessionStorageService,
+    private dialogService: DialogService
   ) {
     this.screenSize$ = this.screenSizeService.screenSize$;
   }
   images: any[] = [];
   itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
+  isLoggedIn: boolean;
 
   ngOnInit(): void {
-    // 
+    //
     // make chips for display in the DOM
     localStorage.setItem('displayMode', 'grid');
 
@@ -110,19 +117,20 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngAfterViewInit() {
-    // 
-    this.makeWhereConditionService.condition$
-    .pipe(untilDestroyed(this)).subscribe((data:SaleList[]) => {
-      this.images = [...this.images, ...data];
-      this.cd.detectChanges();
-      this.getConditionalSaleListLength();
-
-    })
     //
-    this.makeWhereConditionService.resetImages$.pipe(untilDestroyed(this))
-    .subscribe((data:any) => {
-      this.images = [];
-    })
+    this.makeWhereConditionService.condition$
+      .pipe(untilDestroyed(this))
+      .subscribe((data: SaleList[]) => {
+        this.images = [...this.images, ...data];
+        this.cd.detectChanges();
+        this.getConditionalSaleListLength();
+      });
+    //
+    this.makeWhereConditionService.resetImages$
+      .pipe(untilDestroyed(this))
+      .subscribe((data: any) => {
+        this.images = [];
+      });
   }
   private getConditionalSaleListLength() {
     this.saleListService
@@ -134,10 +142,11 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
   onScroll(index: number) {
-    // 
+    //
     if (index + 20 > this.images.length) {
       this.makeWhereConditionService.scrollObservable.next({
-        skip: this.images.length, take: 20,
+        skip: this.images.length,
+        take: 20,
       });
     }
     index > 1 ? (this.showScrollToTop = true) : (this.showScrollToTop = false);
@@ -145,27 +154,46 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     // console.log('sale list destroy');
-    this.makeWhereConditionService.resetService()
+    this.makeWhereConditionService.resetService();
   }
 
   scrollToTop() {
-    console.log('scrollToTop clicked')
+    console.log('scrollToTop clicked');
     this.viewport.scrollToIndex(0);
-    }
-  selectImage(image: UserSaleList  ) {
+  }
+  async selectImage(image: UserSaleList) {
     // console.log('detailSaleItem', row);
-    const dialogRef = this.dialog.open(DetailsItemComponent, {
-      data: image
+    const store = this.sessionStorageService.getItem('userProfile');
+    if (!store) {
+      this.authService.login();
+    }
+    const mobileMode = window.matchMedia('(max-width: 576px)').matches;
+    const width = mobileMode ? '100%' : '60%';
+    const dialogRef = this.dialogService.open(DetailsItemComponent, {
+       data: {
+        data: image,
+       },
+       width,
+       // height: 'auto',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if( result === 'save' ) {
-      // check if the item is already saved.
-
-      } else if( result === 'delete' ) {
-
+    dialogRef.afterClosed$.subscribe((result) => {
+      if (result === 'save') {
+        // check if the item is already saved.
+      } else if (result === 'delete') {
       }
       console.log('The dialog was closed', result);
-    })
+    });
+    // const dialogRef = this.dialog.open(DetailsItemComponent, {
+    //   data: image,
+    // });
+
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result === 'save') {
+    //     // check if the item is already saved.
+    //   } else if (result === 'delete') {
+    //   }
+    //   console.log('The dialog was closed', result);
+    // });
   }
 }

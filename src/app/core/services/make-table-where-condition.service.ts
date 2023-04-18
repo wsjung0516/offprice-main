@@ -37,7 +37,7 @@ export class MakeTableWhereConditionService {
 
   constructor(
     //private makeObservableService: MakeObservableService,
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private userSaleListService: UserSaleListService,
     private localStorageService: LocalStorageService
   ) {}
@@ -114,7 +114,7 @@ export class MakeTableWhereConditionService {
       material$,
       search_period$,
       input_keyword$,
-    } = this.SharedMenuObservableService;
+    } = this.sharedMenuObservableService;
 
     this.searchConditionObservable$ = combineLatest([
       // this.displayMode$,
@@ -131,6 +131,8 @@ export class MakeTableWhereConditionService {
         this.displayMode = localStorage.getItem('displayMode');
         this.paginator.firstPage();
         // console.log('make-table tap', val,this.displayMode);
+        // Close the mobile menu after selecting an option from the filter menu
+        this.sharedMenuObservableService.showMobileMenu.next(false);
       }),
       filter(() => this.displayMode === 'list'),
       // filter(([displayMode]) => displayMode === 'list'),

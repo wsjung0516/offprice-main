@@ -21,12 +21,13 @@ import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-o
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
 import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
 import { DialogService } from '@ngneat/dialog';
-import { CartItemsComponent } from 'src/app/modules/dashboard/components/cart-items/cart-items.component';
+import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     AngularSvgIconModule,
     NavbarMenuComponent,
     NavbarMobileComponent,
@@ -34,7 +35,7 @@ CommonModule,
     MatIconModule,
     RouterModule,
     MatBadgeModule,
-    CartItemsComponent
+    CartItemsComponent,
   ],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -44,6 +45,7 @@ CommonModule,
 export class NavbarComponent implements OnInit {
   sSize: string;
   cart_badge_count = '0';
+  userName: string;
   // public screenSize$: Observable<any>;
   constructor(
     private menuService: MenuService,
@@ -52,7 +54,8 @@ export class NavbarComponent implements OnInit {
     private removeChipsKeywordService: RemoveChipsKeywordService,
     private makeTableWhereConditionService: MakeTableWhereConditionService,
     private cd: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private sessionStorageService: SessionStorageService
   ) {}
 
   ngOnInit(): void {
@@ -69,10 +72,14 @@ export class NavbarComponent implements OnInit {
         this.gotoHome();
       });
     this.sharedMenuObservableService.cart_badge_count$
-      .pipe(untilDestroyed(this)).subscribe((val)=>{
+      .pipe(untilDestroyed(this))
+      .subscribe((val) => {
+        console.log('navbar val', val);
         this.cart_badge_count = val;
         this.cd.detectChanges();
-      })
+      });
+      const profile:any = this.sessionStorageService.getItem('userProfile');
+      this.userName = profile.username;
   }
 
   public toggleMobileMenu(): void {
@@ -87,7 +94,6 @@ export class NavbarComponent implements OnInit {
     this.dialogService.open(CartItemsComponent, {
       // width: '800px'
     });
-
   }
   resetKeyword() {
     const service = this.sharedMenuObservableService;

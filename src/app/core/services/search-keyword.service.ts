@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, filter, from, groupBy, toArray } from "rxjs";
+import { BehaviorSubject, filter, from, toArray } from "rxjs";
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()

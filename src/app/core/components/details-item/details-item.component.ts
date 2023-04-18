@@ -1,21 +1,21 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit, AfterViewInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { HtmlContentComponent } from 'src/app/core/utils/html-content/html-content.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './../confirm-dialog/confirm-dialog.component';
-import { DialogService } from '@ngneat/dialog';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatIconModule } from '@angular/material/icon';
-export interface DialogData {
+export interface Data {
   data: Partial<UserSaleList>;
 }
 @Component({
   selector: 'app-details-item',
   standalone: true,
   imports: [CommonModule,
-  HtmlContentComponent,
+HtmlContentComponent,
     ConfirmDialogComponent,
-    MatIconModule
+    MatIconModule,
 ],
   templateUrl: './details-item.component.html',
   styles: [],
@@ -23,9 +23,10 @@ export interface DialogData {
 })
 export class DetailsItemComponent implements OnInit, AfterViewInit {
   item: any;
+  ref: DialogRef<Data> = inject(DialogRef);
   constructor(
-    public dialogRef: MatDialogRef<DetailsItemComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    // public dialogRef: MatDialogRef<DetailsItemComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private cd: ChangeDetectorRef,
     private dialogService: DialogService
   ) { }
@@ -33,30 +34,34 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
 
-    this.item = {...this.data};
+    this.item = {...this.ref.data.data};
+    // this.item = {...this.data};
     this.cd.detectChanges();
 
   }
   onSave(): void {
     
-    this.dialogRef.close({ status: 'save', data: this.item});
+    this.ref.close({ status: 'save', data: this.item});
+    // this.dialogRef.close({ status: 'save', data: this.item});
   }
   onDelete(): void {
     const ret = this.dialogService.open(ConfirmDialogComponent,{
       data: {
         title: 'Delete',
         message: 'Are you sure you want to delete this item?'
-      }
+      },
     });
     ret.afterClosed$.subscribe((result) => {
 
       if( result ){
-        this.dialogRef.close({ status: 'delete', data: this.item});
+        this.ref.close({ status: 'delete', data: this.item});
+        // this.dialogRef.close({ status: 'delete', data: this.item});
       }
     });
   }
   onClose(): void {
-    this.dialogRef.close();
+    this.ref.close();
+    // this.dialogRef.close();
   } 
 }
 // export const item: Partial<UserSaleList> = {

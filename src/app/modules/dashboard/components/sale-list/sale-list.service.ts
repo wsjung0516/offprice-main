@@ -60,7 +60,7 @@ export class SaleListService {
   // getConditionalSaleListLength(where: any): Observable<SaleList[]> {
   getConditionalSaleListLength(): Observable<number> {
     let url: string;
-    url = `${this.baseUrl}/sale-list/length`;
+    url = `${this.baseUrl}/user-sale-list/length`;
     return this.http.get(url).pipe(
       map((data: any) => data ),
     )

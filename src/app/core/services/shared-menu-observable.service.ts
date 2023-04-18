@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject, ReplaySubject, Subject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +28,11 @@ export class SharedMenuObservableService {
   //
   gotoHome = new Subject<string>();
   gotoHome$ = this.gotoHome.asObservable();
-  cart_badge_count = new Subject<string>();
+  cart_badge_count = new ReplaySubject<string>();
   cart_badge_count$ = this.cart_badge_count.asObservable();
  
+  showMobileMenu = new Subject<boolean>();
+  showMobileMenu$ = this.showMobileMenu.asObservable();
   get input_keyword$() {
     return this.input_keyword.asObservable();
   }
@@ -53,12 +55,5 @@ export class SharedMenuObservableService {
     return this.search_period.asObservable();
   }
   resetService() {
-    // this.input_keyword.next(null);
-    // this.vendor.next('All');
-    // this.price.next('All');
-    // this.category.next('All');
-    // this.size.next('All');
-    // this.material.next('All');
-    // this.search_period.next('All');
   }
 }

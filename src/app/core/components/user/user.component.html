@@ -1,0 +1,282 @@
+<p></p>
+<div class="mt-4">
+  <div class="flex justify-center text-2xl font-bold">Update User Information</div>
+  <div class="flex justify-center">
+    <div class="block p-4 rounded-lg shadow-lg bg-white max-w-xl">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2">
+          <mat-form-field class="">
+            <mat-label>First Name</mat-label>
+            <input
+              class="placeholder-red-300"
+              readonly
+              matInput
+              formControlName="first_name"
+              placeholder="First Name"
+              value=""
+            />
+          </mat-form-field>
+          <mat-form-field class="">
+            <mat-label>Last Name</mat-label>
+            <input
+              readonly
+              matInput
+              formControlName="last_name"
+              placeholder="Ex. Pizza"
+              value=""
+            />
+          </mat-form-field>
+        </div>
+        <mat-form-field class="w-full">
+          <!-- <mat-form-field class="" > -->
+          <mat-label>Email</mat-label>
+          <input
+            *ngIf="disabled"
+            readonly
+            matInput
+            formControlName="email"
+            placeholder="Email"
+            value=""
+          />
+          <input
+            *ngIf="!disabled"
+            matInput
+            formControlName="email"
+            placeholder="Email"
+            value=""
+          />
+        </mat-form-field>
+        <div class="grid grid-cols-2 gap-4">
+          <mat-form-field class="">
+            <mat-label>Address 1</mat-label>
+            <input
+              matInput
+              formControlName="address1"
+              placeholder=""
+              value=""
+            />
+          </mat-form-field>
+          <mat-form-field class="">
+            <mat-label>Address 2</mat-label>
+            <input
+              matInput
+              formControlName="address2"
+              placeholder=""
+              value=""
+            />
+          </mat-form-field>
+        </div>
+        <div class="grid grid-cols-3 gap-4 ">
+          <mat-form-field appearance="fill">
+            <mat-label>City</mat-label>
+            <mat-select [(ngModel)]="selectedCity[0]" formControlName="city">
+              <mat-option *ngFor="let city of cities[0]" [value]="city">{{
+                city
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>State</mat-label>
+            <mat-select [(ngModel)]="selectedState[0]" formControlName="state">
+              <mat-option *ngFor="let state of states[0]" [value]="state">{{
+                state
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Country</mat-label>
+            <mat-select
+              [(ngModel)]="selectedCountry[0]"
+              formControlName="country"
+            >
+              <mat-option
+                *ngFor="let country of countries[0]"
+                [value]="country"
+                >{{ country }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <mat-form-field class="">
+            <mat-label>Postal Code</mat-label>
+            <input
+              matInput
+              formControlName="zipcode"
+              placeholder=""
+              [value]="postalCode[0]"
+            />
+          </mat-form-field>
+          <mat-form-field class="">
+            <mat-label>Phone Number</mat-label>
+            <input
+              matInput
+              formControlName="phone_no"
+              placeholder=""
+              value=""
+            />
+          </mat-form-field>
+        </div>
+
+        <section class="">
+          <mat-checkbox formControlName="subscribe" class=""
+            >I Have read the terms and conditions and agreed!</mat-checkbox
+          >
+        </section>
+        <ng-container
+          *ngIf="contactForm.get('subscribe').value === false; else subscribe"
+        >
+        </ng-container>
+        <section class="">
+          <mat-checkbox formControlName="seller" class=""
+            ><span class="text-green-600 font-bold">Seller</span></mat-checkbox
+          >
+        </section>
+        <ng-container
+          *ngIf="contactForm.get('seller').value === false; else seller"
+        >
+        </ng-container>
+        <div *ngIf="!disabled" class="flex justify-center space-x-4">
+          <div
+            class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700"
+          >
+            <button type="submit">{{ mode }}</button>
+            <!-- <button mat-raised-button color="primary" type="submit">{{mode}}</button> -->
+          </div>
+          <div
+            class="py-2 px-4 rounded border border-green-400 bg-white text-black hover:bg-gray-200"
+          >
+            <button type="button" (click)="closeDialog()">Cancel</button>
+            <!-- <button mat-raised-button color="primary" type="submit">{{mode}}</button> -->
+          </div>
+        </div>
+        <ng-template #seller>
+          <div class="p-4 w-full h-full bg-green-100">
+            <div class="grid grid-cols-2 gap-2">
+              <mat-form-field class="">
+                <mat-label>Store Name</mat-label>
+                <input
+                  matInput
+                  formControlName="store_name"
+                  placeholder=""
+                  value=""
+                />
+              </mat-form-field>
+              <mat-form-field class="">
+                <mat-label>Representative Name</mat-label>
+                <input
+                  matInput
+                  formControlName="representative_name"
+                  placeholder=""
+                  value=""
+                />
+              </mat-form-field>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <mat-form-field class="">
+                <mat-label>Register Number</mat-label>
+                <input
+                  matInput
+                  formControlName="register_no"
+                  placeholder=""
+                  value=""
+                />
+              </mat-form-field>
+              <mat-form-field class="">
+                <mat-label>Representative Phone No</mat-label>
+                <input
+                  matInput
+                  formControlName="representative_phone_no"
+                  placeholder=""
+                  value=""
+                />
+              </mat-form-field>
+            </div>
+            <section class="">
+              <mat-checkbox (change)="checkSameValueAsAbove($event)" class=""
+                >The same as above</mat-checkbox
+              >
+            </section>
+
+            <div class="grid grid-cols-2 gap-4">
+              <mat-form-field class="">
+                <mat-label>Store Address 1</mat-label>
+                <input
+                  matInput
+                  formControlName="store_address1"
+                  placeholder="Address 1"
+                  value=""
+                />
+              </mat-form-field>
+              <mat-form-field class="">
+                <mat-label>Store Address 2</mat-label>
+                <input
+                  matInput
+                  formControlName="store_address2"
+                  placeholder="Address 2"
+                  value=""
+                />
+              </mat-form-field>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>Store City</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedCity[1]"
+                  formControlName="store_city"
+                >
+                  <mat-option *ngFor="let city of cities[1]" [value]="city">{{
+                    city
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="fill">
+                <mat-label>store State</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedState[1]"
+                  formControlName="store_state"
+                >
+                  <mat-option *ngFor="let state of states[1]" [value]="state">{{
+                    state
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="fill">
+                <mat-label>Store Country</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedCountry[1]"
+                  formControlName="store_country"
+                >
+                  <mat-option
+                    *ngFor="let country of countries[1]"
+                    [value]="country"
+                    >{{ country }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <mat-form-field class="">
+                <mat-label>Store Postal Code</mat-label>
+                <input
+                  matInput
+                  formControlName="store_zipcode"
+                  placeholder=""
+                  [value]="postalCode[1]"
+                />
+              </mat-form-field>
+              <div></div>
+            </div>
+          </div>
+        </ng-template>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="">
+  <ng-template #tmplateName>
+    <p>Are you sure?</p>
+  </ng-template>
+</div>
+
+<ng-template #subscribe> </ng-template>

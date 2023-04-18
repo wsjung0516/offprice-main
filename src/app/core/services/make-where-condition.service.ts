@@ -46,7 +46,7 @@ export class MakeWhereConditionService {
 
   constructor(
     private saleListService: SaleListService,
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private localStorageService: LocalStorageService
   ) {
     // this.makeObservableService.makeWhereObservable();
@@ -104,7 +104,7 @@ export class MakeWhereConditionService {
       material$,
       search_period$,
       input_keyword$,
-    } = this.SharedMenuObservableService;
+    } = this.sharedMenuObservableService;
 
     this.searchConditionObservable$ = combineLatest([
       // displayMode$,
@@ -120,6 +120,9 @@ export class MakeWhereConditionService {
       tap((val) => {
         this.displayMode = localStorage.getItem('displayMode');
         // console.log('make-where-observable : ', val, this.displayMode);
+                // Close the mobile menu after selecting an option from the filter menu
+        this.sharedMenuObservableService.showMobileMenu.next(false);
+
       }),
       filter(() => this.displayMode === 'grid'),
       // filter(([displayMode]) => displayMode === 'grid'),

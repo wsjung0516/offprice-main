@@ -9,11 +9,13 @@ import { SearchPeriodComponent } from '../../sidebar/search-period/search-period
 import { PriceRangeComponent } from '../../sidebar/price-range/price-range.component';
 // import { PatternComponent } from '../../sidebar/pattern/pattern.component';
 import { MaterialComponent } from '../../sidebar/material/material.component';
-
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+@UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
+CommonModule,
     AngularSvgIconModule,
     // CategoryComponent,
     SelectSizeComponent,
@@ -29,11 +31,16 @@ import { MaterialComponent } from '../../sidebar/material/material.component';
 export class NavbarMobileComponent implements OnInit {
   public showMobileMenu$: Observable<boolean> = new Observable<boolean>();
 
-  constructor(private menuService: MenuService) {
+  constructor(private menuService: MenuService,
+    private sharedMenuObservableService: SharedMenuObservableService) {
     this.showMobileMenu$ = this.menuService.showMobileMenu$;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.sharedMenuObservableService.showMobileMenu$.pipe(untilDestroyed(this)).subscribe((data) => {
+      this.menuService.showMobileMenu = false;
+    })
+  }
 
   public toggleMobileMenu(): void {
     this.menuService.showMobileMenu = false;

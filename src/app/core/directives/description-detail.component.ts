@@ -9,7 +9,7 @@ import { HtmlContentComponent } from '../utils/html-content/html-content.compone
   HtmlContentComponent
   ],
   template: `
-        <div class=" rounded m-4 w-12 h-12 bg-green-400">
+        <div class=" rounded m-4 ">
         <app-html-content [content]="html"></app-html-content>
         </div>
   `,

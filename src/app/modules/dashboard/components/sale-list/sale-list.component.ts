@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   OnDestroy,
+  HostListener,
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
@@ -47,9 +48,10 @@ import { DialogService } from '@ngneat/dialog';
   templateUrl: './sale-list.component.html',
   styles: [
     `
+    $header-height: 27vh;
       .viewport {
         width: 100%;
-        height: 84vh;
+        /* height: calc( 100vh - #{$header-height} ); */
         overflow-y: auto;
       }
 
@@ -69,6 +71,7 @@ import { DialogService } from '@ngneat/dialog';
 export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('viewport', { static: false }) viewport: CdkVirtualScrollViewport;
   //
+  viewportHeight: string;
   currentScreenSize: string;
   public screenSize$: Observable<any>;
   sSize: string;
@@ -88,11 +91,20 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialogService: DialogService
   ) {
     this.screenSize$ = this.screenSizeService.screenSize$;
+    this.updateViewportHeight();
   }
   images: any[] = [];
   itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   isLoggedIn: boolean;
 
+  @HostListener('window:resize', ['$event']) onResize(event: Event) {
+    this.updateViewportHeight();
+  }
+  updateViewportHeight() {
+    // 높이를 계산하고 "viewportHeight" 속성에 할당합니다.
+    const headerHeight = 209; // 헤더 높이를 원하는 값으로 변경합니다.
+    this.viewportHeight = `calc(100vh - ${headerHeight}px)`;
+  }
   ngOnInit(): void {
     //
     // make chips for display in the DOM

@@ -7,8 +7,8 @@ interface Data {
 @Component({
     selector: 'app-image-detail',
     template: `
-        <div class="">
-           <img [src]="image" class="h-full object-cover" alt="offprice.store">
+        <div class="w-96 h-144 overflow-hidden">
+           <img [src]="image" class="min-h-full" alt="offprice.store">
         </div>
     `,
     styles: [],

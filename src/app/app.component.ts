@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { ThemeService } from './core/services/theme.service';
 import { SessionStorageService } from './core/services/session-storage.service';
 import { CartItemsService } from './core/components/cart-items/cart-items.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -18,7 +19,8 @@ CommonModule,
     LoaderComponent,
     RouterModule,
     MatProgressBarModule,
-    HomeComponent
+    HomeComponent,
+    MatProgressSpinnerModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -37,12 +39,14 @@ export class AppComponent implements OnInit{
      ) {
   }
   async ngOnInit() {
+    this.isLoading = true;
     this.refreshKeycloakToken();
     this.isLoggedIn = await this.keycloakService.isLoggedIn();
     const profile:any = this.sessionStorageService.getItem('userProfile');
     // console.log('AppComponent ngOnInit', this.isLoggedIn, profile);
 
     if (this.isLoggedIn) {
+      this.isLoading = false;
       this.userProfile = await this.keycloakService.loadUserProfile();
       this.name = this.userProfile.firstName;
       if( this.userProfile.id ) {
@@ -58,6 +62,9 @@ export class AppComponent implements OnInit{
       this.cartItemsService.setCartItemsLength(profile.id);
       this.cartItemsService.makeUserCart(profile.id);
     }
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 10000);
 
   }
   refreshKeycloakToken() {

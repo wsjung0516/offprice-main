@@ -1,4 +1,10 @@
-<div [ngClass]="{ dark: this.themeService.isDark }">
-  <router-outlet></router-outlet>
-  <!-- <app-responsive-helper></app-responsive-helper> -->
+<div class="h-full">
+  <div [ngClass]="{ dark: this.themeService.isDark }">
+    <router-outlet></router-outlet>
+    <!-- <app-responsive-helper></app-responsive-helper> -->
+  </div>
+  <div *ngIf="isLoading" class="h-screen flex items-center justify-center">
+    <mat-spinner></mat-spinner>
+  </div>
+
 </div>

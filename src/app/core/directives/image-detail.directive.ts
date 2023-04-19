@@ -37,8 +37,8 @@ export class ImageDetailDirective implements OnInit {
         if (!this.image) return; // 
         this.dialogRef = this._dialogService.open(ImageDetailComponent, {
             data: this.image,
-            width: '400px',
-            height: '600px',
+            // width: '400px',
+            // height: '600px',
             // position: position,
             hasBackdrop: false,
             panelClass: 'app-full-bleed-dialog',

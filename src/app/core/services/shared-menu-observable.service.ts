@@ -30,7 +30,7 @@ export class SharedMenuObservableService {
   gotoHome$ = this.gotoHome.asObservable();
   cart_badge_count = new ReplaySubject<string>();
   cart_badge_count$ = this.cart_badge_count.asObservable();
-  refreshCartItemsButton = new Subject<boolean>();
+  refreshCartItemsButton = new ReplaySubject<boolean>();
   refreshCartItemsButton$ = this.refreshCartItemsButton.asObservable();
   closeCartItemsDialog = new Subject<boolean>();
   closeCartItemsDialog$ = this.closeCartItemsDialog.asObservable();

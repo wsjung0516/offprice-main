@@ -194,7 +194,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
         // check if the item is already saved.
       } else if (result === 'delete') {
       }
-      console.log('The dialog was closed', result);
     });
   }
 }

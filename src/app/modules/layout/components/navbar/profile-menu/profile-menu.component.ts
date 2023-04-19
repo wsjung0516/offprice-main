@@ -5,12 +5,14 @@ import { AuthService } from 'src/app/auth/keycloak/auth.service';
 import { UserComponent } from 'src/app/core/components/user/user.component';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { ProfileMenuModule } from './profile-menu.module';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   standalone: true,
   imports: [
 CommonModule,
     MatDialogModule,
-    ProfileMenuModule
+    ProfileMenuModule,
+    MatSnackBarModule
   ],
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
@@ -29,7 +31,9 @@ export class ProfileMenuComponent implements OnInit {
   constructor(private authService: AuthService,
     private dialog: MatDialog,
     private sessionStorageService: SessionStorageService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private snackBar: MatSnackBar
+
     ) 
     {}
 
@@ -56,6 +60,14 @@ export class ProfileMenuComponent implements OnInit {
     // document.getElementById('mobile-menu').classList.toggle('show');
   }
   openProfile() {
+    const profile = this.sessionStorageService.getItem('userProfile');
+    if (!profile) {
+      this.snackBar.open('Please login first', 'Close', {
+        duration: 2000,
+      });
+      return
+    }
+
     const dialogRef = this.dialog.open(UserComponent, {
       
     });

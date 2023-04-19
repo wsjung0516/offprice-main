@@ -37,7 +37,7 @@ import { debounceTime, distinctUntilChanged, filter, Observable, skip, switchMap
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { KeycloakService } from 'keycloak-angular';
+import { SessionStorageService } from './../../services/session-storage.service';
 // import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
 interface Data {
   user_id: string;
@@ -47,7 +47,7 @@ interface Data {
   selector: 'app-user',
   standalone: true,
   imports: [
-  CommonModule,
+CommonModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -93,7 +93,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private http: HttpClient,
     public dialogRef: MatDialogRef<UserComponent>,
-    private keycloakService: KeycloakService
+    private sessionStorageService: SessionStorageService,
   ) {}
 
   contactForm = new UntypedFormGroup({
@@ -122,20 +122,23 @@ export class UserComponent implements OnInit, AfterViewInit {
   });
   private dialog = inject(DialogService);
   isDirty$: Observable<boolean>;
-
   beforeClose$: Observable<boolean>;
+  // isSeller = false;
   ngOnInit() {
     // this.contactForm.valueChanges.subscribe((value) => {});
     // const id = '25b85792-ac77-4433-97bb-a622e03f3241'
   }
   async ngAfterViewInit() {
     // this.mode = this.ref.data.mode;
-    const user = await this.keycloakService.loadUserProfile();
-    this.userService.getUser(user.id).subscribe((user) => {
+    const profile:any = this.sessionStorageService.getItem('userProfile');
+    this.userService.getUser(profile.id).subscribe((user) => {
       console.log('user', user);
       this.userId = user.user_id;
       this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
       this.contactForm.patchValue(user);
+      this.contactForm.get('seller').patchValue(false);
+      this.contactForm.get('address1').setValue(user.address1);
+      this.contactForm.get('store_address1').setValue(user.store_address1);
       this.cd.detectChanges();
     })
     // this.user = this.ref.data.user;
@@ -143,8 +146,11 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.completeAddress('address1',0);
     this.completeAddress('store_address1',1);
 
-    this.displayUser(this.user);
   }
+  compareFn(object1: any, object2: any) {
+    console.log('object1, object2', object1, object2);
+    return object1 && object2 && object1.id == object2.id;
+}
   private completeAddress(control: string, arg:number) {
     this.contactForm
       .get(control)
@@ -255,6 +261,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   updateUser() {
     console.log ('this.contactForm.value', this.contactForm.value);
     const user: User = {...this.contactForm.value, ...{updated_at: new Date()}}
+    console.log('user----', user);
     this.userService
       .updateUser(this.userId, user)
       .subscribe((response: any) => {
@@ -271,44 +278,44 @@ export class UserComponent implements OnInit, AfterViewInit {
         console.log('response', response);
       });
   }
-  displayUser(user: Partial<User>) {
-    if (!user) {
-      return;
-    }
+  // displayUser(user: Partial<User>) {
+  //   if (!user) {
+  //     return;
+  //   }
 
-    const {
-      first_name,
-      last_name,
-      email,
-      phone_no,
-      address1,
-      address2,
-      city,
-      state,
-      country,
-      zipcode,
-      subscribe,
-      user_id,
-      created_at,
-    } = user;
+  //   const {
+  //     first_name,
+  //     last_name,
+  //     email,
+  //     phone_no,
+  //     address1,
+  //     address2,
+  //     city,
+  //     state,
+  //     country,
+  //     zipcode,
+  //     subscribe,
+  //     user_id,
+  //     created_at,
+  //   } = user;
 
-    this.contactForm.patchValue({
-      first_name,
-      last_name,
-      email,
-      phone_no,
-      address1,
-      address2,
-      city,
-      state,
-      country,
-      zipcode,
-      subscribe,
-    });
+  //   this.contactForm.patchValue({
+  //     first_name,
+  //     last_name,
+  //     email,
+  //     phone_no,
+  //     address1,
+  //     address2,
+  //     city,
+  //     state,
+  //     country,
+  //     zipcode,
+  //     subscribe,
+  //   });
 
-    this.userId = user_id ? user_id.toString() : '';
-    // this.createdDate = format(new Date(created_at), 'MM/dd/yyyy hh:mm:ss');
-  }
+  //   this.userId = user_id ? user_id.toString() : '';
+  //   // this.createdDate = format(new Date(created_at), 'MM/dd/yyyy hh:mm:ss');
+  // }
   closeDialog() {
     this.dialogRef.close();
   }

@@ -1,8 +1,14 @@
 <p></p>
 <div class="mt-4">
+  <style>
+    .scroll-container {
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+  </style>
   <div class="flex justify-center text-2xl font-bold">Update User Information</div>
   <div class="flex justify-center">
-    <div class="block p-4 rounded-lg shadow-lg bg-white max-w-xl">
+    <div class="block p-4 rounded-lg shadow-lg bg-white max-w-xl scroll-container">
       <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
           <mat-form-field class="">
@@ -69,7 +75,7 @@
         <div class="grid grid-cols-3 gap-4 ">
           <mat-form-field appearance="fill">
             <mat-label>City</mat-label>
-            <mat-select [(ngModel)]="selectedCity[0]" formControlName="city">
+            <mat-select [(value)]="selectedCity[0]" formControlName="city">
               <mat-option *ngFor="let city of cities[0]" [value]="city">{{
                 city
               }}</mat-option>
@@ -77,7 +83,7 @@
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>State</mat-label>
-            <mat-select [(ngModel)]="selectedState[0]" formControlName="state">
+            <mat-select [(value)]="selectedState[0]" formControlName="state">
               <mat-option *ngFor="let state of states[0]" [value]="state">{{
                 state
               }}</mat-option>
@@ -86,7 +92,7 @@
           <mat-form-field appearance="fill">
             <mat-label>Country</mat-label>
             <mat-select
-              [(ngModel)]="selectedCountry[0]"
+            [(value)]="selectedCountry[0]"
               formControlName="country"
             >
               <mat-option
@@ -104,7 +110,7 @@
               matInput
               formControlName="zipcode"
               placeholder=""
-              [value]="postalCode[0]"
+              [(ngModel)]="postalCode[0]"
             />
           </mat-form-field>
           <mat-form-field class="">
@@ -222,7 +228,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Store City</mat-label>
                 <mat-select
-                  [(ngModel)]="selectedCity[1]"
+                  [(value)]="selectedCity[1]"
                   formControlName="store_city"
                 >
                   <mat-option *ngFor="let city of cities[1]" [value]="city">{{
@@ -233,7 +239,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>store State</mat-label>
                 <mat-select
-                  [(ngModel)]="selectedState[1]"
+                  [(value)]="selectedState[1]"
                   formControlName="store_state"
                 >
                   <mat-option *ngFor="let state of states[1]" [value]="state">{{
@@ -244,7 +250,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Store Country</mat-label>
                 <mat-select
-                  [(ngModel)]="selectedCountry[1]"
+                  [(value)]="selectedCountry[1]"
                   formControlName="store_country"
                 >
                   <mat-option
@@ -262,7 +268,7 @@
                   matInput
                   formControlName="store_zipcode"
                   placeholder=""
-                  [value]="postalCode[1]"
+                  [(ngModel)]="postalCode[1]"
                 />
               </mat-form-field>
               <div></div>

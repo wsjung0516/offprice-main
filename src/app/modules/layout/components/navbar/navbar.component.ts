@@ -81,7 +81,7 @@ export class NavbarComponent implements OnInit {
     this.sharedMenuObservableService.refreshCartItemsButton$
       .pipe(untilDestroyed(this))
       .subscribe((val) => {
-        console.log('refreshCartItemsButton', val);
+        // console.log('refreshCartItemsButton', val);
         this.refreshButton.nativeElement.click();
       })
       const profile:any = this.sessionStorageService.getItem('userProfile');

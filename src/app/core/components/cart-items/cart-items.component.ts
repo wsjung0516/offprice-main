@@ -112,7 +112,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
             this.snackBar.open('Deleted from cart', 'success', {
               duration: 2000,
             });
-
+            this.sharedMenuObservableService.refreshCartItemsButton.next(true);
           });
 
         // this.dialogRef.close({ status: 'delete', data: this.item});

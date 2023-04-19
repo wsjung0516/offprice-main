@@ -12,6 +12,7 @@ import { PriceRangeComponent } from './price-range/price-range.component';
 import { MaterialComponent } from './material/material.component';
 import { MatIconModule } from '@angular/material/icon';
 import { SearchPeriodComponent } from './search-period/search-period.component';
+import { AuthService } from 'src/app/auth/keycloak/auth.service';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -36,7 +37,8 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     public themeService: ThemeService,
-    private menuService: MenuService
+    private menuService: MenuService,
+    private authService: AuthService
   ) {
     this.showSideBar$ = this.menuService.showSideBar$;
     // this.pagesMenu$ = this.menuService.pagesMenu$;
@@ -51,4 +53,7 @@ export class SidebarComponent implements OnInit {
   toggleTheme() {
     this.themeService.theme = !this.themeService.isDark ? 'dark' : 'light';
   }
+  signOut() {
+    this.authService.logout();
+  } 
 }

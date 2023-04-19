@@ -4,6 +4,7 @@ import {
   Component,
   OnInit,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { MenuService } from '../../../../core/services/menu.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -12,7 +13,6 @@ import { NavbarMenuComponent } from './navbar-menu/navbar-menu.component';
 import { NavbarMobileComponent } from './navbar-mobile/navbar-mobilecomponent';
 import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
 import { MatIconModule } from '@angular/material/icon';
-import { Observable } from 'rxjs';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Router, RouterModule } from '@angular/router';
@@ -46,6 +46,7 @@ export class NavbarComponent implements OnInit {
   sSize: string;
   cart_badge_count = '0';
   userName: string;
+  @ViewChild('refreshButton', { static: false }) refreshButton: ElementRef;
   // public screenSize$: Observable<any>;
   constructor(
     private menuService: MenuService,
@@ -74,12 +75,18 @@ export class NavbarComponent implements OnInit {
     this.sharedMenuObservableService.cart_badge_count$
       .pipe(untilDestroyed(this))
       .subscribe((val) => {
-        console.log('navbar val', val);
         this.cart_badge_count = val;
         this.cd.detectChanges();
       });
+    this.sharedMenuObservableService.refreshCartItemsButton$
+      .pipe(untilDestroyed(this))
+      .subscribe((val) => {
+        console.log('refreshCartItemsButton', val);
+        this.refreshButton.nativeElement.click();
+      })
       const profile:any = this.sessionStorageService.getItem('userProfile');
-      this.userName = profile.username;
+
+      this.userName = profile?.username ?? 'Guest';
   }
 
   public toggleMobileMenu(): void {

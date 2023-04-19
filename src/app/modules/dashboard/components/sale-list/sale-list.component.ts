@@ -163,12 +163,12 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   async selectImage(image: UserSaleList) {
     // console.log('detailSaleItem', row);
-    const store = this.sessionStorageService.getItem('userProfile');
-    if (!store) {
+    const userProfile = this.sessionStorageService.getItem('userProfile');
+    if (!userProfile) {
       this.authService.login();
     }
     const mobileMode = window.matchMedia('(max-width: 576px)').matches;
-    const width = mobileMode ? '100%' : '60%';
+    const width = mobileMode ? '100%' : '58%';
     const dialogRef = this.dialogService.open(DetailsItemComponent, {
        data: {
         data: image,
@@ -184,16 +184,5 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       console.log('The dialog was closed', result);
     });
-    // const dialogRef = this.dialog.open(DetailsItemComponent, {
-    //   data: image,
-    // });
-
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   if (result === 'save') {
-    //     // check if the item is already saved.
-    //   } else if (result === 'delete') {
-    //   }
-    //   console.log('The dialog was closed', result);
-    // });
   }
 }

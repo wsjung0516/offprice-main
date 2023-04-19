@@ -31,13 +31,16 @@ import { DetailsItemComponent } from 'src/app/core/components/details-item/detai
 import { AuthService } from 'src/app/auth/keycloak/auth.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
+import { CartItems } from 'src/app/core/models/cart-items.model';
+import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @UntilDestroy()
 @Component({
   selector: 'app-table-list',
   standalone: true,
   imports: [
-    CommonModule,
+CommonModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableModule,
@@ -107,7 +110,9 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
     private authService: AuthService,
-    private sessionStorageService: SessionStorageService
+    private sessionStorageService: SessionStorageService,
+    private cartItemService: CartItemsService,
+    private snackBar: MatSnackBar
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
@@ -151,13 +156,13 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   selectItem(row: UserSaleList) {
     // console.log('detailSaleItem', row);
-    const store = this.sessionStorageService.getItem('userProfile');
-    if (!store) {
+    const userProfile = this.sessionStorageService.getItem('userProfile');
+    if (!userProfile) {
       this.authService.login();
     }
 
     const mobileMode = window.matchMedia('(max-width: 576px)').matches;
-    const width = mobileMode ? '100%' : '60%';
+    const width = mobileMode ? '100%' : '58%';
     const dialogRef = this.dialogService.open(DetailsItemComponent, {
        data: {
         data: row,
@@ -174,56 +179,35 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('The dialog was closed', result);
     });
 
-    // const dialogRef = this.dialog.open(DetailsItemComponent, {
-    //   data: row,
-    // });
-
-
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   if (result === 'save') {
-    //     // check if the item is already saved.
-    //   } else if (result === 'delete') {
-    //   }
-
-    //   console.log('The dialog was closed', result);
-    // });
+  }
+  putIntoCart(row: Partial<UserSaleList>) {
+    const userProfile:any = this.sessionStorageService.getItem('userProfile');
+    if (!userProfile) {
+      this.authService.login();
+    }
+    let data: Partial<CartItems> = {};
+    data = {
+      sale_list_id: +row.sale_list_id,
+      quantity: 1,
+    }
+    this.cartItemService.addCartItem(data).subscribe((res: any) => {
+      this.cartItemService.setCartItemsLength(userProfile.id);
+      this.snackBar.open('Added to cart', 'Success', {
+        duration: 2000})
+    })
     // const dialogRef = this.dialogService
-    //   .open(CreateUserComponent, {
-    //     data: {
-    //       user: resetUser,
-    //       disabled: false,
-    //       mode: 'Create',
-    //     },
+    //   .open(CartItemsComponent, {
+    //     data: {},
     //     backdrop: false,
     //     //...config,
-    //     width: '800px',
-    //     height: '800px',
+    //     // width: '800px',
+    //     // height: '800px',
     //   })
     //   .afterClosed$.subscribe((data: any) => {
     //     if (data) {
     //       this.refreshObservable.next({}); // trigger the observable for updating the table}
     //     }
     //   });
-  }
-  putIntoCart(id: string) {
-    const store = this.sessionStorageService.getItem('userProfile');
-    if (!store) {
-      this.authService.login();
-    }
-
-    const dialogRef = this.dialogService
-      .open(CartItemsComponent, {
-        data: {},
-        backdrop: false,
-        //...config,
-        // width: '800px',
-        // height: '800px',
-      })
-      .afterClosed$.subscribe((data: any) => {
-        if (data) {
-          this.refreshObservable.next({}); // trigger the observable for updating the table}
-        }
-      });
   }
   ngOnDestroy(): void {
     console.log('table-list destroy');

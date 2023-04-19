@@ -50,12 +50,13 @@ export class AppComponent implements OnInit{
         this.userService.saveUserProfileToDB(this.userProfile);
         // This is for the case when the user is log in.
         this.cartItemsService.setCartItemsLength(this.userProfile.id);
+        this.cartItemsService.makeUserCart(this.userProfile.id);
       }
       
     }
     if( profile ) { // This is for the case when the page is refreshed without log out.
-      console.log('AppComponent ngOnInit profile', profile)
       this.cartItemsService.setCartItemsLength(profile.id);
+      this.cartItemsService.makeUserCart(profile.id);
     }
 
   }

@@ -38,7 +38,7 @@
         <div class="text-white w-14 overflow-x-hidden">
           {{ userName}}
         </div>
-        <div class="text-white  -mr-3 mt-3  sm:mr-3 sm:mt-3 cursor-pointer" (click)="openCart()">
+        <div #refreshButton class="text-white  -mr-3 mt-3  sm:mr-3 sm:mt-3 cursor-pointer" (click)="openCart()">
           <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent">add_shopping_cart</mat-icon>
         </div>
       </ng-container>
@@ -48,7 +48,7 @@
           <div class="text-white w-18 mr-3 overflow-x-hidden">
             {{ userName}}
           </div>
-            <div class="text-white  mt-3  sm:mr-3 sm:mt-3 cursor-pointer" (click)="openCart()">
+            <div #refreshButton class="text-white  mt-3  sm:mr-3 sm:mt-3 cursor-pointer" (click)="openCart()">
             <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent">add_shopping_cart</mat-icon>
           </div>
         </ng-container>

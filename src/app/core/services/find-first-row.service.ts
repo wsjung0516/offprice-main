@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, groupBy, first, mergeMap, toArray, Observable } from 'rxjs';
+import { from, groupBy, first, mergeMap, toArray, Observable, last, filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,7 @@ export class FindFirstRowService {
     return from(data).pipe(
       groupBy((row) => row.sale_list_id),
       mergeMap((group$) => group$.pipe(first())),
+      filter((row) => row.quantity > 0),
       toArray()
     );
   }

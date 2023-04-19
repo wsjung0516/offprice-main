@@ -39,7 +39,7 @@ export class ProfileMenuComponent implements OnInit {
       if (profile) {
         this.userName = profile.username;
         this.userEmail = profile.email;
-        console.log('profile-menu. profile', profile);
+        // console.log('profile-menu. profile', profile);
       }
     }, 1000);
 

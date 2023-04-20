@@ -52,11 +52,11 @@ export class AppComponent implements OnInit{
       if( this.userProfile.id ) {
         this.sessionStorageService.setItem('userProfile', this.userProfile);
         this.userService.saveUserProfileToDB(this.userProfile);
-        // This is for the case when the user is log in.
+        // This is for the case when the user-profile is log in.
         this.cartItemsService.setCartItemsLength(this.userProfile.id);
         this.cartItemsService.makeUserCart(this.userProfile.id);
       }
-      
+
     }
     if( profile ) { // This is for the case when the page is refreshed without log out.
       this.cartItemsService.setCartItemsLength(profile.id);

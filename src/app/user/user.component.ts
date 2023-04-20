@@ -40,7 +40,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-user',
+  selector: 'app-user-profile',
   standalone: true,
   imports: [
     CommonModule,
@@ -169,7 +169,7 @@ export class UserComponent implements OnInit {
     // console.log('onCreatedUser', this.userForm.value);
   }
   onUpdatedUser(user: User) {
-    // this.user.user_id = user.user_id;
+    // this.user-profile.user_id = user-profile.user_id;
     const dialogRef = this.dialog
       .open(CreateUserComponent, {
         data: {

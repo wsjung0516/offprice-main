@@ -78,13 +78,13 @@ export class UserService {
   }
   saveUserProfileToDB(data: any) {
     // call from app.component.ts
-    // Because login with keycloak, we need to save user profile to our DB, when user login
+    // Because login with keycloak, we need to save user-profile profile to our DB, when user-profile login
     let user: any = {};
     user.first_name = data.firstName;
     user.last_name = data.lastName;
     user.user_id = data.id;
     user.email = data.email;
-    // Check if user exist in our DB
+    // Check if user-profile exist in our DB
     const ret = this.getUser(data.id).subscribe((ret: any) => {
       if (!ret) {
         user.first_name = data.firstName;

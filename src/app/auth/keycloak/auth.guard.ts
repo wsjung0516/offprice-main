@@ -21,7 +21,7 @@ export class AuthGuard extends KeycloakAuthGuard {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ) {
-    // Force the user to log in if currently unauthenticated.
+    // Force the user-profile to log in if currently unauthenticated.
     if (!this.authenticated) {
       await this.keycloak.login({
         redirectUri: window.location.origin + state.url
@@ -31,12 +31,12 @@ export class AuthGuard extends KeycloakAuthGuard {
     // Get the roles required from the route.
     const requiredRoles = route.data['roles'];
 
-    // Allow the user to proceed if no additional roles are required to access the route.
+    // Allow the user-profile to proceed if no additional roles are required to access the route.
     if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
       return true;
     }
 
-    // Allow the user to proceed if all the required roles are present.
+    // Allow the user-profile to proceed if all the required roles are present.
     return requiredRoles.every((role) => this.roles.includes(role));
   }
 }
@@ -67,7 +67,7 @@ export class AuthGuard extends KeycloakAuthGuard {
         // Get the roles required from the route.
         const requiredRoles = route.data.roles;
 
-        // Allow the user to proceed if no additional roles are required to access the route.
+        // Allow the user-profile to proceed if no additional roles are required to access the route.
         if (!(requiredRoles instanceof Array) || requiredRoles.length == 0) {
             return true;
         }
@@ -81,7 +81,7 @@ export class AuthGuard extends KeycloakAuthGuard {
             return false;
         }
 
-        // Allow the user to proceed if all the required roles are present.
+        // Allow the user-profile to proceed if all the required roles are present.
         return requiredRoles.every((role) => this.roles.includes(role));
     }
 }

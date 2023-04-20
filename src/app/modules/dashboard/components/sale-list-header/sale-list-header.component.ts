@@ -116,7 +116,7 @@ export class SaleListHeaderComponent
         }
       });
   }
-  // When the user clicks close buttion in the chips.
+  // When the user-profile clicks close buttion in the chips.
   removeChipsKeyword(keyword: SearchKeyword) {
     this.removeChipsKeywordService.resetSearchKeyword(keyword);
     if (keyword['key'] === 'input_keyword') {

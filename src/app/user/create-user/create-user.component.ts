@@ -43,7 +43,7 @@ interface Data {
 import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 @Component({
-  selector: 'app-create-user',
+  selector: 'app-create-user-profile',
   standalone: true,
   imports: [
     CommonModule,
@@ -106,7 +106,7 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       // this.mode = this.ref.data.mode;
-      // this.user = this.ref.data.user;
+      // this.user-profile = this.ref.data.user-profile;
       // this.disabled = this.ref.data.disabled;
       this.displayUser(this.user);
 

@@ -23,7 +23,7 @@ import { SaleListModule } from 'src/app/modules/dashboard/components/sale-list/s
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/core/components/confirm-dialog/confirm-dialog.component';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-// import { CreatUserComponent } from './../../../../core/components/user-info/user-info.component';
+// import { CreatUserComponent } from './../../../../core/components/user-profile-info/user-profile-info.component';
 import { CreateUserComponent } from 'src/app/user/create-user/create-user.component';
 import { DialogConfig, DialogService } from '@ngneat/dialog';
 import { User } from 'src/app/user/models/user.model';

@@ -99,7 +99,7 @@ export class CategoryMenuComponent implements OnInit {
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }
-  // This method is called from localStorage when the user clicks remove button chip of chips,
+  // This method is called from localStorage when the user-profile clicks remove button chip of chips,
   // Where save 'All' to localStorage
   // Which is sale-list-header.component.ts
   subscribeToLocalStorageItem(): void {

@@ -44,7 +44,7 @@ interface Data {
 }
 @UntilDestroy()
 @Component({
-  selector: 'app-user',
+  selector: 'app-user-profile',
   standalone: true,
   imports: [
 CommonModule,
@@ -63,11 +63,11 @@ CommonModule,
     MatSelectModule,
     // NzModalModule,
   ],
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css'],
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserComponent implements OnInit, AfterViewInit {
+export class UserProfileComponent implements OnInit, AfterViewInit {
   // ref: DialogRef<Data> = inject(DialogRef);
 
   title = 'Update User';
@@ -92,7 +92,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     private userService: UserService,
     private cd: ChangeDetectorRef,
     private http: HttpClient,
-    public dialogRef: MatDialogRef<UserComponent>,
+    public dialogRef: MatDialogRef<UserProfileComponent>,
     private sessionStorageService: SessionStorageService,
   ) {}
 
@@ -141,7 +141,7 @@ export class UserComponent implements OnInit, AfterViewInit {
       this.contactForm.get('store_address1').setValue(user.store_address1);
       this.cd.detectChanges();
     })
-    // this.user = this.ref.data.user;
+    // this.user-profile = this.ref.data.user-profile;
     // this.disabled = this.ref.data.disabled;
     this.completeAddress('address1',0);
     this.completeAddress('store_address1',1);
@@ -168,7 +168,7 @@ export class UserComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe((response) => {
-          
+
         const searchResults = response as any;
         // Extract the city, state, and country information from the search results
         this.cities[arg] = Array.from(
@@ -205,7 +205,7 @@ export class UserComponent implements OnInit, AfterViewInit {
           )
         );
 
-        // this.postalCode = postalCode.length ? postalCode[0] : '';      
+        // this.postalCode = postalCode.length ? postalCode[0] : '';
         if (!!postalCode && postalCode.length > 0) {
           console.log('postalCode', postalCode[0]);
           this.postalCode[arg] = postalCode[0];
@@ -261,7 +261,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   updateUser() {
     console.log ('this.contactForm.value', this.contactForm.value);
     const user: User = {...this.contactForm.value, ...{updated_at: new Date()}}
-    console.log('user----', user);
+    console.log('user-profile----', user);
     this.userService
       .updateUser(this.userId, user)
       .subscribe((response: any) => {
@@ -278,8 +278,8 @@ export class UserComponent implements OnInit, AfterViewInit {
         console.log('response', response);
       });
   }
-  // displayUser(user: Partial<User>) {
-  //   if (!user) {
+  // displayUser(user-profile: Partial<User>) {
+  //   if (!user-profile) {
   //     return;
   //   }
 
@@ -297,7 +297,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   //     subscribe,
   //     user_id,
   //     created_at,
-  //   } = user;
+  //   } = user-profile;
 
   //   this.contactForm.patchValue({
   //     first_name,

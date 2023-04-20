@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from 'src/app/auth/keycloak/auth.service';
-import { UserComponent } from 'src/app/core/components/user/user.component';
+import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { ProfileMenuModule } from './profile-menu.module';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -19,7 +19,7 @@ CommonModule,
   styles: [`
     .z_index{
       z-index:100;
-    }    
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -34,7 +34,7 @@ export class ProfileMenuComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private snackBar: MatSnackBar
 
-    ) 
+    )
     {}
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class ProfileMenuComponent implements OnInit {
     // Profile dropdown
   toggleDropdown() {
     this.dropdown = !this.dropdown;
-    // document.getElementById('user-menu-button').classList.toggle('show');
+    // document.getElementById('user-profile-menu-button').classList.toggle('show');
   }
   mobile_menu = true;
   mobileMenuOpen() {
@@ -68,8 +68,8 @@ export class ProfileMenuComponent implements OnInit {
       return
     }
 
-    const dialogRef = this.dialog.open(UserComponent, {
-      
+    const dialogRef = this.dialog.open(UserProfileComponent, {
+
     });
 
     dialogRef.afterClosed().subscribe((result:any) => {

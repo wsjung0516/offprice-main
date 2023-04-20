@@ -2,9 +2,9 @@
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { UserComponent } from './user.component';
 
-// describe('UserComponent', () => {
-//   let spectator: Spectator<UserComponent>;
-//   const createComponent = createComponentFactory(UserComponent);
+// describe('UserProfileComponent', () => {
+//   let spectator: Spectator<UserProfileComponent>;
+//   const createComponent = createComponentFactory(UserProfileComponent);
 
 //   beforeEach(() => spectator = createComponent());
 

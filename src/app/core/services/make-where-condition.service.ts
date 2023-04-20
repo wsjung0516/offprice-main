@@ -180,6 +180,8 @@ export class MakeWhereConditionService {
     }
     if (input_keyword !== '') {
       orArray.push({ vendor: { contains: input_keyword } });
+      orArray.push({ store_name: { contains: input_keyword } });
+      orArray.push({ product_name: { contains: input_keyword } });
       orArray.push({ description: { contains: input_keyword } });
     }
 

@@ -10,9 +10,8 @@ export class RemoveChipsKeywordService {
   constructor(
     private chipsKeywordService: ChipsKeywordService,
     private SharedMenuObservableService: SharedMenuObservableService,
-    private localStorageService: LocalStorageService
-  ) // private cd: ChangeDetectorRef
-  {}
+    private localStorageService: LocalStorageService // private cd: ChangeDetectorRef
+  ) {}
   async resetSearchKeyword(keyword: SearchKeyword) {
     const value = { key: keyword['key'], value: keyword['value'] };
     // Remove chip from the chips array
@@ -32,6 +31,7 @@ export class RemoveChipsKeywordService {
         this.SharedMenuObservableService.search_period.next('All'),
       input_keyword: () => {
         this.SharedMenuObservableService.input_keyword.next('');
+        this.SharedMenuObservableService.reset_input_keyword.next('');
         // clear search keyword in the sale-list-header.component
         // this.inputKeyword = '';
         // this.cd.detectChanges();

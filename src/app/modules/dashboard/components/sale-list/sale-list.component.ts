@@ -175,10 +175,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   async selectImage(image: UserSaleList) {
     // console.log('detailSaleItem', row);
-    const userProfile = this.sessionStorageService.getItem('userProfile');
-    if (!userProfile) {
-      this.authService.login();
-    }
     const mobileMode = window.matchMedia('(max-width: 576px)').matches;
     const width = mobileMode ? '100%' : '58%';
     const dialogRef = this.dialogService.open(DetailsItemComponent, {

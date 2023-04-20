@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -10,6 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  fromEvent,
+  Observable,
+  pluck,
+} from 'rxjs';
+import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
 
 @UntilDestroy()
 @Component({
@@ -40,31 +49,46 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputKeywordComponent implements OnInit {
+export class InputKeywordComponent implements OnInit, AfterViewInit {
+  inputWord: any;
   inputKeyword = '';
   constructor(
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private removeChipsKeywordService: RemoveChipsKeywordService
   ) {}
   ngOnInit(): void {
-    this.SharedMenuObservableService.reset_input_keyword$
+    this.sharedMenuObservableService.reset_input_keyword$
       .pipe(untilDestroyed(this))
       .subscribe((data) => {
         this.reset();
+      });
+  }
+  ngAfterViewInit(): void {
+    this.inputWord = document.getElementById('default-search');
+    fromEvent(this.inputWord, 'input')
+      .pipe(untilDestroyed(this), debounceTime(400), distinctUntilChanged())
+      .subscribe((data: any) => {
+        // console.log('data.target.value',data.target.value);
+        this.onInputSearchKeyword(data.target.value);
       });
   }
   onInputSearchKeyword(data: string): void {
     if (data === '') {
       const value = { key: 'input_keyword', value: data };
       this.chipsKeywordService.removeChipKeyword(value);
+      this.removeChipsKeywordService.resetSearchKeyword({
+        key: 'input_keyword',
+        value: data,
+      });
       return;
     }
     const value = { key: 'input_keyword', value: data };
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     // To make observable value change, which will be used make-where-condition.service.ts
-    this.SharedMenuObservableService.input_keyword.next(data);
+    this.sharedMenuObservableService.input_keyword.next(data);
     // this.favoriteSeason = data;
   }
   reset() {

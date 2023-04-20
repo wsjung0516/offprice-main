@@ -30,7 +30,7 @@ export class MakeTableWhereConditionService {
 
   sort: MatSort;
   paginator: MatPaginator;
-  refreshObservable$: Observable<any>;
+  refreshObservable$: Observable<any> = this.sharedMenuObservableService.refreshData$;
   private displayModeSubject = new BehaviorSubject<string>('grid');
   displayMode$: Observable<string> = this.displayModeSubject.asObservable();
   displayMode = '';
@@ -175,6 +175,7 @@ export class MakeTableWhereConditionService {
       });
     }
     if (input_keyword !== '') {
+      orArray.push({ product_name: { contains: input_keyword } });
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ description: { contains: input_keyword } });
       orArray.push({ store_name: { contains: input_keyword } });

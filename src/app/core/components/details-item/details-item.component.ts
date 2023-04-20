@@ -18,6 +18,7 @@ import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.
 import { SessionStorageService } from './../../services/session-storage.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { AuthService } from 'src/app/auth/keycloak/auth.service';
 export interface Data {
   data: Partial<UserSaleList>;
 }
@@ -49,11 +50,12 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     private cartItemsService: CartItemsService,
     private sessionStorageService: SessionStorageService,
     private snackBar: MatSnackBar,
-    private sharedMenuObservableService: SharedMenuObservableService
+    private sharedMenuObservableService: SharedMenuObservableService,
+    private authService: AuthService,
   ) {}
   ngOnInit(): void {
     const profile: any = this.sessionStorageService.getItem('userProfile');
-    this.userId = profile.id;
+    this.userId = profile?.id;
   }
   ngAfterViewInit(): void {
     this.item = { ...this.ref.data.data };
@@ -67,6 +69,11 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     });
   }
   onSave(): void {
+    const userProfile = this.sessionStorageService.getItem('userProfile');
+    if (!userProfile) {
+      this.authService.login();
+    }
+
     // Currently, the quantity is fixed to 1.
     const quantity = 1;
     const { user_id, sale_list_id } = this.item;

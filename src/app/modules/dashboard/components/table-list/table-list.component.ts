@@ -61,13 +61,14 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = [
+    'product_name',
     'vendor',
     'price',
     'count',
-    'description',
     'category',
     'size',
     'material',
+    'description',
     'created_at',
     'image_url',
     'store_name',
@@ -77,13 +78,14 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   displayedTitle: string[] = [
     // 'Id',
+    'Product Name',
     'Vendor',
     'Price',
     'Quantity',
-    'Description',
     'Category',
     'Size',
     'Material',
+    'Description',
     'CreatedAt',
     'Image',
     'Store Name',
@@ -156,10 +158,6 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   selectItem(row: UserSaleList) {
     // console.log('detailSaleItem', row);
-    const userProfile = this.sessionStorageService.getItem('userProfile');
-    if (!userProfile) {
-      this.authService.login();
-    }
 
     const mobileMode = window.matchMedia('(max-width: 576px)').matches;
     const width = mobileMode ? '100%' : '58%';

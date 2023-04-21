@@ -69,7 +69,6 @@ export class ProfileMenuComponent implements OnInit {
     }
 
     const dialogRef = this.dialog.open(UserProfileComponent, {
-
     });
 
     dialogRef.afterClosed().subscribe((result:any) => {

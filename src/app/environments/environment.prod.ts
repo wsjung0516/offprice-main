@@ -26,5 +26,5 @@ export const environment = {
     keycloak: keycloakConfig,
     url: 'http://localhost:3000/api/v1',  // nestjs api
     // url: 'https://192.168.1.248:3030/api/v1',  // nestjs api
-    redirectUri: 'http://localhost:4200/register'
+    redirectUri: 'http://localhost:4200/
 };

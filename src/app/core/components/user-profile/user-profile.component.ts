@@ -33,11 +33,19 @@ import { format } from 'date-fns';
 import { UserService } from './user.service';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { debounceTime, distinctUntilChanged, filter, Observable, skip, switchMap } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  Observable,
+  skip,
+  switchMap,
+} from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SessionStorageService } from './../../services/session-storage.service';
+import { TermsAndConditionsComponent } from '../terms-and-condition/terms-and-conditions.component';
 // import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
 interface Data {
   user_id: string;
@@ -47,7 +55,7 @@ interface Data {
   selector: 'app-user-profile',
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -61,6 +69,7 @@ CommonModule,
     MatTooltipModule,
     // ConfirmDialogComponent,
     MatSelectModule,
+    MatDialogModule
     // NzModalModule,
   ],
   templateUrl: './user-profile.component.html',
@@ -94,6 +103,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     private http: HttpClient,
     public dialogRef: MatDialogRef<UserProfileComponent>,
     private sessionStorageService: SessionStorageService,
+    private matDialog: MatDialog
   ) {}
 
   contactForm = new UntypedFormGroup({
@@ -130,9 +140,9 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
   async ngAfterViewInit() {
     // this.mode = this.ref.data.mode;
-    const profile:any = this.sessionStorageService.getItem('userProfile');
+    const profile: any = this.sessionStorageService.getItem('userProfile');
     this.userService.getUser(profile.id).subscribe((user) => {
-      console.log('user', user);
+      // console.log('user', user);
       this.userId = user.user_id;
       this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
       this.contactForm.patchValue(user);
@@ -140,90 +150,108 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       this.contactForm.get('address1').setValue(user.address1);
       this.contactForm.get('store_address1').setValue(user.store_address1);
       this.cd.detectChanges();
-    })
+    });
     // this.user-profile = this.ref.data.user-profile;
     // this.disabled = this.ref.data.disabled;
-    this.completeAddress('address1',0);
-    this.completeAddress('store_address1',1);
-
+    this.completeAddress('address1', 0);
+    this.completeAddress('store_address1', 1);
   }
   compareFn(object1: any, object2: any) {
     console.log('object1, object2', object1, object2);
     return object1 && object2 && object1.id == object2.id;
-}
-  private completeAddress(control: string, arg:number) {
+  }
+  private completeAddress(control: string, arg: number) {
     this.contactForm
       .get(control)
       .valueChanges.pipe(
         skip(1),
-        filter((value) => value !== '' && value !== null ),
+        filter((value) => value !== '' && value !== null),
         untilDestroyed(this),
         debounceTime(300),
         distinctUntilChanged(),
         switchMap((value: string) => {
-          return this.http
-          .get(
+          return this.http.get(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${value}&key=AIzaSyDhlv6bqw8LpkJdw5oikJD_mAuqs1jpjgA`
-            )
+          );
         })
       )
       .subscribe((response) => {
-
         const searchResults = response as any;
         // Extract the city, state, and country information from the search results
         this.cities[arg] = Array.from(
           new Set(
             searchResults?.results?.map(
-              (result: any) => result.address_components.find((component: any) => component.types.find((val: any) => val.includes('locality', 'sublocality')
-              )
-              )?.long_name
+              (result: any) =>
+                result.address_components.find((component: any) =>
+                  component.types.find((val: any) =>
+                    val.includes('locality', 'sublocality')
+                  )
+                )?.long_name
             )
           )
         );
         this.states[arg] = Array.from(
           new Set(
             searchResults?.results?.map(
-              (result: any) => result.address_components.find((component: any) => component.types[0].includes('administrative_area_level_1')
-              ).short_name
+              (result: any) =>
+                result.address_components.find((component: any) =>
+                  component.types[0].includes('administrative_area_level_1')
+                ).short_name
             )
           )
         );
         this.countries[arg] = Array.from(
           new Set(
             searchResults?.results?.map(
-              (result: any) => result.address_components.find((component: any) => component.types[0].includes('country')
-              ).short_name
+              (result: any) =>
+                result.address_components.find((component: any) =>
+                  component.types[0].includes('country')
+                ).short_name
             )
           )
         );
         const postalCode: string[] = Array.from(
           new Set(
             searchResults?.results?.map(
-              (result: any) => result.address_components.find((component: any) => component.types[0].includes('postal_code')
-              )?.long_name
+              (result: any) =>
+                result.address_components.find((component: any) =>
+                  component.types[0].includes('postal_code')
+                )?.long_name
             )
           )
         );
 
         // this.postalCode = postalCode.length ? postalCode[0] : '';
         if (!!postalCode && postalCode.length > 0) {
-          console.log('postalCode', postalCode[0]);
+          // console.log('postalCode', postalCode[0]);
           this.postalCode[arg] = postalCode[0];
         }
       });
   }
-  checkSameValueAsAbove(event:any) {
+  checkSameValueAsAbove(event: any) {
     console.log('event', event.checked);
     if (event.checked) {
-      this.contactForm.get('store_address1').setValue(this.contactForm.get('address1').value);
-      this.contactForm.get('store_address2').setValue(this.contactForm.get('address2').value);
-      this.contactForm.get('store_city').setValue(this.contactForm.get('city').value);
-      this.contactForm.get('store_state').setValue(this.contactForm.get('state').value);
-      this.contactForm.get('store_country').setValue(this.contactForm.get('country').value);
-      this.contactForm.get('store_zipcode').setValue(this.contactForm.get('zipcode').value);
+      this.contactForm
+        .get('store_address1')
+        .setValue(this.contactForm.get('address1').value);
+      this.contactForm
+        .get('store_address2')
+        .setValue(this.contactForm.get('address2').value);
+      this.contactForm
+        .get('store_city')
+        .setValue(this.contactForm.get('city').value);
+      this.contactForm
+        .get('store_state')
+        .setValue(this.contactForm.get('state').value);
+      this.contactForm
+        .get('store_country')
+        .setValue(this.contactForm.get('country').value);
+      this.contactForm
+        .get('store_zipcode')
+        .setValue(this.contactForm.get('zipcode').value);
       this.cd.detectChanges();
     } else {
-      this.contactForm.get('store_address1').setValue('',{emitEvent: false});
+      this.contactForm.get('store_address1').setValue('', { emitEvent: false });
       this.contactForm.get('store_address2').setValue('');
       this.contactForm.get('store_city').setValue('');
       this.contactForm.get('store_state').setValue('');
@@ -233,10 +261,8 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
   onSubmit() {
-    console.log('this.mode', this.mode);
+    // console.log('this.mode', this.mode);
     switch (this.mode) {
       case 'Create':
         this.createUser();
@@ -254,13 +280,16 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     this.userService
       .createUser(this.contactForm.value)
       .subscribe((response: any) => {
-        console.log('response', response);
+        //console.log('response', response);
         // this.ref.close(true);
       });
   }
   updateUser() {
-    console.log ('this.contactForm.value', this.contactForm.value);
-    const user: User = {...this.contactForm.value, ...{updated_at: new Date()}}
+    console.log('this.contactForm.value', this.contactForm.value);
+    const user: User = {
+      ...this.contactForm.value,
+      ...{ updated_at: new Date() },
+    };
     console.log('user-profile----', user);
     this.userService
       .updateUser(this.userId, user)
@@ -278,44 +307,17 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         console.log('response', response);
       });
   }
-  // displayUser(user-profile: Partial<User>) {
-  //   if (!user-profile) {
-  //     return;
-  //   }
-
-  //   const {
-  //     first_name,
-  //     last_name,
-  //     email,
-  //     phone_no,
-  //     address1,
-  //     address2,
-  //     city,
-  //     state,
-  //     country,
-  //     zipcode,
-  //     subscribe,
-  //     user_id,
-  //     created_at,
-  //   } = user-profile;
-
-  //   this.contactForm.patchValue({
-  //     first_name,
-  //     last_name,
-  //     email,
-  //     phone_no,
-  //     address1,
-  //     address2,
-  //     city,
-  //     state,
-  //     country,
-  //     zipcode,
-  //     subscribe,
-  //   });
-
-  //   this.userId = user_id ? user_id.toString() : '';
-  //   // this.createdDate = format(new Date(created_at), 'MM/dd/yyyy hh:mm:ss');
-  // }
+  openTermsAndConditions() {
+    this.matDialog.open(TermsAndConditionsComponent, {
+      hasBackdrop: false,
+      disableClose: true,
+    });
+    // this.dialog.open(TermsAndConditionsComponent, {
+    //   data: { data: 'Terms and Conditions' },
+      
+    //   backdrop: false
+    // });
+  }
   closeDialog() {
     this.dialogRef.close();
   }

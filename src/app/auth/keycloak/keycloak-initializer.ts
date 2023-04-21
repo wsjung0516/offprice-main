@@ -9,7 +9,7 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<boo
         loadUserProfileAtStartUp: true,
         initOptions: {
           pkceMethod: 'S256',
-          redirectUri: 'http://localhost:4200/',
+          redirectUri: environment.redirectUri,
           checkLoginIframe: false,
           // onLoad: 'check-sso',
           // silentCheckSsoRedirectUri:

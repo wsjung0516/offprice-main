@@ -13,6 +13,38 @@ export const Sizes = [
   {key: '5X', value: '5X'},
   {key: 'OX', value: 'OX'},
 ]
+export const ENUM_COLOR = [
+  'Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Navy',   
+  'Purple', 'Pink', 'Brown', 'Gray', 'White', 'Black',  
+  'Indigo', 'Violet', 'Cyan', 'Magenta','Silver', 
+  'Gold', 'Beige', 'Maroon','Olive',  
+] as const
+export type Color = typeof ENUM_COLOR[number];
+
+export const Colors = [
+  {key:'All', value: 'All'},
+  {key: 'Red', value: '#FF0000'},
+  {key: 'Orange', value: '#FFA500'},
+  {key: 'Yellow', value: '#FFFF00'},
+  {key: 'Green', value: '#008000'},
+  {key: 'Blue', value: '#0000FF'},
+  {key: 'Navy', value: '#000080'},
+  {key: 'Purple', value: '#800080'},
+  {key: 'Pink', value: '#FFC0CB'},
+  {key: 'Brown', value: '#A52A2A'},
+  {key: 'Gray', value: '#808080'},
+  {key: 'White', value: '#FFFFFF'},
+  {key: 'Black', value: '#000000'},
+  {key: 'Indigo', value: '#4B0082'},
+  {key: 'Violet', value: '#EE82EE'},
+  {key: 'Cyan', value: '#00FFFF'},
+  {key: 'Magenta', value: '#FF00FF'},
+  {key: 'Silver', value: '#C0C0C0'},
+  {key: 'Gold', value: '#FFD700'},
+  {key: 'Beige', value: '#F5F5DC'},
+  {key: 'Maroon', value: '#800000'},
+  {key: 'Olive', value: '#808000'},
+]
 export enum EWaist {
   w23 = '23',
   w24 = '24',

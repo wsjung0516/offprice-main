@@ -12,6 +12,7 @@ export class SharedMenuObservableService {
   size = new BehaviorSubject<string>('All');
   material = new BehaviorSubject<string>('All');
   search_period = new BehaviorSubject<string>('All');
+  color = new BehaviorSubject<string>('All');
   //
   reset_category = new Subject<string>();
   reset_category$ = this.reset_category.asObservable();
@@ -25,6 +26,8 @@ export class SharedMenuObservableService {
   reset_material$ = this.reset_material.asObservable();
   reset_search_period = new Subject<string>();
   reset_search_period$ = this.reset_search_period.asObservable();
+  reset_color = new Subject<string>();
+  reset_color$ = this.reset_color.asObservable();
   //
   gotoHome = new Subject<string>();
   gotoHome$ = this.gotoHome.asObservable();
@@ -59,6 +62,9 @@ export class SharedMenuObservableService {
   }
   get search_period$() {
     return this.search_period.asObservable();
+  }
+  get color$() {
+    return this.color.asObservable();
   }
   resetService() {}
 }

@@ -1,29 +1,28 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-// import { MenuItem } from 'src/app/core/models/menu.model';
 import { ThemeService } from 'src/app/core/services/theme.service';
-// import packageJson from '../../../../../../package.json';
 import { MenuService } from '../../../../core/services/menu.service';
 import { CommonModule } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-// import { CategoryComponent } from './category/category.component';
 import { SelectSizeComponent } from './select-size/select-size.component';
 import { PriceRangeComponent } from './price-range/price-range.component';
 import { MaterialComponent } from './material/material.component';
 import { MatIconModule } from '@angular/material/icon';
 import { SearchPeriodComponent } from './search-period/search-period.component';
 import { AuthService } from 'src/app/auth/keycloak/auth.service';
+import { ColorComponent } from './color/color.component';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     AngularSvgIconModule,
     // CategoryComponent,
     SelectSizeComponent,
     PriceRangeComponent,
     MaterialComponent,
     SearchPeriodComponent,
+    ColorComponent,
     MatIconModule,
   ],
   templateUrl: './sidebar.component.html',

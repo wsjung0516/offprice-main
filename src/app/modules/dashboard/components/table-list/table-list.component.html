@@ -12,10 +12,10 @@
           <ng-container
             *ngIf="
               column !== 'action' &&
-              column !== 'image_url' &&
+              column !== 'image_urls' &&
               column !== 'created_at' &&
-              column !== 'first_name' &&
-              column !== 'description'
+              column !== 'description' &&
+              column !== 'color'
             "
           >
             <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
@@ -30,25 +30,32 @@
               </div>
             </td>
           </ng-container>
-          <ng-container *ngIf="column === 'image_url'">
+          <ng-container *ngIf="column === 'image_urls'">
             <td mat-cell *matCellDef="let row">
               <div
                 class="w-10 h-10 rounded-full"
                 imageDetail
-                [image]="row[column]"
+                [image]="row[column].split(',')[0]"
               >
-                <img [src]="row[column]" alt="offprice.store" />
+                <img [src]="row[column].split(',')[0]" alt="offprice.store" />
+              </div>
+            </td>
+          </ng-container>
+          <ng-container *ngIf="column === 'color'">
+            <td mat-cell *matCellDef="let row">
+              <div class="flex">
+                <div *ngFor="let color of row[column]?.split(',')"
+                     class="w-8 h-8 mr-2"
+                     [ngStyle]="{ 'background-color': color.trim() }"
+                     [ngClass]="'rounded-full'">
+                 <span class="align-middle text-xs">{{ color.trim() }}</span> 
+                </div>
               </div>
             </td>
           </ng-container>
           <ng-container *ngIf="column === 'created_at'">
             <td mat-cell *matCellDef="let row">
               {{ row[column] | date: 'yyyy-MM-dd' }}
-            </td>
-          </ng-container>
-          <ng-container *ngIf="column === 'first_name'">
-            <td mat-cell *matCellDef="let row">
-              {{ row[column] }}  {{ row['last_name'] }}
             </td>
           </ng-container>
           <ng-container *ngIf="column === 'action'">

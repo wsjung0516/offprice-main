@@ -25,10 +25,24 @@ export class RemoveChipsKeywordService {
         // This value will be used in category menu component
         this.localStorageService.setItem('category', 'All');
       },
-      size: () => this.SharedMenuObservableService.size.next('All'),
-      material: () => this.SharedMenuObservableService.material.next('All'),
+      size: () => {
+        this.SharedMenuObservableService.input_keyword.next('');
+        this.SharedMenuObservableService.reset_input_keyword.next('');
+      },
+      material: () => {
+        this.SharedMenuObservableService.input_keyword.next('');
+        this.SharedMenuObservableService.reset_input_keyword.next('');
+      },
       search_period: () =>
         this.SharedMenuObservableService.search_period.next('All'),
+        // color, material, size 도 input_keyword 와 같은 방식으로 처리하는 이유는 
+        // color, material, size Table 에는 다양한 종류의 값이 있기 때문에 단순히 검색어 하나로 로 처리할 수 없기 때문에,
+        // 마치 input_keyword 와 같이 검색어를 입력하고 엔터를 눌러서 검색하는 방식으로 처리하기 위해서이다.
+      color: () => {
+        this.SharedMenuObservableService.input_keyword.next('');
+        this.SharedMenuObservableService.reset_input_keyword.next('');
+      },
+
       input_keyword: () => {
         this.SharedMenuObservableService.input_keyword.next('');
         this.SharedMenuObservableService.reset_input_keyword.next('');

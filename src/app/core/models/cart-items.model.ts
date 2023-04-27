@@ -3,7 +3,7 @@ export  interface CartItems {
   cart_id: number;
   category: string;
   count: number;
-  image_url: string;
+  image_urls: string;
   material: string;
   price: number;
   quantity: number;

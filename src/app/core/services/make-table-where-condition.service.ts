@@ -114,6 +114,7 @@ export class MakeTableWhereConditionService {
       material$,
       search_period$,
       input_keyword$,
+      color$,
     } = this.sharedMenuObservableService;
 
     this.searchConditionObservable$ = combineLatest([
@@ -125,6 +126,7 @@ export class MakeTableWhereConditionService {
       material$,
       search_period$,
       input_keyword$,
+      color$,
     ]).pipe(
       untilDestroyed(this),
       tap((val) => {
@@ -148,7 +150,8 @@ export class MakeTableWhereConditionService {
     material,
     search_period,
     input_keyword,
-  ]: [string, string, string, string, string, string, string]): {
+    color,
+  ]: [string, string, string, string, string, string, string, string]): {
     where: { and: any[]; or: any[] };
   } {
     const andArray: any[] = [];
@@ -162,6 +165,7 @@ export class MakeTableWhereConditionService {
     if (category !== 'All') andArray.push({ category: category });
     if (size !== 'All') andArray.push({ size: size });
     if (material !== 'All') andArray.push({ material: material });
+    // if (color !== 'All') andArray.push({ color: color });
     if (search_period !== 'All') {
       const day: number = +search_period;
       andArray.push({
@@ -179,6 +183,9 @@ export class MakeTableWhereConditionService {
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ description: { contains: input_keyword } });
       orArray.push({ store_name: { contains: input_keyword } });
+      orArray.push({ color: { contains: input_keyword } });
+      orArray.push({ size: { contains: input_keyword } });
+      orArray.push({ material: { contains: input_keyword } });
     }
 
     return { where: { and: andArray, or: orArray } };

@@ -1,10 +1,29 @@
-<ng-container *ngIf="this.item?.image_url">
+<ng-container *ngIf="this.item?.image_urls">
   <div class="flex flex-col h-full">
     <div class="overflow-y-auto max-h-[calc(100vh-3rem)] p-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <!-- Left Column: Image -->
-        <div class="">
-          <img [src]="item.image_url" alt="Product Image" class="w-full object-cover object-center">
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
+          <!-- Small Images Column -->
+          <div class="col-span-1 flex flex-col">
+            <ng-container *ngFor="let image of item.image_urls.split(',')">
+              <img
+                [src]="image"
+                alt="Product Image"
+                class="h-16 w-auto object-cover object-center mb-2 cursor-pointer"
+                (click)="selectedImage = image"
+              />
+            </ng-container>
+          </div>
+
+          <!-- Main Image Column -->
+          <div class="col-span-4">
+            <img
+              [src]="selectedImage || item.image_urls.split(',')[0]"
+              alt="Product Image"
+              class="w-full object-cover object-center"
+            />
+          </div>
         </div>
     
         <!-- Right Column: Product Details -->
@@ -13,8 +32,20 @@
             <h2 class="text-xl font-semibold text-blue-600">{{item.product_name}}</h2>
             <p class="mt-1">Category: <span class="font-bold">{{item.category}}</span></p>
             <p class="mt-1">Price: <span class="font-bold">${{item.price}}</span></p>
-            <p class="mt-1">Quantity: <span class="font-bold">{{item.count}}</span></p>
             <p class="mt-1">Size: <span class="font-bold">{{item.size}}</span></p>
+            <p class="mt-1">Quantity: <span class="font-bold">{{item.sizeArray}}</span></p>
+            <div class="flex justify-start">
+              <p class="mt-1">Color:</p> 
+                <div class="ml-3 flex">
+                  <div *ngFor="let color of item.color.split(',')"
+                    class="w-8 h-8 mr-6"
+                    [ngStyle]="{ 'background-color': color.trim() }"
+                    [ngClass]="'rounded-full'">
+                    <span class="align-middle text-xs">{{ color.trim() }}</span> 
+                  </div>
+                <!-- {{item.color}} -->
+              </div>
+            </div>
             <p class="mt-1">Vendor: <span class="font-bold">{{item.vendor}}</span></p>
             <p class="mt-1">Material: <span class="font-bold">{{item.material}}</span></p>
             <p class="mt h-36 overflow-y-auto">

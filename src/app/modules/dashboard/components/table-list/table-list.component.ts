@@ -64,13 +64,14 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     'product_name',
     'vendor',
     'price',
-    'count',
+    'color',
     'category',
     'size',
+    'sizeArray',
     'material',
     'description',
     'created_at',
-    'image_url',
+    'image_urls',
     'store_name',
     'action',
 
@@ -81,15 +82,16 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     'Product Name',
     'Vendor',
     'Price',
-    'Quantity',
+    'Color',
     'Category',
     'Size',
+    'Quantity',
     'Material',
     'Description',
     'CreatedAt',
     'Image',
     'Store Name',
-    'Detail',
+    'Details',
   ];
 
   dataSource: MatTableDataSource<UserSaleList>;
@@ -213,33 +215,32 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 }
 // make example data by using UserSaleList model
-export const resetUserSaleList: Partial<UserSaleList> = {
-  category: 'Tops',
-  count: 100,
-  // created_at:"2023-04-13T19:32:54.000Z",
-  description:
-    '<h1>Title</h1><p>1.test1</p><p>2.test2</p><p>3.test3</p><p>adkfjdasfkdasfdsafdasfdsafdasfdasfdasfasdfdsafasfasdfdasfasdfdsfdsafdasfsdafsd</p>',
-  image_url:
-    'https://offprice_bucket.storage.googleapis.com/263e8818-c66e-11ec-9c47-027098eb172b_E_1681414372510.jpg',
-  material: 'Polyester',
-  price: '100',
-  register_no: '1234567890',
-  representative_name: 'Junsu',
-  representative_phone_no: '111-2222-3333',
-  sale_list_id: '1032',
-  size: 'XS',
-  status1: null,
-  status2: null,
-  status3: null,
-  store_address1: '3416 manning ave Apt3813',
-  store_address2: null,
-  store_city: '대방동',
-  store_country: 'KR',
-  store_name: 'ABC mart',
-  store_state: '서울특별시',
-  user_id: '25b85792-ac77-4433-97bb-a622e03f3241',
-  vendor: 'BBB',
-};
+// export const resetUserSaleList: Partial<UserSaleList> = {
+//   category: 'Tops',
+//   // created_at:"2023-04-13T19:32:54.000Z",
+//   description:
+//     '<h1>Title</h1><p>1.test1</p><p>2.test2</p><p>3.test3</p><p>adkfjdasfkdasfdsafdasfdsafdasfdasfdasfasdfdsafasfasdfdasfasdfdsfdsafdasfsdafsd</p>',
+//   image_url:
+//     'https://offprice_bucket.storage.googleapis.com/263e8818-c66e-11ec-9c47-027098eb172b_E_1681414372510.jpg',
+//   material: 'Polyester',
+//   price: '100',
+//   register_no: '1234567890',
+//   representative_name: 'Junsu',
+//   representative_phone_no: '111-2222-3333',
+//   sale_list_id: '1032',
+//   size: 'XS',
+//   status1: null,
+//   status2: null,
+//   status3: null,
+//   store_address1: '3416 manning ave Apt3813',
+//   store_address2: null,
+//   store_city: '대방동',
+//   store_country: 'KR',
+//   store_name: 'ABC mart',
+//   store_state: '서울특별시',
+//   user_id: '25b85792-ac77-4433-97bb-a622e03f3241',
+//   vendor: 'BBB',
+// };
 
 export const resetUser: User = {
   user_id: '1', // string 1

@@ -46,8 +46,8 @@ template: `
         border-radius: 0.25rem;
       }
       .sel_class {
-        background-color: #2962ff;
-        color: white;
+        /* background-color: #2962ff;
+        color: white; */
       }
     `,
   ],

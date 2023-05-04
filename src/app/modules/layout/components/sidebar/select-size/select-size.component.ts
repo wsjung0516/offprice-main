@@ -21,7 +21,10 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
         <button
           #buttonRef
           class="box-size flex items-center justify-center cursor-pointer"
-          [ngClass]="{ sel_class: size.key === selected_size }"
+          [ngClass]="{ 
+            'bg-blue-200': size.category === 'US',
+            'bg-green-200': size.category === 'KR'
+           }"
           (click)="selectSize(size)"
         >
           {{ size.key }}
@@ -32,9 +35,10 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
   styles: [
     `
       .box-size {
-        width: 3rem;
-        height: 2rem;
+        width: auto;
+        height: 2.5rem;
         margin: 0.25rem;
+        padding: 0.5rem;
         border: 1px;
         border-style: solid;
         border-color: gray;
@@ -43,6 +47,12 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
       .sel_class {
         background-color: #2962ff;
         color: white;
+      }
+      .bg-green-200 {
+        background-color: #bbf7d0;
+      }
+      .bg-blue-200 {
+        background-color: #bfdbfe;
       }
     `,
   ],

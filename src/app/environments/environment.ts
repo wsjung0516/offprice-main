@@ -15,7 +15,7 @@ export const environment = {
     production: false,
     apiPath: '/api/v1',
     keycloak: keycloakConfig,
-    url: 'http://localhost:3000/api/v1',  // nestjs api
-    // url: 'https://192.168.1.248:3030/api/v1',  // nestjs api
+    // url: 'http://localhost:3000/api/v1',  // nestjs api
+    url: 'http://34.127.113.47:3000/api/v1',  // nestjs api
     redirectUri: 'http://localhost:4200/'
 };

@@ -30,7 +30,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { User } from 'src/app/core/models/user.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { format } from 'date-fns';
-import { UserService } from './user.service';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
@@ -46,6 +45,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SessionStorageService } from './../../services/session-storage.service';
 import { TermsAndConditionsComponent } from '../terms-and-condition/terms-and-conditions.component';
+import { UserService } from 'src/app/user/user.service';
 // import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
 interface Data {
   user_id: string;
@@ -140,8 +140,9 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
   async ngAfterViewInit() {
     // this.mode = this.ref.data.mode;
-    const profile: any = this.sessionStorageService.getItem('userProfile');
-    this.userService.getUser(profile.id).subscribe((user) => {
+    // const profile: any = this.sessionStorageService.getItem('userProfile');
+    const profile: any = JSON.parse(localStorage.getItem('token'))?.user;
+    this.userService.getUser(profile.uid).subscribe((user: Partial<User>) => {
       // console.log('user', user);
       this.userId = user.user_id;
       this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');

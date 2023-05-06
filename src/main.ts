@@ -1,19 +1,21 @@
-import { enableProdMode, ErrorHandler, importProvidersFrom } from '@angular/core';
+import {
+  enableProdMode,
+  ErrorHandler,
+  importProvidersFrom,
+} from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/routes';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { environment } from './app/environments/environment';
+import { environment } from './environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoaderInterceptor } from './app/core/interceptors/loader.interceptor';
 import { HttpErrorInterceptor } from './app/core/interceptors/http-error.interceptor';
-import { GlobalErrorHandler } from './app/core/services/global-error-handler';  
+import { GlobalErrorHandler } from './app/core/services/global-error-handler';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { AuthModule } from './app/auth/keycloak/auth.module';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-
-
+import { AngularFireModule } from '@angular/fire/compat';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -22,21 +24,22 @@ bootstrapApplication(AppComponent, {
       HttpClientModule,
       BrowserAnimationsModule,
       MatSnackBarModule,
-      AuthModule,
+      AngularFireModule.initializeApp(environment.firebase),
+
     ),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptor,
       multi: true,
-   },
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
       multi: true,
-   },
-   { provide: ErrorHandler, useClass: GlobalErrorHandler },
-   MatSnackBar
-  ]
+    },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    MatSnackBar,
+  ],
 }).catch((err) => console.error(err));
 
 // platformBrowserDynamic().bootstrapModule(AppModule)

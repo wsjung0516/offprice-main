@@ -29,7 +29,6 @@ import { DetailsItemComponent } from 'src/app/core/components/details-item/detai
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
-import { AuthService } from 'src/app/auth/keycloak/auth.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { DialogService } from '@ngneat/dialog';
 @UntilDestroy()
@@ -86,7 +85,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private makeWhereConditionService: MakeWhereConditionService,
     private dialog: MatDialog,
-    private authService: AuthService,
     private sessionStorageService: SessionStorageService,
     private dialogService: DialogService
   ) {

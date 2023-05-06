@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { AuthService } from 'src/app/auth/keycloak/auth.service';
+// import { AuthService } from 'src/app/auth/keycloak/auth.service';
 import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { ProfileMenuModule } from './profile-menu.module';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from 'src/app/modules/dashboard/components/login/services/auth.service';
+import { Router } from '@angular/router';
 @Component({
   standalone: true,
   imports: [
@@ -32,7 +34,8 @@ export class ProfileMenuComponent implements OnInit {
     private dialog: MatDialog,
     private sessionStorageService: SessionStorageService,
     private cd: ChangeDetectorRef,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
 
     )
     {}
@@ -77,7 +80,7 @@ export class ProfileMenuComponent implements OnInit {
     });
   }
   login() {
-    this.authService.login();
+    this.router.navigate(['/login']);
     this.toggleDropdown();
   }
   logout() {

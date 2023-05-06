@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, shareReplay, tap } from 'rxjs';
-import { environment } from 'src/app/environments/environment';
+import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 
@@ -11,7 +11,7 @@ import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 export class UserSaleListService {
   baseUrl = environment.url;
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
-  headers = { 'content-type': 'application/json'}; // 'Accept': 'application/json'
+  headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
   getUserSaleLists(
     skip: number,
     take: number,
@@ -21,17 +21,19 @@ export class UserSaleListService {
   ): Observable<UserSaleList[]> {
     // console.log('getUserSaleList', skip, take, orderBy, where, whereOR)
     const whereData = this.buildWhereData(where, whereOR);
-    
+
     const order = JSON.stringify(orderBy);
     let url = `${this.baseUrl}/user-sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
     }
     // console.log('saleLists', url)
-    return this.http.get<UserSaleList[]>(url).pipe(
+    return this.http
+      .get<UserSaleList[]>(url)
+      .pipe
       // tap(data => console.log('data: ', data)),
       // shareReplay(1)
-    );
+      ();
   }
 
   private buildWhereData(
@@ -52,35 +54,34 @@ export class UserSaleListService {
     const url = `${this.baseUrl}/user-sale-list/${id}`;
 
     return this.http.get(url).pipe(
-      map((data: any) => data ),
+      map((data: any) => data),
       shareReplay(1)
-    )
+    );
   }
   // getConditionalSaleListLength(where: any): Observable<UserSaleList[]> {
   getConditionalUserSaleListLength(): Observable<number> {
     let url: string;
     url = `${this.baseUrl}/user-sale-list/length`;
-    return this.http.get(url).pipe(
-      map((data: any) => data ),
-    )
+    return this.http.get(url).pipe(map((data: any) => data));
   }
-  createUserSaleList(data:Partial<UserSaleList>): Observable<UserSaleList> {
+  createUserSaleList(data: Partial<UserSaleList>): Observable<UserSaleList> {
     const url = `${this.baseUrl}/user-sale-list`;
-    return this.http.post(url, {data}, {headers: this.headers}).pipe(
-      map((data: any) => data ),
-    )
+    return this.http
+      .post(url, { data }, { headers: this.headers })
+      .pipe(map((data: any) => data));
   }
-  updateUserSaleList(id: string, data: Partial<UserSaleList>): Observable<UserSaleList> {
+  updateUserSaleList(
+    id: string,
+    data: Partial<UserSaleList>
+  ): Observable<UserSaleList> {
     const url = `${this.baseUrl}/user-sale-list/${id}`;
-    return this.http.patch(url, {data}, {observe: 'response'}).pipe(
-      map((data: any) => data ),
-    )
+    return this.http
+      .patch(url, { data }, { observe: 'response' })
+      .pipe(map((data: any) => data));
   }
   deleteUserSaleList(id: string): Observable<UserSaleList> {
     const url = `${this.baseUrl}/user-sale-list/${id}`;
 
-    return this.http.delete(url).pipe(
-      map((data: any) => data ),
-    )
+    return this.http.delete(url).pipe(map((data: any) => data));
   }
 }

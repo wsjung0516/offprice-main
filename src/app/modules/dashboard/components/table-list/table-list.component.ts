@@ -28,12 +28,12 @@ import { CreateUserComponent } from 'src/app/user/create-user/create-user.compon
 import { DialogConfig, DialogService } from '@ngneat/dialog';
 import { User } from 'src/app/user/models/user.model';
 import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
-import { AuthService } from 'src/app/auth/keycloak/auth.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
 import { CartItems } from 'src/app/core/models/cart-items.model';
 import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../login/services/auth.service';
 
 @UntilDestroy()
 @Component({
@@ -113,8 +113,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
     private cd: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
-    private authService: AuthService,
-    private sessionStorageService: SessionStorageService,
+    // private sessionStorageService: SessionStorageService,
     private cartItemService: CartItemsService,
     private snackBar: MatSnackBar
   ) {
@@ -181,9 +180,9 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   putIntoCart(row: Partial<UserSaleList>) {
-    const userProfile:any = this.sessionStorageService.getItem('userProfile');
+    const userProfile:any = JSON.parse(localStorage.getItem('token'))?.user;
     if (!userProfile) {
-      this.authService.login();
+      this.router.navigate(['/login']);
     }
     let data: Partial<CartItems> = {};
     data = {

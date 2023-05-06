@@ -18,7 +18,8 @@ import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.
 import { SessionStorageService } from './../../services/session-storage.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
-import { AuthService } from 'src/app/auth/keycloak/auth.service';
+import { Router } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 export interface Data {
   data: Partial<UserSaleList>;
 }
@@ -31,10 +32,14 @@ CommonModule,
     ConfirmDialogComponent,
     MatIconModule,
     MatSnackBarModule,
-
+    MatCardModule,
   ],
   templateUrl: './details-item.component.html',
-  styles: [],
+  styles: [`
+      mat-card-content {
+        padding: 0 !important;
+      }
+  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailsItemComponent implements OnInit, AfterViewInit {
@@ -52,7 +57,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     private sessionStorageService: SessionStorageService,
     private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private authService: AuthService,
+    private router: Router,
   ) {}
   ngOnInit(): void {
     const profile: any = this.sessionStorageService.getItem('userProfile');
@@ -70,9 +75,9 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     });
   }
   onSave(): void {
-    const userProfile = this.sessionStorageService.getItem('userProfile');
+    const userProfile = JSON.parse(localStorage.getItem('token')).user;
     if (!userProfile) {
-      this.authService.login();
+      this.router.navigate(['/login']);
     }
 
     // Currently, the quantity is fixed to 1.

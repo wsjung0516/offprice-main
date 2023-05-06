@@ -3,28 +3,33 @@
     <div class="overflow-y-auto max-h-[calc(100vh-3rem)] p-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <!-- Left Column: Image -->
-        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
-          <!-- Small Images Column -->
-          <div class="col-span-1 flex flex-col">
-            <ng-container *ngFor="let image of item.image_urls.split(',')">
-              <img
-                [src]="image"
-                alt="Product Image"
-                class="h-16 w-auto object-cover object-center mb-2 cursor-pointer"
-                (click)="selectedImage = image"
-              />
-            </ng-container>
+        <mat-card class="">
+          <div class="flex flex-col h-screen">
+            <div class="flex justify-start space-x-1 mb-1">
+              <ng-container *ngFor="let image of item.image_urls.split(','); let i = index">
+                <mat-card-content class="flex-shrink-0 w-12 h-16">
+                  <img
+                    (click)="selectedImage = image"
+                    [src]="image"
+                    class="w-full h-full object-cover cursor-pointer relative"
+                    *ngIf="image"
+                    alt="offprice.store"
+                  />
+                </mat-card-content>
+              </ng-container>
+            </div>
+            <div class="w-full h-full mt-1">
+              <ng-container *ngIf="item.image_urls.length > 0">
+                <img
+                  [src]="selectedImage || item.image_urls.split(',')[0]"
+                  class="w-full h-auto object-cover"
+                  alt="offprice.store"
+                />
+              </ng-container>
+            </div>
           </div>
+        </mat-card>
 
-          <!-- Main Image Column -->
-          <div class="col-span-4">
-            <img
-              [src]="selectedImage || item.image_urls.split(',')[0]"
-              alt="Product Image"
-              class="w-full object-cover object-center"
-            />
-          </div>
-        </div>
     
         <!-- Right Column: Product Details -->
         <div class="col-span-1 flex flex-col ">

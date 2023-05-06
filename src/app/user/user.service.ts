@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from './models/user.model';
 import { map, Observable, shareReplay, tap } from 'rxjs';
-import { environment } from '../environments/environment';
+import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
@@ -11,88 +11,92 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class UserService {
   baseUrl = environment.url;
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
-  headers = { 'content-type': 'application/json'}; // 'Accept': 'application/json'
-  getUsers(skip: number, take: number, orderBy?: any, where?: any): Observable<User[]> {
+  headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
+  getUsers(
+    skip: number,
+    take: number,
+    orderBy?: any,
+    where?: any
+  ): Observable<User[]> {
     let url: string;
-    const dat = {data: where};
+    const dat = { data: where };
     const whereData = JSON.stringify(dat);
     const order = JSON.stringify(orderBy);
     // console.log('whereData: ', whereData);
     // console.log('where: ', where);
 
-    if( where && whereData ){
+    if (where && whereData) {
       url = `${this.baseUrl}/user?skip=${skip}&take=${take}&orderBy=${order}&where=${whereData}`;
-    }
-    else{
+    } else {
       url = `${this.baseUrl}/user?skip=${skip}&take=${take}&orderBy=${order}`;
     }
     return this.http.get(url).pipe(
-      map((data: any) => data ),
+      map((data: any) => data),
       shareReplay(1)
-    )
+    );
   }
   getUser(id: string): Observable<User> {
     const url = `${this.baseUrl}/user/${id}`;
 
-    return this.http.get(url).pipe(
-      map((data: any) => data ),
+    return this.http.get<User>(url).pipe(
+      map((data: any) => data),
       shareReplay(1)
-    )
+    );
   }
   getConditionalUserLength(where: any): Observable<User[]> {
-    const dat = {data: where};
+    const dat = { data: where };
     let url: string;
-    if( where && where.length > 0 ){
+    if (where && where.length > 0) {
       const whereData = JSON.stringify(dat);
       url = `${this.baseUrl}/user/length?where=${whereData}`;
-    }
-    else{
+    } else {
       url = `${this.baseUrl}/user/length`;
     }
 
     return this.http.get(url).pipe(
-      map((data: any) => data ),
+      map((data: any) => data),
       shareReplay(1)
-    )
+    );
   }
-  createUser(data:Partial<User>): Observable<User> {
+  createUser(data: Partial<User>): Observable<User> {
     const url = `${this.baseUrl}/user`;
-    return this.http.post(url, {data}, {headers: this.headers}).pipe(
-      map((data: any) => data ),
+    return this.http.post(url, { data }, { headers: this.headers }).pipe(
+      map((data: any) => data),
       shareReplay(1)
-    )
+    );
   }
   updateUser(id: string, data: Partial<User>): Observable<User> {
     const url = `${this.baseUrl}/user/${id}`;
-    return this.http.patch(url, {data}, {observe: 'response'}).pipe(
-      map((data: any) => data ),
+    return this.http.patch(url, { data }, { observe: 'response' }).pipe(
+      map((data: any) => data),
       shareReplay(1)
-    )
+    );
   }
   deleteUser(id: string): Observable<User> {
     const url = `${this.baseUrl}/user/${id}`;
 
     return this.http.delete(url).pipe(
-      map((data: any) => data ),
+      map((data: any) => data),
       shareReplay(1)
-    )
+    );
   }
-  saveUserProfileToDB(data: any) {  // call from app.component.ts
+  saveUserProfileToDB(data: any) {
+    // call from app.component.ts
+    // call from app.component.ts
+    // Because login with firebase, we need to save user-profile profile to our DB, when new user login
+    if( !data.user ) return;
     let user: any = {};
-    user.first_name = data.firstName;
-    user.last_name = data.lastName;
-    user.user_id = data.id;
-    user.email = data.email;
-    //
-    const ret = this.getUser(data.id).subscribe((ret: any) => {
-      if(!ret){
-        user.first_name = data.firstName;
-        user.last_name = data.lastName;
-        user.user_id = data.id;
-        user.email = data.email;
+    user.first_name = data.user.displayName?.split('')[0];
+    user.last_name = data.user.displayName?.split('')[1];
+    user.user_id = data.user.uid;
+    user.email = data.user.email;
+    // Check if user-profile exist in our DB
+    const ret = this.getUser(user.user_id).subscribe((ret: any) => {
+      // onsole.log('saveUserProfileToDB -ret', ret);
+      if (!ret) {
         this.createUser(user).subscribe((result) => {
-          this.snackBar.open('User updated', 'OK', {duration: 3000})
-       })
+          this.snackBar.open('User updated', 'OK', { duration: 3000 });
+        });
       }
     });
   }

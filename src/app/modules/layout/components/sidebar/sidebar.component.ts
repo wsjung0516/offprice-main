@@ -9,8 +9,9 @@ import { PriceRangeComponent } from './price-range/price-range.component';
 import { MaterialComponent } from './material/material.component';
 import { MatIconModule } from '@angular/material/icon';
 import { SearchPeriodComponent } from './search-period/search-period.component';
-import { AuthService } from 'src/app/auth/keycloak/auth.service';
+//import { AuthService } from ;
 import { ColorComponent } from './color/color.component';
+import { AuthService } from 'src/app/modules/dashboard/components/login/services/auth.service';
 @Component({
   selector: 'app-sidebar',
   standalone: true,

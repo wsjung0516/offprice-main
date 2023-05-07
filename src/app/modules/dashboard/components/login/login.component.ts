@@ -15,11 +15,11 @@ CommonModule,
     // LoginModule
   ],
 template: `
-  <div class="h-screen overflow-hidden flex items-center justify-center ">
-    <div class="max-w-2xl">
+  <div class=" h-screen overflow-hidden flex items-center justify-center ">
+    <div class="border-2 border-gray-200 p-10 max-w-2xl">
       <div class="bg-white shadow-md rounded">
         <div class="mb-4">
-          <div class="text-center text-2xl text-red-200">Login</div>
+          <div class="text-center text-2xl text-gray-700">Login</div>
         </div>
         <form>
           <div class="mb-4">
@@ -38,7 +38,7 @@ template: `
               <a [routerLink]="['/login/user-register']" class="font-bold text-sm text-blue-700 hover:text-blue-800 underline"><span class="">Register</span></a>
             </div> 
             <div class="">
-              <a [routerLink]="['/login/forgot-password']" class="font-bold text-sm text-blue-700 hover:text-gray-900">Forgot Password?</a>
+              <a [routerLink]="['/login/forgot-password']" class="font-bold text-sm text-blue-700 hover:text-gray-900 underline">Forgot Password?</a>
             </div>
           </div>
           <div class="mt-4">
@@ -46,15 +46,17 @@ template: `
               <img src="assets/icons/icons8-google-48.png" alt="" height="24px" width="24px" class="mr-2"> Sign In with Google
             </a>
           </div>
-          <div class="mt-4 ">
+<!--           <div class="mt-4 ">
             <a (click)="signInWithFacebook()" class="flex items-center justify-center cursor-pointer bg-red shadow-md rounded px-4 py-2 text-gray-700 hover:bg-gray-100">
               <img src="assets/icons/icons8-facebook-48.png" alt="" height="24px" width="24px" class="mr-2"> Sign In with Facebook
             </a>
           </div>
-        </form>
+ -->  
+       </form>
       </div>
     </div>
   </div>
+  
 
   `,
   styles: [`

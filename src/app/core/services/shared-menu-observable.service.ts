@@ -44,6 +44,8 @@ export class SharedMenuObservableService {
   showMobileMenu$ = this.showMobileMenu.asObservable();
   displayName = new Subject<string>();
   displayName$ = this.displayName.asObservable();
+  closeFeedback = new Subject<boolean>(); 
+  closeFeedback$ = this.closeFeedback.asObservable();
   
   get input_keyword$() {
     return this.input_keyword.asObservable();

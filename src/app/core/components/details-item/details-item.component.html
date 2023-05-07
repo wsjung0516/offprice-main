@@ -18,7 +18,7 @@
                 </mat-card-content>
               </ng-container>
             </div>
-            <div class="w-full h-full mt-1">
+            <div class="w-full h-auto mt-1">
               <ng-container *ngIf="item.image_urls.length > 0">
                 <img
                   [src]="selectedImage || item.image_urls.split(',')[0]"
@@ -33,7 +33,8 @@
     
         <!-- Right Column: Product Details -->
         <div class="col-span-1 flex flex-col ">
-          <div class="flex-grow">
+          <div class="">
+          <!-- <div class="flex-grow"> -->
             <h2 class="text-xl font-semibold text-blue-600">{{item.product_name}}</h2>
             <p class="mt-1">Category: <span class="font-bold">{{item.category}}</span></p>
             <p class="mt-1">Price: <span class="font-bold">${{item.price}}</span></p>

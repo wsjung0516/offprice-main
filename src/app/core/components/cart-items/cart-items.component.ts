@@ -51,10 +51,10 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     })
   }
   ngAfterViewInit(): void {
-    const profile:any = this.sessionStorageService.getItem('userProfile');
+    const profile:any = this.sessionStorageService.getItem('token');
     // console.log('cart-items-profile',profile)
     if( !profile ) return;
-    this.cartItemsService.getCartItems({user_id:profile.id}).pipe(
+    this.cartItemsService.getCartItems({user_id:profile.user.uid}).pipe(
       switchMap((data: any[]) => {
         return this.findFirstRowService.findFirstRows(data);
       })
@@ -90,7 +90,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
   }
 
   onDeletedItem(item: CartItems) {
-    const profile:any = this.sessionStorageService.getItem('userProfile');
+    const profile:any = this.sessionStorageService.getItem('token');
     const ret = this.dialogService.open(ConfirmDialogComponent, {
       data: {
         title: 'Delete',
@@ -108,7 +108,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
         this.cartItemsService
           .addCartItem(data)
           .subscribe((data) => {
-            this.cartItemsService.setCartItemsLength(profile.id);
+            this.cartItemsService.setCartItemsLength(profile.user.uid);
             this.snackBar.open('Deleted from cart', 'success', {
               duration: 2000,
             });

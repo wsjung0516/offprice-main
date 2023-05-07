@@ -9,31 +9,82 @@
   </div>
 
 </div>
-<div class="fixed-button">
-  <button id="feedback-button">
-    <span>Feedback</span>
+<div class="fixed-button fixed top-1/2 right-0 z-10 transform -translate-y-1/2">
+  <button id="feedback-button" class="bg-blue-500 text-white font-bold text-sm w-6 h-20 rounded-l-lg cursor-pointer transition-colors duration-200 ease-in-out flex items-center justify-center hover:bg-blue-700">
+    <span class="transform rotate-90">Feedback</span>
   </button>
 </div>
 
-<div id="dialog-overlay" class="dialog-overlay">
-  <div class="dialog-content">
-    <div class="dialog-tabs">
-      <a href="#" class="dialog-tab active" data-tab="tab1">Tab 1</a>
-      <a href="#" class="dialog-tab" data-tab="tab2">Tab 2</a>
-      <a href="#" class="dialog-tab" data-tab="tab3">Tab 3</a>
-      <button id="close-btn" class="close-btn">&times;</button>
+<div id="dialog-overlay" class="dialog-overlay fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 z-10 hidden justify-center items-center">
+  <div class="bg-white shadow-md rounded-lg p-6 relative">
+    <div class="flex border-b border-gray-300 mb-4">
+      <button
+        type="button"
+        (click)="setActiveTab('tab1')"
+        [ngClass]="{ 'bg-blue-500 text-white': isActiveTab('tab1') }"
+        class="px-4 py-2 font-bold text-sm text-blue-500 cursor-pointer rounded-t-lg hover:text-blue-700"
+      >
+        Leave Message
+      </button>
+      <button
+        type="button"
+        (click)="setActiveTab('tab2')"
+        [ngClass]="{ 'bg-blue-500 text-white': isActiveTab('tab2') }"
+        class="px-4 py-2 font-bold text-sm text-blue-500 cursor-pointer rounded-t-lg hover:text-blue-700"
+      >
+        Tab 2
+      </button>
+      <button
+        type="button"
+        (click)="setActiveTab('tab3')"
+        [ngClass]="{ 'bg-blue-500 text-white': isActiveTab('tab3') }"
+        class="px-4 py-2 font-bold text-sm text-blue-500 cursor-pointer rounded-t-lg hover:text-blue-700"
+      >
+        Tab 3
+      </button>
     </div>
+    <button
+      type="button"
+      id="close-btn"
+      class="close-btn absolute top-2 right-2 bg-transparent border-none text-xl cursor-pointer text-gray-700"
+    >
+      &times;
+    </button>
     <div class="tab-content">
-      <div id="tab1" class="tab-pane active">
-        <p>Tab 1 content goes here...</p>
+      <div *ngIf="isActiveTab('tab1')" class="tab-pane">
+        <app-feedback-request></app-feedback-request>
       </div>
-      <div id="tab2" class="tab-pane">
+      <div *ngIf="isActiveTab('tab2')" class="tab-pane">
         <p>Tab 2 content goes here...</p>
       </div>
-      <div id="tab3" class="tab-pane">
+      <div *ngIf="isActiveTab('tab3')" class="tab-pane">
         <p>Tab 3 content goes here...</p>
       </div>
     </div>
   </div>
 </div>
 
+
+
+<!-- <div id="dialog-overlay" class="dialog-overlay fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 z-10 hidden justify-center items-center">
+  <div class="dialog-content bg-white w-full max-w-md p-4 rounded-lg shadow-md">
+    <div class="dialog-tabs flex border-b border-gray-300 mb-4 relative">
+      <a href="#" class="dialog-tab px-4 py-2 font-bold text-sm text-blue-500 cursor-pointer rounded-t-lg hover:text-blue-700 active:bg-blue-500 active:text-white" data-tab="tab1">Request</a>
+      <a href="#" class="dialog-tab px-4 py-2 font-bold text-sm text-blue-500 cursor-pointer rounded-t-lg hover:text-blue-700" data-tab="tab2">Tab 2</a>
+      <a href="#" class="dialog-tab px-4 py-2 font-bold text-sm text-blue-500 cursor-pointer rounded-t-lg hover:text-blue-700" data-tab="tab3">Tab 3</a>
+      <button id="close-btn" class="close-btn absolute top-0 right-0 bg-transparent border-none text-xl cursor-pointer text-gray-700">&times;</button>
+    </div>
+    <div class="p-5">
+      <div id="tab1" class="">
+        <app-feedback-request></app-feedback-request>
+      </div>
+      <div id="tab2" class="tab-pane hidden">
+        <p>Tab 2 content goes here...</p>
+      </div>
+      <div id="tab3" class="tab-pane hidden">
+        <p>Tab 3 content goes here...</p>
+      </div>
+    </div>
+  </div>
+</div>
+ -->

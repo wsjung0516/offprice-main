@@ -57,8 +57,8 @@ export class CartItemsService {
       .subscribe();
   }
   addCartItem(cartItem: Partial<CartItems>): Observable<CartItems> {
-    const userProfile: any = this.sessionStorageService.getItem('userProfile');
-    const userId = userProfile.id;
+    const userProfile: any = this.sessionStorageService.getItem('token');
+    const userId = userProfile.user.uid;
     return this.isUserCartExist(userId).pipe(
       switchMap((data: any) => {
         const id: string = data.id;

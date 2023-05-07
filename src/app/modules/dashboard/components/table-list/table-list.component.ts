@@ -40,7 +40,7 @@ import { AuthService } from '../login/services/auth.service';
   selector: 'app-table-list',
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableModule,
@@ -113,7 +113,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
     private cd: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
-    // private sessionStorageService: SessionStorageService,
+    private sessionStorageService: SessionStorageService,
     private cartItemService: CartItemsService,
     private snackBar: MatSnackBar
   ) {
@@ -163,11 +163,11 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     const mobileMode = window.matchMedia('(max-width: 576px)').matches;
     const width = mobileMode ? '100%' : '58%';
     const dialogRef = this.dialogService.open(DetailsItemComponent, {
-       data: {
+      data: {
         data: row,
-       },
-       width,
-       // height: 'auto',
+      },
+      width,
+      // height: 'auto',
     });
 
     dialogRef.afterClosed$.subscribe((result) => {
@@ -177,23 +177,24 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       console.log('The dialog was closed', result);
     });
-
   }
   putIntoCart(row: Partial<UserSaleList>) {
-    const userProfile:any = JSON.parse(localStorage.getItem('token'))?.user;
-    if (!userProfile) {
+    const userProfile: any = this.sessionStorageService.getItem('token');
+    if (!userProfile.user) {
       this.router.navigate(['/login']);
+      return;
     }
     let data: Partial<CartItems> = {};
     data = {
       sale_list_id: +row.sale_list_id,
       quantity: 1,
-    }
+    };
     this.cartItemService.addCartItem(data).subscribe((res: any) => {
-      this.cartItemService.setCartItemsLength(userProfile.id);
+      this.cartItemService.setCartItemsLength(userProfile.user.uid);
       this.snackBar.open('Added to cart', 'Success', {
-        duration: 2000})
-    })
+        duration: 2000,
+      });
+    });
     // const dialogRef = this.dialogService
     //   .open(CartItemsComponent, {
     //     data: {},

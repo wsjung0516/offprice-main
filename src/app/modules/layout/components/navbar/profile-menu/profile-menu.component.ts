@@ -42,10 +42,10 @@ export class ProfileMenuComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      const profile: any = this.sessionStorageService.getItem('userProfile')
-      if (profile) {
-        this.userName = profile.username;
-        this.userEmail = profile.email;
+      const profile: any = this.sessionStorageService.getItem('token')
+      if (profile?.user) {
+        this.userName = profile.user.displayName;
+        this.userEmail = profile.user.email;
         // console.log('profile-menu. profile', profile);
       }
     }, 1000);
@@ -63,8 +63,8 @@ export class ProfileMenuComponent implements OnInit {
     // document.getElementById('mobile-menu').classList.toggle('show');
   }
   openProfile() {
-    const profile = this.sessionStorageService.getItem('userProfile');
-    if (!profile) {
+    const profile:any = this.sessionStorageService.getItem('token');
+    if (!profile.user) {
       this.snackBar.open('Please login first', 'Close', {
         duration: 2000,
       });

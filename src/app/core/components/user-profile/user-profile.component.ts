@@ -42,7 +42,12 @@ import {
 } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { SessionStorageService } from './../../services/session-storage.service';
 import { TermsAndConditionsComponent } from '../terms-and-condition/terms-and-conditions.component';
 import { UserService } from 'src/app/user/user.service';
@@ -69,7 +74,7 @@ interface Data {
     MatTooltipModule,
     // ConfirmDialogComponent,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
     // NzModalModule,
   ],
   templateUrl: './user-profile.component.html',
@@ -140,9 +145,8 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
   async ngAfterViewInit() {
     // this.mode = this.ref.data.mode;
-    // const profile: any = this.sessionStorageService.getItem('userProfile');
-    const profile: any = JSON.parse(localStorage.getItem('token'))?.user;
-    this.userService.getUser(profile.uid).subscribe((user: Partial<User>) => {
+    const profile: any = this.sessionStorageService.getItem('token');
+    this.userService.getUser(profile.user.uid).subscribe((user: Partial<User>) => {
       // console.log('user', user);
       this.userId = user.user_id;
       this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
@@ -315,7 +319,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     });
     // this.dialog.open(TermsAndConditionsComponent, {
     //   data: { data: 'Terms and Conditions' },
-      
+
     //   backdrop: false
     // });
   }

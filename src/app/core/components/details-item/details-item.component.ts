@@ -27,7 +27,7 @@ export interface Data {
   selector: 'app-details-item',
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     HtmlContentComponent,
     ConfirmDialogComponent,
     MatIconModule,
@@ -35,11 +35,13 @@ CommonModule,
     MatCardModule,
   ],
   templateUrl: './details-item.component.html',
-  styles: [`
+  styles: [
+    `
       mat-card-content {
         padding: 0 !important;
       }
-  `],
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailsItemComponent implements OnInit, AfterViewInit {
@@ -57,27 +59,29 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     private sessionStorageService: SessionStorageService,
     private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private router: Router,
+    private router: Router
   ) {}
   ngOnInit(): void {
-    const profile: any = this.sessionStorageService.getItem('userProfile');
-    this.userId = profile?.id;
+    const profile: any = this.sessionStorageService.getItem('token');
+    this.userId = profile?.user.uid;
   }
   ngAfterViewInit(): void {
     this.item = { ...this.ref.data.data };
     // this.item = {...this.data};
     this.cd.detectChanges();
-    this.cartItemsService.isCartItemExist(this.userId, this.item.sale_list_id)
-    .then((data) => {
-      // console.log('isCartItemExist: ret ', data);
-      this.isCartItemExist = data;
-      this.cd.detectChanges();
-    });
+    this.cartItemsService
+      .isCartItemExist(this.userId, this.item.sale_list_id)
+      .then((data) => {
+        // console.log('isCartItemExist: ret ', data);
+        this.isCartItemExist = data;
+        this.cd.detectChanges();
+      });
   }
   onSave(): void {
-    const userProfile = JSON.parse(localStorage.getItem('token')).user;
-    if (!userProfile) {
+    const userProfile:any = this.sessionStorageService.getItem('token');
+    if (!userProfile?.user) {
       this.router.navigate(['/login']);
+      return;
     }
 
     // Currently, the quantity is fixed to 1.
@@ -85,11 +89,10 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     const { user_id, sale_list_id } = this.item;
     this.cartItemsService
       .addCartItem({ user_id, sale_list_id, quantity })
-      .subscribe((data:any) => {
+      .subscribe((data: any) => {
         //console.log('addCartItems', data);
         this.cartItemsService.setCartItemsLength(this.userId);
-        this.snackBar.open('Added to cart', 'Success', {  duration: 2000, })
-
+        this.snackBar.open('Added to cart', 'Success', { duration: 2000 });
       });
 
     this.ref.close({ status: 'save', data: this.item });
@@ -113,10 +116,11 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
           .subscribe((data) => {
             // console.log('deletedCartItems', data);
             this.cartItemsService.setCartItemsLength(this.userId);
-            this.snackBar.open('Deleted from cart', 'Success', {  duration: 2000, })
+            this.snackBar.open('Deleted from cart', 'Success', {
+              duration: 2000,
+            });
             this.sharedMenuObservableService.refreshCartItemsButton.next(true);
             this.sharedMenuObservableService.closeCartItemsDialog.next(true);
-
           });
 
         // this.dialogRef.close({ status: 'delete', data: this.item});

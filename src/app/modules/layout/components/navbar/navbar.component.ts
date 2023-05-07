@@ -84,9 +84,9 @@ export class NavbarComponent implements OnInit {
         // console.log('refreshCartItemsButton', val);
         this.refreshButton.nativeElement.click();
       });
-    const profile: any = this.sessionStorageService.getItem('userProfile');
+    const profile: any = this.sessionStorageService.getItem('token');
 
-    this.userName = profile?.username ?? 'Guest';
+    this.userName = profile?.user.displayName ?? 'Guest';
   }
 
   public toggleMobileMenu(): void {

@@ -55,7 +55,9 @@ export class AuthService {
   logout() {
     this.fireauth.signOut().then( () => {
       this.sessionStorageService.removeItem('token');
-      this.router.navigate(['/login']);
+      this.sharedMenuObservableService.displayName.next('');
+      this.sharedMenuObservableService.cart_badge_count.next('0');
+      // this.router.navigate(['/login']);
     }, err => {
       alert(err.message);
     })

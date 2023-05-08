@@ -21,12 +21,13 @@ import { SharedMenuObservableService } from './core/services/shared-menu-observa
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FeedbackRequestComponent } from './feedback-request/feedback-request.component';
+import { AuthService } from './modules/dashboard/components/login/services/auth.service';
 @UntilDestroy()
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     LoaderComponent,
     RouterModule,
     MatProgressBarModule,
@@ -52,7 +53,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private sharedMenuObservableService: SharedMenuObservableService,
     private router: Router,
-    private auth: AngularFireAuth
+    private auth: AngularFireAuth,
+    private authService: AuthService,
   ) {}
   async ngOnInit() {
     this.loggedUser = this.sessionStorageService.getItem('token');
@@ -61,13 +63,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (this.loggedUser?.user) {
       this.name = this.loggedUser?.user?.displayName;
       this.userService.saveUserProfileToDB(this.loggedUser);
-      // This is for the case when the user-profile is log in.
-      this.cartItemsService.setCartItemsLength(this.loggedUser.user.uid);
       this.cartItemsService.makeUserCart(this.loggedUser.user.uid);
-      // if( this.userProfile.id ) {
-      // }
-    } else {
-      this.router.navigate(['/login']);
     }
     this.resetLogoutTimer();
     this.sharedMenuObservableService.closeFeedback$.pipe(untilDestroyed(this))
@@ -75,65 +71,61 @@ export class AppComponent implements OnInit, AfterViewInit {
       const dialogOverlay = document.getElementById('dialog-overlay');
       dialogOverlay.style.display = 'none';   
     })
+    this.receiveFeedback();
+
   }
+  // Logout after 30 minutes of inactivity
   @HostListener('window:mousemove')
   @HostListener('window:keypress')
   resetLogoutTimer() {
     clearTimeout(this.logoutTimer);
     this.logoutTimer = setTimeout(() => {
       this.auth.signOut().then(() => {
+        this.authService.logout();
         alert('You have been logged out after 30 minutes of inactivity.');
       });
     }, 30 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {
-    const profile:any = this.sessionStorageService.getItem('token');
-    if (profile?.user) {
-      this.name = profile.user.displayName;
-      this.cd.detectChanges();
-    }
-    this.sharedMenuObservableService.displayName$
-      .pipe(untilDestroyed(this))
-      .subscribe((name) => {
-        this.name = name;
-        this.cd.detectChanges();
-      });
-    this.receiveFeedback();
   }
 
   private receiveFeedback() {
-    document
-      .getElementById('feedback-button')
-      .addEventListener('click', function () {
-        const dialogOverlay = document.getElementById('dialog-overlay');
-        // });
-        // document.addEventListener('DOMContentLoaded', function () {
-        dialogOverlay.style.display =
-          dialogOverlay.style.display === 'none' ? 'flex' : 'none';
-        const tabs = document.querySelectorAll('.dialog-tab');
-        const closeButton = document.getElementById('close-btn');
-        closeButton.addEventListener('click', function () {
-          dialogOverlay.style.display = 'none';
-        });
 
-        // tabs.forEach((tab) => {
-        //   tab.addEventListener('click', (event) => {
-        //     event.preventDefault();
-        //     const tabId = tab.getAttribute('data-tab');
-        //     const tabPane = document.getElementById(tabId);
+    const profile: any = this.sessionStorageService.getItem('token');
+    const feedbackButton = document.getElementById('feedback-button');
+    feedbackButton.addEventListener('click', () => {
+      const profile: any = this.sessionStorageService.getItem('token');
+      // console.log('receiveFeedback', profile);
+      if (!profile) {
+        this.router.navigate(['/login']);
+        return
+      }
+      const dialogOverlay = document.getElementById('dialog-overlay');
+      dialogOverlay.style.display =
+        dialogOverlay.style.display === 'none' ? 'flex' : 'none';
 
-        //     // Deactivate all tabs and tab panes
-        //     tabs.forEach((t) => t.classList.remove('active'));
-        //     document
-        //       .querySelectorAll('.tab-pane')
-        //       .forEach((pane) => pane.classList.remove('active'));
-
-        //     // Activate the clicked tab and its content
-        //     tab.classList.add('active');
-        //     tabPane.classList.add('active');
-        //   });
-        // });
+      const closeButton = document.getElementById('close-btn');
+      closeButton.addEventListener('click', () => {
+        dialogOverlay.style.display = 'none';
       });
+
+    });
+  
+    // const feedbackButton = document.getElementById('feedback-button');
+    // feedbackButton.addEventListener('click', () => {
+    //   const dialogOverlay = document.getElementById('dialog-overlay');
+    //   if (dialogOverlay.style.display === 'none') {
+    //     dialogOverlay.style.display = 'flex';
+    //   } else {
+    //     dialogOverlay.style.display = 'none';
+    //   }
+
+    //   const closeButton = document.getElementById('close-btn');
+    //   closeButton.addEventListener('click', () => {
+    //     dialogOverlay.style.display = 'none';
+    //   });
+    //   this.router.navigate(['/feedback-request']);
+    // });
   }
   acitveTab = 'tab1';
   setActiveTab(tabId: string) {

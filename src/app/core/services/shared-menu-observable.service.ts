@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
+import { CartItems } from 'src/app/core/models/cart-items.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,7 @@ export class SharedMenuObservableService {
   //
   gotoHome = new Subject<string>();
   gotoHome$ = this.gotoHome.asObservable();
-  cart_badge_count = new ReplaySubject<string>();
+  cart_badge_count = new Subject<string>();
   cart_badge_count$ = this.cart_badge_count.asObservable();
   refreshCartItemsButton = new ReplaySubject<boolean>();
   refreshCartItemsButton$ = this.refreshCartItemsButton.asObservable();

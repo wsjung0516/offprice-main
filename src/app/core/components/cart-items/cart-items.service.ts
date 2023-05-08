@@ -30,6 +30,15 @@ export class CartItemsService {
       // tap(data => console.log('getCartItems:--- ', data)),
       ();
   }
+  getCartItemsLength(userId?: string): Observable<number> {
+    return this.getCartItems({ user_id: userId })
+      .pipe(
+        switchMap((data: any[]) => {
+          return this.findFirstRowService.findFirstRows(data);
+        }),
+        map((data: any[]) => data.length),
+      )
+  }
   setCartItemsLength(userId?: string) {
     this.getCartItems({ user_id: userId })
       .pipe(

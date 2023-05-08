@@ -61,7 +61,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     ).subscribe((items: CartItems[]) => {
       this.items = items;
       this.cd.detectChanges();
-      this.sharedMenuObservableService.cart_badge_count.next(items.length.toString());
+      // this.sharedMenuObservableService.cart_badge_count.next(items.length.toString());
     })
   }
   onSelectDetail(item: CartItems) {

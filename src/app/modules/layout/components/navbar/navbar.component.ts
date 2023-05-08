@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
+  AfterViewInit,
 } from '@angular/core';
 import { MenuService } from '../../../../core/services/menu.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -23,6 +24,7 @@ import { MakeTableWhereConditionService } from 'src/app/core/services/make-table
 import { DialogService } from '@ngneat/dialog';
 import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
+import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -42,7 +44,7 @@ import { SessionStorageService } from 'src/app/core/services/session-storage.ser
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, AfterViewInit {
   sSize: string;
   cart_badge_count = '0';
   userName: string;
@@ -56,7 +58,8 @@ export class NavbarComponent implements OnInit {
     private makeTableWhereConditionService: MakeTableWhereConditionService,
     private cd: ChangeDetectorRef,
     private dialogService: DialogService,
-    private sessionStorageService: SessionStorageService
+    private sessionStorageService: SessionStorageService,
+    private cartItemsService: CartItemsService
   ) {}
 
   ngOnInit(): void {
@@ -72,9 +75,21 @@ export class NavbarComponent implements OnInit {
       .subscribe(() => {
         this.gotoHome();
       });
+  }
+  ngAfterViewInit(): void {
+    const profile: any = this.sessionStorageService.getItem('token');
+    this.userName = profile?.user.displayName ?? 'Guest';
+    this.sharedMenuObservableService.displayName$
+      .pipe(untilDestroyed(this))
+      .subscribe((name) => {
+        this.userName = name;
+        this.cd.detectChanges();
+      });
+    this.cartItemsService.setCartItemsLength(profile?.user.uid ?? '');
     this.sharedMenuObservableService.cart_badge_count$
       .pipe(untilDestroyed(this))
       .subscribe((val) => {
+        // console.log('cart_badge_count', val);
         this.cart_badge_count = val;
         this.cd.detectChanges();
       });
@@ -82,13 +97,16 @@ export class NavbarComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((val) => {
         // console.log('refreshCartItemsButton', val);
-        this.refreshButton.nativeElement.click();
+        // To display the cart items in the cart dialog.
+        this.cartItemsService
+          .getCartItemsLength(profile?.user.uid ?? '')
+          .pipe(untilDestroyed(this))
+          .subscribe((val) => {
+            // To prevent from displaying when the cart is empty.
+            if (val > 0) this.refreshButton.nativeElement.click();
+          });
       });
-    const profile: any = this.sessionStorageService.getItem('token');
-
-    this.userName = profile?.user.displayName ?? 'Guest';
   }
-
   public toggleMobileMenu(): void {
     this.menuService.showMobileMenu = true;
   }

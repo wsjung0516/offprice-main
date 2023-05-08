@@ -80,6 +80,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
   onSave(): void {
     const userProfile:any = this.sessionStorageService.getItem('token');
     if (!userProfile?.user) {
+      this.ref.close();
       this.router.navigate(['/login']);
       return;
     }

@@ -14,12 +14,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './../confirm-dialog/confirm-dialog.component';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
+// import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
 import { SessionStorageService } from './../../services/session-storage.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+// import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
+import { CartItemsService } from '../cart-items/cart-items.service';
+import { SharedMenuObservableService } from '../../services/shared-menu-observable.service';
 export interface Data {
   data: Partial<UserSaleList>;
 }
@@ -40,6 +42,7 @@ export interface Data {
       mat-card-content {
         padding: 0 !important;
       }
+      
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,11 +65,25 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     private router: Router
   ) {}
   ngOnInit(): void {
-    const profile: any = this.sessionStorageService.getItem('token');
-    this.userId = profile?.user.uid;
   }
   ngAfterViewInit(): void {
+    const profile: any = this.sessionStorageService.getItem('token');
+    this.userId = profile?.user.uid;
+
     this.item = { ...this.ref.data.data };
+    // To prevent from viewing the vendor's information when the user is not logged in.
+    if( !profile ) {
+      this.item.store_name = '';
+      this.item.register_no = '';
+      this.item.email = '';
+      this.item.representative_phone_no = '';
+      this.item.representative_name = '';
+      this.item.store_address1 = '';
+      this.item.store_address2 = '';
+      this.item.store_city = '';
+      this.item.store_state = '';
+      this.item.store_country = '';
+    }
     // this.item = {...this.data};
     this.cd.detectChanges();
     this.cartItemsService

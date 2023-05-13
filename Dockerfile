@@ -30,7 +30,7 @@ COPY /src/etc/nginx-custom.conf /etc/nginx/conf.d/default.conf
 
 # 컨테이너에서 사용할 포트 설정
 
-# EXPOSE 80
+EXPOSE 80
 
-# # # Nginx 실행
-# CMD ["nginx", "-g", "daemon off;"]
+# # # # Nginx 실행
+CMD ["nginx", "-g", "daemon off;"]

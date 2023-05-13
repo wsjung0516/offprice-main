@@ -3,8 +3,8 @@
 export const environment = {
     production: false,
     apiPath: '/api/v1',
-    // url: 'http://localhost:3000/api/v1',  // nestjs api
-    url: 'http://34.127.113.47:3000/api/v1',  // nestjs api
+    // url: 'https://usul.me/api/v1',  // nestjs api
+    url: 'https://34.149.35.188/api/v1',  // nestjs api
     redirectUri: 'http://localhost:4200/',
     firebase: {
       apiKey: "AIzaSyBPmnWZU8ENexukmayvbxtyxZhcyRse-tU",

@@ -111,21 +111,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     });
   
-    // const feedbackButton = document.getElementById('feedback-button');
-    // feedbackButton.addEventListener('click', () => {
-    //   const dialogOverlay = document.getElementById('dialog-overlay');
-    //   if (dialogOverlay.style.display === 'none') {
-    //     dialogOverlay.style.display = 'flex';
-    //   } else {
-    //     dialogOverlay.style.display = 'none';
-    //   }
-
-    //   const closeButton = document.getElementById('close-btn');
-    //   closeButton.addEventListener('click', () => {
-    //     dialogOverlay.style.display = 'none';
-    //   });
-    //   this.router.navigate(['/feedback-request']);
-    // });
   }
   acitveTab = 'tab1';
   setActiveTab(tabId: string) {

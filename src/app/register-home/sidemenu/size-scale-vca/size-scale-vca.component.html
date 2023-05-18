@@ -1,0 +1,37 @@
+<div class="flex justify-center">
+  <div class="add-sizes-form" [formGroup]="form">
+    <ng-container formArrayName="sizes">
+      <ng-container *ngFor="let sizeFormGroup of formGroupArray; let i = index">
+        <div class="flex justify-between" [formGroup]="sizeFormGroup">
+          <mat-form-field appearance="fill">
+            <mat-label>size scale</mat-label>
+            <mat-select matNativeControl id="mySelectId" formControlName="scale">
+              <mat-option *ngFor="let size of sizesScale" [value]="size">{{size.key}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="ml-3 margin-top">
+            <mat-form-field appearance="fill">
+              <input
+                matInput
+                type="number"
+                formControlName="ratio"
+                placeholder="size ratio"
+              />
+            </mat-form-field>
+
+          </div>
+          <mat-icon class="delete-btn" (click)="deletesize(i)">
+            delete_forever</mat-icon
+          >
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <div class="flex justify-center">
+      <button color="primary" mat-mini-fab (click)="addsize()">
+        <mat-icon class="add-course-btn">add</mat-icon>
+      </button>
+
+    </div>
+  </div>
+</div>

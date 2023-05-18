@@ -1,0 +1,109 @@
+<div class="ml-2 overflow-auto rounded-lg shadow mat-elevation-z8">
+  <table class="w-full" mat-table [dataSource]="dataSource" matSort>
+    <!--  -->
+    <ng-container *ngFor="let column of displayedColumns; let i = index">
+      <ng-container [matColumnDef]="column">
+        <!-- <ng-container *ngIf="i !== 0"> -->
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ displayedTitle[i] }}
+        </th>
+        <!-- </ng-container> -->
+        <ng-container
+          *ngIf="
+            column !== 'action' &&
+            column !== 'image_urls' &&
+            column !== 'created_at' &&
+            column !== 'description' &&
+            column !== 'color' 
+          "
+        >
+          <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
+        </ng-container>
+        <ng-container *ngIf="column === 'action'">
+          <td mat-cell *matCellDef="let row">
+            <div class="flex justify-around">
+              <div class="">
+                <a mat-icon-button class="text-green-600" matTooltip="Details Item">
+                  <mat-icon (click)="openDetailsItem(row)">search</mat-icon>
+                </a>
+              </div>
+              <div class="">
+                <a mat-icon-button class="text-blue-600" matTooltip="Edit List">
+                  <mat-icon (click)="editSaleList(row)">edit</mat-icon>
+                </a>
+              </div>
+              <div class="">
+                <a mat-icon-button class="text-red-500" matTooltip="Delete List">
+                  <mat-icon (click)="onDeletedSaleList(row)">delete</mat-icon>
+                </a>
+              </div>
+            </div>
+
+          </td>
+        </ng-container>
+        <ng-container *ngIf="column === 'description'">
+          <td mat-cell *matCellDef="let row">
+            <div
+              class="w-10 h-10 rounded-full"
+              descriptionDetail
+              [html]="row[column]"
+            >
+              {{ row[column] }}
+            </div>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="column === 'image_urls'">
+          <td mat-cell *matCellDef="let row">
+            <div
+              class="w-10 h-10 rounded-full"
+              imageDetail
+              [image]="row[column].split(',')[0]"
+            >
+              <img [src]="row[column].split(',')[0]" alt="user" />
+            </div>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="column === 'color'">
+          <td mat-cell *matCellDef="let row">
+            <div class="flex">
+              <div *ngFor="let color of row[column]?.split(',')"
+                   class="w-8 h-8 mr-2"
+                   [ngStyle]="{ 'background-color': color.trim() }"
+                   [ngClass]="'rounded-full'">
+               <span class="align-middle text-xs">{{ color.trim() }}</span> 
+              </div>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="column === 'created_at'">
+          <td mat-cell *matCellDef="let row">
+            {{ row[column] | date : "yyyy-MM-dd" }}
+          </td>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (dblclick)="openDetailsItem(row)"
+    ></tr>
+    <!-- (dblclick)="onDisplaySaleList(row)" -->
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">
+        No data matching the filter
+        <!-- No data matching the filter "{{ input.value }}" -->
+      </td>
+    </tr>
+  </table>
+
+  <mat-paginator
+    [pageSize]="pageSize"
+    [hidePageSize]="true"
+    aria-label="Select page of users"
+    [showFirstLastButtons]="true"
+  ></mat-paginator>
+</div>

@@ -12,6 +12,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service';
 import { DetailsItemComponent } from '../details-item/details-item.component';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { UserTokenService } from '../../services/user-token.service';
 @UntilDestroy()
 @Component({
   selector: 'app-cart-items',
@@ -40,7 +41,8 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     private sessionStorageService: SessionStorageService,
     private dialogService: DialogService,
     private snackBar: MatSnackBar,
-    private userSaleListService: UserSaleListService
+    private userSaleListService: UserSaleListService,
+    private userTokenService: UserTokenService,
     ) { }
 
   ngOnInit(): void {
@@ -50,19 +52,22 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
       this.ref.close();
     })
   }
+  profile:any;
   ngAfterViewInit(): void {
-    const profile:any = this.sessionStorageService.getItem('token');
-    // console.log('cart-items-profile',profile)
-    if( !profile ) return;
-    this.cartItemsService.getCartItems({user_id:profile.user.uid}).pipe(
-      switchMap((data: any[]) => {
-        return this.findFirstRowService.findFirstRows(data);
-      })
-    ).subscribe((items: CartItems[]) => {
-      this.items = items;
-      this.cd.detectChanges();
-      // this.sharedMenuObservableService.cart_badge_count.next(items.length.toString());
-    })
+
+    this.userTokenService.getUserToken().subscribe((profile: any) => {
+      if (profile) {
+        this.profile = profile;
+        this.cartItemsService.getCartItems({user_id: this.profile.user.uid}).pipe(
+          switchMap((data: any[]) => {
+            return this.findFirstRowService.findFirstRows(data);
+          })
+        ).subscribe((items: CartItems[]) => {
+          this.items = items;
+          this.cd.detectChanges();
+        })
+      }
+    });
   }
   onSelectDetail(item: CartItems) {
     const sale_list_id = item.sale_list_id.toString();
@@ -90,7 +95,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
   }
 
   onDeletedItem(item: CartItems) {
-    const profile:any = this.sessionStorageService.getItem('token');
+    // const profile:any = this.sessionStorageService.getItem('token');
     const ret = this.dialogService.open(ConfirmDialogComponent, {
       data: {
         title: 'Delete',
@@ -108,11 +113,16 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
         this.cartItemsService
           .addCartItem(data)
           .subscribe((data) => {
-            this.cartItemsService.setCartItemsLength(profile.user.uid);
-            this.snackBar.open('Deleted from cart', 'success', {
-              duration: 2000,
+            this.userTokenService.getUserToken().subscribe((profile: any) => {
+              if (profile) {
+                
+                this.cartItemsService.setCartItemsLength(profile.user.uid);
+                this.snackBar.open('Deleted from cart', 'success', {
+                  duration: 2000,
+                });
+                this.sharedMenuObservableService.refreshCartItemsButton.next(true);
+              }
             });
-            this.sharedMenuObservableService.refreshCartItemsButton.next(true);
           });
 
         // this.dialogRef.close({ status: 'delete', data: this.item});

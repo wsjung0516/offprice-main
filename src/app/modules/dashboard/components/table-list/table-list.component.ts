@@ -34,6 +34,7 @@ import { CartItems } from 'src/app/core/models/cart-items.model';
 import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../login/services/auth.service';
+import { UserTokenService } from 'src/app/core/services/user-token.service';
 
 @UntilDestroy()
 @Component({
@@ -115,7 +116,8 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private sessionStorageService: SessionStorageService,
     private cartItemService: CartItemsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userTokenService: UserTokenService,
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
@@ -179,35 +181,31 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   putIntoCart(row: Partial<UserSaleList>) {
-    const userProfile: any = this.sessionStorageService.getItem('token');
+/*     const userProfile: any = this.sessionStorageService.getItem('token');
     if (!userProfile.user) {
       this.router.navigate(['/login']);
       return;
     }
-    let data: Partial<CartItems> = {};
-    data = {
-      sale_list_id: +row.sale_list_id,
-      quantity: 1,
-    };
-    this.cartItemService.addCartItem(data).subscribe((res: any) => {
-      this.cartItemService.setCartItemsLength(userProfile.user.uid);
-      this.snackBar.open('Added to cart', 'Success', {
-        duration: 2000,
-      });
+ */ 
+    this.userTokenService.getUserToken().subscribe((userProfile: any) => {
+      if (!userProfile) {
+        this.router.navigate(['/login']);
+        return;
+      } else {
+        let data: Partial<CartItems> = {};
+        data = {
+          sale_list_id: +row.sale_list_id,
+          quantity: 1,
+        };
+        this.cartItemService.addCartItem(data).subscribe((res: any) => {
+          this.cartItemService.setCartItemsLength(userProfile.user.uid);
+          this.snackBar.open('Added to cart', 'Success', {
+            duration: 2000,
+          });
+        });
+
+      }
     });
-    // const dialogRef = this.dialogService
-    //   .open(CartItemsComponent, {
-    //     data: {},
-    //     backdrop: false,
-    //     //...config,
-    //     // width: '800px',
-    //     // height: '800px',
-    //   })
-    //   .afterClosed$.subscribe((data: any) => {
-    //     if (data) {
-    //       this.refreshObservable.next({}); // trigger the observable for updating the table}
-    //     }
-    //   });
   }
   ngOnDestroy(): void {
     console.log('table-list destroy');

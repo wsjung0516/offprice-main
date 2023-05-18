@@ -1,0 +1,57 @@
+<!-- <app-user-profile></app-user-profile> -->
+<!-- <p>user-profile works!</p> -->
+<div class="mt-2 ml-5 mb-4">
+  <div
+    class="space-x-1 text-xs font-medium text-gray-400 dark:text-night-300"
+  >
+    <!-- <app-chip-list></app-chip-list> -->
+    <ng-container *ngTemplateOutlet="showChips"></ng-container>
+    <!-- <p class="font-bold">{{ searchItemLength }}</p> -->
+  </div>
+</div>
+
+<div class="">
+  <div class="ml-2">
+    <form [formGroup]="userForm">
+      <div class="">
+        <div class="flex items-center sm:justify-start overflow-x-auto">
+          <div class="">
+            <div class="relative min-w-60 w-60">
+              <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
+            </div>
+          </div>
+          <div (click)="onVendor()" #vendor class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">
+            Vendor
+          </div>
+          <div (click)="onPrice()" #price class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Price</div>
+          <div (click)="onCategory()" #category class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Category</div>
+          <div (click)="onSize()" #size class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Size</div>
+          <div (click)="onMaterial()" #material class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Material</div>
+          <div (click)="onSearchPeriod()" #search_period class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Search_Period</div>
+          <div (click)="onColor()" #color class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Color</div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="w-full mt-4">
+    <app-table-list></app-table-list>
+  </div>
+</div>
+<ng-template #showInputButton>
+  <app-input-keyword></app-input-keyword>
+</ng-template>
+<!-- chips -->
+<ng-template #showChips>
+  <mat-chip-listbox class="mat-chip-list-wrapper">
+    <mat-chip
+      *ngFor="let keyword of keywords"
+      (removed)="removeChipsKeyword(keyword)"
+    >
+      {{ keyword["value"] }}
+      <button matChipRemove aria-label="'remove ' + keyword">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+  </mat-chip-listbox>
+</ng-template>

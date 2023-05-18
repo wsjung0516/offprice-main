@@ -51,6 +51,7 @@ import {
 import { SessionStorageService } from './../../services/session-storage.service';
 import { TermsAndConditionsComponent } from '../terms-and-condition/terms-and-conditions.component';
 import { UserService } from 'src/app/user/user.service';
+import { UserTokenService } from '../../services/user-token.service';
 // import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
 interface Data {
   user_id: string;
@@ -108,7 +109,8 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     private http: HttpClient,
     public dialogRef: MatDialogRef<UserProfileComponent>,
     private sessionStorageService: SessionStorageService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private userTokenService: UserTokenService,
   ) {}
 
   contactForm = new UntypedFormGroup({
@@ -145,8 +147,14 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
   async ngAfterViewInit() {
     // this.mode = this.ref.data.mode;
-    const profile: any = this.sessionStorageService.getItem('token');
-    this.userService.getUser(profile.user.uid).subscribe((user: Partial<User>) => {
+    // const profile: any = this.sessionStorageService.getItem('token');
+    this.userTokenService.getUserToken().pipe(
+      filter((profile: any) => profile !== null),
+      switchMap((profile: any) => {
+        return this.userService.getUser(profile.user.uid)
+      })
+    )
+    .subscribe((user: Partial<User>) => {
       // console.log('user', user);
       this.userId = user.user_id;
       this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
@@ -155,11 +163,12 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       this.contactForm.get('address1').setValue(user.address1);
       this.contactForm.get('store_address1').setValue(user.store_address1);
       this.cd.detectChanges();
+      // Get google address
+      this.completeAddress('address1', 0);
+      this.completeAddress('store_address1', 1);
     });
     // this.user-profile = this.ref.data.user-profile;
     // this.disabled = this.ref.data.disabled;
-    this.completeAddress('address1', 0);
-    this.completeAddress('store_address1', 1);
   }
   compareFn(object1: any, object2: any) {
     console.log('object1, object2', object1, object2);

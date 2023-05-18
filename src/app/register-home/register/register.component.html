@@ -1,0 +1,163 @@
+<div *ngIf="isLoading" class="h-screen flex items-center justify-center">
+  <mat-spinner></mat-spinner>
+</div>
+<form [formGroup]="registerForm">
+  <div class="grid-container grid md:grid-cols-2 gap-2 xl:grid-cols-3">
+    <div class=" bg-blue-50">
+      <div class="m-2">
+        <!-- image upload -->
+        <app-image-upload formControlName="image_urls"
+        [registerStatus]="registerStatus"
+        [imageUrls]="imgURLs"
+        [uploadStartStatus]="uploadStartStatus"
+        ></app-image-upload>
+        <!-- image upload -->
+
+
+      </div>
+    </div>
+    <div class="bg-blue-50">
+      <div class="">
+        <!-- Product Name  -->
+        <div class="m-2">
+          <p><span class="text-xl font-bold">Product Name</span></p>
+          <mat-form-field class="w-full">
+            <mat-label>Product Name</mat-label>
+            <input matInput type="text" formControlName="product_name" />
+          </mat-form-field>
+        </div>
+        <!-- Product Name b-1 -->
+        <!-- Vendor Name b-1 -->
+        <div class="m-2">
+          <p><span class="text-xl font-bold">Vendor</span></p>
+          <mat-form-field class="w-full">
+            <mat-label>Vendor Name</mat-label>
+            <input matInput type="text" formControlName="vendor" />
+          </mat-form-field>
+        </div>
+        <!-- Vendor Name b-1 -->
+        <!-- Price -->
+        <div class="m-2">
+          <p><span class="text-xl font-bold">Price</span></p>
+          <div class="container mx-auto p-1">
+            <div class="flex items-center">
+              <div class="w-4/5 mr-2">
+                <mat-form-field  class="w-full">
+                  <mat-label>Price</mat-label>
+                  <input matInput type="number" placeholder="0" formControlName="price">
+                </mat-form-field>
+              </div>
+              <div class="w-1/5">
+                <mat-form-field  class="w-full">
+                  <mat-label>Unit</mat-label>
+                  <mat-select [value]="selectedUnit">
+                    <mat-option value="USD">USD</mat-option>
+                    <mat-option value="WON">WON</mat-option>
+                    <mat-option value="EURO">EURO</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <!-- Category -->
+        <p class="m-2"><span class="text-xl font-bold">Category</span></p>
+        <div class="m-2 overflow-y-auto">
+          <app-category-vca [category]="category" formControlName="category"></app-category-vca>
+        </div>
+        <!-- Count -->
+        <!-- Editor for comment -->
+      <div class="m-2">
+        <app-quill-editor [html]="htmlText" (OnCreatedDescription)="createdDescription($event)"></app-quill-editor>
+      </div>
+      <!-- Editor for comment -->
+
+      </div>
+    </div>
+    <div class="bg-blue-50">
+      <div class="">
+
+        <!-- Size c-1 -->
+        <p class="m-2 mt-4"><span class="text-xl font-bold">Size</span></p>
+        <!-- <div class="">
+          <app-size-scale-vca formControlName="size"></app-size-scale-vca>
+        </div> -->
+       <div class="m-2 overflow-y-auto">
+          <app-select-size-vca [selectedSize]="size" formControlName="size"></app-select-size-vca>
+        </div>
+        <ng-container>
+          <div class="container mx-auto">
+            <div class="flex flex-wrap items-center justify-center">
+              <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+                <div formArrayName="sizeArray">
+                <div class="flex justify-center">
+                  <div *ngFor="let control of nSizes; let i=index" class="flex flex-col items-center justify-center m-2">
+                    <span class="text-blue-600 font-semibold mr-2">{{ nSizes[i].name }}</span>
+                    <input type="number" class="w-16 text-center" [formControlName]="i" placeholder="Qty" />
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- Size -->
+        <!-- Material c-1 -->
+        <p class="m-2 mt-4"><span class="text-xl font-bold">Material</span></p>
+        <div class="m-2 overflow-y-auto">
+          <app-material-vca [selectedMaterial]="material" formControlName="material"></app-material-vca>
+        </div>
+        <!-- Material c-1 -->
+        <!-- Color -->
+        <p class="m-2 mt-4"><span class="text-xl font-bold">Color</span></p>
+        <div class="m-2 overflow-y-auto">
+          <app-color-vca [selectedColor]="color" formControlName="color"></app-color-vca>
+        </div>
+        <ng-container>
+          <div class="container mx-auto">
+            <div class="flex flex-wrap items-center justify-center">
+              <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+                <div formArrayName="colorArray">
+                <div class="flex justify-center">
+                  <div *ngFor="let color of nColors; let i=index" class="flex flex-col items-center justify-center m-2">
+                    <span class="text-sm text-blue-600 mr-2">{{ color.name }}</span>
+                    <div [style.background-color]="color.value" class="h-9 w-9 rounded-full"></div>
+                    <!-- <input type="number" class="w-16 text-center" [formControlName]="i" placeholder="Qty" /> -->
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- Color -->
+        <!-- Progress bar -->
+        <app-progress [progress]="progress"></app-progress>
+        <!-- Upload Image button -->
+
+        <div class="mt-4 flex item-center justify-center">
+          <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="uploadImage()"
+            class="m-2 rounded-md w-44 h-12 text-xl text-white bg-green-600 disabled:bg-red-300 hover:bg-green-800 drop-shadow-xl"
+          >
+          <mat-icon>cloud_upload</mat-icon>
+            Upload Image
+          </button>
+          <ng-container *ngIf="registerStatus=== 'update'">
+            <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="cancelUpload()"
+              class="m-2 rounded-md w-36 h-12 text-xl text-black bg-white border-2 border-green-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
+            >
+            <!-- <mat-icon>cancel</mat-icon> -->
+              Cancel
+            </button>
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <ng-template #loading>
+</ng-template>
+</form>
+<pre><code>{{ jsonString }}</code></pre>

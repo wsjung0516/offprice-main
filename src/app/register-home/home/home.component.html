@@ -1,0 +1,364 @@
+<nav class="bg-blue-600">
+  <div class="mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="relative flex h-16 items-center justify-between">
+      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+        <!-- Mobile menu button-->
+        <button
+          type="button"
+          class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          (click)="mobileMenuOpen()"
+        >
+          <span class="sr-only">Open main menu</span>
+          <!--
+            Icon when menu is closed.
+
+            Menu open: "hidden", Menu closed: "block"
+          -->
+          <svg
+            class="block h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+          <!--
+            Icon when menu is open.
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
+          <svg
+            class="hidden h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
+      >
+        <div class="flex">
+          <div class="flex flex-shrink-0 items-center">
+            <!-- logo  -->
+            <div
+              class="flex items-center justify-center text-blue-600 mr-6 w-36 h-12 border rounded-md bg-slate-50"
+            >
+              <span class="font-semibold text-2xl tracking-tight text-green-800"
+                >Off<span class="text-3xl text-blue-700">Price</span></span
+              >
+            </div>
+          </div>
+          <div
+            class="mt-1 flex items-center justify-center w-10 h-10 rounded bg-blue-800"
+          >
+            <button mat-icon-button (click)="gotoHome()">
+              <mat-icon class="text-white mt-2">home</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="hidden sm:ml-6 sm:block">
+          <div class="flex space-x-4">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+            <a
+              href="#"
+              [routerLink]="['/register-home/home/sale-list']"
+              routerLinkActive="active"
+              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-xl font-medium"
+              aria-current="page"
+              >Sales List</a
+            >
+
+            <a
+              href="#"
+              [routerLink]="['/register-home/home/register']"
+              routerLinkActive="active"
+              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-xl font-medium"
+              >Register</a
+            >
+
+            <a
+              href="#"
+              [routerLink]="['/register-home/home/about']"
+              routerLinkActive="active"
+              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-xl font-medium"
+              >About</a
+            >
+          </div>
+        </div>
+      </div>
+      <div
+        class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+      >
+        <div class="hidden sm:block text-white mr-3">{{ userName }}</div>
+        <!-- Notification -->
+        <button
+          type="button"
+          class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+        >
+          <span class="sr-only">View notifications</span>
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+            />
+          </svg>
+        </button>
+
+        <!-- Profile dropdown -->
+        <ng-container *ngIf="isProfileMenuOpen">
+        <div class="relative ml-3">
+          <div>
+            <button
+              type="button"
+              class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              id="user-menu-button"
+              aria-expanded="false"
+              aria-haspopup="true"
+              (click)="toggleDropdown()"
+            >
+              <span class="sr-only">Open user menu</span>
+              <img
+                clickOutside
+                (clickOutside)="dropdown = false"
+                class="h-9 w-9 rounded-md"
+                src="../../../assets/avatars/avt-01.jpg"
+                alt=""
+              />
+            </button>
+          </div>
+
+          <!--
+            Dropdown menu, show/hide based on menu state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
+          <div
+            [ngClass]="
+              dropdown
+                ? 'pointer-events-auto scale-100 animate-fade-in-up opacity-100 duration-200'
+                : 'pointer-events-none scale-95 opacity-0 duration-100 ease-in'
+            "
+            class="absolute z-50 right-0 mt-2 w-60 origin-top-right transform rounded-md bg-white py-4 shadow-custom ring-1 ring-transparent ring-opacity-5 transition focus:outline-none dark:bg-night-600"
+          >
+            <div class="flext-row flex items-center px-4 pb-4">
+              <div class="w-10 shrink-0">
+                <img
+                  class="rounded-md"
+                  src="../../../assets/avatars/avt-01.jpg"
+                  alt=""
+                />
+                <!-- <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" /> -->
+              </div>
+              <div
+                class="overflow-hidden px-2 text-sm font-semibold text-gray-700 dark:text-night-50"
+              >
+                {{ userName }}
+                <p
+                  class="truncate text-ellipsis text-xs font-semibold text-gray-400 dark:text-night-300"
+                >
+                  {{ userEmail }}
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="border-b border-dashed border-gray-200 dark:border-night-500"
+            ></div>
+
+            <ul class="my-2 mx-4">
+              <li
+                class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
+              >
+                <a
+                  class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                  role="menuitem"
+                  tabindex="-1"
+                  id="user-menu-item-0"
+                  (click)="openProfile()"
+                  >Profile</a
+                >
+              </li>
+              <li
+                class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
+              >
+                <a
+                  class="block px-4 py-2 text-sm text-gray-700"
+                  role="menuitem"
+                  tabindex="-1"
+                  id="user-menu-item-1"
+                  >Settings</a
+                >
+              </li>
+              <li
+                class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
+              >
+                <a
+                  class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                  role="menuitem"
+                  tabindex="-1"
+                  id="user-menu-item-2"
+                  (click)="logout()"
+                  >Sign out</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <div [ngClass]="{ hidden: mobile_menu }" id="mobile-menu">
+    <div class="space-y-1 px-2 pt-2 pb-3">
+      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+
+      <a
+        href="#"
+        [routerLink]="['/home/sale-list']"
+        routerLinkActive="active"
+        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        (click)="mobileMenuOpen()"
+        >Sales List</a
+      >
+
+      <a
+        href="#"
+        [routerLink]="['/home/register']"
+        routerLinkActive="active"
+        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        (click)="mobileMenuOpen()"
+        >Register</a
+      >
+      <a
+        href="#"
+        [routerLink]="['/home/about']"
+        routerLinkActive="active"
+        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        (click)="mobileMenuOpen()"
+        >About</a
+      >
+    </div>
+  </div>
+</nav>
+<div class="fixed-button fixed top-1/2 right-0 z-10 transform -translate-y-1/2">
+  <button
+    id="feedback-button"
+    class="bg-blue-500 text-white font-bold text-sm w-6 h-20 rounded-l-lg cursor-pointer transition-colors duration-200 ease-in-out flex items-center justify-center hover:bg-blue-700"
+  >
+    <span class="transform rotate-90">Feedback</span>
+  </button>
+</div>
+
+<div
+  id="dialog-overlay"
+  class="dialog-overlay fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 z-10 hidden justify-center items-center"
+>
+  <div class="bg-white shadow-md rounded-lg p-6 relative">
+    <div class="flex border-b border-gray-300 mb-4">
+      <button
+        type="button"
+        (click)="setActiveTab('tab1')"
+        [ngClass]="{ 'bg-blue-500 text-white': isActiveTab('tab1') }"
+        class="px-4 py-2 font-bold text-sm text-white cursor-pointer rounded-t-lg hover:text-blue-700"
+      >
+        Leave Message
+      </button>
+      <!-- <button
+        type="button"
+        (click)="setActiveTab('tab2')"
+        [ngClass]="{ 'bg-blue-500 text-white': isActiveTab('tab2') }"
+        class="px-4 py-2 font-bold text-sm text-blue-500 cursor-pointer rounded-t-lg hover:text-blue-700"
+      >
+        Tab 2
+      </button>
+      <button
+        type="button"
+        (click)="setActiveTab('tab3')"
+        [ngClass]="{ 'bg-blue-500 text-white': isActiveTab('tab3') }"
+        class="px-4 py-2 font-bold text-sm text-blue-500 cursor-pointer rounded-t-lg hover:text-blue-700"
+      >
+        Tab 3
+      </button> -->
+    </div>
+    <button
+      type="button"
+      id="close-btn"
+      class="close-btn absolute top-2 right-2 bg-transparent border-none text-xl cursor-pointer text-gray-700"
+    >
+      &times;
+    </button>
+    <div class="tab-content">
+      <div *ngIf="isActiveTab('tab1')" class="tab-pane">
+        <app-feedback-request></app-feedback-request>
+      </div>
+      <div *ngIf="isActiveTab('tab2')" class="tab-pane">
+        <p>Tab 2 content goes here...</p>
+      </div>
+      <div *ngIf="isActiveTab('tab3')" class="tab-pane">
+        <p>Tab 3 content goes here...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="fixed-button">
+  <button id="feedback-button">
+    <span>Feedback</span>
+  </button>
+</div>
+
+<div id="dialog-overlay" class="dialog-overlay">
+  <div class="dialog-content">
+    <div class="dialog-tabs">
+      <a href="#" class="dialog-tab active" data-tab="tab1">Tab 1</a>
+      <a href="#" class="dialog-tab" data-tab="tab2">Tab 2</a>
+      <a href="#" class="dialog-tab" data-tab="tab3">Tab 3</a>
+      <button id="close-btn" class="close-btn">&times;</button>
+    </div>
+    <div class="tab-content">
+      <div id="tab1" class="tab-pane active">
+        <p>Tab 1 content goes here...</p>
+      </div>
+      <div id="tab2" class="tab-pane">
+        <p>Tab 2 content goes here...</p>
+      </div>
+      <div id="tab3" class="tab-pane">
+        <p>Tab 3 content goes here...</p>
+      </div>
+    </div>
+  </div>
+</div> -->
+<router-outlet></router-outlet>
+<app-help></app-help>

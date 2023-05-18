@@ -22,6 +22,7 @@ import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { CartItemsService } from '../cart-items/cart-items.service';
 import { SharedMenuObservableService } from '../../services/shared-menu-observable.service';
+import { UserTokenService } from '../../services/user-token.service';
 export interface Data {
   data: Partial<UserSaleList>;
 }
@@ -62,46 +63,61 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     private sessionStorageService: SessionStorageService,
     private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private router: Router
+    private router: Router,
+    private userTokenService: UserTokenService
   ) {}
   ngOnInit(): void {
   }
   ngAfterViewInit(): void {
-    const profile: any = this.sessionStorageService.getItem('token');
-    this.userId = profile?.user.uid;
-
+    // const profile: any = this.sessionStorageService.getItem('token');
+    // this.userId = profile?.user.uid;
     this.item = { ...this.ref.data.data };
-    // To prevent from viewing the vendor's information when the user is not logged in.
-    if( !profile ) {
-      this.item.store_name = '';
-      this.item.register_no = '';
-      this.item.email = '';
-      this.item.representative_phone_no = '';
-      this.item.representative_name = '';
-      this.item.store_address1 = '';
-      this.item.store_address2 = '';
-      this.item.store_city = '';
-      this.item.store_state = '';
-      this.item.store_country = '';
-    }
-    // this.item = {...this.data};
-    this.cd.detectChanges();
-    this.cartItemsService
-      .isCartItemExist(this.userId, this.item.sale_list_id)
-      .then((data) => {
-        // console.log('isCartItemExist: ret ', data);
-        this.isCartItemExist = data;
+
+    this.userTokenService.getUserToken().subscribe((loggedUser: any) => {
+      if (!loggedUser) {
+        this.clearItemData();
+        // this.item = {...this.data};
         this.cd.detectChanges();
-      });
+      } else {
+        this.userId = loggedUser?.user?.uid;
+
+        this.cartItemsService
+          .isCartItemExist(this.userId, this.item.sale_list_id)
+          .then((data) => {
+            // console.log('isCartItemExist: ret ', data);
+            this.isCartItemExist = data;
+            this.cd.detectChanges();
+          });
+      }
+    });
+    //
+    // To prevent from viewing the vendor's information when the user is not logged in.
   }
+  private clearItemData() {
+    this.item.store_name = '';
+    this.item.register_no = '';
+    this.item.email = '';
+    this.item.representative_phone_no = '';
+    this.item.representative_name = '';
+    this.item.store_address1 = '';
+    this.item.store_address2 = '';
+    this.item.store_city = '';
+    this.item.store_state = '';
+    this.item.store_country = '';
+  }
+
   onSave(): void {
-    const userProfile:any = this.sessionStorageService.getItem('token');
-    if (!userProfile?.user) {
+    // const userProfile:any = this.sessionStorageService.getItem('token');
+    // if (!userProfile?.user) {
+    //   this.ref.close();
+    //   this.router.navigate(['/login']);
+    //   return;
+    // }
+    if (!this.userId) {
       this.ref.close();
       this.router.navigate(['/login']);
-      return;
+      return
     }
-
     // Currently, the quantity is fixed to 1.
     const quantity = 1;
     const { user_id, sale_list_id } = this.item;

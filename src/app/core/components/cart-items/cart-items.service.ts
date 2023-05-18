@@ -9,6 +9,7 @@ import { filter, switchMap } from 'rxjs/operators';
 import { FindFirstRowService } from 'src/app/core/services/find-first-row.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { SessionStorageService } from './../../services/session-storage.service';
+import { UserTokenService } from '../../services/user-token.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -18,7 +19,8 @@ export class CartItemsService {
     private http: HttpClient,
     private findFirstRowService: FindFirstRowService,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private sessionStorageService: SessionStorageService
+    private sessionStorageService: SessionStorageService,
+    private userTokenService: UserTokenService
   ) {}
   headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
 
@@ -66,25 +68,49 @@ export class CartItemsService {
       .subscribe();
   }
   addCartItem(cartItem: Partial<CartItems>): Observable<CartItems> {
-    const userProfile: any = this.sessionStorageService.getItem('token');
-    const userId = userProfile.user.uid;
-    return this.isUserCartExist(userId).pipe(
-      switchMap((data: any) => {
-        const id: string = data.id;
-        const params = {
-          id: id,
-          sale_list_id: cartItem.sale_list_id,
-          quantity: cartItem.quantity,
-        };
+    // const userProfile: any = this.sessionStorageService.getItem('token');
+    // const userId = userProfile.user.uid;
 
-        const url = `${this.baseUrl}/cart/add-item`;
-        return this.http
-          .post<CartItems>(url, params)
-          .pipe
-          // tap(data => console.log('addCartItem: ', data)),
-          ();
+    return this.userTokenService.getUserToken().pipe(
+      filter((loggedUser: any) => loggedUser !== null),
+      switchMap((loggedUser: any) => {
+        return this.isUserCartExist(loggedUser.user.uid).pipe(
+          switchMap((data: any) => {
+            const id: string = data.id;
+            const params = {
+              id: id,
+              sale_list_id: cartItem.sale_list_id,
+              quantity: cartItem.quantity,
+            };
+    
+            const url = `${this.baseUrl}/cart/add-item`;
+            return this.http
+              .post<CartItems>(url, params)
+              .pipe
+              // tap(data => console.log('addCartItem: ', data)),
+              ();
+          })
+        );
+    
       })
     );
+    // return this.isUserCartExist(userId).pipe(
+    //   switchMap((data: any) => {
+    //     const id: string = data.id;
+    //     const params = {
+    //       id: id,
+    //       sale_list_id: cartItem.sale_list_id,
+    //       quantity: cartItem.quantity,
+    //     };
+
+    //     const url = `${this.baseUrl}/cart/add-item`;
+    //     return this.http
+    //       .post<CartItems>(url, params)
+    //       .pipe
+    //       // tap(data => console.log('addCartItem: ', data)),
+    //       ();
+    //   })
+    // );
   }
   updateCart(cartItem: CartItems) {
     const url = `${this.baseUrl}/cart/update`;

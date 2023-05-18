@@ -25,6 +25,9 @@ import { DialogService } from '@ngneat/dialog';
 import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
+import { UserTokenService } from 'src/app/core/services/user-token.service';
+import { switchMap, tap } from 'rxjs';
+import { UserService } from 'src/app/user/user.service';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -59,7 +62,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private dialogService: DialogService,
     private sessionStorageService: SessionStorageService,
-    private cartItemsService: CartItemsService
+    private cartItemsService: CartItemsService,
+    private userTokenService: UserTokenService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -76,16 +81,44 @@ export class NavbarComponent implements OnInit, AfterViewInit {
         this.gotoHome();
       });
   }
+  profile: any;
   ngAfterViewInit(): void {
-    const profile: any = this.sessionStorageService.getItem('token');
-    this.userName = profile?.user.displayName ?? 'Guest';
+    // const profile: any = this.sessionStorageService.getItem('token');
+    this.userTokenService.getUserToken().subscribe((profile: any) => {
+      if (profile) {
+        this.userName = profile.user.displayName;
+        this.cartItemsService.setCartItemsLength(profile.user.uid ?? '');
+        this.profile = profile;
+      } else {
+        this.userName = 'Guest';
+      }
+    });
+    // To make condition for showing name and cart badge count.
+    this.sharedMenuObservableService.isLoggedIn$.pipe(
+      tap((isLoggedIn: any) => {
+        console.log('isLoggedIn', isLoggedIn);
+      }),
+      untilDestroyed(this),
+      switchMap((user_id:string) => {
+        return this.userService.getUser(user_id);
+      })).subscribe((profile: any) => {
+        if (profile) {
+          this.userName = profile.user.displayName;
+          this.cartItemsService.setCartItemsLength(profile.user.uid ?? '');
+          this.profile = profile;
+        } else {
+          this.userName = 'Guest';
+        }
+        this.cd.detectChanges();
+      });
+    // this.userName = profile?.user.displayName ?? 'Guest';
     this.sharedMenuObservableService.displayName$
       .pipe(untilDestroyed(this))
       .subscribe((name) => {
         this.userName = name;
         this.cd.detectChanges();
       });
-    this.cartItemsService.setCartItemsLength(profile?.user.uid ?? '');
+      //
     this.sharedMenuObservableService.cart_badge_count$
       .pipe(untilDestroyed(this))
       .subscribe((val) => {
@@ -99,7 +132,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
         // console.log('refreshCartItemsButton', val);
         // To display the cart items in the cart dialog.
         this.cartItemsService
-          .getCartItemsLength(profile?.user.uid ?? '')
+          .getCartItemsLength(this.profile?.user.uid ?? '')
           .pipe(untilDestroyed(this))
           .subscribe((val) => {
             // To prevent from displaying when the cart is empty.

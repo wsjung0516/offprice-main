@@ -40,7 +40,7 @@ import { SizeScaleVcaComponent } from '../sidemenu/size-scale-vca/size-scale-vca
 import {
   FileData,
   ImageUploadComponent,
-} from '../sidemenu/image-upload/image-upload.component';
+} from '../core/components/image-upload/image-upload.component';
 import { SaleList } from '../core/models/sale-list.model';
 import { Size, Color } from '../core/constants/data-define';
 import { UserTokenService } from 'src/app/core/services/user-token.service';

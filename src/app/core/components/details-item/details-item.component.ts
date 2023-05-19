@@ -43,7 +43,7 @@ export interface Data {
       mat-card-content {
         padding: 0 !important;
       }
-      
+
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -66,8 +66,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     private router: Router,
     private userTokenService: UserTokenService
   ) {}
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     // const profile: any = this.sessionStorageService.getItem('token');
     // this.userId = profile?.user.uid;
@@ -116,7 +115,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     if (!this.userId) {
       this.ref.close();
       this.router.navigate(['/login']);
-      return
+      return;
     }
     // Currently, the quantity is fixed to 1.
     const quantity = 1;

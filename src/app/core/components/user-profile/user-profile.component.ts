@@ -61,7 +61,7 @@ interface Data {
   selector: 'app-user-profile',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -333,6 +333,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     // });
   }
   closeDialog() {
+    // To show register button.
     this.dialogRef.close();
   }
 }

@@ -26,7 +26,7 @@
     "
     class="absolute z_index right-0 mt-2 w-60 origin-top-right transform rounded-md bg-white py-4 shadow-custom ring-1 ring-transparent ring-opacity-5 transition focus:outline-none dark:bg-night-600"
   >
-    <div class="flext-row flex items-center px-4 pb-4">
+    <div *ngIf="isLoggedIn" class="flext-row flex items-center px-4 pb-4">
       <div class="w-10 shrink-0">
         <img class="rounded-md" src="assets/avatars/avt-01.jpg" alt="" />
         <!-- <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" /> -->
@@ -56,6 +56,7 @@
         role="menuitem"
         tabindex="-1"
         id="user-menu-item-2"
+        [class.disabled]="isLoggedIn"
         (click)="login()"
         >Login</a
       >
@@ -64,11 +65,12 @@
       <li
         class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
       >
-        <a
+        <a 
           class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
           role="menuitem"
           tabindex="-1"
           id="user-menu-item-0"
+          [class.disabled]="!isLoggedIn"
           (click)="openProfile()"
           >Profile</a
         >
@@ -84,7 +86,7 @@
           >Settings</a
         >
       </li>
-      <li
+      <li 
         class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
       >
         <a
@@ -92,6 +94,7 @@
           role="menuitem"
           tabindex="-1"
           id="user-menu-item-2"
+          [class.disabled]="!isLoggedIn"
           (click)="logout()"
           >Logout</a
         >

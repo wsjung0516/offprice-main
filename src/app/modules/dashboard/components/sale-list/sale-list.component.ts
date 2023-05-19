@@ -179,7 +179,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
        data: {
         data: image,
        },
-       width,
+      width: width,
        // height: 'auto',
     });
 

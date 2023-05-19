@@ -49,6 +49,7 @@ export class UserTokenService {
   }
   updateUserToken(value: any): Observable<any> {
     const userId: any = this.sessionStorageService.getItem('userId');
+    if(!userId) return of(null);
     const id = userId.id;
     const data = {
       user_id: userId.user_id,
@@ -63,6 +64,7 @@ export class UserTokenService {
   }
   deleteUserToken() {
     const userId: any = this.sessionStorageService.getItem('userId');
+    if(!userId) return;
     const id = userId.id;
     const url = `${this.baseUrl}/user-token/${id}`;
     this.http

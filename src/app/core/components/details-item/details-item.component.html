@@ -1,13 +1,13 @@
 <ng-container *ngIf="this.item?.image_urls">
-  <div class="flex flex-col h-full">
-    <div class="overflow-y-auto max-h-[calc(100vh-3rem)] p-2">
+  <div class="flex flex-col max-h-[calc(100vh-4rem)] ">
+    <div class="overflow-y-auto  p-2">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-green-50">
         <!-- Left Column: Image -->
-        <mat-card class="max-h-[calc(100vh-5rem)] p-2">
-          <div class="flex flex-col h-screen">
+        <div class="max-h-[calc(100vh-4rem)] p-2">
+          <div class="flex flex-col ">
             <div class="flex justify-start space-x-1 mb-1">
               <ng-container *ngFor="let image of item.image_urls.split(','); let i = index">
-                <mat-card-content class="flex-shrink-0 w-12 h-16">
+                <div class="flex-shrink-0 w-12 h-16">
                   <img
                     (click)="selectedImage = image"
                     [src]="image"
@@ -15,7 +15,7 @@
                     *ngIf="image"
                     alt="offprice.store"
                   />
-                </mat-card-content>
+                </div>
               </ng-container>
             </div>
             <div class="w-full h-auto mt-1">
@@ -23,14 +23,14 @@
                 <mat-card-content class="">
                   <img
                     [src]="selectedImage || item.image_urls.split(',')[0]"
-                    class="w-full h-full object-cover"
+                    class="w-auto h-auto object-cover"
                     alt="offprice.store"
                   />
                 </mat-card-content>
               </ng-container>
             </div>
           </div>
-        </mat-card>
+        </div>
 
     
         <!-- Right Column: Product Details -->

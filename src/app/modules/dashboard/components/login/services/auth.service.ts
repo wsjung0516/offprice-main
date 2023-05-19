@@ -100,6 +100,7 @@ export class AuthService {
   logout() {
     this.fireauth.signOut().then( () => {
       const userId:any = this.sessionStorageService.getItem('userId');
+      if (!userId) return;
       this.userTokenService.deleteUserToken();
       this.sessionStorageService.removeItem('userId');
       this.sharedMenuObservableService.displayName.next('Guest');

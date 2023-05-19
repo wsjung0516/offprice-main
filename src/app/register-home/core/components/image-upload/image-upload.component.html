@@ -1,0 +1,83 @@
+    <!-- File upload -->
+    <div class="m-2 flex justify-between">
+      <span style="color: red" *ngIf="message">{{ message }}</span>
+      <!-- To prevent to change image in update mode -->
+      <div *ngIf="registerStatus === 'create'" class="mb-3 w-96">
+        <div class="flex justify-between">
+          <div class="">
+            <label
+              for="formFile"
+              class="mb-2 inline-block text-neutral-700 dark:text-neutral-200"
+              ><span class="text-xl font-bold">Select Image File</span></label
+            >
+          </div> 
+          <div *ngIf="imgURLs.length > 0" class="h-6 w-24 rounded-md flex items-center justify-center text-white bg-green-600 hover:bg-green-800">
+            <button (click)="onAddImage()">Add Image</button>
+          </div>
+        </div>
+        <input
+          #file
+          class="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 dark:border-neutral-600 bg-clip-padding py-[0.32rem] px-3 text-base font-normal text-neutral-700 dark:text-neutral-200 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 dark:file:bg-neutral-700 file:px-3 file:py-[0.32rem] file:text-neutral-700 dark:file:text-neutral-100 file:transition file:duration-150 file:ease-in-out file:[margin-inline-end:0.75rem] file:[border-inline-end-width:1px] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-[0_0_0_1px] focus:shadow-primary focus:outline-none"
+          type="file"
+          multiple
+          (change)="onSelectedImageFile($event)"
+          id="formFile"
+        />
+      </div>
+      <div
+        *ngIf="registerStatus === 'update'"
+        class="m-auto mt-4 w-44 h-12 bg-white border-2 border-green-600 rounded text-green-800 items-center flex justify-center text-xl"
+      >
+        Edit Mode
+      </div>
+    </div>
+    <!-- File upload -->
+    <div *ngIf="imgURLs.length === 0">
+      <mat-card-header>
+        <mat-card-title>To select image file</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Click on the button above<span
+            class="ml-1 text-xl font-bold text-blue-700  "
+            >"Choose Files"</span
+          >.
+        </p>
+      </mat-card-content>
+    </div>
+    <!-- Display Image -->
+    <mat-card class="">
+      <div class="flex flex-col ">
+        <div class="flex justify-start space-x-1 mb-1">
+          <ng-container *ngFor="let image of imgURLs; let i = index">
+            <mat-card-content class="flex-shrink-0 w-12 h-16">
+              <img
+                (click)="selectImage(image)"
+                [src]="image"
+                class="w-full h-full object-cover cursor-pointer relative"
+                *ngIf="image"
+                alt="offprice.store"
+              />
+            </mat-card-content>
+          </ng-container>
+        </div>
+        <div class="w-full h-auto mt-1">
+          <ng-container *ngIf="imgURLs.length > 0">
+            <img
+              [src]="selectedImage || imgURLs[0]"
+              class="w-full h-auto object-cover"
+              alt="offprice.store"
+            />
+          </ng-container>
+          <ng-container *ngIf="imgURLs.length === 0">
+            <img
+              src="assets/images/need-image.jpg"
+              class="w-auto h-auto object-fit"
+              alt="offprice.store"
+            />
+          </ng-container>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Display Image -->

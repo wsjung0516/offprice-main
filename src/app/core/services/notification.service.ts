@@ -18,6 +18,8 @@ export class NotificationService {
   }
 
   showError(message: string): void {
+    if( message.includes('FirebaseError') ) return;
+    if( message.includes('NG04002') ) return;
     this.zone.run(() => {
       // The second parameter is the text in the button.
       // In the third, we send in the css class for the snack bar.

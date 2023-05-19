@@ -15,7 +15,6 @@
             <mat-label>First Name</mat-label>
             <input
               class="placeholder-red-300"
-              readonly
               matInput
               formControlName="first_name"
               placeholder="First Name"
@@ -25,7 +24,6 @@
           <mat-form-field class="">
             <mat-label>Last Name</mat-label>
             <input
-              readonly
               matInput
               formControlName="last_name"
               placeholder="Ex. Pizza"
@@ -37,15 +35,7 @@
           <!-- <mat-form-field class="" > -->
           <mat-label>Email</mat-label>
           <input
-            *ngIf="disabled"
             readonly
-            matInput
-            formControlName="email"
-            placeholder="Email"
-            value=""
-          />
-          <input
-            *ngIf="!disabled"
             matInput
             formControlName="email"
             placeholder="Email"
@@ -75,7 +65,7 @@
         <div class="grid grid-cols-3 gap-4 ">
           <mat-form-field appearance="fill">
             <mat-label>City</mat-label>
-            <mat-select [(value)]="selectedCity[0]" formControlName="city">
+            <mat-select formControlName="city">
               <mat-option *ngFor="let city of cities[0]" [value]="city">{{
                 city
               }}</mat-option>

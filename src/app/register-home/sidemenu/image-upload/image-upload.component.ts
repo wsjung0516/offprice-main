@@ -79,7 +79,7 @@ export interface FileData {
       </div>
     </div>
     <!-- File upload -->
-    <div *ngIf="!imgURL">
+    <div *ngIf="imgURLs.length === 0">
       <mat-card-header>
         <mat-card-title>To select image file</mat-card-title>
       </mat-card-header>
@@ -94,7 +94,7 @@ export interface FileData {
     </div>
     <!-- Display Image -->
     <mat-card class="">
-      <div class="flex flex-col h-screen">
+      <div class="flex flex-col ">
         <div class="flex justify-start space-x-1 mb-1">
           <ng-container *ngFor="let image of imgURLs; let i = index">
             <mat-card-content class="flex-shrink-0 w-12 h-16">
@@ -108,11 +108,18 @@ export interface FileData {
             </mat-card-content>
           </ng-container>
         </div>
-        <div class="w-full h-full mt-1">
+        <div class="w-full h-auto mt-1">
           <ng-container *ngIf="imgURLs.length > 0">
             <img
               [src]="selectedImage || imgURLs[0]"
-              class="w-full h-full object-cover"
+              class="w-full h-auto object-cover"
+              alt="offprice.store"
+            />
+          </ng-container>
+          <ng-container *ngIf="imgURLs.length === 0">
+            <img
+              src="assets/images/need-image.jpg"
+              class="w-auto h-auto object-fit"
               alt="offprice.store"
             />
           </ng-container>

@@ -114,7 +114,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   ) {}
 
   contactForm = new UntypedFormGroup({
-    first_name: new UntypedFormControl(),
+    first_name: new UntypedFormControl(''),
     last_name: new UntypedFormControl(),
     email: new UntypedFormControl(),
     zipcode: new UntypedFormControl(),
@@ -155,13 +155,13 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       })
     )
     .subscribe((user: Partial<User>) => {
-      // console.log('user', user);
+      console.log('user', user);
       this.userId = user.user_id;
       this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
       this.contactForm.patchValue(user);
-      this.contactForm.get('seller').patchValue(false);
       this.contactForm.get('address1').setValue(user.address1);
       this.contactForm.get('store_address1').setValue(user.store_address1);
+      // this.contactForm.setValue({city: user.city});
       this.cd.detectChanges();
       // Get google address
       this.completeAddress('address1', 0);

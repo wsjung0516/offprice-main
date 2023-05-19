@@ -67,7 +67,7 @@ export class AuthService {
         if (res.user?.emailVerified == true) {
           this.router.navigate(['/home']);
         } else {
-          this.router.navigate(['/login/varify-email']);
+          this.router.navigate(['/login/verify-email']);
         }
         this.userTokenService.updateUserToken(res).subscribe((res: any) => {
         });
@@ -114,7 +114,7 @@ export class AuthService {
   forgotPassword(email: string) {
     this.fireauth.sendPasswordResetEmail(email).then(
       () => {
-        this.router.navigate(['/login/varify-email']);
+        this.router.navigate(['/login/verify-email']);
       },
       (err) => {
         alert('Something went wrong');
@@ -127,7 +127,7 @@ export class AuthService {
     console.log(user);
     user.sendEmailVerification().then(
       (res: any) => {
-        this.router.navigate(['/login/varify-email']);
+        this.router.navigate(['/login/verify-email']);
       },
       (err: any) => {
         alert('Something went wrong. Not able to send mail to your email.');

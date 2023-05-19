@@ -63,8 +63,8 @@ export class ProfileMenuComponent implements OnInit {
     // document.getElementById('mobile-menu').classList.toggle('show');
   }
   openProfile() {
-    const profile:any = this.sessionStorageService.getItem('token');
-    if (!profile.user) {
+    const userId:any = this.sessionStorageService.getItem('userId');
+    if (!userId) {
       this.snackBar.open('Please login first', 'Close', {
         duration: 2000,
       });

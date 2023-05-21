@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   FormsModule,
@@ -20,6 +21,8 @@ import {
   ReactiveFormsModule,
   UntypedFormControl,
   UntypedFormGroup,
+  ValidatorFn,
+  Validators,
 } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,9 +30,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { User } from 'src/app/core/models/user.model';
+import { User } from 'src/app/register-home/core/models/user.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { format } from 'date-fns';
+import { UserService } from './user.service';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
@@ -42,17 +46,16 @@ import {
 } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-} from '@angular/material/dialog';
-import { SessionStorageService } from './../../services/session-storage.service';
-import { TermsAndConditionsComponent } from '../terms-and-condition/terms-and-conditions.component';
-import { UserService } from 'src/app/user/user.service';
-import { UserTokenService } from '../../services/user-token.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SessionStorageService } from 'src/app/register-home/core/services/session-storage.service';
+import { UserTokenService } from 'src/app/core/services/user-token.service';
+import { ar, fi, th } from 'date-fns/locale';
+import { TermsAndConditionsComponent } from 'src/app/core/components/terms-and-condition/terms-and-conditions.component';
 // import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { errorTailorImports } from '@ngneat/error-tailor';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserProfileModule } from './user-profile.module';
 interface Data {
   user_id: string;
 }
@@ -76,7 +79,8 @@ interface Data {
     // ConfirmDialogComponent,
     MatSelectModule,
     MatDialogModule,
-    // NzModalModule,
+    errorTailorImports,
+    UserProfileModule,
   ],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
@@ -95,47 +99,50 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('templateName') tName: TemplateRef<any>;
 
   address = '';
-  cities: string[][] = [];
-  selectedCity: string[] = [];
-  states: string[][] = [];
-  selectedState: string[] = [];
-  countries: string[][] = [];
-  selectedCountry: string[] = [];
+  cities: { key: any }[][] = [];
+  selectedCity: { key: any }[][] = [];
+  states: { key: any }[][] = [];
+  selectedState: { key: any }[][] = [];
+  countries: { key: any }[][] = [];
+  selectedCountry: { key: any }[][] = [];
   postalCode: string[] = [];
 
+  firstName = '';
+  lastName = '';
+  eMail = '';
   constructor(
     private userService: UserService,
     private cd: ChangeDetectorRef,
     private http: HttpClient,
     public dialogRef: MatDialogRef<UserProfileComponent>,
-    private sessionStorageService: SessionStorageService,
     private matDialog: MatDialog,
     private userTokenService: UserTokenService,
+    private snackBar: MatSnackBar,
   ) {}
 
   contactForm = new UntypedFormGroup({
-    first_name: new UntypedFormControl(''),
-    last_name: new UntypedFormControl(),
-    email: new UntypedFormControl(),
-    zipcode: new UntypedFormControl(),
-    phone_no: new UntypedFormControl(),
-    address1: new UntypedFormControl(),
+    first_name: new UntypedFormControl('',Validators.required),
+    last_name: new UntypedFormControl('',Validators.required),
+    email: new UntypedFormControl('',Validators.required),
+    zipcode: new UntypedFormControl('',Validators.pattern(/^\d+$/)),
+    phone_no: new UntypedFormControl('', Validators.pattern(/^[\d\-]+$/)),
+    address1: new UntypedFormControl('',Validators.required),
     address2: new UntypedFormControl(),
     city: new UntypedFormControl(),
     state: new UntypedFormControl(),
     country: new UntypedFormControl(),
-    subscribe: new UntypedFormControl(false),
+    subscribe: new UntypedFormControl(false,Validators.requiredTrue),
     seller: new UntypedFormControl(false),
     store_name: new UntypedFormControl(),
     representative_name: new UntypedFormControl(),
     register_no: new UntypedFormControl(),
-    representative_phone_no: new UntypedFormControl(),
+    representative_phone_no: new UntypedFormControl('', Validators.pattern(/^[\d\-]+$/)),
     store_address1: new UntypedFormControl(),
     store_address2: new UntypedFormControl(),
     store_city: new UntypedFormControl(),
     store_state: new UntypedFormControl(),
     store_country: new UntypedFormControl(),
-    store_zipcode: new UntypedFormControl(),
+    store_zipcode: new UntypedFormControl('',Validators.pattern(/^\d+$/)),
   });
   private dialog = inject(DialogService);
   isDirty$: Observable<boolean>;
@@ -144,35 +151,81 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // this.contactForm.valueChanges.subscribe((value) => {});
     // const id = '25b85792-ac77-4433-97bb-a622e03f3241'
+    this.setSellerValidators();
   }
-  async ngAfterViewInit() {
+  ngAfterViewInit() {
     // this.mode = this.ref.data.mode;
-    // const profile: any = this.sessionStorageService.getItem('token');
-    this.userTokenService.getUserToken().pipe(
-      filter((profile: any) => profile !== null),
-      switchMap((profile: any) => {
-        return this.userService.getUser(profile.user.uid)
-      })
-    )
-    .subscribe((user: Partial<User>) => {
-      console.log('user', user);
-      this.userId = user.user_id;
-      this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
-      this.contactForm.patchValue(user);
-      this.contactForm.get('address1').setValue(user.address1);
-      this.contactForm.get('store_address1').setValue(user.store_address1);
-      // this.contactForm.setValue({city: user.city});
-      this.cd.detectChanges();
-      // Get google address
-      this.completeAddress('address1', 0);
-      this.completeAddress('store_address1', 1);
-    });
+    // const user: any = this.sessionStorageService.getItem('token');
+    // const userId: string = this.sessionStorageService.getItem('user_id');
+
+    this.userTokenService
+      .getUserToken()
+      .pipe(
+        filter((profile: any) => !!profile),
+        switchMap((profile: any) => {
+          return this.userService.getUser(profile.user.uid);
+        })
+      )
+      .subscribe((user) => {
+        console.log('user', user);
+        this.userId = user.user_id;
+        this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
+        this.contactForm.patchValue(user);
+        this.contactForm.get('address1').setValue(user.address1);
+        this.contactForm.get('store_address1').setValue(user.store_address1);
+
+        this.cd.detectChanges();
+        this.completeAddress('address1', 0);
+        this.completeAddress('store_address1', 1);
+      });
     // this.user-profile = this.ref.data.user-profile;
     // this.disabled = this.ref.data.disabled;
   }
-  compareFn(object1: any, object2: any) {
-    console.log('object1, object2', object1, object2);
-    return object1 && object2 && object1.id == object2.id;
+  private setSellerValidators() {
+    this.contactForm.get('seller').valueChanges.subscribe(sellerValue => {
+      const storeNameControl = this.contactForm.get('store_name');
+      const representativeNameControl = this.contactForm.get('representative_name');
+      const registerNoControl = this.contactForm.get('register_no');
+      const storeAddress1Control = this.contactForm.get('store_address1');
+      const storeCityControl = this.contactForm.get('store_city');
+      const storeStateControl = this.contactForm.get('store_state');
+      const storeCountryControl = this.contactForm.get('store_country');
+      const storeZipcodeControl = this.contactForm.get('store_zipcode');
+
+    
+      if (sellerValue) {
+        storeNameControl.setValidators([Validators.required]);
+        representativeNameControl.setValidators([Validators.required]);
+        registerNoControl.setValidators([Validators.required, einValidator()]);
+        storeAddress1Control.setValidators([Validators.required]);
+        storeCityControl.setValidators([Validators.required]);
+        storeStateControl.setValidators([Validators.required]);
+        storeCountryControl.setValidators([Validators.required]);
+        storeZipcodeControl.setValidators([Validators.required]);
+
+      } else {
+        storeNameControl.clearValidators();
+        representativeNameControl.clearValidators();
+        registerNoControl.clearValidators();
+        storeAddress1Control.clearValidators();
+        storeCityControl.clearValidators();
+        storeStateControl.clearValidators();
+        storeCountryControl.clearValidators();
+        storeZipcodeControl.clearValidators();
+
+      }
+      
+      storeNameControl.updateValueAndValidity();
+      representativeNameControl.updateValueAndValidity();
+      registerNoControl.updateValueAndValidity();
+      storeAddress1Control.updateValueAndValidity();
+      storeCityControl.updateValueAndValidity();
+      storeStateControl.updateValueAndValidity();
+      storeCountryControl.updateValueAndValidity();
+      storeZipcodeControl.updateValueAndValidity();
+
+    });
+    
   }
   private completeAddress(control: string, arg: number) {
     this.contactForm
@@ -192,56 +245,71 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       .subscribe((response) => {
         const searchResults = response as any;
         // Extract the city, state, and country information from the search results
-        this.cities[arg] = Array.from(
-          new Set(
-            searchResults?.results?.map(
-              (result: any) =>
-                result.address_components.find((component: any) =>
-                  component.types.find((val: any) =>
-                    val.includes('locality', 'sublocality')
-                  )
-                )?.long_name
-            )
-          )
-        );
-        this.states[arg] = Array.from(
-          new Set(
-            searchResults?.results?.map(
-              (result: any) =>
-                result.address_components.find((component: any) =>
-                  component.types[0].includes('administrative_area_level_1')
-                ).short_name
-            )
-          )
-        );
-        this.countries[arg] = Array.from(
-          new Set(
-            searchResults?.results?.map(
-              (result: any) =>
-                result.address_components.find((component: any) =>
-                  component.types[0].includes('country')
-                ).short_name
-            )
-          )
-        );
-        const postalCode: string[] = Array.from(
-          new Set(
-            searchResults?.results?.map(
-              (result: any) =>
-                result.address_components.find((component: any) =>
-                  component.types[0].includes('postal_code')
-                )?.long_name
-            )
-          )
-        );
-
-        // this.postalCode = postalCode.length ? postalCode[0] : '';
-        if (!!postalCode && postalCode.length > 0) {
-          // console.log('postalCode', postalCode[0]);
-          this.postalCode[arg] = postalCode[0];
+        // console.log('searchResults', searchResults);
+        const city = searchResults?.results?.map((result: any) => {
+          return result.address_components
+            .filter((component: any) => {
+              return (
+                component.types.includes('locality') ||
+                component.types.includes('neighborhood') ||
+                component.types.includes('political')
+              );
+            })
+            .map((item: any) => item.short_name);
+        });
+        let cities: any[] = [];
+        city[0]?.forEach((item: any) => {
+          cities.push({ key: item });
+        });
+        this.cities[arg] = [...cities];
+        //
+        const stat = searchResults?.results?.map((result: any) => {
+          return result.address_components
+            .filter((component: any) => {
+              return (
+                component.types.includes('administrative_area_level_2') ||
+                component.types.includes('administrative_area_level_1')
+              );
+            })
+            .map((item: any) => item.short_name);
+        });
+        let state: any[] = [];
+        stat[0]?.forEach((item: any) => {
+          state.push({ key: item });
+        });
+        this.states[arg] = [...state];
+        //
+        const count = searchResults?.results?.map((result: any) => {
+          return result.address_components
+            .filter((component: any) => {
+              return component.types.includes('country');
+            })
+            .map((item: any) => item.short_name);
+        });
+        let country: any[] = [];
+        count[0]?.forEach((item: any) => {
+          country.push({ key: item });
+        });
+        this.countries[arg] = [...country];
+        //
+        const postal = searchResults?.results?.map((result: any) => {
+          return result.address_components.filter((component: any) =>
+            component.types.includes('postal_code')
+          );
+        });
+        if (postal[0]?.length > 0) {
+          this.postalCode[arg] = postal[0][0]?.short_name ?? '';
+          if (arg === 0) {
+            this.contactForm.get('zipcode').setValue(this.postalCode[0]);
+          }
+          if (arg === 1) {
+            this.contactForm.get('store_zipcode').setValue(this.postalCode[1]);
+          }
         }
+        this.cd.detectChanges();
       });
   }
+
   checkSameValueAsAbove(event: any) {
     console.log('event', event.checked);
     if (event.checked) {
@@ -276,7 +344,16 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    // console.log('this.mode', this.mode);
+    console.log('this.mode', this.mode);
+    if (this.contactForm.valid) {
+      console.log('Form Submitted!');
+    } else {
+      console.log('Please agree to terms and conditions!');
+      this.snackBar.open('Please check the field conditions!', 'Close', {
+        duration: 3000,
+      });
+      return;
+    }
     switch (this.mode) {
       case 'Create':
         this.createUser();
@@ -294,7 +371,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     this.userService
       .createUser(this.contactForm.value)
       .subscribe((response: any) => {
-        //console.log('response', response);
+        console.log('response', response);
         // this.ref.close(true);
       });
   }
@@ -304,7 +381,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       ...this.contactForm.value,
       ...{ updated_at: new Date() },
     };
-    console.log('user-profile----', user);
+    // console.log('user-profile----', user);
     this.userService
       .updateUser(this.userId, user)
       .subscribe((response: any) => {
@@ -333,11 +410,21 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     // });
   }
   closeDialog() {
-    // To show register button.
     this.dialogRef.close();
   }
 }
+function einValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const einPattern = /^\d{2}-\d{7}$/;
+    const value = control.value;
 
+    if (!value) { // 값이 없는 경우, 유효성 검사를 통과시킵니다.
+        return null;
+    }
+
+    return einPattern.test(value) ? null : { 'invalidEIN': true };
+  };
+}
 export const sampleUser: Partial<User> = {
   user_id: '1', // number 1
   first_name: 'John', // string 'John'

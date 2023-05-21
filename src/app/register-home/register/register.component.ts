@@ -348,8 +348,6 @@ user_id:"8e2452c0-bf35-4ece-acdf-6ff434bc1197"
 vendor:"bbb"
 */
   private deserializeData(data: Partial<SaleList>, image_urls: string[]) {
-    // const user: any = this.sessionStorageService.getItem('token');
-    // const userId: string = this.sessionStorageService.getItem('user_id');
     const tSize: string[] = [];
     const tColor: string[] = [];
     const tSizeArray: string[] = [];
@@ -386,7 +384,8 @@ vendor:"bbb"
     console.log('final data', adata);
     return adata;
   }
-
+  deleteEditImage(index: number) {
+  }
   cancelUpload() {
     this.imgURLs = [];
     // this.file = null;
@@ -397,9 +396,6 @@ vendor:"bbb"
   }
 
   private createSaleList(data: Partial<SaleList>, user:any) {
-    // const userId = this.sessionStorageService.getItem('user_id');
-    // const user: any =  this.sessionStorageService.getItem('token');
-    // console.log('createSaleList', user);
     
     this.registerForm.patchValue({
       user_id: user.user.uid,

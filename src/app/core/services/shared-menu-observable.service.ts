@@ -47,8 +47,6 @@ export class SharedMenuObservableService {
   displayName$ = this.displayName.asObservable();
   closeFeedback = new Subject<boolean>(); 
   closeFeedback$ = this.closeFeedback.asObservable();
-  closeRegisterButton = new Subject<boolean>();
-  closeRegisterButton$ = this.closeRegisterButton.asObservable();
   closeProfileButton = new Subject<boolean>();
   closeProfileButton$ = this.closeProfileButton.asObservable();
   isLoggedIn = new Subject<string>();

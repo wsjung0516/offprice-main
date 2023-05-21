@@ -9,11 +9,11 @@ export class SessionStorageService {
   constructor() { }
 
   setItem(key: string, value: any): void {
-    sessionStorage.setItem(key, JSON.stringify(value));
+    localStorage.setItem(key, JSON.stringify(value));
   }
 
   getItem<T>(key: string): T | null {
-    const value = sessionStorage.getItem(key);
+    const value = localStorage.getItem(key);
     if (value) {
       return JSON.parse(value) as T;
     }
@@ -21,10 +21,29 @@ export class SessionStorageService {
   }
 
   removeItem(key: string): void {
-    sessionStorage.removeItem(key);
+    localStorage.removeItem(key);
   }
 
   clear(): void {
-    sessionStorage.clear();
+    localStorage.clear();
   }
+  // setItem(key: string, value: any): void {
+  //   sessionStorage.setItem(key, JSON.stringify(value));
+  // }
+
+  // getItem<T>(key: string): T | null {
+  //   const value = sessionStorage.getItem(key);
+  //   if (value) {
+  //     return JSON.parse(value) as T;
+  //   }
+  //   return null;
+  // }
+
+  // removeItem(key: string): void {
+  //   sessionStorage.removeItem(key);
+  // }
+
+  // clear(): void {
+  //   sessionStorage.clear();
+  // }
 }

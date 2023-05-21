@@ -1,76 +1,89 @@
 <nav class="bg-blue-600">
   <div class="mx-auto px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
-      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+      <div class="absolute inset-y-0 left-0 flex items-center">
         <!-- Mobile menu button-->
-        <button
-          type="button"
-          class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-          aria-controls="mobile-menu"
-          aria-expanded="false"
-          (click)="mobileMenuOpen()"
-        >
-          <span class="sr-only">Open main menu</span>
-          <!--
-            Icon when menu is closed.
-
-            Menu open: "hidden", Menu closed: "block"
-          -->
-          <svg
-            class="block h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            aria-hidden="true"
+        <div class="sm:hidden flex justify-between">
+          <button
+            type="button"
+            class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+            (click)="mobileMenuOpen()"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-            />
-          </svg>
-          <!--
-            Icon when menu is open.
-
-            Menu open: "block", Menu closed: "hidden"
-          -->
-          <svg
-            class="hidden h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
-      <div
-        class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
-      >
-        <div class="flex">
-          <div class="flex flex-shrink-0 items-center">
-            <!-- logo  -->
-            <div
-              class="flex items-center justify-center text-blue-600 mr-6 w-36 h-12 border rounded-md bg-slate-50"
+            <span class="sr-only">Open main menu</span>
+            <!--
+              Icon when menu is closed.
+  
+              Menu open: "hidden", Menu closed: "block"
+            -->
+            <svg
+              class="block h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              aria-hidden="true"
             >
-              <span class="font-semibold text-2xl tracking-tight text-green-800"
-                >Off<span class="text-3xl text-blue-700">Price</span></span
-              >
-            </div>
-          </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
+            <!--
+              Icon when menu is open.
+  
+              Menu open: "block", Menu closed: "hidden"
+            -->
+            <svg
+              class="hidden h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
           <div
             class="mt-1 flex items-center justify-center w-10 h-10 rounded bg-blue-800"
           >
             <button mat-icon-button (click)="gotoHome()">
               <mat-icon class="text-white mt-2">home</mat-icon>
             </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
+      >
+        <div class="flex">
+          <div class="flex flex-shrink-0 items-center">
+
+            <!-- logo  -->
+            <div
+              class="flex items-center justify-center text-blue-600 mr-6 w-28 h-10 border rounded-md bg-slate-50"
+            >
+              <span class="font-semibold text-xl tracking-tight text-green-800"
+                >Off<span class="text-2xl text-blue-700">Price</span></span
+              >
+            </div>
+            <div class="hidden sm:block">
+              <div
+                class="mt-1 flex items-center justify-center w-10 h-10 rounded bg-blue-800"
+              >
+                <button mat-icon-button (click)="gotoHome()">
+                  <mat-icon class="text-white mt-2">home</mat-icon>
+                </button>
+              </div>
+
+            </div>
           </div>
         </div>
         <div class="hidden sm:ml-6 sm:block">
@@ -130,29 +143,29 @@
         </button>
 
         <!-- Profile dropdown -->
-        <ng-container *ngIf="isProfileMenuOpen">
-        <div class="relative ml-3">
-          <div>
-            <button
-              type="button"
-              class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-              id="user-menu-button"
-              aria-expanded="false"
-              aria-haspopup="true"
-              (click)="toggleDropdown()"
-            >
-              <span class="sr-only">Open user menu</span>
-              <img
-                clickOutside
-                (clickOutside)="dropdown = false"
-                class="h-9 w-9 rounded-md"
-                src="../../../assets/avatars/avt-01.jpg"
-                alt=""
-              />
-            </button>
-          </div>
+        <ng-container>
+          <div class="relative ml-3">
+            <div>
+              <button
+                type="button"
+                class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                id="user-menu-button"
+                aria-expanded="false"
+                aria-haspopup="true"
+                (click)="toggleDropdown()"
+              >
+                <span class="sr-only">Open user menu</span>
+                <img
+                  clickOutside
+                  (clickOutside)="dropdown = false"
+                  class="h-9 w-9 rounded-md"
+                  src="../../../assets/avatars/avt-01.jpg"
+                  alt=""
+                />
+              </button>
+            </div>
 
-          <!--
+            <!--
             Dropdown menu, show/hide based on menu state.
 
             Entering: "transition ease-out duration-100"
@@ -162,78 +175,78 @@
               From: "transform opacity-100 scale-100"
               To: "transform opacity-0 scale-95"
           -->
-          <div
-            [ngClass]="
-              dropdown
-                ? 'pointer-events-auto scale-100 animate-fade-in-up opacity-100 duration-200'
-                : 'pointer-events-none scale-95 opacity-0 duration-100 ease-in'
-            "
-            class="absolute z-50 right-0 mt-2 w-60 origin-top-right transform rounded-md bg-white py-4 shadow-custom ring-1 ring-transparent ring-opacity-5 transition focus:outline-none dark:bg-night-600"
-          >
-            <div class="flext-row flex items-center px-4 pb-4">
-              <div class="w-10 shrink-0">
-                <img
-                  class="rounded-md"
-                  src="../../../assets/avatars/avt-01.jpg"
-                  alt=""
-                />
-                <!-- <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" /> -->
-              </div>
-              <div
-                class="overflow-hidden px-2 text-sm font-semibold text-gray-700 dark:text-night-50"
-              >
-                {{ userName }}
-                <p
-                  class="truncate text-ellipsis text-xs font-semibold text-gray-400 dark:text-night-300"
-                >
-                  {{ userEmail }}
-                </p>
-              </div>
-            </div>
-
             <div
-              class="border-b border-dashed border-gray-200 dark:border-night-500"
-            ></div>
+              [ngClass]="
+                dropdown
+                  ? 'pointer-events-auto scale-100 animate-fade-in-up opacity-100 duration-200'
+                  : 'pointer-events-none scale-95 opacity-0 duration-100 ease-in'
+              "
+              class="absolute z-50 right-0 mt-2 w-60 origin-top-right transform rounded-md bg-white py-4 shadow-custom ring-1 ring-transparent ring-opacity-5 transition focus:outline-none dark:bg-night-600"
+            >
+              <div class="flext-row flex items-center px-4 pb-4">
+                <div class="w-10 shrink-0">
+                  <img
+                    class="rounded-md"
+                    src="../../../assets/avatars/avt-01.jpg"
+                    alt=""
+                  />
+                  <!-- <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" /> -->
+                </div>
+                <div
+                  class="overflow-hidden px-2 text-sm font-semibold text-gray-700 dark:text-night-50"
+                >
+                  {{ userName }}
+                  <p
+                    class="truncate text-ellipsis text-xs font-semibold text-gray-400 dark:text-night-300"
+                  >
+                    {{ userEmail }}
+                  </p>
+                </div>
+              </div>
 
-            <ul class="my-2 mx-4">
-              <li
-                class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
-              >
-                <a
-                  class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
-                  role="menuitem"
-                  tabindex="-1"
-                  id="user-menu-item-0"
-                  (click)="openProfile()"
-                  >Profile</a
+              <div
+                class="border-b border-dashed border-gray-200 dark:border-night-500"
+              ></div>
+
+              <ul class="my-2 mx-4">
+                <li
+                  class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
                 >
-              </li>
-              <li
-                class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
-              >
-                <a
-                  class="block px-4 py-2 text-sm text-gray-700"
-                  role="menuitem"
-                  tabindex="-1"
-                  id="user-menu-item-1"
-                  >Settings</a
+                  <a
+                    class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                    role="menuitem"
+                    tabindex="-1"
+                    id="user-menu-item-0"
+                    (click)="openProfile()"
+                    >Profile</a
+                  >
+                </li>
+                <li
+                  class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
                 >
-              </li>
-              <li
-                class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
-              >
-                <a
-                  class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
-                  role="menuitem"
-                  tabindex="-1"
-                  id="user-menu-item-2"
-                  (click)="logout()"
-                  >Sign out</a
+                  <a
+                    class="block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    tabindex="-1"
+                    id="user-menu-item-1"
+                    >Settings</a
+                  >
+                </li>
+                <li
+                  class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
                 >
-              </li>
-            </ul>
+                  <a
+                    class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                    role="menuitem"
+                    tabindex="-1"
+                    id="user-menu-item-2"
+                    (click)="logout()"
+                    >Log out</a
+                  >
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
         </ng-container>
       </div>
     </div>

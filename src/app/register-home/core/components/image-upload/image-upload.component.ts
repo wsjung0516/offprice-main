@@ -40,7 +40,9 @@ import {
   tap,
   toArray,
 } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 import { pipe } from 'rxjs';
+import { set } from 'date-fns';
 export interface FileData {
   name: string;
   type: string;
@@ -50,13 +52,35 @@ export interface FileData {
 @Component({
   selector: 'app-image-upload',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatCardModule],
+  imports: [CommonModule, FormsModule, MatCardModule, MatIconModule],
   templateUrl: './image-upload.component.html',
   styles: [
     `
       mat-card-content {
         padding: 0 !important;
       }
+      .file-upload {
+  position: relative;
+  display: inline-block;
+}
+
+.file-upload label {
+  background-color: green;  /* 배경색 변경 */
+  padding: 10px 20px;     /* 크기 조절 */
+  border-radius: 4px;     /* 모서리 둥글게 */
+  color: white;
+  cursor: pointer;
+}
+
+.file-upload input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
     `,
   ],
   providers: [
@@ -78,6 +102,9 @@ export class ImageUploadComponent
   @Input() set uploadStartStatus ( val: boolean) {
     if (val) {
       this.uploadToCloud();
+    } else {
+      // Finished uploading image to cloud, reset imageUrls
+      this.imgURLs = [];
     }
   }
   @Input() set imageUrls(val: string[]) {
@@ -108,7 +135,8 @@ export class ImageUploadComponent
     private compressImageService: CompressImageService
   ) {}
   ngOnInit(): void {}
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+  }
   ngOnChanges(changes: SimpleChanges): void {
     // console.log('ngOnChanges ---',changes);
     if (this.imageUrls && this.imageUrls.length > 0) {
@@ -122,6 +150,13 @@ export class ImageUploadComponent
   }
   selectImage(image: string) {
     this.selectedImage = image;
+  }
+  onDeleteImage(){
+    const index = this.imgURLs.indexOf(this.selectedImage);
+    console.log('index ---', index);
+    this.imgURLs.splice(index, 1);
+    this.selectedImage = this.imgURLs[0] ?? '';
+    this.cd.detectChanges();
   }
   compressedFile: File[] = [];
   async onSelectedImageFile(file: Event) {
@@ -173,14 +208,15 @@ export class ImageUploadComponent
     }
 
     const fileData: FileData[] = [];
-    this.imgURLs = [];
+    // this.imgURLs = [];
     for (const file of Array.from(files)) {
       try {
         const fileDatum = await this.readImageFile(file);
         fileData.push(fileDatum);
         this.imgURLs.push(fileDatum.data);
+        this.selectedImage = this.imgURLs[0];
         this.cd.detectChanges();
-        console.log('imgURLs ---', this.imgURLs);
+        //console.log('imgURLs ---', this.imgURLs);
       } catch (error) {
         console.error('Error reading image file:', error);
         throw error;

@@ -97,36 +97,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Check if register button can be displayed
     console.log('AppComponent ngAfterViewInit');
-    this.userTokenService.getUserToken().pipe(
-      filter((profile: any) => profile !== null),
-      switchMap((profile: any) => {
-        return this.userService.getUser(profile.user.uid);
-      })
-    ).subscribe((userProfile: any) => {
-      // console.log('userProfile', userProfile);
-      if( userProfile.seller === true ) {
-        this.isRegisterButton = true;
-        this.sharedMenuObservableService.closeRegisterButton.next(true);
-      }
-    });
-    // To make condition for showing register button in home page when user is logged in
-    this.sharedMenuObservableService.isLoggedIn$.pipe(
-      untilDestroyed(this),
-      switchMap((user_id:string) => {
-        return this.userService.getUser(user_id);
-      })).subscribe((userProfile: any) => {
-        // console.log('userProfile', userProfile);
-        if( userProfile.seller === true ) {
-          this.isRegisterButton = true;
-          this.sharedMenuObservableService.closeRegisterButton.next(true);
-        }
-      });
-      // To show register button in home page when user is logged in
-    this.sharedMenuObservableService.closeRegisterButton$.pipe(
-      untilDestroyed(this)
-      ).subscribe((status) => {
-        this.isRegisterButton = status;
-      });
+
   }
 
   private receiveFeedback() {
@@ -151,27 +122,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     });
   
-  }
-  onRegister() {
-    if (window.opener) {
-      // 이 창은 부모 창에 의해 열렸습니다.
-      // this.isNewWindow = true;
-      console.log('This window was opened by another window.');
-    } else {
-      // 이 창은 부모 창에 의해 열리지 않았습니다.
-      console.log('This window was not opened by another window.');
-    }
-    const width = window.screen.width;
-    const height = window.screen.height;
-    const options =
-      'resizable=1, scrollbars=1, fullscreen=0, ' +
-      'width=' + width + ', height=' +  height + ',' +
-      'screenX=100 , left=100, screenY=0, top=0, v-toolbar=0, menubar=0, status=0';
-
-    // window.open('http://googl.com', '_blank', options);
-    window.open('/register-home');
-    // window.open('/about', 'offPrice Register', options);
-    window.focus();
   }
   acitveTab = 'tab1';
   setActiveTab(tabId: string) {

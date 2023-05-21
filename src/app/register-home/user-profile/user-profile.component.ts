@@ -46,8 +46,10 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SessionStorageService } from 'src/app/register-home/core/services/session-storage.service';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
-import { fi } from 'date-fns/locale';
+import { ar, fi, th } from 'date-fns/locale';
+import { TermsAndConditionsComponent } from 'src/app/core/components/terms-and-condition/terms-and-conditions.component';
 // import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 interface Data {
   user_id: string;
 }
@@ -70,7 +72,7 @@ interface Data {
     MatTooltipModule,
     // ConfirmDialogComponent,
     MatSelectModule,
-    // NzModalModule,
+    MatDialogModule
   ],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
@@ -89,12 +91,12 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('templateName') tName: TemplateRef<any>;
 
   address = '';
-  cities: string[][] = [];
-  selectedCity: string[] = [];
-  states: string[][] = [];
-  selectedState: string[] = [];
-  countries: string[][] = [];
-  selectedCountry: string[] = [];
+  cities: { key: any }[][] = [];
+  selectedCity: { key: any }[][] = [];
+  states: { key: any }[][] = [];
+  selectedState: { key: any }[][] = [];
+  countries: { key: any }[][] = [];
+  selectedCountry: { key: any }[][] = [];
   postalCode: string[] = [];
 
   firstName = '';
@@ -105,7 +107,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private http: HttpClient,
     public dialogRef: MatDialogRef<UserProfileComponent>,
-    // private sessionStorageService: SessionStorageService
+    private matDialog: MatDialog,
     private userTokenService: UserTokenService
   ) {}
 
@@ -142,28 +144,27 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     // const id = '25b85792-ac77-4433-97bb-a622e03f3241'
   }
   ngAfterViewInit() {
-    // this.mode = this.ref.data.mode;
-    // const user: any = this.sessionStorageService.getItem('token');
-    // const userId: string = this.sessionStorageService.getItem('user_id');
 
-    this.userTokenService.getUserToken().pipe(
-      filter((profile: any) => !!profile),
-      switchMap((profile: any) => {
-        return this.userService.getUser(profile.user.uid)
-      })
-    )
-    .subscribe((user) => {
-      // console.log('user', user);
-      this.userId = user.user_id;
-      this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
-      this.contactForm.patchValue(user);
-      this.contactForm.get('seller').patchValue(false);
-      this.contactForm.get('address1').setValue(user.address1);
-      this.contactForm.get('store_address1').setValue(user.store_address1);
-      this.cd.detectChanges();
-      this.completeAddress('address1', 0);
-      this.completeAddress('store_address1', 1);
-    });
+    this.userTokenService
+      .getUserToken()
+      .pipe(
+        filter((profile: any) => !!profile),
+        switchMap((profile: any) => {
+          return this.userService.getUser(profile.user.uid);
+        })
+      )
+      .subscribe((user) => {
+        console.log('user', user);
+        this.userId = user.user_id;
+        this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
+        this.contactForm.patchValue(user);
+        this.contactForm.get('address1').setValue(user.address1);
+        this.contactForm.get('store_address1').setValue(user.store_address1);
+
+        this.cd.detectChanges();
+        this.completeAddress('address1', 0);
+        this.completeAddress('store_address1', 1);
+      });
     // this.user-profile = this.ref.data.user-profile;
     // this.disabled = this.ref.data.disabled;
   }
@@ -186,62 +187,65 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         const searchResults = response as any;
         // Extract the city, state, and country information from the search results
         // console.log('searchResults', searchResults);
-        this.cities[arg] = Array.from(
-          new Set(
-            searchResults?.results?.map((result: any) => {
-              const component = result.address_components.find(
-                (component: any) =>
-                  component.types.find((val: any) =>
-                    val.includes('locality', 'sublocality')
-                  )
+        const city = searchResults?.results?.map((result: any) => {
+          return result.address_components
+            .filter((component: any) => {
+              return (
+                component.types.includes('locality') ||
+                component.types.includes('neighborhood') ||
+                component.types.includes('political')
               );
-              return component?.short_name || component?.long_name;
             })
-          )
-        );
-        this.states[arg] = Array.from(
-          new Set(
-            searchResults?.results?.map((result: any) => {
-              const component = result.address_components.find(
-                (component: any) =>
-                  component.types[0].includes(
-                    'administrative_area_level_1',
-                    'political'
-                  )
-                // component.types[0].includes('administrative_area_scale_1')
+            .map((item: any) => item.short_name);
+        });
+        let cities: any[] = [];
+        city[0]?.forEach((item: any) => {
+          cities.push({ key: item });
+        });
+        this.cities[arg] = [...cities];
+        //
+        const stat = searchResults?.results?.map((result: any) => {
+          return result.address_components
+            .filter((component: any) => {
+              return (
+                component.types.includes('administrative_area_level_2') ||
+                component.types.includes('administrative_area_level_1')
               );
-              return component?.short_name || component?.long_name;
             })
-          )
-        );
-        this.countries[arg] = Array.from(
-          new Set(
-            searchResults?.results?.map((result: any) => {
-              const component = result.address_components.find(
-                (component: any) =>
-                  component.types[0].includes('country', 'political', 'geocode')
-              );
-              return component?.short_name || component?.long_name;
+            .map((item: any) => item.short_name);
+        });
+        let state: any[] = [];
+        stat[0]?.forEach((item: any) => {
+          state.push({ key: item });
+        });
+        this.states[arg] = [...state];
+        //
+        const count = searchResults?.results?.map((result: any) => {
+          return result.address_components
+            .filter((component: any) => {
+              return component.types.includes('country');
             })
-          )
-        );
-        const postalCode: string[] = Array.from(
-          new Set(
-            searchResults?.results?.map((result: any) => {
-              const component = result.address_components.find(
-                (component: any) => component.types[0].includes('postal_code')
-              );
-              return component?.long_name || component?.short_name;
-            })
-          )
-        );
-
-        // this.postalCode = postalCode.length ? postalCode[0] : '';
-        if (!!postalCode && postalCode.length > 0) {
-          console.log('postalCode', postalCode[0]);
-          this.postalCode[arg] = postalCode[0];
-        } else {
-          this.postalCode[arg] = '';
+            .map((item: any) => item.short_name);
+        });
+        let country: any[] = [];
+        count[0]?.forEach((item: any) => {
+          country.push({ key: item });
+        });
+        this.countries[arg] = [...country];
+        //
+        const postal = searchResults?.results?.map((result: any) => {
+          return result.address_components.filter((component: any) =>
+            component.types.includes('postal_code')
+          );
+        });
+        if (postal[0]?.length > 0) {
+          this.postalCode[arg] = postal[0][0]?.short_name ?? '';
+          if (arg === 0) {
+            this.contactForm.get('zipcode').setValue(this.postalCode[0]);
+          }
+          if (arg === 1) {
+            this.contactForm.get('store_zipcode').setValue(this.postalCode[1]);
+          }
         }
         this.cd.detectChanges();
       });
@@ -364,6 +368,17 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   //   this.userId = user_id ? user_id.toString() : '';
   //   // this.createdDate = format(new Date(created_at), 'MM/dd/yyyy hh:mm:ss');
   // }
+  openTermsAndConditions() {
+    this.matDialog.open(TermsAndConditionsComponent, {
+      hasBackdrop: false,
+      disableClose: true,
+    });
+    // this.dialog.open(TermsAndConditionsComponent, {
+    //   data: { data: 'Terms and Conditions' },
+
+    //   backdrop: false
+    // });
+  }
   closeDialog() {
     this.dialogRef.close();
   }

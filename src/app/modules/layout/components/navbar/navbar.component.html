@@ -1,8 +1,9 @@
 <div class="bg-blue-600 dark:bg-night-700">
-  <div class="mx-auto px-5">
-    <div class="flex items-center justify-between py-3.5 md:justify-start">
+  <div class="mx-auto px-5 flex justify-between">
+    <div class="flex items-center py-2 justify-start">
+    <!-- <div class="flex items-center justify-between py-3.5 md:justify-start"> -->
       <!-- Mobile Navigation Menu Button-->
-      <div class="sm:order-1 md:hidden">
+      <div class="md:order-1 md:hidden">
         <button
           (click)="toggleMobileMenu()"
           type="button"
@@ -16,44 +17,79 @@
         </button>
       </div>
 
-      <div class="flex items-center justify-center w-10 h-10 rounded bg-blue-800">
+      <div
+        class="flex items-center justify-center w-10 h-10 rounded bg-blue-800"
+      >
         <button mat-icon-button (click)="gotoHome()">
           <mat-icon class="text-white mt-2">home</mat-icon>
         </button>
-      </div>
-      <!-- Logo -->
-      <div
-        class="flex items-center justify-center w-28 h-12 sm:mr-6 sm:w-36 sm:h-12 border-2 border-blue-600 rounded-md bg-slate-50 sm:hidden"
-      >
-        <span class="font-semibold text-xl sm:text-2xl tracking-tight text-green-800"
-          >Off<span class="text-2xl sm:text-3xl text-blue-700">Price</span></span
-        >
       </div>
       <!-- Desktop Menu -->
       <div class="hidden space-x-10 sm:order-3 md:flex">
         <!-- <app-navbar-menu></app-navbar-menu> -->
       </div>
-
-      <ng-container *ngIf="sSize === 'XSmall'">
-        <div class="text-white w-14 overflow-x-hidden">
-          {{ userName}}
+    </div>
+    <!-- Logo -->
+    <div class="flex items-center">
+      <div
+        class="flex items-center justify-center w-24 h-10 mr-6 border-2 border-blue-600 rounded-md bg-slate-50 md:hidden"
+      >
+        <span
+          class="font-semibold text-xl  tracking-tight text-green-800"
+          >Off<span class="text-2xl text-blue-700"
+            >Price</span
+          ></span
+        >
+      </div>
+    </div>
+    <div class="flex items-center justify-end">
+      <div class="flex items-center justify-between">
+        <div class="hidden sm:block mr-2">
+          <div
+            class="text-white flex items-center justify-center rounded-md w-20 h-8 bg-green-600 hover:bg-green-800"
+          >
+            <button (click)="onRegister()">Register</button>
+          </div>
         </div>
-        <div #refreshButton class="text-white  -mr-3 mt-3  sm:mr-3 sm:mt-3 cursor-pointer" (click)="openCart()">
-          <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent">add_shopping_cart</mat-icon>
+        <div class="hidden sm:block text-white w-auto overflow-x-hidden mr-2">
+          {{ userName }}
         </div>
-      </ng-container>
+        <div
+          #refreshButton
+          class="hidden sm:block text-white -mr-3 mt-3 sm:mr-3 sm:mt-3 cursor-pointer"
+          (click)="openCart()"
+        >
+          <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent"
+            >add_shopping_cart</mat-icon
+          >
+        </div>
+        <div class="hidden sm:block">
+          <!-- Toggle display mode grid or list -->
+          <app-profile-menu></app-profile-menu>
+        </div>
+      </div>
       <!-- Profile menu -->
       <div class="items-center justify-end sm:order-4 md:flex md:flex-1 lg:w-0">
-        <ng-container *ngIf="sSize !== 'XSmall'">
-          <div class="text-white w-18 mr-3 overflow-x-hidden">
-            {{ userName}}
+        <!-- <ng-container *ngIf="sSize !== 'XSmall'"> -->
+        <div class="flex items-center justify-between">
+          <div class="text-xs block sm:hidden text-white w-10 mr-3 overflow-x-hidden">
+                  {{ userName}}
           </div>
-            <div #refreshButton class="text-white  mt-3  sm:mr-3 sm:mt-3 cursor-pointer" (click)="openCart()">
-            <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent">add_shopping_cart</mat-icon>
+          <div
+            #refreshButton
+            class="block sm:hidden text-white mt-3 sm:mr-3 sm:mt-3 cursor-pointer"
+            (click)="openCart()"
+          >
+            <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent"
+              >add_shopping_cart</mat-icon
+            >
           </div>
-        </ng-container>
-          <!-- Toggle display mode grid or list -->
-        <app-profile-menu></app-profile-menu>
+          <div class="block sm:hidden">
+            <!-- Toggle display mode grid or list -->
+            <app-profile-menu></app-profile-menu>
+          </div>
+        </div>
+        <!-- </ng-container> -->
       </div>
     </div>
   </div>
@@ -61,4 +97,9 @@
   <div class="">
     <app-navbar-mobile></app-navbar-mobile>
   </div>
+</div>
+<div class="sm:hidden fixed-button fixed top-12 right-0 z-10">
+  <button id="register-button" class="bg-green-500 text-white text-sm w-6 h-20 rounded-l-lg cursor-pointer transition-colors duration-200 ease-in-out flex items-center justify-center hover:bg-green-700">
+      <span class="transform rotate-90" (click)="onRegister()">Register</span>
+  </button>
 </div>

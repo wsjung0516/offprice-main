@@ -11,7 +11,7 @@ import { SaleListComponent } from '../sale-list/sale-list.component';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 // import { HomeModule } from './home.component.module';
-import { UserProfileComponent } from '../user-profile/user-profile.component';
+// import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RemoveChipsKeywordService } from '../core/services/remove-chips-keyword.service';
 import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
@@ -23,6 +23,7 @@ import { SessionStorageService } from '../core/services/session-storage.service'
 import { HelpComponent } from '../core/components/help/help.component';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
+import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 // import { LoginModule } from '../login/login.module';
 @UntilDestroy()
 @Component({
@@ -61,7 +62,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private sharedParentObservableService: SharedParentObservableService
   ) {}
   ngOnInit() {
-    console.log('HomeComponent ngOnInit');
+    console.log('Register HomeComponent ngOnInit');
     this.resetLogoutTimer();
     this.sharedMenuObservableService.closeFeedback$
       .pipe(untilDestroyed(this))
@@ -84,7 +85,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }, 30 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {
-    // const user: any = this.sessionStorageService.getItem('token');
+    // 
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       if (profile) {
         this.userName = profile?.user.displayName;

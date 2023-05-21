@@ -6,6 +6,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { MenuService } from '../../../../core/services/menu.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -26,7 +27,7 @@ import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-item
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
-import { switchMap, tap } from 'rxjs';
+import { switchMap, tap, Subscription, interval } from 'rxjs';
 import { UserService } from 'src/app/user/user.service';
 @UntilDestroy()
 @Component({
@@ -47,10 +48,12 @@ import { UserService } from 'src/app/user/user.service';
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavbarComponent implements OnInit, AfterViewInit {
+export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   sSize: string;
   cart_badge_count = '0';
   userName: string;
+  newWindow: any;
+  subscription: Subscription
   @ViewChild('refreshButton', { static: false }) refreshButton: ElementRef;
   // public screenSize$: Observable<any>;
   constructor(
@@ -80,6 +83,20 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       .subscribe(() => {
         this.gotoHome();
       });
+        // Check every minute (60000 milliseconds)
+    this.subscription = interval(60000).subscribe(() => {
+          // your window checking logic here
+          console.log('Checking window status...');
+          // if (newWindow && newWindow.closed) { ... }
+        if (this.newWindow && this.newWindow.closed) {
+            console.log('The window has been closed.');
+            this.sessionStorageService.removeItem('isRegisterLoggedIn');
+            // this.subscription.unsubscribe();
+            // this.newWindow = null;
+        } else {
+            console.log('The window is still open.');
+        }
+      });  
   }
   profile: any;
   ngAfterViewInit(): void {
@@ -153,6 +170,12 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       // width: '800px'
     });
   }
+  onRegister() {
+    // window.open('http://googl.com', '_blank', options);
+    this.newWindow = window.open('/register-home');
+    window.focus();
+  }
+
   resetKeyword() {
     const service = this.sharedMenuObservableService;
     const filters: any[] = [
@@ -205,5 +228,10 @@ export class NavbarComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+  ngOnDestroy(): void {
+    if (this.subscription && !this.subscription.closed) {
+      this.subscription.unsubscribe();
+    }
   }
 }

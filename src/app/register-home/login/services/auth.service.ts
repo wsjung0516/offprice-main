@@ -8,6 +8,8 @@ import jwt_decode from 'jwt-decode';
 import { SessionStorageService } from '../../core/services/session-storage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
+import { Observable, map, of, tap } from 'rxjs';
+import { User } from '../../core/models/user.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -25,7 +27,8 @@ export class AuthService {
   }
   isLoggedIn(): boolean {
     // console.log('this.token', this.token);
-    if (!this.token) {
+    const userId: any = this.sessionStorageService.getItem('userId');
+    if (!userId) {
       return false;
     }
     // this.userTokenService.getUserToken().subscribe((profile: any) => {
@@ -34,21 +37,21 @@ export class AuthService {
     //   }
     // });
 
-    const decoded: any = jwt_decode(this.token.credential.idToken);
+    // const decoded: any = jwt_decode(this.token.credential.idToken);
 
-    const currentTime = new Date().getTime() / 1000;
-    if (decoded.exp < currentTime) {
-      const elapsedTime = currentTime - decoded.exp;
-      const elapsedTimeInMinutes = elapsedTime / 60;
-      this.matSnackBar.open('Your session has expired. Please login again.', 'Close', {
-        // duration: 3000,
-        verticalPosition: 'bottom',
-        horizontalPosition: 'center',
-      });
-      console.log('elapsedTime', elapsedTimeInMinutes);
-      this.sessionStorageService.removeItem('token');
-      return false;
-    }
+    // const currentTime = new Date().getTime() / 1000;
+    // if (decoded.exp < currentTime) {
+    //   const elapsedTime = currentTime - decoded.exp;
+    //   const elapsedTimeInMinutes = elapsedTime / 60;
+    //   this.matSnackBar.open('Your session has expired. Please login again.', 'Close', {
+    //     // duration: 3000,
+    //     verticalPosition: 'bottom',
+    //     horizontalPosition: 'center',
+    //   });
+    //   console.log('elapsedTime', elapsedTimeInMinutes);
+    //   this.sessionStorageService.removeItem('token');
+    //   return false;
+    // }
 
     return true;
   }
@@ -56,41 +59,55 @@ export class AuthService {
   login(email: string, password: string) {
     this.fireauth.signInWithEmailAndPassword(email, password).then(
       (res) => {
-        // console.log('res' , res)
-        this.token = res;
-        // this.sessionStorageService.setItem('token', res);
-        this.sharedMenuObservableService.displayName.next(
-          res.user?.displayName
-        );
-        this.userService.saveUserProfileToDB(res);
 
-        if (res.user?.emailVerified == true) {
-          this.router.navigate(['/home']);
-        } else {
-          this.router.navigate(['/login/verify-email']);
-        }
-        this.userTokenService.updateUserToken(res).subscribe((res: any) => {
-        });
+        this.createUserTokenFn(res).subscribe(
+          (ret: any) => {
+            this.sharedMenuObservableService.displayName.next(res.user.displayName);
+            // this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
+            this.userService.saveUserProfileToDB(res);
+    
+            if(res.user?.emailVerified == true) {
+              this.router.navigate(['/register-home']);
+              this.sessionStorageService.setItem('isRegisterLoggedIn', true);
+
+            } else {
+              this.router.navigate(['/login/verify-email']);
+            }
+
+          });
+
 
       },
       (err) => {
         alert(err.message);
-        this.router.navigate(['/login']);
+        this.router.navigate(['/register-home/login']);
       }
     );
   }
-
+  private createUserTokenFn(res:any): Observable<any> {
+    return this.userTokenService.createUserToken(res).pipe(
+      map((ret: any) => {
+      // console.log('createUserTokenFn', ret);
+      const value = JSON.parse(ret.token);
+      const data = {
+        id: ret.token_id,
+        user_id: value.user.uid,
+      };
+      this.sessionStorageService.setItem('userId', data);
+      return value;
+    }));
+  }
   // register method
   register(email: string, password: string) {
     this.fireauth.createUserWithEmailAndPassword(email, password).then(
       (res) => {
         alert('Registration Successful');
         this.sendEmailForVarification(res.user);
-        this.router.navigate(['/login']);
+        this.router.navigate(['/register-hom/login']);
       },
       (err) => {
         alert(err.message);
-        this.router.navigate(['/home/register']);
+        this.router.navigate(['/register-home/home/register']);
       }
     );
   }
@@ -98,11 +115,21 @@ export class AuthService {
   // sign out
   logout() {
     console.log('logout');
+    
+    this.sessionStorageService.removeItem('isRegisterLoggedIn');
+    const userId:any = this.sessionStorageService.getItem('userId');
+    if (!userId) return;
+    
     this.fireauth.signOut().then(
       () => {
-        this.userTokenService.deleteUserToken();
-        this.sharedMenuObservableService.displayName.next('');
-          this.router.navigate(['/login']);
+        this.userTokenService.getUserToken().subscribe((profile: any) => {
+          if( !profile.token ) {
+            this.userTokenService.deleteUserToken();
+            this.sessionStorageService.removeItem('userId');
+    
+            this.router.navigate(['/register-home/login']);
+          }
+        });
       },
       (err) => {
         alert(err.message);
@@ -140,19 +167,43 @@ export class AuthService {
     return this.fireauth.signInWithPopup(new GoogleAuthProvider()).then(
       (res) => {
 
-        this.router.navigate(['/register-home']);
-        this.sharedMenuObservableService.displayName.next(res.user?.displayName);
-        this.userService.saveUserProfileToDB(res);
-  
-        this.userTokenService.updateUserToken(res).subscribe((res: any) => {
-        });
-        },
+        this.createUserTokenFn(res).subscribe(
+          (ret: any) => {
+            console.log('createUserTokenFn -2', ret);
+            this.isSellerChecked(ret.user.uid).subscribe((isSeller: boolean) => {
+              console.log('isSeller', isSeller);
+              if (isSeller) {
+                this.router.navigate(['/register-home']);
+                this.sessionStorageService.setItem('isRegisterLoggedIn', true);
+                this.userService.saveUserProfileToDB(res);
+              } else {
+                // Input profile information
+                this.inputProfileInfo(res).subscribe((ret: any) => {
+                  console.log('inputProfileInfo', ret);
+                  this.router.navigate(['/register-home']);
+                });; 
+              }
+          })
+        })
+      },
       (err) => {
         alert(err.message);
       }
     );
   }
-  
+  private isSellerChecked(uid: string): Observable<boolean> {
+    return this.userService.getUser(uid).pipe(
+      tap((user: any) => {
+        console.log('isSellerChecked', user);
+      }),
+      map((user: any) => {
+        return user.seller;
+      })
+    )
+  }
+  private inputProfileInfo(res: any): Observable<any> {
+    return of(true);
+  }
   facebookSignIn() {
     return this.fireauth.signInWithPopup(new FacebookAuthProvider()).then(
       (res) => {
@@ -161,7 +212,6 @@ export class AuthService {
         console.log('facebook sign in', res);
 
         this.router.navigate(['/register']);
-        this.sessionStorageService.setItem('token', res);
         this.userService.saveUserProfileToDB(res);
       },
       (err) => {

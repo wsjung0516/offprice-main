@@ -8,6 +8,7 @@ import { UserService } from 'src/app/user/user.service';
 import { SessionStorageService } from './../../../../../core/services/session-storage.service';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { Observable, map, tap } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 declare const FB: any;
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class AuthService {
      private userService: UserService,
      private sessionStorageService: SessionStorageService,
      private userTokenService: UserTokenService,
+     private snackBar: MatSnackBar
      ) { }
      isLoggedIn(): boolean {
       const userId:any = this.sessionStorageService.getItem('userId');
@@ -49,7 +51,6 @@ export class AuthService {
   login(email : string, password : string) {
     this.fireauth.signInWithEmailAndPassword(email,password).then( res => {
       // console.log('res' , res)
-        // this.sessionStorageService.setItem('token',res);
         this.createUserTokenFn(res).subscribe(
           (ret: any) => {
             // this.sharedMenuObservableService.displayName.next(res.user.displayName);
@@ -98,14 +99,25 @@ export class AuthService {
 
   // sign out
   logout() {
-    this.fireauth.signOut().then( () => {
-      const userId:any = this.sessionStorageService.getItem('userId');
-      if (!userId) return;
-      this.userTokenService.deleteUserToken();
-      this.sessionStorageService.removeItem('userId');
+
+    const userId:any = this.sessionStorageService.getItem('userId');
+    // Make logout action now when the the register logged out already
+    // Clear display name. and clear cart badge count
+    // And return because the register window cleared user token already
+    if( !userId ) {
       this.sharedMenuObservableService.displayName.next('Guest');
-      this.sharedMenuObservableService.closeRegisterButton.next(false);
       this.sharedMenuObservableService.cart_badge_count.next('0');
+      return;
+    } 
+    this.fireauth.signOut().then( () => {
+      this.userTokenService.getUserToken().subscribe((profile: any) => {
+        if( profile ) {
+          this.userTokenService.deleteUserToken();
+          this.sessionStorageService.removeItem('userId');
+          this.sharedMenuObservableService.displayName.next('Guest');
+          this.sharedMenuObservableService.cart_badge_count.next('0');
+        }
+      });
       // this.router.navigate(['/login']);
     }, err => {
       alert(err.message);
@@ -135,10 +147,9 @@ export class AuthService {
   googleSignIn() {
     return this.fireauth.signInWithPopup(new GoogleAuthProvider).then(res => {
       
-      // this.sessionStorageService.setItem('token',res);
       this.createUserTokenFn(res).subscribe(
         (ret: any) => {
-          console.log('createUserTokenFn', ret);
+          console.log('createUserTokenFn -1', ret);
           this.router.navigate(['/']);
           // this.sharedMenuObservableService.displayName.next(res.user?.displayName);
           this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);

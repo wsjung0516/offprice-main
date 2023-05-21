@@ -7,6 +7,9 @@ module.exports = {
 	content: ['./src/**/*.{html,ts}', './projects/**/*.{html,ts}'],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    maxHeight: {
+      '90vh': '90vh',
+    },
     extend: {},
   },
   variants: {

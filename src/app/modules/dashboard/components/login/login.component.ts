@@ -19,7 +19,7 @@ template: `
     <div class="border-2 border-gray-200 p-10 max-w-2xl">
       <div class="bg-white shadow-md rounded">
         <div class="mb-4">
-          <div class="text-center text-2xl text-gray-700">Login</div>
+          <div class="text-center text-2xl text-gray-700">Login offPrice</div>
         </div>
         <form>
           <div class="mb-4">
@@ -43,7 +43,7 @@ template: `
           </div>
           <div class="mt-4">
             <a (click)="signInWithGoogle()" class="flex items-center justify-center cursor-pointer bg-white shadow-md rounded px-4 py-2 text-gray-700 hover:bg-gray-100">
-              <img src="assets/icons/icons8-google-48.png" alt="" height="24px" width="24px" class="mr-2"> Sign In with Google
+              <img src="assets/icons/icons8-google-48.png" alt="" height="24px" width="24px" class="mr-2"> Log In with Google
             </a>
           </div>
 <!--           <div class="mt-4 ">

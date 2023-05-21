@@ -1,20 +1,15 @@
 <p></p>
-<div class="mt-4">
-  <style>
-    .scroll-container {
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-  </style>
+<div class="mt-4 overflow-y-auto max-h-90vh">
   <div class="flex justify-center text-2xl font-bold">Update User Information</div>
   <div class="flex justify-center">
     <div class="block p-4 rounded-lg shadow-lg bg-white max-w-xl scroll-container">
-      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="contactForm" errorTailor (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
           <mat-form-field class="">
             <mat-label>First Name</mat-label>
             <input
               class="placeholder-red-300"
+              readonly
               matInput
               formControlName="first_name"
               placeholder="First Name"
@@ -24,9 +19,10 @@
           <mat-form-field class="">
             <mat-label>Last Name</mat-label>
             <input
+              readonly
               matInput
               formControlName="last_name"
-              placeholder="Ex. Pizza"
+              placeholder="Last Name"
               value=""
             />
           </mat-form-field>
@@ -35,7 +31,15 @@
           <!-- <mat-form-field class="" > -->
           <mat-label>Email</mat-label>
           <input
+            *ngIf="disabled"
             readonly
+            matInput
+            formControlName="email"
+            placeholder="Email"
+            value=""
+          />
+          <input
+            *ngIf="!disabled"
             matInput
             formControlName="email"
             placeholder="Email"
@@ -66,16 +70,16 @@
           <mat-form-field appearance="fill">
             <mat-label>City</mat-label>
             <mat-select formControlName="city">
-              <mat-option *ngFor="let city of cities[0]" [value]="city">{{
-                city
+              <mat-option *ngFor="let city of cities[0]" [value]="city.key">{{
+                city.key
               }}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>State</mat-label>
             <mat-select [(value)]="selectedState[0]" formControlName="state">
-              <mat-option *ngFor="let state of states[0]" [value]="state">{{
-                state
+              <mat-option *ngFor="let state of states[0]" [value]="state.key">{{
+                state.key
               }}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -87,8 +91,8 @@
             >
               <mat-option
                 *ngFor="let country of countries[0]"
-                [value]="country"
-                >{{ country }}</mat-option
+                [value]="country.key"
+                >{{ country.key }}</mat-option
               >
             </mat-select>
           </mat-form-field>
@@ -100,12 +104,13 @@
               matInput
               formControlName="zipcode"
               placeholder=""
-              [(ngModel)]="postalCode[0]"
-            />
+              value=""
+              />
+              <!-- [(ngModel)]="postalCode[0]" -->
           </mat-form-field>
           <mat-form-field class="">
             <mat-label>Phone Number</mat-label>
-            <input
+            <input appPhoneNumber
               matInput
               formControlName="phone_no"
               placeholder=""
@@ -116,7 +121,7 @@
 
         <section class="">
           <button type="button" (click)="openTermsAndConditions()"><span class="text-blue-700">Terms & Conditions</span></button>
-          <mat-checkbox formControlName="subscribe" class=""
+          <mat-checkbox formControlName="subscribe" class="" [controlErrorsTpl]="termErrorTpl"
             >I Have read the terms and conditions and agreed!</mat-checkbox
           >
         </section>
@@ -177,6 +182,7 @@
                   formControlName="register_no"
                   placeholder=""
                   value=""
+                  [controlErrorsTpl]="registerNoErrorTpl"
                 />
               </mat-form-field>
               <mat-form-field class="">
@@ -222,8 +228,8 @@
                   [(value)]="selectedCity[1]"
                   formControlName="store_city"
                 >
-                  <mat-option *ngFor="let city of cities[1]" [value]="city">{{
-                    city
+                  <mat-option *ngFor="let city of cities[1]" [value]="city.key">{{
+                    city.key
                   }}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -233,8 +239,8 @@
                   [(value)]="selectedState[1]"
                   formControlName="store_state"
                 >
-                  <mat-option *ngFor="let state of states[1]" [value]="state">{{
-                    state
+                  <mat-option *ngFor="let state of states[1]" [value]="state.key">{{
+                    state.key
                   }}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -246,8 +252,8 @@
                 >
                   <mat-option
                     *ngFor="let country of countries[1]"
-                    [value]="country"
-                    >{{ country }}</mat-option
+                    [value]="country.key"
+                    >{{ country.key }}</mat-option
                   >
                 </mat-select>
               </mat-form-field>
@@ -259,8 +265,9 @@
                   matInput
                   formControlName="store_zipcode"
                   placeholder=""
-                  [(ngModel)]="postalCode[1]"
-                />
+                  value=""
+                  />
+                  <!-- [(ngModel)]="postalCode[1]" -->
               </mat-form-field>
               <div></div>
             </div>
@@ -277,3 +284,13 @@
 </div>
 
 <ng-template #subscribe> </ng-template>
+<ng-template #termErrorTpl let-control>
+  <div class="text-red-600">
+    You must agree to the terms and conditions.
+  </div>
+</ng-template>
+<ng-template #registerNoErrorTpl let-control>
+  <div class="text-red-600">
+    Register Number need to be format.
+  </div>
+</ng-template> 

@@ -28,7 +28,7 @@
               readonly
               matInput
               formControlName="last_name"
-              placeholder="Ex. Pizza"
+              placeholder="Last Name"
               value=""
             />
           </mat-form-field>
@@ -75,17 +75,17 @@
         <div class="grid grid-cols-3 gap-4 ">
           <mat-form-field appearance="fill">
             <mat-label>City</mat-label>
-            <mat-select [(value)]="selectedCity[0]" formControlName="city">
-              <mat-option *ngFor="let city of cities[0]" [value]="city">{{
-                city
+            <mat-select formControlName="city">
+              <mat-option *ngFor="let city of cities[0]" [value]="city.key">{{
+                city.key
               }}</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>State</mat-label>
             <mat-select [(value)]="selectedState[0]" formControlName="state">
-              <mat-option *ngFor="let state of states[0]" [value]="state">{{
-                state
+              <mat-option *ngFor="let state of states[0]" [value]="state.key">{{
+                state.key
               }}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -97,8 +97,8 @@
             >
               <mat-option
                 *ngFor="let country of countries[0]"
-                [value]="country"
-                >{{ country }}</mat-option
+                [value]="country.key"
+                >{{ country.key }}</mat-option
               >
             </mat-select>
           </mat-form-field>
@@ -110,6 +110,7 @@
               matInput
               formControlName="zipcode"
               placeholder=""
+              value=""
               />
               <!-- [(ngModel)]="postalCode[0]" -->
           </mat-form-field>
@@ -125,6 +126,7 @@
         </div>
 
         <section class="">
+          <button type="button" (click)="openTermsAndConditions()"><span class="text-blue-700">Terms & Conditions</span></button>
           <mat-checkbox formControlName="subscribe" class=""
             >I Have read the terms and conditions and agreed!</mat-checkbox
           >
@@ -231,8 +233,8 @@
                   [(value)]="selectedCity[1]"
                   formControlName="store_city"
                 >
-                  <mat-option *ngFor="let city of cities[1]" [value]="city">{{
-                    city
+                  <mat-option *ngFor="let city of cities[1]" [value]="city.key">{{
+                    city.key
                   }}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -242,8 +244,8 @@
                   [(value)]="selectedState[1]"
                   formControlName="store_state"
                 >
-                  <mat-option *ngFor="let state of states[1]" [value]="state">{{
-                    state
+                  <mat-option *ngFor="let state of states[1]" [value]="state.key">{{
+                    state.key
                   }}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -255,8 +257,8 @@
                 >
                   <mat-option
                     *ngFor="let country of countries[1]"
-                    [value]="country"
-                    >{{ country }}</mat-option
+                    [value]="country.key"
+                    >{{ country.key }}</mat-option
                   >
                 </mat-select>
               </mat-form-field>
@@ -268,6 +270,7 @@
                   matInput
                   formControlName="store_zipcode"
                   placeholder=""
+                  value=""
                   />
                   <!-- [(ngModel)]="postalCode[1]" -->
               </mat-form-field>

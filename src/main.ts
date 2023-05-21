@@ -16,6 +16,7 @@ import { GlobalErrorHandler } from './app/core/services/global-error-handler';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { AngularFireModule } from '@angular/fire/compat';
+import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -38,6 +39,16 @@ bootstrapApplication(AppComponent, {
       multi: true,
     },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    provideErrorTailorConfig({
+      errors: {
+        useValue: {
+          required: 'This field is required',
+          minlength: ({ requiredLength, actualLength }) => 
+                      `Expect ${requiredLength} but got ${actualLength}`,
+          invalidAddress: error => `Address isn't valid`
+        }
+      }
+    }),  
     MatSnackBar,
   ],
 }).catch((err) => console.error(err));

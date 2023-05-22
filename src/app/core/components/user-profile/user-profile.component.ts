@@ -348,7 +348,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     if (this.contactForm.valid) {
       console.log('Form Submitted!');
     } else {
-      console.log('Please agree to terms and conditions!');
       this.snackBar.open('Please check the field conditions!', 'Close', {
         duration: 3000,
       });

@@ -56,7 +56,7 @@ export class FeedbackRequestComponent {
       Subject: subject + ': from offprice.main',
       Body:
         'name:' +
-        profile.user.displayName +
+        profile.user.first_name +
         ':' +
         '<br/> email' +
         ':' +

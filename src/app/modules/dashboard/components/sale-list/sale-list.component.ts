@@ -131,6 +131,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.makeWhereConditionService.condition$
       .pipe(untilDestroyed(this))
       .subscribe((data: SaleList[]) => {
+        console.log('sale-list data: ', data);
         this.images = [...this.images, ...data];
         this.cd.detectChanges();
         this.getConditionalSaleListLength();

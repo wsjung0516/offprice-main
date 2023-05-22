@@ -44,12 +44,14 @@ import {
 import { SaleList } from '../core/models/sale-list.model';
 import { Size, Color } from '../core/constants/data-define';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
+import { errorTailorImports } from '@ngneat/error-tailor';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     MatCardModule,
     MatButtonModule,
     QuillEditorComponent,
@@ -68,6 +70,7 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
     MatSelectModule,
     ImageUploadComponent,
     SizeScaleVcaComponent,
+    errorTailorImports
   ],
   templateUrl: './register.component.html',
   styles: [
@@ -103,6 +106,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   // message = '';
   // imagePath: any;
   imgURLs: string[] = [];
+  imgSmURLs: string[] = [];
   registerForm: FormGroup;
   vendorName: string;
   categories = Categories;
@@ -127,6 +131,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   // nMaterials: { name: string}[] = [];
   jsonString = '';
   image_urls: string[] = [];
+  image_sm_urls: string[] = [];
   description = '';
   uploadStartStatus = false; // This status is used to trigger upload image in image-upload.component.ts
 
@@ -140,7 +145,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
     private sessionStorageService: SessionStorageService,
-    private userTokenService: UserTokenService
+    private userTokenService: UserTokenService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -164,6 +170,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.registerForm.get('price').setValue(res.price);
             this.registerForm.get('product_name').setValue(res.product_name);
             this.imgURLs = res.image_urls.split(',');
+            this.imgSmURLs = res.image_sm_urls.split(',');
             this.htmlText = res.description;
             this.category = res.category;
             this.size = res.size.split(',');
@@ -190,9 +197,12 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       .get('image_urls')
       .valueChanges.pipe(untilDestroyed(this))
       .subscribe((imageData: string[]) => {
-        // console.log('imageData?', imageData);
         if (imageData?.length > 0) {
-          this.image_urls = imageData;
+          const imageXlUrls = imageData.filter((val) => val.includes('XL'));
+          const imageSmUrls = imageData.filter((val) => val.includes('SM'));
+          this.image_urls = imageXlUrls;
+          this.image_sm_urls = imageSmUrls;
+          console.log('imageData?', this.image_urls, this.image_sm_urls);
           this.uploadSaleListToDB();
         }
       });
@@ -263,12 +273,12 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       product_name: [''],
       vendor: ['', Validators.required],
       description: [''],
-      price: [0, Validators.required],
-      size: [''],
+      price: ['',Validators.required],
+      size: ['', Validators.required],
       category: ['', Validators.required],
-      material: [''],
-      color: [''],
-      image_urls: [''],
+      material: ['',Validators.required],
+      color: ['',Validators.required],
+      image_urls: ['', Validators.required],
       user_id: ['', Validators.required],
       sizeArray: this.fb.array(this.createSizeFormControls()),
       colorArray: this.fb.array(this.createColorFormControls()),
@@ -296,7 +306,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.registerStatus === 'update') {
       const finalData = this.deserializeData(
         this.registerForm.value,
-        this.imgURLs
+        this.imgURLs,
+        this.imgSmURLs
       );
       this._saleListService
         .updateSaleList(this.sale_list_id, finalData)
@@ -314,15 +325,14 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       console.log('this.registerForm.value', this.registerForm.value);
       this.uploadStartStatus = true;
-
-      // this.uploadSaleListToDB();
     }
   }
 
   private uploadSaleListToDB() {
     const finalData = this.deserializeData(
       this.registerForm.value,
-      this.image_urls
+      this.image_urls,
+      this.image_sm_urls
     );
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       if(profile) {
@@ -347,7 +357,7 @@ sizeArray:(3) ['100', '200', '300']
 user_id:"8e2452c0-bf35-4ece-acdf-6ff434bc1197"
 vendor:"bbb"
 */
-  private deserializeData(data: Partial<SaleList>, image_urls: string[]) {
+  private deserializeData(data: Partial<SaleList>, image_urls: string[], image_sm_urls: string[]) {
     const tSize: string[] = [];
     const tColor: string[] = [];
     const tSizeArray: string[] = [];
@@ -372,6 +382,7 @@ vendor:"bbb"
       // user_id: user.user.uid,
       description: this.description,
       image_urls: image_urls.join(','),
+      image_sm_urls: image_sm_urls.join(','),
       vendor: data.vendor,
       price: data.price,
       category: data.category,
@@ -388,6 +399,7 @@ vendor:"bbb"
   }
   cancelUpload() {
     this.imgURLs = [];
+    this.imgSmURLs = [];
     // this.file = null;
     this.progress = 0;
     this.registerForm.patchValue({ image_urls: '' });
@@ -411,12 +423,16 @@ vendor:"bbb"
           this._notificationService.success('Register success');
           this.registerForm.reset();
           this.imgURLs = [];
+          this.imgSmURLs = [];
           this.htmlText = '';
           this.uploadStartStatus = false;
         });
     } else {
       this._notificationService.alert('Input data is invalid');
-      console.log('form is invalid');
+      this.snackBar.open('Please check the field conditions!', 'Close', {
+        duration: 3000,
+      });
+      return;
     }
   }
 

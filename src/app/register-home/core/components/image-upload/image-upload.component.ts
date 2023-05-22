@@ -153,22 +153,36 @@ export class ImageUploadComponent
   }
   onDeleteImage(){
     const index = this.imgURLs.indexOf(this.selectedImage);
-    console.log('index ---', index);
+    const index2 = index * 2;
     this.imgURLs.splice(index, 1);
+    this.compressedFiles.splice(index2+1, 1);
+    this.compressedFiles.splice(index2, 1);
+    // this.tempArr.splice(index, 1);
+    console.log('delete index ---', this.imgURLs, this.compressedFiles);
     this.selectedImage = this.imgURLs[0] ?? '';
     this.cd.detectChanges();
   }
-  compressedFile: File[] = [];
+
+  // rawFiles: File[] = [];
+  tempArr: any[] = [];
+  compressedFiles: File[] = [];
   async onSelectedImageFile(file: Event) {
     // console.log('files ---', file, file.target);
     const target = event.target as HTMLInputElement;
     // this.selectedFiles = target.files;
-    const fileData = await this.uploadImages(target.files);
-    this.compressedFile = await this.compressImage(fileData);
+    const fileData = await this.makeImagesFromDevice(target.files);
+    const rawFiles = await this.compressImage(fileData);
+    this.tempArr.push(Array.from(rawFiles));
+    this.tempArr = this.tempArr.flat();
+    this.compressedFiles = this.tempArr;
+    console.log('compressedFiles ---', this.compressedFiles);
+  
+    // console.log('compressedFiles ---', this.compressedFiles);
     // this.uploadToCloud();
   }
   private uploadToCloud() {
-    from(this.compressedFile)
+    // from(this.compressedFiles)
+    from(this.compressedFiles)
       .pipe(
         // tap(() => console.log('tap ---')),
         takeUntil(this.destroy$),
@@ -180,22 +194,45 @@ export class ImageUploadComponent
       .subscribe((res: any) => {
         this.progress = 0;
         // console.log('res-- ', res)
+        this.tempArr = [];
+        this.compressedFiles = [];
         this.onChange(res);
       });
   }
-
   async compressImage(fileList: FileData[]) {
-    return await Promise.all(
-      fileList.map(async (file: FileData) => {
-        const compressedBlob = await this.compressImageService.compressImage(
-          file.data
-        );
-        return await convertBlobToFile(compressedBlob, file.name, file.type);
-      })
-    );
+    const resultFiles = [];
+    for (const file of fileList) {
+      const [xlCompressedBlob, smCompressedBlob] = await Promise.all([
+        this.compressImageService.compressImage(file.data),
+        this.compressImageService.compressSmImage(file.data),
+      ]);
+      const xlFile = await convertBlobToFile(xlCompressedBlob, file.name + '-XL-', file.type);
+      const smFile = await convertBlobToFile(smCompressedBlob, file.name + '-SM-', file.type);
+      resultFiles.push(xlFile, smFile);
+    }
+    return resultFiles;
   }
+  // async compressImage(fileList: FileData[]) {
+  //   const xlFiles = await Promise.all(
+  //     fileList.map(async (file: FileData) => {
+  //       const compressedBlob = await this.compressImageService.compressImage(
+  //         file.data
+  //       );
+  //       return await convertBlobToFile(compressedBlob, file.name+'-XL-', file.type);
+  //     })
+  //   );
+  //   const smFiles = await Promise.all(
+  //     fileList.map(async (file: FileData) => {
+  //       const compressedBlob = await this.compressImageService.compressSmImage(
+  //         file.data
+  //       );
+  //       return await convertBlobToFile(compressedBlob, file.name +'-SM-', file.type);
+  //     })
+  //   );
+  //   return [...xlFiles, ...smFiles];
+  // }
 
-  async uploadImages(files: FileList | null = null): Promise<FileData[]> {
+  async makeImagesFromDevice(files: FileList | null = null): Promise<FileData[]> {
     if (!files || files.length === 0) {
       return [];
     }

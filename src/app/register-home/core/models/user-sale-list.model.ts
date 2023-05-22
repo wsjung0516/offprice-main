@@ -4,6 +4,7 @@ export interface UserSaleList{
   user_id: string;
   description: string;
   image_urls: string;
+  image_sm_urls: string;
   vendor: string;
   price: string;
   created_at:  Date;

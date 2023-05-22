@@ -113,14 +113,14 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     // To make condition for showing name and cart badge count.
     this.sharedMenuObservableService.isLoggedIn$.pipe(
       tap((isLoggedIn: any) => {
-        console.log('isLoggedIn', isLoggedIn);
       }),
       untilDestroyed(this),
       switchMap((user_id:string) => {
         return this.userService.getUser(user_id);
       })).subscribe((profile: any) => {
+        console.log('isLoggedIn - profile', profile);
         if (profile) {
-          this.userName = profile.user.displayName;
+          this.userName = profile.first_name;
           this.cartItemsService.setCartItemsLength(profile.user.uid ?? '');
           this.profile = profile;
         } else {

@@ -4,7 +4,8 @@ import {ImageDetailComponent} from "src/app/register-home/core/directives/image-
 // import {ImageZoomComponent} from "@main-layout/image-layout/image-zoom/image-zoom.component";
 // import {DialogRef, DialogService} from "@ngneat/dialog";
 @Directive({
-    selector: '[imageDetail]'
+    selector: '[imageDetail]',
+    standalone: true
 })
 export class ImageDetailDirective implements OnInit {
     @Input() image: string;

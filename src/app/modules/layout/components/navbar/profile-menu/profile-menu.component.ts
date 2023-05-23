@@ -10,7 +10,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 // import { AuthService } from 'src/app/auth/keycloak/auth.service';
 import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
-import { ProfileMenuModule } from './profile-menu.module';
+
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/modules/dashboard/components/login/services/auth.service';
 import { Router } from '@angular/router';
@@ -21,9 +21,8 @@ import { UserService } from 'src/app/user/user.service';
   imports: [
     CommonModule,
     MatDialogModule,
-    ProfileMenuModule,
     MatSnackBarModule,
-  ],
+],
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
   styles: [

@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
 import { ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SearchKeyword } from 'src/app/core/services/chips-keyword.service';
 import { MatIconModule } from '@angular/material/icon';
-import { SaleListModule } from 'src/app/modules/dashboard/components/sale-list/sale-list.module';
+
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/core/components/confirm-dialog/confirm-dialog.component';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
@@ -35,6 +35,8 @@ import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../login/services/auth.service';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
+import { DescriptionDetailDirective } from 'src/app/core/directives/description-detail.directive';
+import { ImageDetailDirective } from 'src/app/core/directives/image-detail.directive';
 
 @UntilDestroy()
 @Component({
@@ -49,10 +51,11 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
     MatIconModule,
     MatDialogModule,
     ConfirmDialogComponent,
-    SaleListModule,
     DetailsItemComponent,
     CartItemsComponent,
-  ],
+    DescriptionDetailDirective,
+    ImageDetailDirective
+],
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

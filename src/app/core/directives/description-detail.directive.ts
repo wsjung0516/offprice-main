@@ -3,7 +3,8 @@ import {DialogPosition, MatDialog, MatDialogRef} from '@angular/material/dialog'
 import {DescriptionDetailComponent} from "src/app/core/directives/description-detail.component";
 
 @Directive({
-  selector: '[descriptionDetail]'
+    selector: '[descriptionDetail]',
+    standalone: true
 })
 export class DescriptionDetailDirective {
   @Input() html: string;

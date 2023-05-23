@@ -55,7 +55,7 @@ import { TermsAndConditionsComponent } from 'src/app/core/components/terms-and-c
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserProfileModule } from './user-profile.module';
+
 interface Data {
   user_id: string;
 }
@@ -64,7 +64,7 @@ interface Data {
   selector: 'app-user-profile',
   standalone: true,
   imports: [
-  CommonModule,
+    CommonModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -80,8 +80,7 @@ interface Data {
     MatSelectModule,
     MatDialogModule,
     errorTailorImports,
-    UserProfileModule,
-  ],
+],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

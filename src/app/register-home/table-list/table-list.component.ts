@@ -12,28 +12,32 @@ import { concatMap, from, Subject, switchMap } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { SearchKeyword } from '../core/services/chips-keyword.service';
 import { MatIconModule } from '@angular/material/icon';
-import { SaleListModule } from '../sale-list/sale-list.module';
+
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../core/components/confirm-dialog/confirm-dialog.component';
 import { DetailsItemComponent } from '../core/components/details-item/details-item.component';
 import { UserSaleList } from '../core/models/user-sale-list.model';
 import { UserSaleListService } from '../sale-list/user-sale-list.service';
 import { DialogService } from '@ngneat/dialog';
+import { DescriptionDetailDirective } from '../core/directives/description-detail.directive';
+import { ImageDetailDirective } from '../core/directives/image-detail.directive';
+import { TableListModule } from './table-list.module';
 
 @UntilDestroy()
 @Component({
   selector: 'app-table-list',
   standalone: true,
   imports: [CommonModule,
-MatSortModule,
+    MatSortModule,
     MatPaginatorModule,
     MatTableModule,
     RouterModule,
     MatIconModule,
-    SaleListModule,
     MatDialogModule,
     ConfirmDialogComponent,
-
+    DescriptionDetailDirective,
+    ImageDetailDirective,
+    TableListModule,
   ],
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css'  ],

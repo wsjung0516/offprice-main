@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { SharedModule } from 'src/app/shared/shared.module';
+
 import { BottomNavbarComponent } from './components/bottom-navbar/bottom-navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavbarMenuComponent } from './components/navbar/navbar-menu/navbar-menu.component';

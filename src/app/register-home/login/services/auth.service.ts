@@ -68,7 +68,7 @@ export class AuthService {
     
             if(res.user?.emailVerified == true) {
               this.router.navigate(['/register-home']);
-              this.sessionStorageService.setItem('isRegisterLoggedIn', true);
+              // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
 
             } else {
               this.router.navigate(['/login/verify-email']);
@@ -127,7 +127,7 @@ export class AuthService {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
             this.sessionStorageService.removeItem('isRegisterLoggedIn');
-    
+
             this.router.navigate(['/register-home/login']);
           }
         });
@@ -175,7 +175,7 @@ export class AuthService {
               console.log('isSeller', isSeller);
               if (isSeller) {
                 this.router.navigate(['/register-home']);
-                this.sessionStorageService.setItem('isRegisterLoggedIn', true);
+                // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
                 this.userService.saveUserProfileToDB(res);
               } else {
                 // Input profile information

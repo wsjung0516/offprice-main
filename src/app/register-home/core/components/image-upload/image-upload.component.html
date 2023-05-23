@@ -59,23 +59,26 @@
         </div>
         <div class="w-full h-auto mt-1">
           <ng-container *ngIf="imgURLs.length > 0">
-            <div (click)="onDeleteImage()" class="absolute z-50 bg-red-400 rounded-sm text-white w-7 h-7 flex items-center justify-center cursor-pointer hover:bg-red-600">
-              <mat-icon>delete_forever</mat-icon>
-             </div>
-            <img
-              [src]="selectedImage || imgURLs[0]"
-              class="w-full h-auto object-cover"
-              alt="offprice.store"
-            />
-          </ng-container>
-          <ng-container *ngIf="imgURLs.length === 0">
-            <img
-              src="assets/images/need-image.jpg"
-              class="w-auto h-auto object-fit"
-              alt="offprice.store"
-            />
-          </ng-container>
-        </div>
+              <ng-container *ngIf="this.registerStatus === 'create'">
+              <div (click)="onDeleteImage()" class="absolute z-50 bg-red-400 rounded-sm text-white w-7 h-7 flex items-center justify-center cursor-pointer hover:bg-red-600">
+                <mat-icon>delete_forever</mat-icon>
+               </div>
+              </ng-container>
+              <img
+                [src]="selectedImage || imgURLs[0]"
+                class="w-full h-auto object-cover"
+                alt="offprice.store"
+              />
+            </ng-container>
+            <ng-container *ngIf="imgURLs.length === 0">
+              <img
+                src="assets/images/need-image.jpg"
+                class="w-auto h-auto object-fit"
+                alt="offprice.store"
+              />
+            </ng-container>
+          </div>
+
       </div>
     </mat-card>
     <!-- Display Image -->

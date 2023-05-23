@@ -28,12 +28,9 @@ export class RegisterHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('RegisterHomeComponent ngOnInit');
   }
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.titleService.setTitle(this.title);
-      // To prevent from showing register button in child page
-    },500);
+    this.titleService.setTitle(this.title);
   }
   ngOnDestroy(): void {
-    this.sessionStorageService.removeItem('isRegisterLoggedIn');
+    // this.sessionStorageService.removeItem('isRegisterLoggedIn');
   }
 }

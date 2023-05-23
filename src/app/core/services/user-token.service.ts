@@ -71,7 +71,7 @@ export class UserTokenService {
       .delete(url)
       .pipe()
       .subscribe((data) => {
-        this.snackBar.open('User token deleted', 'Close', {
+        this.snackBar.open('Logged out successfully', 'Close', {
           duration: 3000,
           verticalPosition: 'bottom',
           horizontalPosition: 'center',

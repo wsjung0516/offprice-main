@@ -18,8 +18,8 @@ template: `
   <div class="h-screen overflow-hidden flex items-center justify-center ">
     <div class="max-w-2xl">
       <div class="bg-white shadow-md rounded">
-        <div class="mb-4">
-          <div class="text-center text-2xl text-gray-900">Login Register</div>
+        <div class="mb-6">
+          <div class="text-center text-2xl text-gray-900">Sell on offPrice</div>
         </div>
         <form>
           <div class="mb-4">

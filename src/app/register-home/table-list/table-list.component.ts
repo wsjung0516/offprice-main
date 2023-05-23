@@ -143,7 +143,7 @@ export class TableListComponent implements OnInit, AfterViewInit{
     // console.log('editSaleList', saleList);
 
     localStorage.setItem('registerStatus', 'update');
-    this.router.navigate(['/home/register', { id: saleList.sale_list_id }]).then();
+    this.router.navigate(['/register-home/home/register', { id: saleList.sale_list_id }]).then();
 
     // this.cdr.detectChanges();
   }

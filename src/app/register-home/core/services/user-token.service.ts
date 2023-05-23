@@ -39,16 +39,16 @@ export class UserTokenService {
     const id = '1';
     const data = JSON.stringify(value);
     const url = `${this.baseUrl}/user-token/${id}`;
-    console.log('updateUserToken: ', url);
+    // console.log('updateUserToken: ', url);
     return this.http.patch(url, {data}).pipe(
       map((data) => data),
-      tap((data) => console.log('user token updated: ', data) )
+      // tap((data) => console.log('user token updated: ', data) )
     )
   }
   removeUserToken(){
     const data: string = null;
     const url = `${this.baseUrl}/user-token/1`;
     this.http.patch<any>(url, {data}).pipe()
-    .subscribe((data) => console.log('user token removed: ', data) );
+    .subscribe();
   }
 }

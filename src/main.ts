@@ -26,6 +26,7 @@ bootstrapApplication(AppComponent, {
       BrowserAnimationsModule,
       MatSnackBarModule,
       AngularFireModule.initializeApp(environment.firebase),
+      AngularSvgIconModule.forRoot()
 
     ),
     {

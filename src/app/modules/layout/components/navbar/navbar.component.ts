@@ -92,6 +92,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.newWindow && this.newWindow.closed) {
             console.log('The window has been closed.');
             this.sessionStorageService.removeItem('isRegisterLoggedIn');
+            localStorage.removeItem('isStartMenuPassed');
             // this.subscription.unsubscribe();
             // this.newWindow = null;
         } else {
@@ -122,7 +123,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('isLoggedIn - profile', profile);
         if (profile) {
           this.userName = profile.first_name;
-          this.cartItemsService.setCartItemsLength(profile.user.uid ?? '');
+          this.cartItemsService.setCartItemsLength(profile.user_id);
           this.profile = profile;
         } else {
           this.userName = 'Guest';

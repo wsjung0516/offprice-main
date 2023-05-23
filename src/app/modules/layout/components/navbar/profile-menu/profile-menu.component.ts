@@ -102,27 +102,29 @@ export class ProfileMenuComponent implements OnInit, AfterViewInit {
     });
   }
   login() {
-    const isRegisterLoggedIn = this.sessionStorageService.getItem('isRegisterLoggedIn');
-    if (isRegisterLoggedIn) {
-      this.snackBar.open('You are already logged in', 'Close', {
-        duration: 2000,
-      });
-      this.router.navigate(['/']);
-      const userId:any = this.sessionStorageService.getItem('userId');
-      this.sharedMenuObservableService.isLoggedIn.next(userId.user_id);
-    } else {
-      this.router.navigate(['/login']);
-      this.toggleDropdown();
-    }
+    // const isRegisterLoggedIn = this.sessionStorageService.getItem('isRegisterLoggedIn');
+    // if (isRegisterLoggedIn) {
+    //   this.snackBar.open('You are already logged in', 'Close', {
+    //     duration: 2000,
+    //   });
+    //   this.router.navigate(['/']);
+    //   const userId:any = this.sessionStorageService.getItem('userId');
+    //   this.sharedMenuObservableService.isLoggedIn.next(userId.user_id);
+    // } else {
+    //   this.router.navigate(['/login']);
+    //   this.toggleDropdown();
+    // }
+    this.router.navigate(['/login']);
+    this.toggleDropdown();
   }
   logout() {
-    const isRegisterLoggedIn:any = this.sessionStorageService.getItem('isRegisterLoggedIn');
-    if( isRegisterLoggedIn) {
-      this.snackBar.open('You can not log out because the Register window is still working.', 'Close', {
-        duration: 3000,
-      });
-      return;
-    }
+    // const isRegisterLoggedIn:any = this.sessionStorageService.getItem('isRegisterLoggedIn');
+    // if( isRegisterLoggedIn) {
+    //   this.snackBar.open('You can not log out because the Register window is still working.', 'Close', {
+    //     duration: 3000,
+    //   });
+    //   return;
+    // }
     this.isLoggedIn = false;
     this.authService.logout();
     this.toggleDropdown();

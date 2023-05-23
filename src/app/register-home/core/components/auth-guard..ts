@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       // console.log('route, state', route, state);
       if (this.auth.isLoggedIn()) {
-        this.sessionStorageService.setItem('isRegisterLoggedIn', true);
+        // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
         return true;
       } else {
         // this.matSnackBar.open('You don\'t have permission to view this page', 'Close', {

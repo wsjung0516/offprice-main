@@ -115,6 +115,7 @@ export class AuthService {
           this.userTokenService.deleteUserToken();
           this.sessionStorageService.removeItem('userId');
           this.sessionStorageService.removeItem('isRegisterLoggedIn');
+          localStorage.removeItem('isStartMenuPassed');
           this.sharedMenuObservableService.displayName.next('Guest');
           this.sharedMenuObservableService.cart_badge_count.next('0');
         }

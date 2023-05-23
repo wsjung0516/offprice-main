@@ -126,6 +126,7 @@ export class AuthService {
           if( !profile.token ) {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
+            this.sessionStorageService.removeItem('isRegisterLoggedIn');
     
             this.router.navigate(['/register-home/login']);
           }

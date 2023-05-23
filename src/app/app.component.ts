@@ -64,7 +64,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     // this.loggedUser = this.sessionStorageService.getItem('token');
     console.log('AppComponent ngOnInit -1');
     this.userTokenService.getUserToken().subscribe((loggedUser: any) => {
-      console.log('AppComponent ngOnInit', loggedUser);
+      // console.log('AppComponent ngOnInit', loggedUser);
       if (loggedUser) {
         this.name = loggedUser.user?.displayName;
         this.loggedUser = loggedUser;

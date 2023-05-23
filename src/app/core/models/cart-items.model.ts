@@ -2,7 +2,7 @@ export  interface CartItems {
   product_name: string;
   cart_id: number;
   category: string;
-  count: number;
+  sizeArray: string;
   image_urls: string;
   material: string;
   price: number;

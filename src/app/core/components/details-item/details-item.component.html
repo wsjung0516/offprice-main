@@ -1,9 +1,9 @@
 <ng-container *ngIf="this.item?.image_urls">
-  <div class="flex flex-col max-h-[calc(100vh-4rem)] ">
+  <div class="flex flex-col max-h-[calc(100vh-6rem)] ">
     <div class="overflow-y-auto  p-2">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-green-50">
         <!-- Left Column: Image -->
-        <div class="max-h-[calc(100vh-4rem)] p-2">
+        <div class=" p-2">
           <div class="flex flex-col ">
             <div class="flex justify-start space-x-1 mb-1">
               <ng-container *ngFor="let image of item.image_urls.split(','); let i = index">

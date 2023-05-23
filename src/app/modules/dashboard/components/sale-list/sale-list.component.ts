@@ -31,6 +31,7 @@ import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { DialogService } from '@ngneat/dialog';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -40,7 +41,6 @@ import { DialogService } from '@ngneat/dialog';
     ScrollingModule,
     MatDialogModule,
     CartItemsComponent,
-
   ],
 
   selector: 'app-sale-list',
@@ -93,13 +93,36 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     private makeWhereConditionService: MakeWhereConditionService,
     private dialog: MatDialog,
     private sessionStorageService: SessionStorageService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private breakpointObserver: BreakpointObserver
   ) {
     this.screenSize$ = this.screenSizeService.screenSize$;
     this.updateViewportHeight();
+    breakpointObserver.observe([
+      Breakpoints.XSmall,
+      Breakpoints.Small,
+      Breakpoints.Medium,
+      Breakpoints.Large,
+      Breakpoints.XLarge
+    ]).subscribe(result => {
+      if (result.matches) {
+        if (result.breakpoints[Breakpoints.XSmall]) {
+          this.itemSize = 140;
+        } else if (result.breakpoints[Breakpoints.Small]) {
+          this.itemSize = 100;
+        } else if (result.breakpoints[Breakpoints.Medium]) {
+          this.itemSize = 80;
+        } else if (result.breakpoints[Breakpoints.Large]) {
+          this.itemSize = 70;
+        } else if (result.breakpoints[Breakpoints.XLarge]) {
+          this.itemSize = 60;
+        }
+      }
+    });
   }
   images: any[] = [];
-  itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
+  itemSize: number; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
+  // itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   isLoggedIn: boolean;
 
   @HostListener('window:resize', ['$event']) onResize(event: Event) {
@@ -107,7 +130,8 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   updateViewportHeight() {
     // 높이를 계산하고 "viewportHeight" 속성에 할당합니다.
-    const headerHeight = 209; // 헤더 높이를 원하는 값으로 변경합니다.
+    const headerHeight = 225; // 헤더 높이를 원하는 값으로 변경합니다.
+    // const headerHeight = 209; // 헤더 높이를 원하는 값으로 변경합니다.
     this.viewportHeight = `calc(100vh - ${headerHeight}px)`;
   }
   ngOnInit(): void {

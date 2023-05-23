@@ -63,6 +63,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
             return this.findFirstRowService.findFirstRows(data);
           })
         ).subscribe((items: CartItems[]) => {
+          // console.log('items -----', items);
           this.items = items;
           this.cd.detectChanges();
         })

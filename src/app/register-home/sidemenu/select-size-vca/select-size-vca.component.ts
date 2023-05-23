@@ -6,6 +6,9 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { Sizes } from 'src/app/register-home/core/constants/data-define';
+import { untilDestroyed } from '@ngneat/until-destroy';
+import { pipe } from 'rxjs';
+import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
 interface ISize {
   name: string;
   active: boolean;
@@ -93,7 +96,11 @@ export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit{
 
     });
   }
-
+  @Input() set reset_size(value: boolean) {
+    if(value) {
+      this.initializeSize();
+    }
+  }
   selectedSizeIndex: number[] = [];
   aSizes: ISize[] = []
   constructor(private cd: ChangeDetectorRef,
@@ -104,12 +111,16 @@ export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit{
   sizes: any[] = Sizes;
   selected_size: string[] = [];
   ngOnInit(): void {
+    this.initializeSize();
+  }
+
+  private initializeSize() {
     const asize = this.sizes.map((size) => ({
       name: size.value,
       active: false,
       selected: false,
       category: size.category
-    }))
+    }));
     this.aSizes = asize;
   }
 

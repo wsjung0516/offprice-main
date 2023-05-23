@@ -86,6 +86,11 @@ export class ColorVcaComponent implements ControlValueAccessor, OnInit {
 
     });
   }
+  @Input() set reset_color(value: boolean) {
+    if(value) {
+      this.initialize_color();
+    }
+  }
 
   selectedColorIndex: number[] = [];
 
@@ -100,6 +105,9 @@ export class ColorVcaComponent implements ControlValueAccessor, OnInit {
   selected_color: IColor[] = [];
 
   ngOnInit(): void {
+    this.initialize_color();
+  }
+  private initialize_color() {
     const acolor = this.colors.map((color) => ({
       name: color.key,
       active: false,
@@ -108,6 +116,7 @@ export class ColorVcaComponent implements ControlValueAccessor, OnInit {
     }));
     this.aColors = acolor;
   }
+
   toggleSize(color: IColor): void {
     color.active = !color.active;
     if (color.active) {

@@ -58,6 +58,11 @@ export class CategoryVcaComponent implements ControlValueAccessor {
   @Input() set category(value: string) {
     this.selected_category = value;
   }
+  @Input() set reset_category(value: boolean) {
+    if( value) {
+      this.selected_category = '';
+    }    
+  }
   constructor() {}
   onChange: any = () => {};
   onTouch: any = () => {};

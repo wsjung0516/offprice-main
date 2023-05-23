@@ -41,6 +41,9 @@ import {
   toArray,
 } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
 import { pipe } from 'rxjs';
 import { set } from 'date-fns';
 export interface FileData {
@@ -52,13 +55,14 @@ export interface FileData {
 @Component({
   selector: 'app-image-upload',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatCardModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatCardModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './image-upload.component.html',
   styles: [
     `
       mat-card-content {
         padding: 0 !important;
       }
+
       .file-upload {
   position: relative;
   display: inline-block;
@@ -102,6 +106,7 @@ export class ImageUploadComponent
   @Input() set uploadStartStatus ( val: boolean) {
     if (val) {
       this.uploadToCloud();
+
     } else {
       // Finished uploading image to cloud, reset imageUrls
       this.imgURLs = [];
@@ -129,10 +134,13 @@ export class ImageUploadComponent
   file: File;
   fileData: FileData[] = [];
   progress = 0;
+  isLoading = false;
   constructor(
     private cd: ChangeDetectorRef,
     private restApiService: RestApiService,
-    private compressImageService: CompressImageService
+    private compressImageService: CompressImageService,
+    private snackBar: MatSnackBar,
+    private sharedParentObservableService: SharedParentObservableService
   ) {}
   ngOnInit(): void {}
   ngAfterViewInit(): void {
@@ -184,7 +192,10 @@ export class ImageUploadComponent
     // from(this.compressedFiles)
     from(this.compressedFiles)
       .pipe(
-        // tap(() => console.log('tap ---')),
+        tap(() =>  {
+          this.isLoading = true;
+          this.sharedParentObservableService.isImageLoading.next(true);
+        }),
         takeUntil(this.destroy$),
         concatMap((file: File) => this.restApiService.uploadImage(file).pipe(toResponseBody())
         ),
@@ -196,7 +207,15 @@ export class ImageUploadComponent
         // console.log('res-- ', res)
         this.tempArr = [];
         this.compressedFiles = [];
+        this.isLoading = false;
+        this.sharedParentObservableService.isImageLoading.next(false);
         this.onChange(res);
+      }, (err) => {
+        this.sharedParentObservableService.isImageLoading.next(false);
+        this.isLoading = false;
+        this.snackBar.open(err.message, 'Close', {
+          duration: 2000,
+        });
       });
   }
   async compressImage(fileList: FileData[]) {
@@ -212,25 +231,6 @@ export class ImageUploadComponent
     }
     return resultFiles;
   }
-  // async compressImage(fileList: FileData[]) {
-  //   const xlFiles = await Promise.all(
-  //     fileList.map(async (file: FileData) => {
-  //       const compressedBlob = await this.compressImageService.compressImage(
-  //         file.data
-  //       );
-  //       return await convertBlobToFile(compressedBlob, file.name+'-XL-', file.type);
-  //     })
-  //   );
-  //   const smFiles = await Promise.all(
-  //     fileList.map(async (file: FileData) => {
-  //       const compressedBlob = await this.compressImageService.compressSmImage(
-  //         file.data
-  //       );
-  //       return await convertBlobToFile(compressedBlob, file.name +'-SM-', file.type);
-  //     })
-  //   );
-  //   return [...xlFiles, ...smFiles];
-  // }
 
   async makeImagesFromDevice(files: FileList | null = null): Promise<FileData[]> {
     if (!files || files.length === 0) {

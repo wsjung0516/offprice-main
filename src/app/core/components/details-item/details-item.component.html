@@ -35,7 +35,7 @@
     
         <!-- Right Column: Product Details -->
         <div class="col-span-1 flex flex-col ">
-          <div class="flex-grow">
+          <div class="">
           <!-- <div class="flex-grow"> -->
             <h2 class="text-xl font-semibold text-blue-600">{{item.product_name}}</h2>
             <p class="mt-1">Category: <span class="font-bold">{{item.category}}</span></p>
@@ -56,10 +56,10 @@
             </div>
             <p class="mt-1">Vendor: <span class="font-bold">{{item.vendor}}</span></p>
             <p class="mt-1">Material: <span class="font-bold">{{item.material}}</span></p>
-            <p class="mt h-36 overflow-y-auto">
+            <p class="mt max-h-24 overflow-y-auto">
               <app-html-content [content]="item.description"></app-html-content>
             </p>
-            <p class="text-gray-400">--------------------------------------------------------------------------</p>
+            <p class="text-gray-400">---------------------------------------</p>
             <p class="mt-1">Store Name: <span class="font-bold">{{item.store_name}}</span></p>
             <p class="mt-1">Register No: <span class="font-bold">{{item.register_no}}</span></p>
             <p class="mt-1">Email: <span class="font-bold">{{item.email}}</span></p>

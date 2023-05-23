@@ -91,6 +91,11 @@ export class MaterialVcaComponent implements ControlValueAccessor, OnInit {
 
     });
   }
+  @Input() set reset_material(value: boolean) {
+    if(value) {
+      this.initializeMaterial();
+    }
+  }
   selectedMaterialIndex: number[] = [];
   aMaterials: IMaterial[] = [];
   constructor(private cd: ChangeDetectorRef,
@@ -105,13 +110,17 @@ export class MaterialVcaComponent implements ControlValueAccessor, OnInit {
   checkedList: any[] = [];
 
   ngOnInit(): void {
-    const amaterial = this.materials.map((material)=>({
+    this.initializeMaterial();
+  }
+  private initializeMaterial() {
+    const amaterial = this.materials.map((material) => ({
       name: material.value,
       active: false,
       selected: false
-    }))
+    }));
     this.aMaterials = amaterial;
   }
+
   togglematerial(material: IMaterial): void {
     material.active = !material.active;
     if (material.active) {

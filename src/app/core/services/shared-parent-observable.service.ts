@@ -7,4 +7,6 @@ import { Subject } from "rxjs";
 export class SharedParentObservableService {
   isProfileMenuOpen = new Subject<boolean>();
   isProfileMenuOpen$ = this.isProfileMenuOpen.asObservable();
+  isImageLoading = new Subject<boolean>();
+  isImageLoading$ = this.isImageLoading.asObservable();
 }

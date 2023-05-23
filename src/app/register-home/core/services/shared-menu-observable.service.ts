@@ -35,6 +35,8 @@ export class SharedMenuObservableService {
   displayName$ = this.displayName.asObservable();
   closeFeedback = new Subject<boolean>();
   closeFeedback$ = this.closeFeedback.asObservable();
+  reset_register = new Subject<boolean>();
+  reset_register$ = this.reset_register.asObservable();
 
   get input_keyword$() {
     return this.input_keyword.asObservable();

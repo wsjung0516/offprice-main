@@ -84,7 +84,8 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.gotoHome();
       });
         // Check every minute (60000 milliseconds)
-    this.subscription = interval(60000).subscribe(() => {
+        
+    this.subscription = interval(180000).subscribe(() => {
           // your window checking logic here
           console.log('Checking window status...');
           // if (newWindow && newWindow.closed) { ... }

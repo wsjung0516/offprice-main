@@ -1,6 +1,4 @@
-<div *ngIf="isLoading" class="h-screen flex items-center justify-center">
-  <mat-spinner></mat-spinner>
-</div>
+
 <form [formGroup]="registerForm" errorTailor>
   <div class="grid-container grid md:grid-cols-2 gap-2 xl:grid-cols-3">
     <div class=" bg-blue-50">
@@ -12,7 +10,6 @@
         [uploadStartStatus]="uploadStartStatus"
         ></app-image-upload>
         <!-- image upload -->
-
 
       </div>
     </div>
@@ -65,7 +62,7 @@
         <!-- Category -->
         <p class="m-2"><span class="text-xl font-bold">Category</span></p>
         <div class="m-2 overflow-y-auto">
-          <app-category-vca [category]="category" formControlName="category"></app-category-vca>
+          <app-category-vca [category]="category" [reset_category]="reset_category" formControlName="category"></app-category-vca>
         </div>
         <!-- Count -->
         <!-- Editor for comment -->
@@ -85,7 +82,7 @@
           <app-size-scale-vca formControlName="size"></app-size-scale-vca>
         </div> -->
        <div class="m-2 overflow-y-auto">
-          <app-select-size-vca [selectedSize]="size" formControlName="size"></app-select-size-vca>
+          <app-select-size-vca [selectedSize]="size" [reset_size]="reset_size" formControlName="size"></app-select-size-vca>
         </div>
         <ng-container>
           <div class="container mx-auto">
@@ -107,13 +104,13 @@
         <!-- Material c-1 -->
         <p class="m-2 mt-4"><span class="text-xl font-bold">Material</span></p>
         <div class="m-2 overflow-y-auto">
-          <app-material-vca [selectedMaterial]="material" formControlName="material"></app-material-vca>
+          <app-material-vca [selectedMaterial]="material" [reset_material]="reset_material" formControlName="material"></app-material-vca>
         </div>
         <!-- Material c-1 -->
         <!-- Color -->
         <p class="m-2 mt-4"><span class="text-xl font-bold">Color</span></p>
         <div class="m-2 overflow-y-auto">
-          <app-color-vca [selectedColor]="color" formControlName="color"></app-color-vca>
+          <app-color-vca [selectedColor]="color" [reset_color]="reset_color" formControlName="color"></app-color-vca>
         </div>
         <ng-container>
           <div class="container mx-auto">
@@ -138,14 +135,22 @@
         <!-- Upload Image button -->
 
         <div class="mt-4 flex item-center justify-center">
-          <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="uploadImage()"
-            class="m-2 rounded-md w-44 h-12 text-xl text-white bg-green-600 disabled:bg-red-300 hover:bg-green-800 drop-shadow-xl"
-          >
-          <mat-icon>cloud_upload</mat-icon>
-            Upload Image
-          </button>
+          <div class="flex justify-between">
+            <!-- <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="uploadImage()" -->
+            <button  (click)="uploadImage()"
+              class="m-2 rounded-md w-44 h-12 text-xl text-white bg-green-600 disabled:bg-red-300 hover:bg-green-800 drop-shadow-xl"
+            >
+            <mat-icon>cloud_upload</mat-icon>
+              Upload Image
+            </button>
+            <div *ngIf="isLoading" class="m-3">
+              <mat-spinner diameter="35"></mat-spinner>
+            </div>
+
+          </div>
+          <!-- <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="cancelUpload()" -->
           <ng-container *ngIf="registerStatus=== 'update'">
-            <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="cancelUpload()"
+            <button  (click)="cancelUpload()"
               class="m-2 rounded-md w-36 h-12 text-xl text-black bg-white border-2 border-green-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
             >
             <!-- <mat-icon>cancel</mat-icon> -->

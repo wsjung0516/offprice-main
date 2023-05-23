@@ -7,6 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SelectSizeComponent } from '../../sidebar/select-size/select-size.component';
 import { SearchPeriodComponent } from '../../sidebar/search-period/search-period.component';
 import { PriceRangeComponent } from '../../sidebar/price-range/price-range.component';
+import { ColorComponent } from '../../sidebar/color/color.component';
 // import { PatternComponent } from '../../sidebar/pattern/pattern.component';
 import { MaterialComponent } from '../../sidebar/material/material.component';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
@@ -21,7 +22,7 @@ CommonModule,
     SelectSizeComponent,
     SearchPeriodComponent,
     PriceRangeComponent,
-    // PatternComponent,
+    ColorComponent,
     MaterialComponent,
   ],
   selector: 'app-navbar-mobile',

@@ -12,6 +12,8 @@ import { SearchPeriodComponent } from './search-period/search-period.component';
 //import { AuthService } from ;
 import { ColorComponent } from './color/color.component';
 import { AuthService } from 'src/app/modules/dashboard/components/login/services/auth.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -38,7 +40,9 @@ export class SidebarComponent implements OnInit {
   constructor(
     public themeService: ThemeService,
     private menuService: MenuService,
-    private authService: AuthService
+    private authService: AuthService,
+    private sessionStorageService: SessionStorageService,
+    private snackBar: MatSnackBar
   ) {
     this.showSideBar$ = this.menuService.showSideBar$;
     // this.pagesMenu$ = this.menuService.pagesMenu$;
@@ -54,6 +58,13 @@ export class SidebarComponent implements OnInit {
     this.themeService.theme = !this.themeService.isDark ? 'dark' : 'light';
   }
   signOut() {
+    const isRegisterLoggedIn:any = this.sessionStorageService.getItem('isRegisterLoggedIn');
+    if( isRegisterLoggedIn) {
+      this.snackBar.open('You can not log out because the Register window is still working.', 'Close', {
+        duration: 3000,
+      });
+      return;
+    }
     this.authService.logout();
   } 
 }

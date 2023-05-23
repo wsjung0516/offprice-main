@@ -46,12 +46,14 @@ import { Size, Color } from '../core/constants/data-define';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
+import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service'; 
 @UntilDestroy()
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-  CommonModule,
+CommonModule,
     MatCardModule,
     MatButtonModule,
     QuillEditorComponent,
@@ -123,7 +125,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   material: string[] = [];
   color: string[] = [];
   colorArray: string[] = [];
-  isLoading = true;
+  isLoading = false;
   selectedUnit = 'USD';
   nSizes: { name: string; value: number }[] = [];
   nColors: { name: string; value: string }[] = [];
@@ -134,6 +136,11 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   image_sm_urls: string[] = [];
   description = '';
   uploadStartStatus = false; // This status is used to trigger upload image in image-upload.component.ts
+  // To reset selected size from select-size-vca.component.ts
+  reset_size = false;
+  reset_color = false;
+  reset_material = false;
+  reset_category = false;
 
   constructor(
     private fb: FormBuilder,
@@ -146,7 +153,9 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private _router: Router,
     private sessionStorageService: SessionStorageService,
     private userTokenService: UserTokenService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private sharedParentObservableService: SharedParentObservableService,
+    private shredMenuObservableService: SharedMenuObservableService
   ) {}
 
   ngOnInit() {
@@ -190,6 +199,10 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getColors();
     this.getMaterials();
     this.getImageUrls();
+    this.sharedParentObservableService.isImageLoading$
+    .pipe(untilDestroyed(this)).subscribe((val: boolean) => {
+      this.isLoading = val;
+    })
   }
 
   private getImageUrls() {
@@ -278,8 +291,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       category: ['', Validators.required],
       material: ['',Validators.required],
       color: ['',Validators.required],
-      image_urls: ['', Validators.required],
-      user_id: ['', Validators.required],
+      image_urls: [''],
+      user_id: [''],
       sizeArray: this.fb.array(this.createSizeFormControls()),
       colorArray: this.fb.array(this.createColorFormControls()),
     });
@@ -320,14 +333,20 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   uploadImage(files?: File) {
-    if (this.registerStatus === 'update') {
-      this.updateSaleList();
-    } else {
-      console.log('this.registerForm.value', this.registerForm.value);
-      this.uploadStartStatus = true;
+    console.log('this.registerForm.value', this.registerForm.value);
+    if ( this.registerForm.valid) {
+      if (this.registerStatus === 'update') {
+        this.updateSaleList();
+      } else {
+        this.uploadStartStatus = true;
+      }
+    }
+    else {
+      this.snackBar.open('Please check the field conditions!', 'Close', {
+        duration: 3000,
+      });
     }
   }
-
   private uploadSaleListToDB() {
     const finalData = this.deserializeData(
       this.registerForm.value,
@@ -408,6 +427,7 @@ vendor:"bbb"
   }
 
   private createSaleList(data: Partial<SaleList>, user:any) {
+    // Check if this.registerForm.get('image_urls') is empty
     
     this.registerForm.patchValue({
       user_id: user.user.uid,
@@ -426,13 +446,11 @@ vendor:"bbb"
           this.imgSmURLs = [];
           this.htmlText = '';
           this.uploadStartStatus = false;
+          this.reset_size = true;
+          this.reset_material = true;
+          this.reset_color = true;
+          this.reset_category = true;
         });
-    } else {
-      this._notificationService.alert('Input data is invalid');
-      this.snackBar.open('Please check the field conditions!', 'Close', {
-        duration: 3000,
-      });
-      return;
     }
   }
 

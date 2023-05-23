@@ -62,6 +62,13 @@ import { DialogService } from '@ngneat/dialog';
       .xsmall_box {
         margin-top: 2rem;
       }
+      .text-center {
+        line-height: 0.8;
+      }
+      .text-xs {
+        margin: 0;
+        padding: 0;
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -131,7 +138,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.makeWhereConditionService.condition$
       .pipe(untilDestroyed(this))
       .subscribe((data: SaleList[]) => {
-        console.log('sale-list data: ', data);
+        // console.log('sale-list data: ', data);
         this.images = [...this.images, ...data];
         this.cd.detectChanges();
         this.getConditionalSaleListLength();

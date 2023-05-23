@@ -21,7 +21,7 @@ export class CompressImageService {
   compressSmImage(file: any): Promise<Blob> {
     return new Promise<Blob>((resolve, reject) => {
       this.imageCompress
-        .compressFile(file, -1, 100, 100, 140, 210)
+        .compressFile(file, -1, 100, 100, 100, 150)
         .then((result: any) => {
           resolve(result);
         })

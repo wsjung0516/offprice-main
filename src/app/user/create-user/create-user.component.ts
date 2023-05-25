@@ -26,7 +26,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { User } from '../models/user.model';
+import { User } from 'src/app/core/models/user.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { format } from 'date-fns';
 import { UserService } from '../user.service';
@@ -159,14 +159,10 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
-        bod: user.bod,
-        gender: user.gender,
         zipcode: user.zipcode,
         phone_no: user.phone_no,
         address1: user.address1,
         address2: user.address2,
-        point: user.point,
-        status: user.status,
         subscribe: user.subscribe,
       });
       this.userId = user.user_id ? user.user_id.toString() : '';
@@ -178,19 +174,3 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
   }
 }
 
-export const sampleUser: User = {
-  user_id: '1', // number 1
-  first_name: 'John', // string 'John'
-  last_name: 'Doe', // string 'Doe'
-  email: 'abc@gmail.com', // string ''
-  bod: new Date(), // Date,
-  gender: 'Male', // string,
-  zipcode: '12345', // string,
-  phone_no: '1234567890', // string,
-  address1: '123 Main St', // string,
-  address2: 'Apt 1', // string,
-  point: 100, // number,
-  status: 'Active', // string,
-  created_at: new Date(), // Date,
-  subscribe: true, // boolean,
-};

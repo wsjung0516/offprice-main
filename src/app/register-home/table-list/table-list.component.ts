@@ -7,7 +7,8 @@ import { MakeTableWhereConditionService } from 'src/app/register-home/core/servi
 import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SaleListService } from 'src/app/register-home/sale-list/sale-list.service';
-import { SaleList } from 'src/app/register-home/core/models/sale-list.model';
+import { SaleList } from 'src/app/core/models/sale-list.model';
+// import { SaleList } from 'src/app/register-home/core/models/sale-list.model';
 import { concatMap, from, Subject, switchMap } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { SearchKeyword } from '../core/services/chips-keyword.service';
@@ -16,12 +17,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../core/components/confirm-dialog/confirm-dialog.component';
 import { DetailsItemComponent } from '../core/components/details-item/details-item.component';
-import { UserSaleList } from '../core/models/user-sale-list.model';
+import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { UserSaleListService } from '../sale-list/user-sale-list.service';
 import { DialogService } from '@ngneat/dialog';
-import { DescriptionDetailDirective } from '../core/directives/description-detail.directive';
-import { ImageDetailDirective } from '../core/directives/image-detail.directive';
-import { TableListModule } from './table-list.module';
+import { DescriptionDetailDirective } from 'src/app/core/directives/description-detail.directive';
+import { ImageDetailDirective } from 'src/app/core/directives/image-detail.directive';
 
 @UntilDestroy()
 @Component({
@@ -37,7 +37,6 @@ import { TableListModule } from './table-list.module';
     ConfirmDialogComponent,
     DescriptionDetailDirective,
     ImageDetailDirective,
-    TableListModule,
   ],
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css'  ],

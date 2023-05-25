@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SaleList } from '../core/models/sale-list.model';
+import { SaleList } from 'src/app/core/models/sale-list.model';
 import { map, Observable, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';

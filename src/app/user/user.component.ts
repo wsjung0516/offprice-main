@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './user.service';
-import { User } from './models/user.model';
+import { User } from 'src/app/core/models/user.model';
 import {
   combineLatest,
   debounceTime,

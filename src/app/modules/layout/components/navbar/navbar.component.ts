@@ -85,20 +85,20 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
       });
         // Check every minute (60000 milliseconds)
         
-    this.subscription = interval(180000).subscribe(() => {
-          // your window checking logic here
-          console.log('Checking window status...');
-          // if (newWindow && newWindow.closed) { ... }
-        if (this.newWindow && this.newWindow.closed) {
-            console.log('The window has been closed.');
-            this.sessionStorageService.removeItem('isRegisterLoggedIn');
-            localStorage.removeItem('isStartMenuPassed');
-            // this.subscription.unsubscribe();
-            // this.newWindow = null;
-        } else {
-            console.log('The window is still open.');
-        }
-      });  
+    // this.subscription = interval(180000).subscribe(() => {
+    //       // your window checking logic here
+    //       console.log('Checking window status...');
+    //       // if (newWindow && newWindow.closed) { ... }
+    //     if (this.newWindow && this.newWindow.closed) {
+    //         console.log('The window has been closed.');
+    //         this.sessionStorageService.removeItem('isRegisterLoggedIn');
+    //         localStorage.removeItem('isStartMenuPassed');
+    //         // this.subscription.unsubscribe();
+    //         // this.newWindow = null;
+    //     } else {
+    //         console.log('The window is still open.');
+    //     }
+    //   });  
   }
   profile: any;
   ngAfterViewInit(): void {

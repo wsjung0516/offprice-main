@@ -9,7 +9,9 @@ import { SessionStorageService } from '../../core/services/session-storage.servi
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { Observable, map, of, tap } from 'rxjs';
-import { User } from '../../core/models/user.model';
+import { User } from 'src/app/core/models/user.model';
+import { MatDialog } from '@angular/material/dialog';
+import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 @Injectable({
   providedIn: 'root',
 })
@@ -22,6 +24,7 @@ export class AuthService {
     private userService: UserService,
     private sessionStorageService: SessionStorageService,
     private matSnackBar: MatSnackBar,
+    private dialog: MatDialog,
     private userTokenService: UserTokenService
   ) {
   }
@@ -67,16 +70,12 @@ export class AuthService {
             this.userService.saveUserProfileToDB(res);
     
             if(res.user?.emailVerified == true) {
-              this.router.navigate(['/register-home']);
-              // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
-
+              this.checkIfSellerIsSet(ret, res);
             } else {
               this.router.navigate(['/login/verify-email']);
             }
 
           });
-
-
       },
       (err) => {
         alert(err.message);
@@ -170,21 +169,8 @@ export class AuthService {
 
         this.createUserTokenFn(res).subscribe(
           (ret: any) => {
-            console.log('createUserTokenFn -2', ret);
-            this.isSellerChecked(ret.user.uid).subscribe((isSeller: boolean) => {
-              console.log('isSeller', isSeller);
-              if (isSeller) {
-                this.router.navigate(['/register-home']);
-                // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
-                this.userService.saveUserProfileToDB(res);
-              } else {
-                // Input profile information
-                this.inputProfileInfo(res).subscribe((ret: any) => {
-                  console.log('inputProfileInfo', ret);
-                  this.router.navigate(['/register-home']);
-                });; 
-              }
-          })
+            // console.log('createUserTokenFn -2', ret);
+            this.checkIfSellerIsSet(ret, res);
         })
       },
       (err) => {
@@ -192,10 +178,30 @@ export class AuthService {
       }
     );
   }
+  private checkIfSellerIsSet(ret: any, res:any) {
+    this.isSellerChecked(ret.user.uid).subscribe((isSeller: boolean) => {
+      console.log('isSeller', isSeller);
+      if (isSeller) {
+        this.router.navigate(['/register-home']);
+        // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
+        this.userService.saveUserProfileToDB(res);
+      } else {
+        // Input profile information
+        this.inputProfileInfo(res).subscribe((ret: any) => {
+          // console.log('inputProfileInfo', ret);
+          if (ret?.body.seller === true) {
+            this.router.navigate(['/register-home']);
+            return;
+          }
+        });;
+      }
+    });
+  }
+
   private isSellerChecked(uid: string): Observable<boolean> {
     return this.userService.getUser(uid).pipe(
       tap((user: any) => {
-        console.log('isSellerChecked', user);
+        // console.log('isSellerChecked', user);
       }),
       map((user: any) => {
         return user.seller;
@@ -203,7 +209,11 @@ export class AuthService {
     )
   }
   private inputProfileInfo(res: any): Observable<any> {
-    return of(true);
+    const dialogRef = this.dialog.open(UserProfileComponent, {});
+
+    return dialogRef.afterClosed();
+      // To show the register button
+      
   }
   facebookSignIn() {
     return this.fireauth.signInWithPopup(new FacebookAuthProvider()).then(

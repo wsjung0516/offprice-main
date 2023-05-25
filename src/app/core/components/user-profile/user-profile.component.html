@@ -129,14 +129,16 @@
           *ngIf="contactForm.get('subscribe').value === false; else subscribe"
         >
         </ng-container>
-        <section class="">
+        <section *ngIf="title !== 'OffpriceMain'" class="">
           <mat-checkbox formControlName="seller" class=""
             ><span class="text-green-600 font-bold">Seller</span></mat-checkbox
           >
         </section>
-        <ng-container
-          *ngIf="contactForm.get('seller').value === false; else seller"
-        >
+        <ng-container *ngIf="title !== 'OffpriceMain'" >
+          <ng-container
+            *ngIf="contactForm.get('seller').value === false; else seller"
+          >
+          </ng-container>
         </ng-container>
         <div *ngIf="!disabled" class="flex justify-center space-x-4">
           <div

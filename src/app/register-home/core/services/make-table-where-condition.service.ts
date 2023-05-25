@@ -18,7 +18,7 @@ import { SharedMenuObservableService } from './shared-menu-observable.service';
 import { UserSaleListService } from '../../sale-list/user-sale-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { UserSaleList } from '../models/user-sale-list.model';
+import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { LocalStorageService } from './local-storage.service';
 
 @UntilDestroy()

@@ -41,7 +41,7 @@ import {
   FileData,
   ImageUploadComponent,
 } from '../core/components/image-upload/image-upload.component';
-import { SaleList } from '../core/models/sale-list.model';
+import { SaleList } from 'src/app/core/models/sale-list.model';
 import { Size, Color } from '../core/constants/data-define';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { errorTailorImports } from '@ngneat/error-tailor';

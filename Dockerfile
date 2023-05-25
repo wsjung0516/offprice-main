@@ -1,4 +1,4 @@
-FROM node:16.13-alpine as build
+FROM node:16.14-alpine as build
 # 작업 디렉토리 설정
 WORKDIR /app
 

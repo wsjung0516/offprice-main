@@ -30,7 +30,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { User } from 'src/app/register-home/core/models/user.model';
+import { User } from 'src/app/core/models/user.model';
+// import { User } from 'src/app/register-home/core/models/user.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { format } from 'date-fns';
 import { UserService } from './user.service';
@@ -55,6 +56,7 @@ import { TermsAndConditionsComponent } from 'src/app/core/components/terms-and-c
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 
 interface Data {
   user_id: string;
@@ -117,6 +119,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     private matDialog: MatDialog,
     private userTokenService: UserTokenService,
     private snackBar: MatSnackBar,
+    private titleService: Title,
   ) {}
 
   contactForm = new UntypedFormGroup({
@@ -153,9 +156,9 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     this.setSellerValidators();
   }
   ngAfterViewInit() {
-    // this.mode = this.ref.data.mode;
-    // const user: any = this.sessionStorageService.getItem('token');
-    // const userId: string = this.sessionStorageService.getItem('user_id');
+    // To prvevent from writing the seller information because seller info
+    // is managed by register-home module. 
+    this.title = this.titleService.getTitle();
 
     this.userTokenService
       .getUserToken()
@@ -345,7 +348,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   onSubmit() {
     console.log('this.mode', this.mode);
     if (this.contactForm.valid) {
-      console.log('Form Submitted!');
+      // console.log('Form Submitted!');
     } else {
       this.snackBar.open('Please check the field conditions!', 'Close', {
         duration: 3000,
@@ -369,7 +372,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     this.userService
       .createUser(this.contactForm.value)
       .subscribe((response: any) => {
-        console.log('response', response);
+        //console.log('response', response);
         // this.ref.close(true);
       });
   }
@@ -379,14 +382,10 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       ...this.contactForm.value,
       ...{ updated_at: new Date() },
     };
-    // console.log('user-profile----', user);
     this.userService
       .updateUser(this.userId, user)
       .subscribe((response: any) => {
-        console.log('response', response);
-        this.closeDialog();
-
-        // this.ref.close(true);
+        this.dialogRef.close(response);
       });
   }
   deleteUser() {

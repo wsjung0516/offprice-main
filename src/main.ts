@@ -17,6 +17,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { AngularFireModule } from '@angular/fire/compat';
 import { provideErrorTailorConfig } from '@ngneat/error-tailor';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -26,7 +27,8 @@ bootstrapApplication(AppComponent, {
       BrowserAnimationsModule,
       MatSnackBarModule,
       AngularFireModule.initializeApp(environment.firebase),
-      AngularSvgIconModule.forRoot()
+      AngularSvgIconModule.forRoot(),
+      MatDialogModule
 
     ),
     {
@@ -51,6 +53,7 @@ bootstrapApplication(AppComponent, {
       }
     }),  
     MatSnackBar,
+    // MatDialog
   ],
 }).catch((err) => console.error(err));
 

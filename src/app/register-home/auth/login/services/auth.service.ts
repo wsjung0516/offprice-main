@@ -3,15 +3,16 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GoogleAuthProvider, FacebookAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
-import { UserService } from 'src/app/register-home/user-profile/user.service';
+//import { UserService } from 'src/app/register-home/user-profile/user.service';
 import jwt_decode from 'jwt-decode';
-import { SessionStorageService } from '../../core/services/session-storage.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { Observable, map, of, tap } from 'rxjs';
 import { User } from 'src/app/core/models/user.model';
 import { MatDialog } from '@angular/material/dialog';
 import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
+import { UserService } from 'src/app/user/user.service';
 @Injectable({
   providedIn: 'root',
 })

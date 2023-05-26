@@ -81,4 +81,9 @@ export class SaleListService {
 
     return this.http.delete(url).pipe(map((data: any) => data));
   }
+  isReservedSaleItem(id: string): Observable<SaleList> {
+    const url = `${this.baseUrl}/cart-items/is-reserve/${id}`;
+
+    return this.http.get(url).pipe(map((data: any) => data));
+  }
 }

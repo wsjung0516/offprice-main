@@ -38,7 +38,8 @@
             ],
             "scripts": [
               "src/assets/js/smtp.js",
-              "./node_modules/quill/dist/quill.js"
+              "./node_modules/quill/dist/quill.js",
+              "./node_modules/jwt-decode/build/jwt-decode.js"
             ]
           },
           "configurations": {

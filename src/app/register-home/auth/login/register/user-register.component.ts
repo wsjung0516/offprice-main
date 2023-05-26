@@ -3,20 +3,22 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    RouterModule
   ],
   template: `
 <div class="h-screen flex items-center justify-center bg-gray-100">
   <div class="max-w-md">
     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <div class="mb-4">
-        <h4 class="text-dark text-gray-700">Register</h4>
+      <div class="mb-8">
+        <h1 class="m-3 text-3xl font-bold">Register user</h1>
       </div>
       <form>
         <div class="mb-4">
@@ -29,7 +31,7 @@ import { FormsModule } from '@angular/forms';
         </div>
         <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" (click)="register()">Register</button>
         <div class="flex items-center justify-between mt-4">
-          <a href="/login" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Have an account? <span class="text-red-500">Login</span></a>
+          <a [routerLink]="['/register-home/login']" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Have an account? <span class="text-red-500">Login</span></a>
         </div>
       </form>
     </div>

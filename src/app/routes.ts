@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadChildren: () => import('./modules/dashboard/components/login/login.module').then((m) => m.LoginModule),
+    loadChildren: () => import('./core/auth/login/login.module').then((m) => m.LoginModule),
   },
   {
     path: 'register-home',

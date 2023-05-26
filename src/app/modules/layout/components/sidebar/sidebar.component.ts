@@ -11,14 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { SearchPeriodComponent } from './search-period/search-period.component';
 //import { AuthService } from ;
 import { ColorComponent } from './color/color.component';
-import { AuthService } from 'src/app/modules/dashboard/components/login/services/auth.service';
+import { AuthService } from 'src/app/core/auth/login/services/auth.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [
-  CommonModule,
+    CommonModule,
     AngularSvgIconModule,
     // CategoryComponent,
     SelectSizeComponent,
@@ -66,5 +66,5 @@ export class SidebarComponent implements OnInit {
     //   return;
     // }
     this.authService.logout();
-  } 
+  }
 }

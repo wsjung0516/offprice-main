@@ -11,11 +11,11 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { FeedbackRequestComponent } from '../feedback-request/feedback-request.component';
+import { UserFeedbackComponent } from '../core/components/user-feedback/user-feedback.component';
 import { UserService } from '../user/user.service';
 import { CartItemsService } from '../core/components/cart-items/cart-items.service';
 import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
-import { AuthService } from '../modules/dashboard/components/login/services/auth.service';
+import { AuthService } from '../core/auth/login/services/auth.service';
 import { UserTokenService } from '../core/services/user-token.service';
 import { DialogService } from '@ngneat/dialog';
 import { StartMenuComponent } from '../core/components/start-menu/start-menu.component';
@@ -26,13 +26,13 @@ import { Title } from '@angular/platform-browser';
   selector: 'app-home',
   standalone: true,
   imports: [
-  CommonModule,
-      RouterModule,
-      FeedbackRequestComponent,
-      StartMenuComponent
-    ],  templateUrl: './home.component.html',
-  styles: [
-  ]
+    CommonModule,
+    RouterModule,
+    UserFeedbackComponent,
+    StartMenuComponent,
+  ],
+  templateUrl: './home.component.html',
+  styles: [],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   title = 'angular-app';
@@ -68,13 +68,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     this.resetLogoutTimer();
-    this.sharedMenuObservableService.closeFeedback$.pipe(untilDestroyed(this))
-    .subscribe((close) => {
-      const dialogOverlay = document.getElementById('dialog-overlay');
-      dialogOverlay.style.display = 'none';   
-    })
+    this.sharedMenuObservableService.closeFeedback$
+      .pipe(untilDestroyed(this))
+      .subscribe((close) => {
+        const dialogOverlay = document.getElementById('dialog-overlay');
+        dialogOverlay.style.display = 'none';
+      });
     this.receiveFeedback();
-
   }
   // Logout after 30 minutes of inactivity
   @HostListener('window:mousemove')
@@ -89,6 +89,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }, 30 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {
+    this.titleService.setTitle('OffpriceMain');
     const title = this.titleService.getTitle();
     console.log('offPrice-main-title', title);
     // Check if register button can be displayed
@@ -96,36 +97,38 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // To prevent from showing register button in child page
     // const isStartMenuPassed = localStorage.getItem('isStartMenuPassed');
     const userId = this.sessionStorageService.getItem('userId');
-    if ( userId ) return;
-    if( title === 'OffpriceMain' ) {
+    if (userId) return;
+    if (title === 'OffpriceMain') {
       const ref = this.dialogService.open(StartMenuComponent, {
+        data: {
+          title: 'start',
+        },
         width: '340px',
-        backdrop: false,
-        enableClose: false,
+        // backdrop: false,
+        // enableClose: false,
         closeButton: false,
       });
       ref.afterClosed$.subscribe((result) => {
         if (result) {
-          console.log('ref.afterClosed$.subscribe', result)
+          console.log('ref.afterClosed$.subscribe', result);
           // localStorage.setItem('isStartMenuPassed', 'true');
           this.isRegisterButton = true;
           this.cd.detectChanges();
         }
-      })
+      });
     }
   }
 
   private receiveFeedback() {
-
     const feedbackButton = document.getElementById('feedback-button');
     feedbackButton.addEventListener('click', () => {
       this.userTokenService.getUserToken().subscribe((loggedUser: any) => {
         if (!loggedUser) {
           this.router.navigate(['/login']);
-          return
+          return;
         }
       });
-  
+
       const dialogOverlay = document.getElementById('dialog-overlay');
       dialogOverlay.style.display =
         dialogOverlay.style.display === 'none' ? 'flex' : 'none';
@@ -134,9 +137,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       closeButton.addEventListener('click', () => {
         dialogOverlay.style.display = 'none';
       });
-
     });
-  
   }
   acitveTab = 'tab1';
   setActiveTab(tabId: string) {
@@ -145,5 +146,4 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isActiveTab(tabId: string) {
     return this.acitveTab === tabId;
   }
-  
 }

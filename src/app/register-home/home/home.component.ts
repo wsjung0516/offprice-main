@@ -10,26 +10,26 @@ import { RouterModule } from '@angular/router';
 import { SaleListComponent } from '../sale-list/sale-list.component';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-// import { HomeModule } from './home.component.module';
-// import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RemoveChipsKeywordService } from '../core/services/remove-chips-keyword.service';
 import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
-import { AuthService } from '../login/services/auth.service';
+import { AuthService } from '../auth/login/services/auth.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { FeedbackRequestComponent } from '../core/components/feedback-request/feedback-request.component';
+import { UserFeedbackComponent } from '../core/components/feedback-request/feedback-request.component';
 import { SessionStorageService } from '../core/services/session-storage.service';
 import { HelpComponent } from '../core/components/help/help.component';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
 import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
+import { LoaderComponent } from '../core/components/loader/loader.component';
+
 // import { LoginModule } from '../login/login.module';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+    CommonModule,
     RegisterComponent,
     SaleListComponent,
     RouterModule,
@@ -37,8 +37,9 @@ import { UserProfileComponent } from 'src/app/core/components/user-profile/user-
     UserProfileComponent,
     // HomeModule,
     MatIconModule,
-    FeedbackRequestComponent,
+    UserFeedbackComponent,
     HelpComponent,
+    LoaderComponent,
     // LoginModule,
   ],
   selector: 'app-home',
@@ -85,13 +86,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }, 30 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {
-    // 
+    //
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       if (profile) {
         this.userName = profile?.user.displayName;
         this.cd.detectChanges();
       }
-
     });
     this.sharedMenuObservableService.displayName$
       .pipe(untilDestroyed(this))
@@ -99,13 +99,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.userName = name;
         this.cd.detectChanges();
       });
-    this.sharedParentObservableService.isProfileMenuOpen$.pipe(
-      untilDestroyed(this)
-    ).subscribe((isOpen) => {
-      this.isProfileMenuOpen = isOpen;
-      this.cd.detectChanges();
-    });
-    
+    this.sharedParentObservableService.isProfileMenuOpen$
+      .pipe(untilDestroyed(this))
+      .subscribe((isOpen) => {
+        this.isProfileMenuOpen = isOpen;
+        this.cd.detectChanges();
+      });
   }
 
   dropdown = false;

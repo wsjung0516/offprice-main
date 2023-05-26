@@ -47,7 +47,7 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
-import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service'; 
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service'; 
 @UntilDestroy()
 @Component({
   selector: 'app-register',
@@ -72,7 +72,7 @@ CommonModule,
     MatSelectModule,
     ImageUploadComponent,
     SizeScaleVcaComponent,
-    errorTailorImports
+    errorTailorImports,
   ],
   templateUrl: './register.component.html',
   styles: [
@@ -162,7 +162,21 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = false;
     this.registerStatus = localStorage.getItem('registerStatus') ?? 'create';
     this.initRegisterForm();
+    // To edit sale list
     this.calledFromSaleList();
+    // Call from table-list.component.ts when complete delete sale list
+    this.shredMenuObservableService.resultDeleteSaleListItem$.pipe(untilDestroyed(this)).subscribe((sale_list_id: any) => {
+      if( sale_list_id === this.sale_list_id) {
+        this.imgURLs = [];
+        this.imgSmURLs = [];
+        // this.file = null;
+        this.progress = 0;
+        this.registerForm.patchValue({ image_urls: '' });
+        this.registerForm.reset();
+        this._router.navigate(['/register-home/home/sale-list']);
+      }
+    })
+
   }
   private calledFromSaleList() {
     this._activatedRoute.paramMap
@@ -173,7 +187,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         if (id) {
           this.sale_list_id = id;
           this._saleListService.getSaleList(id).subscribe((res: SaleList) => {
-            // console.log('res', res);
+            console.log('res', res);
             // this.registerForm.patchValue(res,{emitEvent: false});
             this.registerForm.get('vendor').setValue(res.vendor);
             this.registerForm.get('price').setValue(res.price);
@@ -322,29 +336,29 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         this.imgURLs,
         this.imgSmURLs
       );
-      this._saleListService
-        .updateSaleList(this.sale_list_id, finalData)
-        .subscribe((res: any) => {
-          // If update status is finished, change status to create
-          this._notificationService.success('Update successfully');
-          this._router.navigate(['/register-home/home/sale-list']);
-        });
+      console.log('this.registerForm.value', this.registerForm.value);
+      // if( this.registerForm.valid) {
+        this._saleListService
+          .updateSaleList(this.sale_list_id, finalData)
+          .subscribe((res: any) => {
+            // If update status is finished, change status to create
+            this._notificationService.success('Update successfully');
+            this._router.navigate(['/register-home/home/sale-list']);
+          });
+
+      // } else { 
+      //   this.snackBar.open('Please check the field conditions!', 'Close', {
+      //     duration: 3000,
+      //   });
+      // }
     }
   }
 
-  uploadImage(files?: File) {
-    console.log('this.registerForm.value', this.registerForm.value);
-    if ( this.registerForm.valid) {
-      if (this.registerStatus === 'update') {
-        this.updateSaleList();
-      } else {
-        this.uploadStartStatus = true;
-      }
-    }
-    else {
-      this.snackBar.open('Please check the field conditions!', 'Close', {
-        duration: 3000,
-      });
+  makeUpdateOrCreate(files?: File) {
+    if (this.registerStatus === 'update') {
+      this.updateSaleList();
+    } else {
+      this.uploadStartStatus = true;
     }
   }
   private uploadSaleListToDB() {
@@ -424,6 +438,11 @@ vendor:"bbb"
     this.registerForm.patchValue({ image_urls: '' });
     this.registerForm.reset();
     this._router.navigate(['/register-home/home/sale-list']);
+  }
+  deleteItem() {
+    // Call to table-list component to delete item
+    console.log('deleteItem', this.sale_list_id);
+    this.shredMenuObservableService.deleteSaleListItem.next(this.sale_list_id.toString());
   }
 
   private createSaleList(data: Partial<SaleList>, user:any) {

@@ -33,7 +33,7 @@ import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-item
 import { CartItems } from 'src/app/core/models/cart-items.model';
 import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../login/services/auth.service';
+import { AuthService } from '../../../../core/auth/login/services/auth.service';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { DescriptionDetailDirective } from 'src/app/core/directives/description-detail.directive';
 import { ImageDetailDirective } from 'src/app/core/directives/image-detail.directive';
@@ -54,8 +54,8 @@ import { ImageDetailDirective } from 'src/app/core/directives/image-detail.direc
     DetailsItemComponent,
     CartItemsComponent,
     DescriptionDetailDirective,
-    ImageDetailDirective
-],
+    ImageDetailDirective,
+  ],
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,7 +120,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private sessionStorageService: SessionStorageService,
     private cartItemService: CartItemsService,
     private snackBar: MatSnackBar,
-    private userTokenService: UserTokenService,
+    private userTokenService: UserTokenService
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
@@ -184,12 +184,12 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   putIntoCart(row: Partial<UserSaleList>) {
-/*     const userProfile: any = this.sessionStorageService.getItem('token');
+    /*     const userProfile: any = this.sessionStorageService.getItem('token');
     if (!userProfile.user) {
       this.router.navigate(['/login']);
       return;
     }
- */ 
+ */
     this.userTokenService.getUserToken().subscribe((userProfile: any) => {
       if (!userProfile) {
         this.router.navigate(['/login']);
@@ -206,7 +206,6 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
             duration: 2000,
           });
         });
-
       }
     });
   }

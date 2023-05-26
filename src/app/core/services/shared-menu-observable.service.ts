@@ -51,6 +51,10 @@ export class SharedMenuObservableService {
   closeProfileButton$ = this.closeProfileButton.asObservable();
   isLoggedIn = new Subject<string>();
   isLoggedIn$ = this.isLoggedIn.asObservable();
+  deleteSaleListItem = new Subject<string>();
+  deleteSaleListItem$ = this.deleteSaleListItem.asObservable();
+  resultDeleteSaleListItem = new Subject<string>();
+  resultDeleteSaleListItem$ = this.resultDeleteSaleListItem.asObservable();
   
   get input_keyword$() {
     return this.input_keyword.asObservable();

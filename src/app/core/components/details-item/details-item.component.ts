@@ -118,11 +118,6 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
       return;
     }
     const { user_id, sale_list_id } = this.item;
-    // Check if user logged in already from the register window.
-    // const isRegisterLoggedIn = this.sessionStorageService.getItem('isRegisterLoggedIn');
-    // if (isRegisterLoggedIn) {
-    //   this.sharedMenuObservableService.isLoggedIn.next(user_id);
-    // }
     // Currently, the quantity is fixed to 1.
     const quantity = 1;
     this.cartItemsService

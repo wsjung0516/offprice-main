@@ -5,28 +5,30 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
-import { SessionStorageService } from './../core/services/session-storage.service';
+import { SharedMenuObservableService } from '../../services/shared-menu-observable.service';
+import { SessionStorageService } from '../../services/session-storage.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { UserTokenService } from '../core/services/user-token.service';
+import { UserTokenService } from '../../services/user-token.service';
+import { UserFeedbackService } from './user-feedback.service';
 
 declare let Email: any;
 @Component({
-  selector: 'app-feedback-request',
+  selector: 'app-user-feedback',
   standalone: true,
   imports: [CommonModule, FormsModule, MatSnackBarModule],
-  templateUrl: './feedback-request.component.html',
+  templateUrl: './user-feedback.component.html',
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeedbackRequestComponent {
+export class UserFeedbackComponent {
   textData = '';
   subjectData = '';
   constructor(
     private sharedMenuObservableService: SharedMenuObservableService,
     private cd: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    private userTokenService: UserTokenService
+    private userTokenService: UserTokenService,
+    private userFeedbackService: UserFeedbackService
   ) {}
 
   sendMsg(subject: string, msg: any) {
@@ -34,15 +36,23 @@ export class FeedbackRequestComponent {
     const textarea = document.getElementById('message') as HTMLTextAreaElement;
     const data = textarea.value.replace(/\n/g, '<br>');
     this.userTokenService.getUserToken().subscribe((profile: any) => {
-      if(!profile){
+      console.log('message', profile);
+      if (profile) {
         this.sendMessage(subject, profile, data);
         this.sendMessageToDB(subject, profile, data);
       }
     });
-    // console.log('message',data);
   }
   private sendMessageToDB(subject: string, profile: any, data: string) {
-    
+    const da = {
+      subject: subject,
+      message: data,
+      email: profile.user.email,
+      name: profile.user.displayName,
+    };
+    this.userFeedbackService.createUserFeedback(da).subscribe((res: any) => {
+      // console.log(res);
+    });
   }
 
   private sendMessage(subject: string, profile: any, data: string) {
@@ -65,7 +75,7 @@ export class FeedbackRequestComponent {
         ': <br/>' +
         data,
     }).then((message: any) => {
-      console.log(message);
+      // console.log(message);
       this.snackBar.open('Message sent successfully', 'Close', {
         duration: 2000,
       });

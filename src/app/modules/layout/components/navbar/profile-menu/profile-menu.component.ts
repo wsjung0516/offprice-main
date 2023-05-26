@@ -12,17 +12,14 @@ import { UserProfileComponent } from 'src/app/core/components/user-profile/user-
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { AuthService } from 'src/app/modules/dashboard/components/login/services/auth.service';
+import { AuthService } from 'src/app/core/auth/login/services/auth.service';
 import { Router } from '@angular/router';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { UserService } from 'src/app/user/user.service';
+import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.directive';
 @Component({
   standalone: true,
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    MatSnackBarModule,
-],
+  imports: [CommonModule, MatDialogModule, MatSnackBarModule, ClickOutsideDirective],
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
   styles: [

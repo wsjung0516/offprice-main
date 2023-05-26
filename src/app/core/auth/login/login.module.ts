@@ -7,11 +7,11 @@ import { UserRegisterComponent } from './register/user-register.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 const routes: Routes = [
-  {path: '', redirectTo:'login', pathMatch:'full'},
-  {path: 'login', component : LoginComponent},
-  {path: 'user-register', component : UserRegisterComponent},
-  {path: 'verify-email', component : VerifyEmailComponent},
-  {path: 'forgot-password', component : ForgotPasswordComponent},
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'user-register', component: UserRegisterComponent },
+  { path: 'verify-email', component: VerifyEmailComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
 ];
 
 @NgModule({

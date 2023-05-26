@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedMenuObservableService } from '../../services/shared-menu-observable.service';
@@ -8,18 +12,16 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
 // import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
 // import { SessionStorageService } from './../core/services/session-storage.service';
 
-declare let Email: any; 
+declare let Email: any;
 @Component({
   selector: 'app-feedback-request',
   standalone: true,
-  imports: [CommonModule,
-FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './feedback-request.component.html',
-  styles: [
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeedbackRequestComponent {
+export class UserFeedbackComponent {
   textData = '';
   subjectData = '';
   constructor(
@@ -34,16 +36,14 @@ export class FeedbackRequestComponent {
     const textarea = document.getElementById('message') as HTMLTextAreaElement;
     const data = textarea.value.replace(/\n/g, '<br>');
     this.userTokenService.getUserToken().subscribe((profile: any) => {
-      if( profile) {
+      if (profile) {
         this.sendMessage(subject, profile, data);
         this.sendMessageToDB(subject, profile, data);
       }
     });
     // console.log('message',data);
   }
-  private sendMessageToDB(subject: string, profile: any, data: string) {
-    
-  }
+  private sendMessageToDB(subject: string, profile: any, data: string) {}
 
   private sendMessage(subject: string, profile: any, data: string) {
     Email.send({

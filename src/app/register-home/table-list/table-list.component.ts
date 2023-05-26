@@ -22,13 +22,15 @@ import { UserSaleListService } from '../sale-list/user-sale-list.service';
 import { DialogService } from '@ngneat/dialog';
 import { DescriptionDetailDirective } from 'src/app/core/directives/description-detail.directive';
 import { ImageDetailDirective } from 'src/app/core/directives/image-detail.directive';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @UntilDestroy()
 @Component({
   selector: 'app-table-list',
   standalone: true,
   imports: [CommonModule,
-    MatSortModule,
+MatSortModule,
     MatPaginatorModule,
     MatTableModule,
     RouterModule,
@@ -96,12 +98,20 @@ export class TableListComponent implements OnInit, AfterViewInit{
     private router: Router,
     private dialog: MatDialog,
     private cd: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private snackBar: MatSnackBar,
+    private sharedMenuObservableService: SharedMenuObservableService
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
+    console.log('table-list ngOnInit');
     localStorage.setItem('displayMode', 'list');
+    this.sharedMenuObservableService.deleteSaleListItem$
+    .pipe(untilDestroyed(this)).subscribe((sale_list_id: string) => {
+      console.log('deleteSaleListItem$', sale_list_id);
+      this.onDeletedSaleList(sale_list_id)
+    });
 
   }
   ngAfterViewInit(): void {
@@ -150,16 +160,23 @@ export class TableListComponent implements OnInit, AfterViewInit{
 
     // this.cdr.detectChanges();
   }
-  onDeletedSaleList(saleList: SaleList) {
+  onDeletedSaleList(saleList: SaleList | string) {
+    console.log('onDeletedSaleList', saleList);
     const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirm Remove Sales List',
         message: 'Are you sure, you want to remove?',
       },
     });
+    let saleListId: string;
+    if (typeof saleList === 'string') {
+      saleListId = saleList;
+    } else {
+      saleListId = saleList.sale_list_id;
+    }
     confirmDialog.afterClosed().subscribe((result: any) => {
       if (result === true) {
-        this.saleListService.deleteSaleList(saleList.sale_list_id).pipe(
+        this.saleListService.deleteSaleList(saleListId).pipe(
           switchMap((data: SaleList) => {
             // Delete images from Google Cloud Storage
             const urls = data.image_urls.split(',');
@@ -174,7 +191,14 @@ export class TableListComponent implements OnInit, AfterViewInit{
           untilDestroyed(this)
         ).subscribe((data: any) => {
           // console.log('deleted---', data);
+          this.sharedMenuObservableService.resultDeleteSaleListItem.next(saleListId);
+          this.snackBar.open('Deleted Successfully', 'Close', {
+            duration: 2000,
+          });
           // this.refreshObservable.next();
+        }, (error: any) => {
+          this.snackBar.open('Deleting is failed because this item is reserved already by someone', 'Close', {
+          });
         });
       }
     });
@@ -198,5 +222,9 @@ export class TableListComponent implements OnInit, AfterViewInit{
       }
       console.log('The dialog was closed', result);
     });
+  }
+  // check if sale_list_id is already reserved in the table of CartItems
+  isReserved(sale_list_id: string) {
+    return this.saleListService.isReservedSaleItem(sale_list_id);
   }
 }

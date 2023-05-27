@@ -169,7 +169,7 @@ export class MakeWhereConditionService {
     if (category !== 'All') andArray.push({ category: category });
     if (size !== 'All') andArray.push({ size: size });
     if (material !== 'All') andArray.push({ material: material });
-    //if (color !== 'All') andArray.push({ color: color });
+    if (color !== 'All') andArray.push({ color: color });
     if (search_period !== 'All') {
       const day: number = +search_period;
       andArray.push({

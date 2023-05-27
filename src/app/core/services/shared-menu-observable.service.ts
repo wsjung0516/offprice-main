@@ -55,6 +55,8 @@ export class SharedMenuObservableService {
   deleteSaleListItem$ = this.deleteSaleListItem.asObservable();
   resultDeleteSaleListItem = new Subject<string>();
   resultDeleteSaleListItem$ = this.resultDeleteSaleListItem.asObservable();
+  userCoupons = new ReplaySubject<string>();
+  userCoupons$ = this.userCoupons.asObservable();
   
   get input_keyword$() {
     return this.input_keyword.asObservable();

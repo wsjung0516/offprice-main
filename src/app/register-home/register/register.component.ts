@@ -48,6 +48,7 @@ import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service'; 
+import { AuthService } from 'src/app/register-home/auth/login/services/auth.service';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
@@ -155,7 +156,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private userTokenService: UserTokenService,
     private snackBar: MatSnackBar,
     private sharedParentObservableService: SharedParentObservableService,
-    private shredMenuObservableService: SharedMenuObservableService
+    private shredMenuObservableService: SharedMenuObservableService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -372,6 +374,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         finalData.user_id = profile.user.uid;
         console.log('finalData', finalData);
         this.createSaleList(finalData, profile);
+        this.authService.checkIfUserCouponsAvailable();
       }
     });
   }

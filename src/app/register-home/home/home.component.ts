@@ -12,7 +12,8 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RemoveChipsKeywordService } from '../core/services/remove-chips-keyword.service';
-import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+// import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
 import { AuthService } from '../auth/login/services/auth.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -22,14 +23,17 @@ import { HelpComponent } from '../core/components/help/help.component';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
 import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
-import { LoaderComponent } from '../core/components/loader/loader.component';
+import { LoaderComponent } from 'src/app/core/components/loader/loader.component';
+import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.directive';
+import { DialogService } from '@ngneat/dialog';
+import { BuyCouponsComponent } from '../core/components/buy-coupons/buy-coupons.component';
 
 // import { LoginModule } from '../login/login.module';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     RegisterComponent,
     SaleListComponent,
     RouterModule,
@@ -40,6 +44,8 @@ import { LoaderComponent } from '../core/components/loader/loader.component';
     UserFeedbackComponent,
     HelpComponent,
     LoaderComponent,
+    ClickOutsideDirective,
+    BuyCouponsComponent
     // LoginModule,
   ],
   selector: 'app-home',
@@ -51,6 +57,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   userEmail = '';
   private logoutTimer: any;
   isProfileMenuOpen = false;
+  userCoupons = '';
   constructor(
     public dialog: MatDialog,
     private removeChipsKeywordService: RemoveChipsKeywordService,
@@ -60,7 +67,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private sessionStorageService: SessionStorageService,
     private userTokenService: UserTokenService,
-    private sharedParentObservableService: SharedParentObservableService
+    private sharedParentObservableService: SharedParentObservableService,
+    private dialogService: DialogService
   ) {}
   ngOnInit() {
     console.log('Register HomeComponent ngOnInit');
@@ -87,6 +95,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     //
+    this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
+      if (coupon) {
+        console.log('userCoupons', coupon);
+        this.userCoupons = coupon;
+        this.cd.detectChanges();
+      }
+    });
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       if (profile) {
         this.userName = profile?.user.displayName;
@@ -148,6 +163,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
       this.toggleDropdown();
+    });
+  }
+  openBuyCoupons() {
+    const dialogRef = this.dialogService.open(BuyCouponsComponent, {
+      width: '300px',
+      height: '500px',
     });
   }
   logout() {

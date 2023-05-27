@@ -1,0 +1,38 @@
+<div class="w-60 h-72">
+  <div class="m-4">
+    <div class="text-2xl flex justify-center">
+      Purchase Coupons
+    </div>
+    <div class="flex flex-col">
+        <mat-form-field class="">
+          <!-- <mat-label>Purchase Coupons</mat-label> -->
+          <input type="number" matInput placeholder="coupons" value="" />
+        </mat-form-field>
+    </div>
+    <div class="flex justify-start">
+      <mat-radio-group
+        class="buy-coupons-group"
+        aria-labelledby="example-radio-group-label"
+        [(ngModel)]="selectedCoupon"
+      >
+        <mat-radio-button *ngFor="let price of prices" [value]="price">
+         Coupons {{ price.coupon }}: ${{ price.price }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="flex justify-between">
+      <div class="text-xl">
+        Total: ${{ selectedCoupon?.price }}
+      </div>
+      <div class="w-36 h-10 border-gray-500">
+        <button
+          (click)="buyCoupons()"
+        >
+          Buy
+        </button>
+      </div>
+    <!-- </form> -->
+  </div>
+  <div class=""></div>
+  <!-- </div> -->
+</div>

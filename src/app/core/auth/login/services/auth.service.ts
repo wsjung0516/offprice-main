@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { GoogleAuthProvider, FacebookAuthProvider } from '@angular/fire/auth';
+import { GoogleAuthProvider, FacebookAuthProvider, User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { UserService } from 'src/app/user/user.service';
@@ -10,6 +10,7 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { Observable, map, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import  jwt_decode from 'jwt-decode';
+import { UserCouponsService } from 'src/app/core/services/user-coupons.service';
 declare const FB: any;
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class AuthService {
     private userService: UserService,
     private sessionStorageService: SessionStorageService,
     private userTokenService: UserTokenService,
+    private userCouponsService: UserCouponsService,
     private snackBar: MatSnackBar
   ) {}
   isLoggedIn(): Promise<boolean> {
@@ -30,38 +32,39 @@ export class AuthService {
       if (!userId) {
         resolve(false);
       } else {
-        this.userTokenService.getUserToken().subscribe(
-          (loggedUser: any) => {
-            // console.log('isLoggedIn user', loggedUser);
-            if (loggedUser) {
-              const decoded: any = jwt_decode(loggedUser.credential.idToken);
-              const currentTime = new Date().getTime() / 1000;
-              if (decoded.exp < currentTime) {
-                const elapsedTime = currentTime - decoded.exp;
-                const elapsedTimeInMinutes = elapsedTime / 60;
-                this.snackBar.open(
-                  'Your session has expired. Please login again.',
-                  'Close',
-                  {
-                    // duration: 3000,
-                    verticalPosition: 'bottom',
-                    horizontalPosition: 'center',
-                  }
-                );
-                console.log('elapsedTime', elapsedTimeInMinutes);
-                this.signOutProcess();
-                resolve(false);
-              } else {
-                resolve(true);
-              }
-            } else {
-              resolve(true);
-            }
-          },
-          (error) => {
-            reject(error);
-          }
-        );
+        // this.userTokenService.getUserToken().subscribe(
+        //   (loggedUser: any) => {
+        //     console.log('isLoggedIn user', loggedUser);
+        //     if (loggedUser) {
+        //       const decoded: any = jwt_decode(loggedUser.credential?.idToken);
+        //       const currentTime = new Date().getTime() / 1000;
+        //       if (decoded.exp < currentTime) {
+        //         const elapsedTime = currentTime - decoded.exp;
+        //         const elapsedTimeInMinutes = elapsedTime / 60;
+        //         this.snackBar.open(
+        //           'Your session has expired. Please login again.',
+        //           'Close',
+        //           {
+        //             // duration: 3000,
+        //             verticalPosition: 'bottom',
+        //             horizontalPosition: 'center',
+        //           }
+        //         );
+        //         console.log('elapsedTime', elapsedTimeInMinutes);
+        //         this.logoutProcess();
+        //         resolve(false);
+        //       } else {
+        //         resolve(true);
+        //       }
+        //     } else {
+        //       resolve(true);
+        //     }
+        //   },
+        //   (error) => {
+        //     reject(error);
+        //   }
+        // );
+        resolve(true);
       }
     });
   }
@@ -77,6 +80,8 @@ export class AuthService {
 
           if (res.user?.emailVerified == true) {
             this.router.navigate(['/']);
+            // User Coupons
+            this.checkIfUserCouponsAvailable();
           } else {
             this.router.navigate(['/login/verify-email']);
           }
@@ -87,6 +92,19 @@ export class AuthService {
         this.router.navigate(['/login']);
       }
     );
+  }
+
+  private checkIfUserCouponsAvailable() {
+    this.userCouponsService.getUserCoupons().subscribe((ret: any) => {
+      // console.log('user coupon', ret.quantity);
+      if (!ret) {
+        this.userCouponsService.createUserCoupon(200).subscribe((ret: any) => {
+          console.log('createUserCoupon', ret);
+        });
+      } else {
+        this.sharedMenuObservableService.userCoupons.next(ret.quantity.toString());
+      }
+    });
   }
 
   private createUserTokenFn(res: any): Observable<any> {
@@ -130,10 +148,10 @@ export class AuthService {
       this.sharedMenuObservableService.cart_badge_count.next('0');
       return;
     }
-    this.signOutProcess();
+    this.logoutProcess();
   }
 
-  private signOutProcess() {
+  private logoutProcess() {
     this.fireauth.signOut().then(
       () => {
         this.userTokenService.getUserToken().subscribe((profile: any) => {
@@ -190,6 +208,9 @@ export class AuthService {
           this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
 
           this.userService.saveUserProfileToDB(res);
+          // User Coupons
+          this.checkIfUserCouponsAvailable();
+
         });
       },
       (err) => {

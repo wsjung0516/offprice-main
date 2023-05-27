@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GoogleAuthProvider, FacebookAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+// import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
 //import { UserService } from 'src/app/register-home/user-profile/user.service';
 import jwt_decode from 'jwt-decode';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
@@ -13,6 +14,7 @@ import { User } from 'src/app/core/models/user.model';
 import { MatDialog } from '@angular/material/dialog';
 import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 import { UserService } from 'src/app/user/user.service';
+import { UserCouponsService } from 'src/app/core/services/user-coupons.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,7 +28,8 @@ export class AuthService {
     private sessionStorageService: SessionStorageService,
     private matSnackBar: MatSnackBar,
     private dialog: MatDialog,
-    private userTokenService: UserTokenService
+    private userTokenService: UserTokenService,
+    private userCouponsService: UserCouponsService
   ) {
   }
   isLoggedIn(): boolean {
@@ -186,6 +189,10 @@ export class AuthService {
         this.router.navigate(['/register-home']);
         // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
         this.userService.saveUserProfileToDB(res);
+
+        // User Coupons
+        this.checkIfUserCouponsAvailable();
+        
       } else {
         // Input profile information
         this.inputProfileInfo(res).subscribe((ret: any) => {
@@ -195,6 +202,31 @@ export class AuthService {
             return;
           }
         });;
+      }
+    });
+  }
+
+  public checkIfUserCouponsAvailable() {
+    this.userCouponsService.getUserCoupons().subscribe((ret: any) => {
+      // console.log('user coupon', ret.quantity);
+      if (ret) {
+        if( ret.quantity <= 5 ) {
+          this.matSnackBar.open('You have ' + ret.quantity + ' coupons left', 'OK', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          });
+        }
+        if( ret.quantity === 0 ) {
+          this.matSnackBar.open('You have ' + ret.quantity + ' coupons left', 'OK', {
+          });
+          this.logout();
+        }
+        this.sharedMenuObservableService.userCoupons.next(ret.quantity.toString());
+      } else {
+        this.userCouponsService.createUserCoupon(200).subscribe((ret: any) => {
+          console.log('createUserCoupon', ret);
+        });
       }
     });
   }

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { ChipsKeywordService, SearchKeyword } from './chips-keyword.service';
 import { LocalStorageService } from './local-storage.service';
-import { SharedMenuObservableService } from './shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Injectable({
   providedIn: 'root',

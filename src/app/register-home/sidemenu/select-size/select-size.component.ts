@@ -2,21 +2,22 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sizes } from 'src/app/register-home/core/constants/data-define';
-import { ChipsKeywordService } from 'src/app/register-home/core/services/chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from '../show-menu-dialog-component/show-menu-dialog-component';
-import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-select-size-vca',
   standalone: true,
   imports: [CommonModule, FormsModule],
-template: `
+  template: `
     <div class="p-4 flex_wrap">
       <ng-container *ngFor="let size of sizes">
         <button
           class="box-size flex items-center justify-center cursor-pointer"
-          [ngClass]="{ sel_class: size.key === selected_size,
+          [ngClass]="{
+            sel_class: size.key === selected_size,
             'bg-blue-200': size.category === 'US',
             'bg-green-200': size.category === 'KR'
           }"

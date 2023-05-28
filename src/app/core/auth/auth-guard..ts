@@ -8,7 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/core/auth/login/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SessionStorageService } from 'src/app/register-home/core/services/session-storage.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @Injectable({
   providedIn: 'root',

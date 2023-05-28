@@ -47,18 +47,18 @@ export class SharedMenuObservableService {
   displayName$ = this.displayName.asObservable();
   closeFeedback = new Subject<boolean>(); 
   closeFeedback$ = this.closeFeedback.asObservable();
-  closeProfileButton = new Subject<boolean>();
-  closeProfileButton$ = this.closeProfileButton.asObservable();
-  isLoggedIn = new Subject<string>();
-  isLoggedIn$ = this.isLoggedIn.asObservable();
-  deleteSaleListItem = new Subject<string>();
-  deleteSaleListItem$ = this.deleteSaleListItem.asObservable();
-  resultDeleteSaleListItem = new Subject<string>();
-  resultDeleteSaleListItem$ = this.resultDeleteSaleListItem.asObservable();
-  userCoupons = new ReplaySubject<string>();
-  userCoupons$ = this.userCoupons.asObservable();
+  reset_register = new Subject<boolean>();
+  reset_register$ = this.reset_register.asObservable();
   isLoggedOut = new Subject<boolean>();
   isLoggedOut$ = this.isLoggedOut.asObservable();
+  resultDeleteSaleListItem = new Subject<string>();
+  resultDeleteSaleListItem$ = this.resultDeleteSaleListItem.asObservable();
+  deleteSaleListItem = new Subject<string>();
+  deleteSaleListItem$ = this.deleteSaleListItem.asObservable();
+  userCoupons = new Subject<string>();
+  userCoupons$ = this.userCoupons.asObservable();
+  isLoggedIn = new Subject<string>();
+  isLoggedIn$ = this.isLoggedIn.asObservable();
   
   get input_keyword$() {
     return this.input_keyword.asObservable();

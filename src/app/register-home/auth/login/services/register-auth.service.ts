@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GoogleAuthProvider, FacebookAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
-// import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
+// import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 //import { UserService } from 'src/app/register-home/user-profile/user.service';
 import jwt_decode from 'jwt-decode';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
@@ -30,8 +30,7 @@ export class RegisterAuthService {
     private dialog: MatDialog,
     private userTokenService: UserTokenService,
     private userCouponsService: UserCouponsService
-  ) {
-  }
+  ) {}
   isLoggedIn(): boolean {
     // console.log('this.token', this.token);
     const userId: any = this.sessionStorageService.getItem('userId');
@@ -66,20 +65,19 @@ export class RegisterAuthService {
   login(email: string, password: string) {
     this.fireauth.signInWithEmailAndPassword(email, password).then(
       (res) => {
+        this.createUserTokenFn(res).subscribe((ret: any) => {
+          this.sharedMenuObservableService.displayName.next(
+            res.user.displayName
+          );
+          // this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
+          this.userService.saveUserProfileToDB(res);
 
-        this.createUserTokenFn(res).subscribe(
-          (ret: any) => {
-            this.sharedMenuObservableService.displayName.next(res.user.displayName);
-            // this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
-            this.userService.saveUserProfileToDB(res);
-    
-            if(res.user?.emailVerified == true) {
-              this.checkIfSellerIsSet(ret, res);
-            } else {
-              this.router.navigate(['/login/verify-email']);
-            }
-
-          });
+          if (res.user?.emailVerified == true) {
+            this.checkIfSellerIsSet(ret, res);
+          } else {
+            this.router.navigate(['/login/verify-email']);
+          }
+        });
       },
       (err) => {
         alert(err.message);
@@ -87,18 +85,19 @@ export class RegisterAuthService {
       }
     );
   }
-  private createUserTokenFn(res:any): Observable<any> {
+  private createUserTokenFn(res: any): Observable<any> {
     return this.userTokenService.createUserToken(res).pipe(
       map((ret: any) => {
-      // console.log('createUserTokenFn', ret);
-      const value = JSON.parse(ret.token);
-      const data = {
-        id: ret.token_id,
-        user_id: value.user.uid,
-      };
-      this.sessionStorageService.setItem('userId', data);
-      return value;
-    }));
+        // console.log('createUserTokenFn', ret);
+        const value = JSON.parse(ret.token);
+        const data = {
+          id: ret.token_id,
+          user_id: value.user.uid,
+        };
+        this.sessionStorageService.setItem('userId', data);
+        return value;
+      })
+    );
   }
   // register method
   register(email: string, password: string) {
@@ -118,16 +117,16 @@ export class RegisterAuthService {
   // sign out
   logout() {
     console.log('logout');
-    
+
     this.sessionStorageService.removeItem('isRegisterLoggedIn');
-    const userId:any = this.sessionStorageService.getItem('userId');
+    const userId: any = this.sessionStorageService.getItem('userId');
     if (!userId) return;
-    
+
     this.fireauth.signOut().then(
       () => {
         this.userTokenService.getUserToken().subscribe((profile: any) => {
           // console.log('profile', profile);
-          if( profile ) {
+          if (profile) {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
             this.sessionStorageService.removeItem('isRegisterLoggedIn');
@@ -172,19 +171,17 @@ export class RegisterAuthService {
   googleSignIn() {
     return this.fireauth.signInWithPopup(new GoogleAuthProvider()).then(
       (res) => {
-
-        this.createUserTokenFn(res).subscribe(
-          (ret: any) => {
-            // console.log('createUserTokenFn -2', ret);
-            this.checkIfSellerIsSet(ret, res);
-        })
+        this.createUserTokenFn(res).subscribe((ret: any) => {
+          // console.log('createUserTokenFn -2', ret);
+          this.checkIfSellerIsSet(ret, res);
+        });
       },
       (err) => {
         alert(err.message);
       }
     );
   }
-  private checkIfSellerIsSet(ret: any, res:any) {
+  private checkIfSellerIsSet(ret: any, res: any) {
     this.isSellerChecked(ret.user.uid).subscribe((isSeller: boolean) => {
       console.log('isSeller', isSeller);
       if (isSeller) {
@@ -194,7 +191,6 @@ export class RegisterAuthService {
 
         // User Coupons
         this.checkIfUserCouponsAvailable();
-        
       } else {
         // Input profile information
         this.inputProfileInfo(res).subscribe((ret: any) => {
@@ -203,7 +199,7 @@ export class RegisterAuthService {
             this.router.navigate(['/register-home']);
             return;
           }
-        });;
+        });
       }
     });
   }
@@ -212,19 +208,28 @@ export class RegisterAuthService {
     this.userCouponsService.getUserCoupons().subscribe((ret: any) => {
       // console.log('user coupon', ret.quantity);
       if (ret) {
-        if( ret.quantity <= 5 ) {
-          this.matSnackBar.open('You have ' + ret.quantity + ' coupons left', 'OK', {
-            duration: 5000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-          });
+        if (ret.quantity <= 5) {
+          this.matSnackBar.open(
+            'You have ' + ret.quantity + ' coupons left',
+            'OK',
+            {
+              duration: 5000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+            }
+          );
         }
-        if( ret.quantity === 0 ) {
-          this.matSnackBar.open('You have ' + ret.quantity + ' coupons left', 'OK', {
-          });
+        if (ret.quantity === 0) {
+          this.matSnackBar.open(
+            'You have ' + ret.quantity + ' coupons left',
+            'OK',
+            {}
+          );
           this.logout();
         }
-        this.sharedMenuObservableService.userCoupons.next(ret.quantity.toString());
+        this.sharedMenuObservableService.userCoupons.next(
+          ret.quantity.toString()
+        );
       } else {
         this.userCouponsService.createUserCoupon(200).subscribe((ret: any) => {
           console.log('createUserCoupon', ret);
@@ -241,14 +246,13 @@ export class RegisterAuthService {
       map((user: any) => {
         return user.seller;
       })
-    )
+    );
   }
   private inputProfileInfo(res: any): Observable<any> {
     const dialogRef = this.dialog.open(UserProfileComponent, {});
 
     return dialogRef.afterClosed();
-      // To show the register button
-      
+    // To show the register button
   }
   facebookSignIn() {
     return this.fireauth.signInWithPopup(new FacebookAuthProvider()).then(

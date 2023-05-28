@@ -48,7 +48,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SessionStorageService } from 'src/app/register-home/core/services/session-storage.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { ar, fi, th } from 'date-fns/locale';
 import { TermsAndConditionsComponent } from 'src/app/core/components/terms-and-condition/terms-and-conditions.component';
@@ -82,7 +82,7 @@ interface Data {
     MatSelectModule,
     MatDialogModule,
     errorTailorImports,
-],
+  ],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -119,32 +119,35 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     private matDialog: MatDialog,
     private userTokenService: UserTokenService,
     private snackBar: MatSnackBar,
-    private titleService: Title,
+    private titleService: Title
   ) {}
 
   contactForm = new UntypedFormGroup({
-    first_name: new UntypedFormControl('',Validators.required),
-    last_name: new UntypedFormControl('',Validators.required),
-    email: new UntypedFormControl('',Validators.required),
-    zipcode: new UntypedFormControl('',Validators.pattern(/^\d+$/)),
+    first_name: new UntypedFormControl('', Validators.required),
+    last_name: new UntypedFormControl('', Validators.required),
+    email: new UntypedFormControl('', Validators.required),
+    zipcode: new UntypedFormControl('', Validators.pattern(/^\d+$/)),
     phone_no: new UntypedFormControl('', Validators.pattern(/^[\d\-]+$/)),
-    address1: new UntypedFormControl('',Validators.required),
+    address1: new UntypedFormControl('', Validators.required),
     address2: new UntypedFormControl(),
     city: new UntypedFormControl(),
     state: new UntypedFormControl(),
     country: new UntypedFormControl(),
-    subscribe: new UntypedFormControl(false,Validators.requiredTrue),
+    subscribe: new UntypedFormControl(false, Validators.requiredTrue),
     seller: new UntypedFormControl(false),
     store_name: new UntypedFormControl(),
     representative_name: new UntypedFormControl(),
     register_no: new UntypedFormControl(),
-    representative_phone_no: new UntypedFormControl('', Validators.pattern(/^[\d\-]+$/)),
+    representative_phone_no: new UntypedFormControl(
+      '',
+      Validators.pattern(/^[\d\-]+$/)
+    ),
     store_address1: new UntypedFormControl(),
     store_address2: new UntypedFormControl(),
     store_city: new UntypedFormControl(),
     store_state: new UntypedFormControl(),
     store_country: new UntypedFormControl(),
-    store_zipcode: new UntypedFormControl('',Validators.pattern(/^\d+$/)),
+    store_zipcode: new UntypedFormControl('', Validators.pattern(/^\d+$/)),
   });
   private dialog = inject(DialogService);
   isDirty$: Observable<boolean>;
@@ -157,7 +160,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     // To prvevent from writing the seller information because seller info
-    // is managed by register-home module. 
+    // is managed by register-home module.
     this.title = this.titleService.getTitle();
 
     this.userTokenService
@@ -184,9 +187,11 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     // this.disabled = this.ref.data.disabled;
   }
   private setSellerValidators() {
-    this.contactForm.get('seller').valueChanges.subscribe(sellerValue => {
+    this.contactForm.get('seller').valueChanges.subscribe((sellerValue) => {
       const storeNameControl = this.contactForm.get('store_name');
-      const representativeNameControl = this.contactForm.get('representative_name');
+      const representativeNameControl = this.contactForm.get(
+        'representative_name'
+      );
       const registerNoControl = this.contactForm.get('register_no');
       const storeAddress1Control = this.contactForm.get('store_address1');
       const storeCityControl = this.contactForm.get('store_city');
@@ -194,7 +199,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       const storeCountryControl = this.contactForm.get('store_country');
       const storeZipcodeControl = this.contactForm.get('store_zipcode');
 
-    
       if (sellerValue) {
         storeNameControl.setValidators([Validators.required]);
         representativeNameControl.setValidators([Validators.required]);
@@ -204,7 +208,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         storeStateControl.setValidators([Validators.required]);
         storeCountryControl.setValidators([Validators.required]);
         storeZipcodeControl.setValidators([Validators.required]);
-
       } else {
         storeNameControl.clearValidators();
         representativeNameControl.clearValidators();
@@ -214,9 +217,8 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         storeStateControl.clearValidators();
         storeCountryControl.clearValidators();
         storeZipcodeControl.clearValidators();
-
       }
-      
+
       storeNameControl.updateValueAndValidity();
       representativeNameControl.updateValueAndValidity();
       registerNoControl.updateValueAndValidity();
@@ -225,9 +227,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       storeStateControl.updateValueAndValidity();
       storeCountryControl.updateValueAndValidity();
       storeZipcodeControl.updateValueAndValidity();
-
     });
-    
   }
   private completeAddress(control: string, arg: number) {
     this.contactForm
@@ -411,15 +411,16 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
 }
 function einValidator(): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} | null => {
+  return (control: AbstractControl): { [key: string]: any } | null => {
     const einPattern = /^\d{2}-\d{7}$/;
     const value = control.value;
 
-    if (!value) { // 값이 없는 경우, 유효성 검사를 통과시킵니다.
-        return null;
+    if (!value) {
+      // 값이 없는 경우, 유효성 검사를 통과시킵니다.
+      return null;
     }
 
-    return einPattern.test(value) ? null : { 'invalidEIN': true };
+    return einPattern.test(value) ? null : { invalidEIN: true };
   };
 }
 export const sampleUser: Partial<User> = {

@@ -1,17 +1,24 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, HostListener, OnInit, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
 import { set } from 'date-fns';
 import { SharedParentObservableService } from '../core/services/shared-parent-observable.service';
 import { Title } from '@angular/platform-browser';
-import { SessionStorageService } from 'src/app/register-home/core/services/session-storage.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @Component({
   selector: 'app-register-home',
   standalone: true,
   imports: [CommonModule, RouterModule],
-template: ` <router-outlet></router-outlet> `,
+  template: ` <router-outlet></router-outlet> `,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -26,7 +26,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { Categories, Sizes } from '../core/constants/data-define';
 import { SelectSizeVcaComponent } from '../sidemenu/select-size-vca/select-size-vca.component';
 import { MaterialVcaComponent } from '../sidemenu/material-vca/material-vca.component';
-import { ProgressComponent } from 'src/app/register-home/core/services/progress.component';
+// import { ProgressComponent } from 'src/app/core/services/progress.component';
 import { CategoryVcaComponent } from '../sidemenu/category-vca/category-vca.component';
 import { SaleListService } from '../sale-list/sale-list.service';
 import { NotificationService } from '../core/services/notification.service';
@@ -67,7 +67,7 @@ import { RegisterAuthService } from 'src/app/register-home/auth/login/services/r
     MaterialVcaComponent,
     CategoryVcaComponent,
     ColorVcaComponent,
-    ProgressComponent,
+    // ProgressComponent,
     RouterModule,
     MatProgressSpinnerModule,
     MatSelectModule,

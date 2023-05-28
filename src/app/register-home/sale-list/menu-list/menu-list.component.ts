@@ -21,7 +21,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { ChipsKeywordService } from 'src/app/register-home/core/services/chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -31,7 +31,7 @@ import {
   MatDialog,
 } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from 'src/app/register-home/sidemenu/show-menu-dialog-component/show-menu-dialog-component';
-import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-menu-list',

@@ -6,10 +6,10 @@ import {
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { ChipsKeywordService } from 'src/app/register-home/core/services/chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import {
   debounceTime,
@@ -18,7 +18,7 @@ import {
   Observable,
   pluck,
 } from 'rxjs';
-import { RemoveChipsKeywordService } from 'src/app/register-home/core/services/remove-chips-keyword.service';
+import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
 
 @UntilDestroy()
 @Component({
@@ -46,11 +46,13 @@ import { RemoveChipsKeywordService } from 'src/app/register-home/core/services/r
       <mat-icon>search</mat-icon>
     </button>
   `,
-  styles: [`
-   #default-search {
-      border: 1px solid black;
-   }
-  `],
+  styles: [
+    `
+      #default-search {
+        border: 1px solid black;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputKeywordComponent implements OnInit, AfterViewInit {

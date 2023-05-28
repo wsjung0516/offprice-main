@@ -3,17 +3,16 @@ import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { Colors } from 'src/app/register-home/core/constants/data-define';
-import { ChipsKeywordService } from 'src/app/register-home/core/services/chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from '../show-menu-dialog-component/show-menu-dialog-component';
-import { SharedMenuObservableService } from '../../core/services/shared-menu-observable.service';
-
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-color',
   standalone: true,
   imports: [CommonModule, MatRadioModule, FormsModule],
-template: `
+  template: `
     <div class="p-4 flex flex_wrap">
       <ng-container *ngFor="let color of colors">
         <button
@@ -51,7 +50,7 @@ template: `
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorComponent {
   @Input() dialogRef: MatDialogRef<ShowMenuDialogComponent>;

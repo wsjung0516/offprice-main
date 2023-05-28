@@ -31,6 +31,7 @@ export class MakeTableWhereConditionService {
   sort: MatSort;
   paginator: MatPaginator;
   refreshObservable$: Observable<any> = this.sharedMenuObservableService.refreshData$;
+  // refreshObservable$: Observable<any>;
   private displayModeSubject = new BehaviorSubject<string>('grid');
   displayMode$: Observable<string> = this.displayModeSubject.asObservable();
   displayMode = '';
@@ -95,10 +96,6 @@ export class MakeTableWhereConditionService {
   */
 
   private makeWhereObservable() {
-    let andArray: any[] = [];
-    let orArray: any[] = [];
-    // const displayMode$ = of(localStorage.getItem('displayMode'));
-    // const displayMode$ = new BehaviorSubject<string>(localStorage.getItem('displayMode') || 'list');
 
     /**
      * 1. display dialog menu (category, size, price, material, search period)
@@ -210,13 +207,13 @@ export class MakeTableWhereConditionService {
         if (data.where && data.where['and'].length > 0) {
           where = data.where['and'];
         } else if (data.where && data.where['and'].length === 0) {
-          where = null;
+          where = [];
         }
         // where or condition event is triggered. (vendor, description)
         if (data.where && data.where['or'].length > 0) {
           whereOR = data.where['or'];
         } else if (data.where && data.where['or'].length === 0) {
-          whereOR = null;
+          whereOR = [];
         }
         // sort event is triggered.
         if (data.active && data.direction) {

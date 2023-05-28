@@ -6,10 +6,10 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { Categories } from 'src/app/register-home/core/constants/data-define';
-import { ChipsKeywordService } from 'src/app/register-home/core/services/chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from '../show-menu-dialog-component/show-menu-dialog-component';
-import { SharedMenuObservableService } from 'src/app/register-home/core/services/shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-category-vca',

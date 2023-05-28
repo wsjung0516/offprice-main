@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  AfterViewInit,
+  ViewChild,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MakeTableWhereConditionService } from 'src/app/register-home/core/services/make-table-where-condition.service';
+import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
 import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SaleListService } from 'src/app/register-home/sale-list/sale-list.service';
@@ -29,8 +35,9 @@ import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-o
 @Component({
   selector: 'app-table-list',
   standalone: true,
-  imports: [CommonModule,
-MatSortModule,
+  imports: [
+    CommonModule,
+    MatSortModule,
     MatPaginatorModule,
     MatTableModule,
     RouterModule,
@@ -41,10 +48,10 @@ MatSortModule,
     ImageDetailDirective,
   ],
   templateUrl: './table-list.component.html',
-  styleUrls: ['./table-list.component.css'  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./table-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableListComponent implements OnInit, AfterViewInit{
+export class TableListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = [
@@ -108,11 +115,11 @@ export class TableListComponent implements OnInit, AfterViewInit{
     console.log('table-list ngOnInit');
     localStorage.setItem('displayMode', 'list');
     this.sharedMenuObservableService.deleteSaleListItem$
-    .pipe(untilDestroyed(this)).subscribe((sale_list_id: string) => {
-      console.log('deleteSaleListItem$', sale_list_id);
-      this.onDeletedSaleList(sale_list_id)
-    });
-
+      .pipe(untilDestroyed(this))
+      .subscribe((sale_list_id: string) => {
+        console.log('deleteSaleListItem$', sale_list_id);
+        this.onDeletedSaleList(sale_list_id);
+      });
   }
   ngAfterViewInit(): void {
     this.makeTableWhereConditionService.initializeWhereCondition(
@@ -156,7 +163,9 @@ export class TableListComponent implements OnInit, AfterViewInit{
     // console.log('editSaleList', saleList);
 
     localStorage.setItem('registerStatus', 'update');
-    this.router.navigate(['/register-home/home/register', { id: saleList.sale_list_id }]).then();
+    this.router
+      .navigate(['/register-home/home/register', { id: saleList.sale_list_id }])
+      .then();
 
     // this.cdr.detectChanges();
   }
@@ -176,30 +185,41 @@ export class TableListComponent implements OnInit, AfterViewInit{
     }
     confirmDialog.afterClosed().subscribe((result: any) => {
       if (result === true) {
-        this.saleListService.deleteSaleList(saleListId).pipe(
-          switchMap((data: SaleList) => {
-            // Delete images from Google Cloud Storage
-            const urls = data.image_urls.split(',');
-            return from(urls).pipe(
-              concatMap((url: string) => {
-                const fileName = url.match(/.*\/(.+\..+)/)[1];
-                // console.log('fileName---', fileName);
-                return this.saleListService.deleteImageFromBucket(fileName);
-              })
-            );
-          }),
-          untilDestroyed(this)
-        ).subscribe((data: any) => {
-          // console.log('deleted---', data);
-          this.sharedMenuObservableService.resultDeleteSaleListItem.next(saleListId);
-          this.snackBar.open('Deleted Successfully', 'Close', {
-            duration: 2000,
-          });
-          // this.refreshObservable.next();
-        }, (error: any) => {
-          this.snackBar.open('Deleting is failed because this item is reserved already by someone', 'Close', {
-          });
-        });
+        this.saleListService
+          .deleteSaleList(saleListId)
+          .pipe(
+            switchMap((data: SaleList) => {
+              // Delete images from Google Cloud Storage
+              const urls = data.image_urls.split(',');
+              return from(urls).pipe(
+                concatMap((url: string) => {
+                  const fileName = url.match(/.*\/(.+\..+)/)[1];
+                  // console.log('fileName---', fileName);
+                  return this.saleListService.deleteImageFromBucket(fileName);
+                })
+              );
+            }),
+            untilDestroyed(this)
+          )
+          .subscribe(
+            (data: any) => {
+              // console.log('deleted---', data);
+              this.sharedMenuObservableService.resultDeleteSaleListItem.next(
+                saleListId
+              );
+              this.snackBar.open('Deleted Successfully', 'Close', {
+                duration: 2000,
+              });
+              // this.refreshObservable.next();
+            },
+            (error: any) => {
+              this.snackBar.open(
+                'Deleting is failed because this item is reserved already by someone',
+                'Close',
+                {}
+              );
+            }
+          );
       }
     });
   }
@@ -208,11 +228,11 @@ export class TableListComponent implements OnInit, AfterViewInit{
     const width = mobileMode ? '100%' : '58%';
     // console.log('openDetailsItem', row)
     const dialogRef = this.dialogService.open(DetailsItemComponent, {
-       data: {
+      data: {
         data: row,
-       },
-       width,
-       // height: 'auto',
+      },
+      width,
+      // height: 'auto',
     });
 
     dialogRef.afterClosed$.subscribe((result) => {

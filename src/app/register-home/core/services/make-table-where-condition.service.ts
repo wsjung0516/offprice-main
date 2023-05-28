@@ -173,10 +173,10 @@ export class MakeTableWhereConditionService {
       });
     }
     if (input_keyword !== '') {
+      orArray.push({ product_name: { contains: input_keyword } });
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ description: { contains: input_keyword } });
       orArray.push({ store_name: { contains: input_keyword } });
-      orArray.push({ product_name: { contains: input_keyword } });
       orArray.push({ color: { contains: input_keyword } });
       orArray.push({ size: { contains: input_keyword } });
       orArray.push({ material: { contains: input_keyword } });

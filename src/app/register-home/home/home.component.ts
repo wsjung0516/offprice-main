@@ -14,10 +14,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { RemoveChipsKeywordService } from '../core/services/remove-chips-keyword.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 // import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
-import { AuthService } from '../auth/login/services/auth.service';
+import { RegisterAuthService } from '../auth/login/services/register-auth.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { UserFeedbackComponent } from '../core/components/feedback-request/feedback-request.component';
 import { SessionStorageService } from '../core/services/session-storage.service';
 import { HelpComponent } from '../core/components/help/help.component';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
@@ -27,13 +26,16 @@ import { LoaderComponent } from 'src/app/core/components/loader/loader.component
 import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.directive';
 import { DialogService } from '@ngneat/dialog';
 import { BuyCouponsComponent } from '../core/components/buy-coupons/buy-coupons.component';
+import { FeedbackButtonComponent } from 'src/app/core/components/feedback-button/feedback-button.component';
+import { RegisterProfileMenuComponent } from '../core/components/profile-menu/register-profile-menu.component';
+import { Title } from '@angular/platform-browser';
 
 // import { LoginModule } from '../login/login.module';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+    CommonModule,
     RegisterComponent,
     SaleListComponent,
     RouterModule,
@@ -41,11 +43,12 @@ import { BuyCouponsComponent } from '../core/components/buy-coupons/buy-coupons.
     UserProfileComponent,
     // HomeModule,
     MatIconModule,
-    UserFeedbackComponent,
     HelpComponent,
     LoaderComponent,
     ClickOutsideDirective,
-    BuyCouponsComponent
+    BuyCouponsComponent,
+    FeedbackButtonComponent,
+    RegisterProfileMenuComponent,
     // LoginModule,
   ],
   selector: 'app-home',
@@ -62,13 +65,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     public dialog: MatDialog,
     private removeChipsKeywordService: RemoveChipsKeywordService,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private authService: AuthService,
+    private authService: RegisterAuthService,
     private auth: AngularFireAuth,
     private cd: ChangeDetectorRef,
     private sessionStorageService: SessionStorageService,
     private userTokenService: UserTokenService,
     private sharedParentObservableService: SharedParentObservableService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private titleService: Title
   ) {}
   ngOnInit() {
     console.log('Register HomeComponent ngOnInit');
@@ -95,6 +99,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     //
+    this.titleService.setTitle('Register');
     this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
       if (coupon) {
         console.log('userCoupons', coupon);
@@ -141,13 +146,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       });
     });
   }
-  acitveTab = 'tab1';
-  setActiveTab(tabId: string) {
-    this.acitveTab = tabId;
-  }
-  isActiveTab(tabId: string) {
-    return this.acitveTab === tabId;
-  }
+
   toggleDropdown() {
     this.dropdown = !this.dropdown;
     // document.getElementById('user-profile-menu-button').classList.toggle('show');

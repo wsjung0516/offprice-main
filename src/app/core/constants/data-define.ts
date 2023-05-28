@@ -1,3 +1,45 @@
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  categoryId: string;
+}
+export const Categories1: Category[] = [
+  {id: '1', name: 'Women'},
+  {id: '2', name: 'Men'},
+  {id: '3', name: 'Kids'},
+]
+export const Categories2: Product[] = [
+  {id: '1', name: 'Dresses', categoryId: '1'},
+  {id: '2', name: 'Tops', categoryId: '1'},
+  {id: '3', name: 'Sweaters', categoryId: '1'},
+  {id: '4', name: 'Jackets', categoryId: '1'},
+  {id: '5', name: 'Jeans', categoryId: '1'},
+  {id: '6', name: 'Pants', categoryId: '1'},
+  {id: '7', name: 'Skirts', categoryId: '1'},
+  {id: '8', name: 'Swimwear', categoryId: '1'},
+  {id: '9', name: 'Sportswear', categoryId: '1'},
+  {id: '1', name: 'Jackets', categoryId: '2'},
+  {id: '2', name: 'Shirts', categoryId: '2'},
+  {id: '3', name: 'Sweaters', categoryId: '2'},
+  {id: '4', name: 'Jeans', categoryId: '2'},
+  {id: '5', name: 'Pants', categoryId: '2'},
+  {id: '6', name: 'Shorts', categoryId: '2'},
+  {id: '7', name: 'Swimwear', categoryId: '2'},
+  {id: '8', name: 'Sportswear', categoryId: '2'},
+  {id: '1', name: 'Jackets', categoryId: '3'},
+  {id: '2', name: 'Shirts', categoryId: '3'},
+  {id: '3', name: 'Sweaters', categoryId: '3'},
+  {id: '4', name: 'Jeans', categoryId: '3'},
+  {id: '5', name: 'Pants', categoryId: '3'},
+  {id: '6', name: 'Shorts', categoryId: '3'},
+  {id: '7', name: 'Swimwear', categoryId: '3'},
+  {id: '8', name: 'Sportswear', categoryId: '3'},
+]
 export const Sizes = [
   {key: 'All', value: 'All', category: 'All'},
   {key: 'XS', value: 'XS', category: 'BASE'},

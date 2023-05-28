@@ -59,7 +59,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   ],
 })
 export class CategoryMenuComponent implements OnInit {
-  @ViewChild('container') container!: ElementRef;
+  // @ViewChild('container') container!: ElementRef;
   categories = Categories;
   buttonWidth = 40;
   scrollDistance = 200;
@@ -81,16 +81,16 @@ export class CategoryMenuComponent implements OnInit {
         this.reset();
       });
   }
-  onScroll(distance: number) {
-    const scrollEl = document.querySelector('.scroll-container') as HTMLElement;
-    const direction = distance > 0 ? 1 : -1;
-    const currentOffset = scrollEl.scrollLeft;
-    const newOffset = currentOffset + direction * this.buttonWidth;
-    scrollEl.scrollTo({
-      left: newOffset,
-      behavior: 'smooth',
-    });
-  }
+  // onScroll(distance: number) {
+  //   const scrollEl = document.querySelector('.scroll-container') as HTMLElement;
+  //   const direction = distance > 0 ? 1 : -1;
+  //   const currentOffset = scrollEl.scrollLeft;
+  //   const newOffset = currentOffset + direction * this.buttonWidth;
+  //   scrollEl.scrollTo({
+  //     left: newOffset,
+  //     behavior: 'smooth',
+  //   });
+  // }
   onSelect(category: any) {
     this.selected_category = category;
     const value = { key: 'category', value: category.key };

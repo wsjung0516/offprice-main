@@ -18,7 +18,7 @@ import { UserCouponsService } from 'src/app/core/services/user-coupons.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class RegisterAuthService {
   token: any;
   constructor(
     private fireauth: AngularFireAuth,
@@ -126,10 +126,12 @@ export class AuthService {
     this.fireauth.signOut().then(
       () => {
         this.userTokenService.getUserToken().subscribe((profile: any) => {
-          if( !profile.token ) {
+          // console.log('profile', profile);
+          if( profile ) {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
             this.sessionStorageService.removeItem('isRegisterLoggedIn');
+            this.sharedMenuObservableService.isLoggedOut.next(true);
 
             this.router.navigate(['/register-home/login']);
           }
@@ -187,7 +189,7 @@ export class AuthService {
       console.log('isSeller', isSeller);
       if (isSeller) {
         this.router.navigate(['/register-home']);
-        // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
+        this.sessionStorageService.setItem('isRegisterLoggedIn', true);
         this.userService.saveUserProfileToDB(res);
 
         // User Coupons

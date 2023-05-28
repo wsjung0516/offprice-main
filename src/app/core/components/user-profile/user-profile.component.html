@@ -1,8 +1,12 @@
 <p></p>
 <div class="mt-4 overflow-y-auto max-h-90vh">
-  <div class="flex justify-center text-2xl font-bold">Update User Information</div>
+  <div class="flex justify-center text-2xl font-bold">
+    Update User Information
+  </div>
   <div class="flex justify-center">
-    <div class="block p-4 rounded-lg shadow-lg bg-white max-w-xl scroll-container">
+    <div
+      class="block p-4 rounded-lg shadow-lg bg-white max-w-xl scroll-container"
+    >
       <form [formGroup]="contactForm" errorTailor (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
           <mat-form-field class="">
@@ -66,7 +70,7 @@
             />
           </mat-form-field>
         </div>
-        <div class="grid grid-cols-3 gap-4 ">
+        <div class="grid grid-cols-3 gap-4">
           <mat-form-field appearance="fill">
             <mat-label>City</mat-label>
             <mat-select formControlName="city">
@@ -86,7 +90,7 @@
           <mat-form-field appearance="fill">
             <mat-label>Country</mat-label>
             <mat-select
-            [(value)]="selectedCountry[0]"
+              [(value)]="selectedCountry[0]"
               formControlName="country"
             >
               <mat-option
@@ -100,17 +104,13 @@
         <div class="grid grid-cols-2 gap-2">
           <mat-form-field class="">
             <mat-label>Postal Code</mat-label>
-            <input
-              matInput
-              formControlName="zipcode"
-              placeholder=""
-              value=""
-              />
-              <!-- [(ngModel)]="postalCode[0]" -->
+            <input matInput formControlName="zipcode" placeholder="" value="" />
+            <!-- [(ngModel)]="postalCode[0]" -->
           </mat-form-field>
           <mat-form-field class="">
             <mat-label>Phone Number</mat-label>
-            <input appPhoneNumber
+            <input
+              appPhoneNumber
               matInput
               formControlName="phone_no"
               placeholder=""
@@ -120,8 +120,13 @@
         </div>
 
         <section class="">
-          <button type="button" (click)="openTermsAndConditions()"><span class="text-blue-700">Terms & Conditions</span></button>
-          <mat-checkbox formControlName="subscribe" class="" [controlErrorsTpl]="termErrorTpl"
+          <button type="button" (click)="openTermsAndConditions()">
+            <span class="text-blue-700">Terms & Conditions</span>
+          </button>
+          <mat-checkbox
+            formControlName="subscribe"
+            class=""
+            [controlErrorsTpl]="termErrorTpl"
             >I Have read the terms and conditions and agreed!</mat-checkbox
           >
         </section>
@@ -129,12 +134,12 @@
           *ngIf="contactForm.get('subscribe').value === false; else subscribe"
         >
         </ng-container>
-        <section *ngIf="title !== 'OffpriceMain'" class="">
+        <section *ngIf="title !== 'offPrice'" class="">
           <mat-checkbox formControlName="seller" class=""
             ><span class="text-green-600 font-bold">Seller</span></mat-checkbox
           >
         </section>
-        <ng-container *ngIf="title !== 'OffpriceMain'" >
+        <ng-container *ngIf="title !== 'offPrice'">
           <ng-container
             *ngIf="contactForm.get('seller').value === false; else seller"
           >
@@ -230,9 +235,11 @@
                   [(value)]="selectedCity[1]"
                   formControlName="store_city"
                 >
-                  <mat-option *ngFor="let city of cities[1]" [value]="city.key">{{
-                    city.key
-                  }}</mat-option>
+                  <mat-option
+                    *ngFor="let city of cities[1]"
+                    [value]="city.key"
+                    >{{ city.key }}</mat-option
+                  >
                 </mat-select>
               </mat-form-field>
               <mat-form-field appearance="fill">
@@ -241,9 +248,11 @@
                   [(value)]="selectedState[1]"
                   formControlName="store_state"
                 >
-                  <mat-option *ngFor="let state of states[1]" [value]="state.key">{{
-                    state.key
-                  }}</mat-option>
+                  <mat-option
+                    *ngFor="let state of states[1]"
+                    [value]="state.key"
+                    >{{ state.key }}</mat-option
+                  >
                 </mat-select>
               </mat-form-field>
               <mat-form-field appearance="fill">
@@ -268,8 +277,8 @@
                   formControlName="store_zipcode"
                   placeholder=""
                   value=""
-                  />
-                  <!-- [(ngModel)]="postalCode[1]" -->
+                />
+                <!-- [(ngModel)]="postalCode[1]" -->
               </mat-form-field>
               <div></div>
             </div>
@@ -287,12 +296,8 @@
 
 <ng-template #subscribe> </ng-template>
 <ng-template #termErrorTpl let-control>
-  <div class="text-red-600">
-    You must agree to the terms and conditions.
-  </div>
+  <div class="text-red-600">You must agree to the terms and conditions.</div>
 </ng-template>
 <ng-template #registerNoErrorTpl let-control>
-  <div class="text-red-600">
-    Register Number need to be format.
-  </div>
-</ng-template> 
+  <div class="text-red-600">Register Number need to be format.</div>
+</ng-template>

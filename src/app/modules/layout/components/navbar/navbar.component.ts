@@ -13,7 +13,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CommonModule } from '@angular/common';
 import { NavbarMenuComponent } from './navbar-menu/navbar-menu.component';
 import { NavbarMobileComponent } from './navbar-mobile/navbar-mobilecomponent';
-import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
+import { ProfileMenuComponent } from '../../../../core/components/profile-menu/profile-menu.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -53,7 +53,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   cart_badge_count = '0';
   userName: string;
   newWindow: any;
-  subscription: Subscription
+  subscription: Subscription;
   @ViewChild('refreshButton', { static: false }) refreshButton: ElementRef;
   // public screenSize$: Observable<any>;
   constructor(
@@ -83,29 +83,29 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(() => {
         this.gotoHome();
       });
-        // Check every minute (60000 milliseconds)
-        
-    // this.subscription = interval(180000).subscribe(() => {
-    //       // your window checking logic here
-    //       console.log('Checking window status...');
-    //       // if (newWindow && newWindow.closed) { ... }
-    //     if (this.newWindow && this.newWindow.closed) {
-    //         console.log('The window has been closed.');
-    //         this.sessionStorageService.removeItem('isRegisterLoggedIn');
-    //         localStorage.removeItem('isStartMenuPassed');
-    //         // this.subscription.unsubscribe();
-    //         // this.newWindow = null;
-    //     } else {
-    //         console.log('The window is still open.');
-    //     }
-    //   });  
+    // Check every minute (60000 milliseconds)
+
+    this.subscription = interval(60000).subscribe(() => {
+          // your window checking logic here
+          console.log('Checking window status...');
+          // if (newWindow && newWindow.closed) { ... }
+        if (this.newWindow && this.newWindow.closed) {
+            console.log('The window has been closed.');
+            this.sessionStorageService.removeItem('isRegisterLoggedIn');
+            this.sessionStorageService.removeItem('userId');
+            localStorage.removeItem('isStartMenuPassed');
+            // this.subscription.unsubscribe();
+            // this.newWindow = null;
+        } else {
+            console.log('The window is still open.');
+        }
+      });
   }
   profile: any;
   ngAfterViewInit(): void {
     // const profile: any = this.sessionStorageService.getItem('token');
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       if (profile) {
-        this.userName = profile.user.displayName;
         this.cartItemsService.setCartItemsLength(profile.user.uid ?? '');
         this.profile = profile;
       } else {
@@ -113,13 +113,15 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     // To make condition for showing name and cart badge count.
-    this.sharedMenuObservableService.isLoggedIn$.pipe(
-      tap((isLoggedIn: any) => {
-      }),
-      untilDestroyed(this),
-      switchMap((user_id:string) => {
-        return this.userService.getUser(user_id);
-      })).subscribe((profile: any) => {
+    this.sharedMenuObservableService.isLoggedIn$
+      .pipe(
+        tap((isLoggedIn: any) => {}),
+        untilDestroyed(this),
+        switchMap((user_id: string) => {
+          return this.userService.getUser(user_id);
+        })
+      )
+      .subscribe((profile: any) => {
         console.log('isLoggedIn - profile', profile);
         if (profile) {
           this.userName = profile.first_name;
@@ -137,7 +139,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userName = name;
         this.cd.detectChanges();
       });
-      //
+    //
     this.sharedMenuObservableService.cart_badge_count$
       .pipe(untilDestroyed(this))
       .subscribe((val) => {
@@ -173,7 +175,6 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   onRegister() {
-    // window.open('http://googl.com', '_blank', options);
     this.newWindow = window.open('/register-home');
     window.focus();
   }

@@ -162,6 +162,7 @@ export class AuthService {
             localStorage.removeItem('isStartMenuPassed');
             this.sharedMenuObservableService.displayName.next('Guest');
             this.sharedMenuObservableService.cart_badge_count.next('0');
+            this.sharedMenuObservableService.isLoggedOut.next(true);
           }
         });
         // this.router.navigate(['/login']);

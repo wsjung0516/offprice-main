@@ -1,0 +1,108 @@
+<div class="relative">
+  <!-- Profile Button -->
+  <button
+    (click)="toggleDropdown()"
+    class="relative flex rounded-full bg-gray-800 text-sm"
+    type="button"
+    aria-expanded="false"
+    aria-haspopup="true"
+  >
+    <span class="sr-only">Open user menu</span>
+    <div clickOutside (clickOutside)="dropdown = false" class="flex items-center justify-center">
+      <div class="w-9 h-9 bg-blue-500 text-white flex items-center justify-center rounded-full">
+        {{ initials }}
+      </div>
+    </div>
+    <!-- <img
+      clickOutside
+      (clickOutside)="dropdown = false"
+      class="h-9 w-9 rounded-md"
+      src="assets/avatars/avt-01.jpg"
+      alt=""
+    /> -->
+    <!-- src="https://avatars.githubusercontent.com/u/12519008?v=4" -->
+  </button>
+  <!-- Dropdown -->
+  <div
+    [ngClass]="
+      dropdown
+        ? 'pointer-events-auto scale-100 animate-fade-in-up opacity-100 duration-200'
+        : 'pointer-events-none scale-95 opacity-0 duration-100 ease-in'
+    "
+    class="absolute z_index right-0 mt-2 w-60 origin-top-right transform rounded-md bg-white py-4 shadow-custom ring-1 ring-transparent ring-opacity-5 transition focus:outline-none dark:bg-night-600"
+  >
+    <div *ngIf="isLoggedIn" class="flext-row flex items-center px-4 pb-4">
+      <div class="w-10 shrink-0">
+        <img class="rounded-md" src="assets/avatars/avt-01.jpg" alt="" />
+      </div>
+      <div
+        class="overflow-hidden px-2 text-sm font-semibold text-gray-700 dark:text-night-50"
+      >
+       {{ userName }}
+        <p
+          class="truncate text-ellipsis text-xs font-semibold text-gray-400 dark:text-night-300"
+        >
+          {{ userEmail }}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="border-b border-dashed border-gray-200 dark:border-night-500"
+    ></div>
+
+    <ul class="my-2 mx-4">
+      <li
+      class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
+    >
+      <a
+        class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+        role="menuitem"
+        tabindex="-1"
+        id="user-menu-item-2"
+        [class.disabled]="isLoggedIn"
+        (click)="login()"
+        >Login</a
+      >
+    </li>
+
+      <li
+        class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
+      >
+        <a 
+          class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+          role="menuitem"
+          tabindex="-1"
+          id="user-menu-item-0"
+          [class.disabled]="!isLoggedIn"
+          (click)="openProfile()"
+          >Profile</a
+        >
+      </li>
+      <li
+        class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
+      >
+        <a
+          class="block px-4 py-2 text-sm text-gray-700"
+          role="menuitem"
+          tabindex="-1"
+          id="user-menu-item-1"
+          >Settings</a
+        >
+      </li>
+      <li 
+        class="block cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 hover:text-primary-500 dark:text-night-200 dark:hover:bg-night-500 dark:hover:text-primary-500"
+      >
+        <a
+          class="block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+          role="menuitem"
+          tabindex="-1"
+          id="user-menu-item-2"
+          [class.disabled]="!isLoggedIn"
+          (click)="logout()"
+          >Logout</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>

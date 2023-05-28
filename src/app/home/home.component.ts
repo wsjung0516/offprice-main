@@ -21,6 +21,7 @@ import { DialogService } from '@ngneat/dialog';
 import { StartMenuComponent } from '../core/components/start-menu/start-menu.component';
 import { SessionStorageService } from '../core/services/session-storage.service';
 import { Title } from '@angular/platform-browser';
+import { FeedbackButtonComponent } from '../core/components/feedback-button/feedback-button.component';
 @UntilDestroy()
 @Component({
   selector: 'app-home',
@@ -30,6 +31,7 @@ import { Title } from '@angular/platform-browser';
     RouterModule,
     UserFeedbackComponent,
     StartMenuComponent,
+    FeedbackButtonComponent,
   ],
   templateUrl: './home.component.html',
   styles: [],
@@ -52,7 +54,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private userTokenService: UserTokenService,
     private dialogService: DialogService,
     private sessionStorageService: SessionStorageService,
-    private titleService: Title
+    private titleService: Title,
+  
   ) {}
   async ngOnInit() {
     // this.loggedUser = this.sessionStorageService.getItem('token');
@@ -89,7 +92,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }, 30 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {
-    this.titleService.setTitle('OffpriceMain');
+    this.titleService.setTitle('offPrice');
     const title = this.titleService.getTitle();
     console.log('offPrice-main-title', title);
     // Check if register button can be displayed
@@ -98,25 +101,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // const isStartMenuPassed = localStorage.getItem('isStartMenuPassed');
     const userId = this.sessionStorageService.getItem('userId');
     if (userId) return;
-    if (title === 'OffpriceMain') {
-      const ref = this.dialogService.open(StartMenuComponent, {
-        data: {
-          title: 'start',
-        },
-        width: '340px',
-        // backdrop: false,
-        // enableClose: false,
-        closeButton: false,
-      });
-      ref.afterClosed$.subscribe((result) => {
-        if (result) {
-          console.log('ref.afterClosed$.subscribe', result);
-          // localStorage.setItem('isStartMenuPassed', 'true');
-          this.isRegisterButton = true;
-          this.cd.detectChanges();
-        }
-      });
-    }
+    // if (title === 'offPrice') {
+    //   const ref = this.dialogService.open(StartMenuComponent, {
+    //     data: {
+    //       title: 'start',
+    //     },
+    //     width: '340px',
+    //     // backdrop: false,
+    //     // enableClose: false,
+    //     closeButton: false,
+    //   });
+    //   ref.afterClosed$.subscribe((result) => {
+    //     if (result) {
+    //       console.log('ref.afterClosed$.subscribe', result);
+    //       // localStorage.setItem('isStartMenuPassed', 'true');
+    //       this.isRegisterButton = true;
+    //       this.titleService.setTitle('Register');
+    //       this.cd.detectChanges();
+    //     }
+    //   });
+    // }
   }
 
   private receiveFeedback() {

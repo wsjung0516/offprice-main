@@ -24,6 +24,8 @@
     "@angular/router": "^16.0.2",
     "@ngneat/dialog": "^3.5.0",
     "@ngneat/error-tailor": "^4.0.0",
+    "@ngneat/helipopper": "^7.1.1",
+    "@ngneat/overview": "^4.1.0",
     "@ngneat/until-destroy": "^9.2.3",
     "angular-svg-icon": "^15.0.0",
     "date-fns": "^2.29.3",

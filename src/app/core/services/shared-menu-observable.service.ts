@@ -57,6 +57,8 @@ export class SharedMenuObservableService {
   resultDeleteSaleListItem$ = this.resultDeleteSaleListItem.asObservable();
   userCoupons = new ReplaySubject<string>();
   userCoupons$ = this.userCoupons.asObservable();
+  isLoggedOut = new Subject<boolean>();
+  isLoggedOut$ = this.isLoggedOut.asObservable();
   
   get input_keyword$() {
     return this.input_keyword.asObservable();

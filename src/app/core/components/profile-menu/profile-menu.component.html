@@ -1,4 +1,4 @@
-<div class="relative ml-3">
+<div class="relative">
   <!-- Profile Button -->
   <button
     (click)="toggleDropdown()"
@@ -8,13 +8,18 @@
     aria-haspopup="true"
   >
     <span class="sr-only">Open user menu</span>
-    <img
+    <div clickOutside (clickOutside)="dropdown = false" class="flex items-center justify-center">
+      <div class="w-9 h-9 bg-blue-500 text-white flex items-center justify-center rounded-full">
+        {{ initials }}
+      </div>
+    </div>
+    <!-- <img
       clickOutside
       (clickOutside)="dropdown = false"
       class="h-9 w-9 rounded-md"
       src="assets/avatars/avt-01.jpg"
       alt=""
-    />
+    /> -->
     <!-- src="https://avatars.githubusercontent.com/u/12519008?v=4" -->
   </button>
   <!-- Dropdown -->
@@ -29,7 +34,6 @@
     <div *ngIf="isLoggedIn" class="flext-row flex items-center px-4 pb-4">
       <div class="w-10 shrink-0">
         <img class="rounded-md" src="assets/avatars/avt-01.jpg" alt="" />
-        <!-- <img class="rounded-md" src="https://avatars.githubusercontent.com/u/12519008?v=4" alt="" /> -->
       </div>
       <div
         class="overflow-hidden px-2 text-sm font-semibold text-gray-700 dark:text-night-50"

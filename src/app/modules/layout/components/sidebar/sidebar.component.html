@@ -53,12 +53,13 @@
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <svg-icon
+            <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/measurement.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
           </svg-icon>
-              <span> Size</span>
+          <ng-container *ngIf="(showSideBar$ | async)">
+            <span > Size</span>
               <span class="transition group-open:rotate-180">
                 <svg
                   fill="none"
@@ -74,6 +75,7 @@
                   <path d="M6 9l6 6 6-6"></path>
                 </svg>
               </span>
+              </ng-container>
             </summary>
             <p class="text-neutral-600 mt-3 group-open:animate-fadeIn">
               <app-select-size></app-select-size>
@@ -85,12 +87,13 @@
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <svg-icon
+            <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/best-price.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
           </svg-icon>
-              <span> Price</span>
+          <ng-container *ngIf="(showSideBar$ | async)">
+            <span> Price</span>
               <span class="transition group-open:rotate-180">
                 <svg
                   fill="none"
@@ -106,6 +109,7 @@
                   <path d="M6 9l6 6 6-6"></path>
                 </svg>
               </span>
+              </ng-container>
             </summary>
             <p class="text-neutral-600 mt-3 group-open:animate-fadeIn">
               <app-price></app-price>
@@ -117,12 +121,13 @@
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-          <svg-icon
+          <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/calendar.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
           </svg-icon>
-              <span> Search Period</span>
+          <ng-container *ngIf="(showSideBar$ | async)">
+            <span>Period</span>
               <span class="transition group-open:rotate-180">
                 <svg
                   fill="none"
@@ -138,6 +143,7 @@
                   <path d="M6 9l6 6 6-6"></path>
                 </svg>
               </span>
+          </ng-container>
             </summary>
             <p class="text-neutral-600 mt-3 group-open:animate-fadeIn">
               <app-search-period></app-search-period>
@@ -146,15 +152,16 @@
         </div>
         <div class="py-2">
           <details class="group">
-            <summary
+            <summary 
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <svg-icon
+            <svg-icon (click)="toggleSidebar()" tp="color"
             src="assets/icons/outline/color-palette.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
           </svg-icon>
-              <span> Color</span>
+          <ng-container *ngIf="(showSideBar$ | async)">
+            <span> Color</span>
               <span class="transition group-open:rotate-180">
                 <svg
                   fill="none"
@@ -170,6 +177,7 @@
                   <path d="M6 9l6 6 6-6"></path>
                 </svg>
               </span>
+              </ng-container>
             </summary>
             <p class="text-neutral-600 mt-3 group-open:animate-fadeIn">
               <app-color></app-color>
@@ -181,11 +189,12 @@
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <svg-icon
+            <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/textile.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
             >
             </svg-icon>
+            <ng-container *ngIf="(showSideBar$ | async)">
               <span> Material</span>
               <span class="transition group-open:rotate-180">
                 <svg
@@ -202,6 +211,8 @@
                   <path d="M6 9l6 6 6-6"></path>
                 </svg>
               </span>
+
+            </ng-container>
             </summary>
             <p class="text-neutral-600 mt-3 group-open:animate-fadeIn">
               <app-material></app-material>

@@ -47,14 +47,14 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service'; 
-import { AuthService } from 'src/app/register-home/auth/login/services/auth.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { RegisterAuthService } from 'src/app/register-home/auth/login/services/register-auth.service';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     MatCardModule,
     MatButtonModule,
     QuillEditorComponent,
@@ -157,7 +157,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private snackBar: MatSnackBar,
     private sharedParentObservableService: SharedParentObservableService,
     private shredMenuObservableService: SharedMenuObservableService,
-    private authService: AuthService
+    private authService: RegisterAuthService
   ) {}
 
   ngOnInit() {
@@ -167,24 +167,25 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     // To edit sale list
     this.calledFromSaleList();
     // Call from table-list.component.ts when complete delete sale list
-    this.shredMenuObservableService.resultDeleteSaleListItem$.pipe(untilDestroyed(this)).subscribe((sale_list_id: any) => {
-      if( sale_list_id === this.sale_list_id) {
-        this.imgURLs = [];
-        this.imgSmURLs = [];
-        // this.file = null;
-        this.progress = 0;
-        this.registerForm.patchValue({ image_urls: '' });
-        this.registerForm.reset();
-        this._router.navigate(['/register-home/home/sale-list']);
-      }
-    })
-
+    this.shredMenuObservableService.resultDeleteSaleListItem$
+      .pipe(untilDestroyed(this))
+      .subscribe((sale_list_id: any) => {
+        if (sale_list_id === this.sale_list_id) {
+          this.imgURLs = [];
+          this.imgSmURLs = [];
+          // this.file = null;
+          this.progress = 0;
+          this.registerForm.patchValue({ image_urls: '' });
+          this.registerForm.reset();
+          this._router.navigate(['/register-home/home/sale-list']);
+        }
+      });
   }
   private calledFromSaleList() {
     this._activatedRoute.paramMap
       .pipe(untilDestroyed(this))
       .subscribe((val: any) => {
-        if(Object.keys(val['params']).length === 0) return;
+        if (Object.keys(val['params']).length === 0) return;
         const id = val['params']?.id;
         if (id) {
           this.sale_list_id = id;
@@ -216,9 +217,10 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getMaterials();
     this.getImageUrls();
     this.sharedParentObservableService.isImageLoading$
-    .pipe(untilDestroyed(this)).subscribe((val: boolean) => {
-      this.isLoading = val;
-    })
+      .pipe(untilDestroyed(this))
+      .subscribe((val: boolean) => {
+        this.isLoading = val;
+      });
   }
 
   private getImageUrls() {
@@ -243,7 +245,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       .valueChanges.pipe(untilDestroyed(this))
       .subscribe((val: any[]) => {
         // console.log('val?', val?.join(':'));
-        if(val?.length > 0) {
+        if (val?.length > 0) {
           this.nMaterials = val?.join(',');
         }
       });
@@ -302,11 +304,11 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       product_name: [''],
       vendor: ['', Validators.required],
       description: [''],
-      price: ['',Validators.required],
+      price: ['', Validators.required],
       size: ['', Validators.required],
       category: ['', Validators.required],
-      material: ['',Validators.required],
-      color: ['',Validators.required],
+      material: ['', Validators.required],
+      color: ['', Validators.required],
       image_urls: [''],
       user_id: [''],
       sizeArray: this.fb.array(this.createSizeFormControls()),
@@ -340,15 +342,15 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       console.log('this.registerForm.value', this.registerForm.value);
       // if( this.registerForm.valid) {
-        this._saleListService
-          .updateSaleList(this.sale_list_id, finalData)
-          .subscribe((res: any) => {
-            // If update status is finished, change status to create
-            this._notificationService.success('Update successfully');
-            this._router.navigate(['/register-home/home/sale-list']);
-          });
+      this._saleListService
+        .updateSaleList(this.sale_list_id, finalData)
+        .subscribe((res: any) => {
+          // If update status is finished, change status to create
+          this._notificationService.success('Update successfully');
+          this._router.navigate(['/register-home/home/sale-list']);
+        });
 
-      // } else { 
+      // } else {
       //   this.snackBar.open('Please check the field conditions!', 'Close', {
       //     duration: 3000,
       //   });
@@ -370,7 +372,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       this.image_sm_urls
     );
     this.userTokenService.getUserToken().subscribe((profile: any) => {
-      if(profile) {
+      if (profile) {
         finalData.user_id = profile.user.uid;
         console.log('finalData', finalData);
         this.createSaleList(finalData, profile);
@@ -393,7 +395,11 @@ sizeArray:(3) ['100', '200', '300']
 user_id:"8e2452c0-bf35-4ece-acdf-6ff434bc1197"
 vendor:"bbb"
 */
-  private deserializeData(data: Partial<SaleList>, image_urls: string[], image_sm_urls: string[]) {
+  private deserializeData(
+    data: Partial<SaleList>,
+    image_urls: string[],
+    image_sm_urls: string[]
+  ) {
     const tSize: string[] = [];
     const tColor: string[] = [];
     const tSizeArray: string[] = [];
@@ -431,8 +437,7 @@ vendor:"bbb"
     console.log('final data', adata);
     return adata;
   }
-  deleteEditImage(index: number) {
-  }
+  deleteEditImage(index: number) {}
   cancelUpload() {
     this.imgURLs = [];
     this.imgSmURLs = [];
@@ -445,12 +450,14 @@ vendor:"bbb"
   deleteItem() {
     // Call to table-list component to delete item
     console.log('deleteItem', this.sale_list_id);
-    this.shredMenuObservableService.deleteSaleListItem.next(this.sale_list_id.toString());
+    this.shredMenuObservableService.deleteSaleListItem.next(
+      this.sale_list_id.toString()
+    );
   }
 
-  private createSaleList(data: Partial<SaleList>, user:any) {
+  private createSaleList(data: Partial<SaleList>, user: any) {
     // Check if this.registerForm.get('image_urls') is empty
-    
+
     this.registerForm.patchValue({
       user_id: user.user.uid,
     });

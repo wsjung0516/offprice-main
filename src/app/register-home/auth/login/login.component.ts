@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from 'src/app/register-home/auth/login/services/auth.service';
+import { RegisterAuthService } from 'src/app/register-home/auth/login/services/register-auth.service';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LoginModule } from './login.module';
@@ -110,8 +110,7 @@ export class LoginComponent implements OnInit {
   email = '';
   password = '';
 
-  constructor(private auth: AuthService,
-    private titleService: Title) {}
+  constructor(private auth: RegisterAuthService, private titleService: Title) {}
 
   ngOnInit(): void {
     const title = this.titleService.getTitle();

@@ -18,6 +18,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { AngularFireModule } from '@angular/fire/compat';
 import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { popperVariation, provideTippyConfig, tooltipVariation } from '@ngneat/helipopper';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -42,6 +43,13 @@ bootstrapApplication(AppComponent, {
       multi: true,
     },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    provideTippyConfig({
+      defaultVariation: 'tooltip',
+      variations: {
+        tooltip: tooltipVariation,
+        popper: popperVariation,
+      }
+    }),
     provideErrorTailorConfig({
       errors: {
         useValue: {

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SidebarSubmenuComponent } from './../sidebar-submenu/sidebar-submenu.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   standalone: true,
@@ -14,6 +15,7 @@ import { SidebarSubmenuComponent } from './../sidebar-submenu/sidebar-submenu.co
     RouterModule,
     AngularSvgIconModule,
     SidebarSubmenuComponent,
+    MatTooltipModule,
   ],
 
   selector: 'app-sidebar-menu',

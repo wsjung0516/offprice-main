@@ -144,7 +144,7 @@ export class AuthService {
     // Clear display name. and clear cart badge count
     // And return because the register window cleared user token already
     if (!userId) {
-      this.sharedMenuObservableService.displayName.next('Guest');
+      // this.sharedMenuObservableService.displayName.next('Guest');
       this.sharedMenuObservableService.cart_badge_count.next('0');
       return;
     }
@@ -160,7 +160,7 @@ export class AuthService {
             this.sessionStorageService.removeItem('userId');
             this.sessionStorageService.removeItem('isRegisterLoggedIn');
             localStorage.removeItem('isStartMenuPassed');
-            this.sharedMenuObservableService.displayName.next('Guest');
+            // this.sharedMenuObservableService.displayName.next('Guest');
             this.sharedMenuObservableService.cart_badge_count.next('0');
             this.sharedMenuObservableService.isLoggedOut.next(true);
           }

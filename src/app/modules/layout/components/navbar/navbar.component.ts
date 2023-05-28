@@ -51,7 +51,7 @@ import { UserService } from 'src/app/user/user.service';
 export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   sSize: string;
   cart_badge_count = '0';
-  userName: string;
+  // userName: string;
   newWindow: any;
   subscription: Subscription;
   @ViewChild('refreshButton', { static: false }) refreshButton: ElementRef;
@@ -108,8 +108,6 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
       if (profile) {
         this.cartItemsService.setCartItemsLength(profile.user.uid ?? '');
         this.profile = profile;
-      } else {
-        this.userName = 'Guest';
       }
     });
     // To make condition for showing name and cart badge count.
@@ -124,21 +122,16 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((profile: any) => {
         console.log('isLoggedIn - profile', profile);
         if (profile) {
-          this.userName = profile.first_name;
           this.cartItemsService.setCartItemsLength(profile.user_id);
           this.profile = profile;
-        } else {
-          this.userName = 'Guest';
         }
         this.cd.detectChanges();
       });
-    // this.userName = profile?.user.displayName ?? 'Guest';
-    this.sharedMenuObservableService.displayName$
-      .pipe(untilDestroyed(this))
-      .subscribe((name) => {
-        this.userName = name;
-        this.cd.detectChanges();
-      });
+    // this.sharedMenuObservableService.displayName$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((name) => {
+    //     this.cd.detectChanges();
+    //   });
     //
     this.sharedMenuObservableService.cart_badge_count$
       .pipe(untilDestroyed(this))

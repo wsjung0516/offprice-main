@@ -11,13 +11,13 @@ import { SaleListComponent } from '../sale-list/sale-list.component';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { RemoveChipsKeywordService } from '../core/services/remove-chips-keyword.service';
+import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 // import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
 import { RegisterAuthService } from '../auth/login/services/register-auth.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { SessionStorageService } from '../core/services/session-storage.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { HelpComponent } from '../core/components/help/help.component';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
@@ -113,12 +113,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.cd.detectChanges();
       }
     });
-    this.sharedMenuObservableService.displayName$
-      .pipe(untilDestroyed(this))
-      .subscribe((name) => {
-        this.userName = name;
-        this.cd.detectChanges();
-      });
+    // this.sharedMenuObservableService.displayName$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((name) => {
+    //     this.userName = name;
+    //     this.cd.detectChanges();
+    //   });
     this.sharedParentObservableService.isProfileMenuOpen$
       .pipe(untilDestroyed(this))
       .subscribe((isOpen) => {
@@ -176,7 +176,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   gotoHome() {
     // To reset the search keyword and positioned selection button to the 'All'.
     this.resetKeyword();
-    // this.makeTableWhereConditionService.resetSort();
   }
   resetKeyword() {
     const service = this.sharedMenuObservableService;

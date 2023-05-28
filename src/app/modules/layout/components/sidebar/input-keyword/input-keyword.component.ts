@@ -46,7 +46,13 @@ import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-ke
       <mat-icon>search</mat-icon>
     </button>
   `,
-  styles: [],
+  styles: [
+    `
+      #default-search {
+        border: 1px solid black;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputKeywordComponent implements OnInit, AfterViewInit {

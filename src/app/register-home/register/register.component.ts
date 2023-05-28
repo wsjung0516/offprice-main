@@ -32,7 +32,7 @@ import { SaleListService } from '../sale-list/sale-list.service';
 import { NotificationService } from '../core/services/notification.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SessionStorageService } from '../core/services/session-storage.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { ColorVcaComponent } from '../sidemenu/color-vca/color-vca.component';

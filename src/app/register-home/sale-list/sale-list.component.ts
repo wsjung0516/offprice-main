@@ -45,13 +45,13 @@ import { ColorComponent } from '../sidemenu/color/color.component';
 import {
   SearchKeyword,
   ChipsKeywordService,
-} from '../core/services/chips-keyword.service';
+} from 'src/app/core/services/chips-keyword.service';
 // import { ChipListComponent } from './chip-list/chip-list.component';
 import { TableListComponent } from '../table-list/table-list.component';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { RemoveChipsKeywordService } from '../core/services/remove-chips-keyword.service';
-import { InputKeywordComponent } from '../core/components/input-keyword/input-keyword.component';
+import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
+import { InputKeywordComponent } from 'src/app/modules/layout/components/sidebar/input-keyword/input-keyword.component';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
 @UntilDestroy()
 @Component({

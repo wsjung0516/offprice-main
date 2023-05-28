@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { CategoryMenuComponent } from './components/category-menu/category-menu.component';
+import { CategoryMenuComponent } from '../layout/components/sidebar/category-menu/category-menu.component';
 import { SaleListHeaderComponent } from './components/sale-list-header/sale-list-header.component';
-import { Category1MenuComponent} from './components/category1-menu/category1-menu.component';
+import { Category1MenuComponent} from 'src/app/modules/layout/components/sidebar/category1-menu/category1-menu.component';
 
 @Component({
   standalone: true,

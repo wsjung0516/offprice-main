@@ -66,7 +66,7 @@ export class ProfileMenuComponent implements OnInit, AfterViewInit {
     this.sharedMenuObservableService.isLoggedOut$.pipe(untilDestroyed(this))
     .subscribe((isLoggedOut: boolean) => {
       if (isLoggedOut) {
-        this.initials = '';
+        this.initials = 'Guest';
         this.authService.logout();
         this.cd.detectChanges();
       }
@@ -83,6 +83,10 @@ export class ProfileMenuComponent implements OnInit, AfterViewInit {
         
       });
       // console.log('profile-menu. profile', profile);
+    } else {
+      this.isLoggedIn = false;
+      this.initials = 'Guest';
+      this.cd.detectChanges();
     }
   }
 

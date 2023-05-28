@@ -66,9 +66,6 @@ export class RegisterAuthService {
     this.fireauth.signInWithEmailAndPassword(email, password).then(
       (res) => {
         this.createUserTokenFn(res).subscribe((ret: any) => {
-          this.sharedMenuObservableService.displayName.next(
-            res.user.displayName
-          );
           // this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
           this.userService.saveUserProfileToDB(res);
 

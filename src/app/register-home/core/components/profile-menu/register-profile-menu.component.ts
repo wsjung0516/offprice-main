@@ -71,6 +71,10 @@ export class RegisterProfileMenuComponent implements OnInit, AfterViewInit {
         
       });
       // console.log('profile-menu. profile', profile);
+    } else {
+      this.isLoggedIn = false;
+      this.initials = 'Guest';
+      this.cd.detectChanges();
     }
   }
 

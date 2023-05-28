@@ -17,7 +17,7 @@ import { SaleList } from 'src/app/core/models/sale-list.model';
 // import { SaleList } from 'src/app/register-home/core/models/sale-list.model';
 import { concatMap, from, Subject, switchMap } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
-import { SearchKeyword } from '../core/services/chips-keyword.service';
+import { SearchKeyword } from 'src/app/core/services/chips-keyword.service';
 import { MatIconModule } from '@angular/material/icon';
 
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
@@ -99,7 +99,6 @@ export class TableListComponent implements OnInit, AfterViewInit {
 
   constructor(
     private makeTableWhereConditionService: MakeTableWhereConditionService,
-    // private makeWhereConditionService: MakeWhereConditionService,
     private userSaleListService: UserSaleListService,
     private saleListService: SaleListService,
     private router: Router,

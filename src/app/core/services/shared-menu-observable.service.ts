@@ -43,8 +43,6 @@ export class SharedMenuObservableService {
 
   showMobileMenu = new Subject<boolean>();
   showMobileMenu$ = this.showMobileMenu.asObservable();
-  displayName = new Subject<string>();
-  displayName$ = this.displayName.asObservable();
   closeFeedback = new Subject<boolean>(); 
   closeFeedback$ = this.closeFeedback.asObservable();
   reset_register = new Subject<boolean>();

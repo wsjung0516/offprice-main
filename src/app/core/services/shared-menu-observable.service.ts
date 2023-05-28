@@ -57,6 +57,8 @@ export class SharedMenuObservableService {
   userCoupons$ = this.userCoupons.asObservable();
   isLoggedIn = new Subject<string>();
   isLoggedIn$ = this.isLoggedIn.asObservable();
+  cartegory1 = new Subject<string>();
+  cartegory1$ = this.cartegory1.asObservable();
   
   get input_keyword$() {
     return this.input_keyword.asObservable();

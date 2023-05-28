@@ -112,7 +112,7 @@ export class SaleListHeaderComponent
       .subscribe((item) => {
         if (item && item.key === 'searchItemsLength') {
           this.searchItemLength = +item.value;
-          this.cd.markForCheck();
+          this.cd.detectChanges();
         }
       });
   }

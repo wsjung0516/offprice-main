@@ -89,10 +89,11 @@ export class MakeTableWhereConditionService {
   0:{vendor: 'All'}
   1:{price: '10, 25'}
   2:{category: 'Tops'}
-  3:{size: 'XS'}
-  4:{material: 'Wool'}
-  5:{search_period: 2}
-  6:{input_keyword: 'aaa'}
+  3:{category1: '1'}
+  4:{size: 'XS'}
+  5:{material: 'Wool'}
+  6:{search_period: 2}
+  7:{input_keyword: 'aaa'}
   */
 
   private makeWhereObservable() {
@@ -107,6 +108,7 @@ export class MakeTableWhereConditionService {
       vendor$,
       price$,
       category$,
+      category1$,
       size$,
       material$,
       search_period$,
@@ -119,6 +121,7 @@ export class MakeTableWhereConditionService {
       vendor$,
       price$,
       category$,
+      category1$,
       size$,
       material$,
       search_period$,
@@ -143,26 +146,27 @@ export class MakeTableWhereConditionService {
     vendor,
     price,
     category,
+    category1,
     size,
     material,
     search_period,
     input_keyword,
     color,
-  ]: [string, string, string, string, string, string, string, string]): {
+  ]: [string, string, string, string, string, string, string, string, string]): {
     where: { and: any[]; or: any[] };
   } {
     const andArray: any[] = [];
     const orArray: any[] = [];
-
+    andArray.push({ category1: '1' });
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
       const pric = price.split(',');
       andArray.push({ price: { gt: +pric[0], lt: +pric[1] } });
     }
     if (category !== 'All') andArray.push({ category: category });
-    if (size !== 'All') andArray.push({ size: size });
-    if (material !== 'All') andArray.push({ material: material });
-    if (color !== 'All') andArray.push({ color: color });
+    if (size !== 'All') andArray.push({ size: {contains:size }});
+    if (material !== 'All') andArray.push({ material: {contains:material}});
+    if (color !== 'All') andArray.push({ color: {contains:color}});
     if (search_period !== 'All') {
       const day: number = +search_period;
       andArray.push({

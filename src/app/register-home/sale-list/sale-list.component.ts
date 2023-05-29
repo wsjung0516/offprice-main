@@ -154,7 +154,7 @@ export class SaleListComponent implements OnInit {
             (obj.value !== '' && obj.key === 'input_keyword') ||
             (obj.value !== 'All' && obj.key !== 'input_keyword')
         );
-        this.cd.markForCheck();
+        this.cd.detectChanges();
       });
   }
   // Display the dialog for selecting search condition for each menu

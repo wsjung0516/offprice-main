@@ -62,9 +62,11 @@ export class ColorComponent {
   ) {}
   selectValue(data: any) {
     const value = { key: 'colorsearch_period', value: data.key };
+    this.sharedMenuObservableService.input_keyword.next(data.key);
+    this.sharedMenuObservableService.color.next(data.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
-    this.sharedMenuObservableService.input_keyword.next(data.key);
+
     this.dialogRef.close();
   }
   hexToRgb(hex: string) {

@@ -100,6 +100,7 @@ export class MakeWhereConditionService {
       vendor$,
       price$,
       category$,
+      category1$,
       size$,
       material$,
       search_period$,
@@ -112,6 +113,7 @@ export class MakeWhereConditionService {
       vendor$,
       price$,
       category$,
+      category1$,
       size$,
       material$,
       search_period$,
@@ -150,26 +152,28 @@ export class MakeWhereConditionService {
     vendor,
     price,
     category,
+    category1,
     size,
     material,
     search_period,
     input_keyword,
     color,
-  ]: [string, string, string, string, string, string, string, string]): {
+  ]: [string, string, string, string, string, string, string, string, string]): {
     where: { and: any[]; or: any[] };
   } {
+    console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color)
     const andArray: any[] = [];
     const orArray: any[] = [];
-
+    andArray.push({ category1: category1 });
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
       const pric = price.split(',');
       andArray.push({ price: { gt: +pric[0], lt: +pric[1] } });
     }
     if (category !== 'All') andArray.push({ category: category });
-    if (size !== 'All') andArray.push({ size: size });
-    if (material !== 'All') andArray.push({ material: material });
-    if (color !== 'All') andArray.push({ color: color });
+    if (size !== 'All') andArray.push({ size: {contains:size} });
+    if (material !== 'All') andArray.push({ material: {contains:material}});
+    if (color !== 'All') andArray.push({ color: {contains:color }});
     if (search_period !== 'All') {
       const day: number = +search_period;
       andArray.push({
@@ -183,6 +187,7 @@ export class MakeWhereConditionService {
       });
     }
     if (input_keyword !== '') {
+      console.log('input_keyword', input_keyword)
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ store_name: { contains: input_keyword } });
       orArray.push({ product_name: { contains: input_keyword } });

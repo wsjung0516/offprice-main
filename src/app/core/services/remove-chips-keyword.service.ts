@@ -26,7 +26,9 @@ export class RemoveChipsKeywordService {
         this.localStorageService.setItem('category', 'All');
       },
       size: () => {
+        // Clear makeWhereConditionService if there is size value input already
         this.SharedMenuObservableService.input_keyword.next('');
+        // Clear input tag in the DOM.
         this.SharedMenuObservableService.reset_input_keyword.next('');
       },
       material: () => {

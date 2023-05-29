@@ -91,11 +91,11 @@ export class InputKeywordComponent implements OnInit, AfterViewInit {
       return;
     }
     const value = { key: 'input_keyword', value: data };
-    this.chipsKeywordService.removeChipKeyword(value);
-    this.chipsKeywordService.addChipKeyword(value);
     // To make observable value change, which will be used make-where-condition.service.ts
     this.sharedMenuObservableService.input_keyword.next(data);
     // this.favoriteSeason = data;
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
   }
   reset() {
     this.inputKeyword = '';

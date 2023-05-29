@@ -78,7 +78,7 @@ export class MaterialComponent implements OnInit {
     const value = { key: 'material', value: material.key };
     this.selected_material = material.key;
     this.SharedMenuObservableService.input_keyword.next(material.key);
-    // this.SharedMenuObservableService.material.next(material.key);
+    this.SharedMenuObservableService.material.next(material.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }

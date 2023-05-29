@@ -64,7 +64,7 @@ export class MaterialComponent {
     const value = { key: 'material', value: material.key };
     this.selected_material = value.key;
     this.sharedMenuObservableService.input_keyword.next(material.key);
-    // this.sharedMenuObservableService.material.next(material.key);
+    this.sharedMenuObservableService.material.next(material.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     this.dialogRef.close();

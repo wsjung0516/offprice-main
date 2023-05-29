@@ -82,7 +82,7 @@ export class SelectSizeComponent {
     const value = { key: 'size', value: size.key };
     this.selected_size = size.key;
     this.SharedMenuObservableService.input_keyword.next(size.key);
-    // this.SharedMenuObservableService.size.next(size.key);
+    this.SharedMenuObservableService.size.next(size.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     if (size.key === 'All') {

@@ -73,7 +73,7 @@ export class SelectSizeComponent {
     const value = { key: 'size', value: size.key };
     this.selected_size = size.key;
     this.sharedMenuObservableService.input_keyword.next(size.key);
-    // this.sharedMenuObservableService.size.next(size.key);
+    this.sharedMenuObservableService.size.next(size.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     this.dialogRef.close();

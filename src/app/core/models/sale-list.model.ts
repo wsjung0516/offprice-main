@@ -10,6 +10,7 @@ export interface SaleList{
   created_at:  Date;
   updated_at:  Date;
   category: string;
+  category1: string; // Parent category id '1': women, '2': men, '3': kids
   size: string;
   sizeArray: string;
   color: string;

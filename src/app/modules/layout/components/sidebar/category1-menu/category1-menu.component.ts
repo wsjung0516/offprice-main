@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Categories1 } from 'src/app/core/constants/data-define';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-category1-menu',
   standalone: true,
   imports: [CommonModule, MatIconModule],
-  template: `
+template: `
     <div class="bg-gray-200 px-1 py-1 flex items-center">
       <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide">
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
@@ -19,7 +20,7 @@ import { Categories1 } from 'src/app/core/constants/data-define';
               [value]="button"
               (click)="onSelect(button)"
             >
-              <span class="text-sm">{{ button.name }}</span>
+              <span class="text-sm">{{ button.key }}</span>
             </button>
           </ng-container>
         </div>
@@ -53,19 +54,23 @@ import { Categories1 } from 'src/app/core/constants/data-define';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Category1MenuComponent {
+export class Category1MenuComponent implements AfterViewInit{
+  constructor(
+    private sharedMenuObservableService: SharedMenuObservableService,
+  ) { }
   categories = Categories1;
   buttonWidth = 40;
   scrollDistance = 200;
   scrollOffset = 0;
   selected_category: any = { id: '1', value: 'All' };
+  ngAfterViewInit(): void {
+    this.onSelect({id:'1'})
+    setTimeout(()=>{
+    });
+  }
   onSelect(category: any) {
     this.selected_category = category;
-    const value = { key: 'category', value: category.key };
-    // this.selected_category = value.key;
-    // this.SharedMenuObservableService.category.next(category.key);
-    // this.chipsKeywordService.removeChipKeyword(value);
-    // this.chipsKeywordService.addChipKeyword(value);
+    const value = { key: 'category1', value: category.key };
+    this.sharedMenuObservableService.category1.next(category.id);
   }
-
 }

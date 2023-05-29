@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { Categories } from 'src/app/core/constants/data-define';
+import { Categories, Categories2, Product } from 'src/app/core/constants/data-define';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   standalone: true,
   imports: [CommonModule, MatIconModule],
   template: `
-    <div class="bg-gray-200 px-4 py-2 flex items-center">
+    <div class="bg-gray-200 px-1 py-2 flex items-center">
       <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide">
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
           <ng-container *ngFor="let button of categories">
@@ -58,16 +58,16 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     `,
   ],
 })
-export class CategoryMenuComponent implements OnInit {
+export class CategoryMenuComponent implements OnInit, AfterViewInit {
   // @ViewChild('container') container!: ElementRef;
-  categories = Categories;
+  categories: Product[] = [];
   buttonWidth = 40;
   scrollDistance = 200;
   scrollOffset = 0;
   selected_category: any = { key: 'All', value: 'All' };
   private storageItemSubscription: Subscription | undefined;
   constructor(
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
     private localStorageService: LocalStorageService,
     private cd: ChangeDetectorRef
@@ -75,7 +75,7 @@ export class CategoryMenuComponent implements OnInit {
   ngOnInit() {
     this.onSelect(this.selected_category);
     this.subscribeToLocalStorageItem();
-    this.SharedMenuObservableService.reset_category$
+    this.sharedMenuObservableService.reset_category$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
@@ -91,11 +91,20 @@ export class CategoryMenuComponent implements OnInit {
   //     behavior: 'smooth',
   //   });
   // }
+  ngAfterViewInit() {
+    let cat = '';
+    this.sharedMenuObservableService.category1$
+    .pipe(untilDestroyed(this)).subscribe((id) => {
+      cat = id;
+      this.categories = Categories2.filter((item) => item.categoryId === cat);
+      this.cd.detectChanges();
+    });
+  }
   onSelect(category: any) {
     this.selected_category = category;
     const value = { key: 'category', value: category.key };
     // this.selected_category = value.key;
-    this.SharedMenuObservableService.category.next(category.key);
+    this.sharedMenuObservableService.category.next(category.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }

@@ -1,44 +1,45 @@
 interface Category {
   id: string;
-  name: string;
+  key: string;
+  value: string;
 }
 
-interface Product {
-  id: string;
-  name: string;
+export interface Product {
+  key: string;
+  value: string;
   categoryId: string;
 }
 export const Categories1: Category[] = [
-  {id: '1', name: 'Women'},
-  {id: '2', name: 'Men'},
-  {id: '3', name: 'Kids'},
+  {id: '1', key: 'Women', value:'women'},
+  {id: '2', key: 'Men', value:'men'},
+  {id: '3', key: 'Kids', value:'kids'},
 ]
 export const Categories2: Product[] = [
-  {id: '1', name: 'Dresses', categoryId: '1'},
-  {id: '2', name: 'Tops', categoryId: '1'},
-  {id: '3', name: 'Sweaters', categoryId: '1'},
-  {id: '4', name: 'Jackets', categoryId: '1'},
-  {id: '5', name: 'Jeans', categoryId: '1'},
-  {id: '6', name: 'Pants', categoryId: '1'},
-  {id: '7', name: 'Skirts', categoryId: '1'},
-  {id: '8', name: 'Swimwear', categoryId: '1'},
-  {id: '9', name: 'Sportswear', categoryId: '1'},
-  {id: '1', name: 'Jackets', categoryId: '2'},
-  {id: '2', name: 'Shirts', categoryId: '2'},
-  {id: '3', name: 'Sweaters', categoryId: '2'},
-  {id: '4', name: 'Jeans', categoryId: '2'},
-  {id: '5', name: 'Pants', categoryId: '2'},
-  {id: '6', name: 'Shorts', categoryId: '2'},
-  {id: '7', name: 'Swimwear', categoryId: '2'},
-  {id: '8', name: 'Sportswear', categoryId: '2'},
-  {id: '1', name: 'Jackets', categoryId: '3'},
-  {id: '2', name: 'Shirts', categoryId: '3'},
-  {id: '3', name: 'Sweaters', categoryId: '3'},
-  {id: '4', name: 'Jeans', categoryId: '3'},
-  {id: '5', name: 'Pants', categoryId: '3'},
-  {id: '6', name: 'Shorts', categoryId: '3'},
-  {id: '7', name: 'Swimwear', categoryId: '3'},
-  {id: '8', name: 'Sportswear', categoryId: '3'},
+  {key: 'Dresses', value: 'Dresses', categoryId: '1'},
+  {key: 'Tops', value: 'Tops', categoryId: '1'},
+  {key: 'Sweater', value: 'Sweaters', categoryId: '1'},
+  {key: 'Jacket', value: 'Jackets', categoryId: '1'},
+  {key: 'Jeans', value: 'Jeans', categoryId: '1'},
+  {key: 'Pants', value: 'Pants', categoryId: '1'},
+  {key: 'Skirts', value: 'Skirts', categoryId: '1'},
+  {key: 'Swimwear', value: 'Swimwear', categoryId: '1'},
+  {key: 'Sportswear', value: 'Sportswear', categoryId: '1'},
+  {key: 'Jackets', value: 'Jackets', categoryId: '2'},
+  {key: 'Shirts', value: 'Shirts', categoryId: '2'},
+  {key: 'Sweater', value: 'Sweaters', categoryId: '2'},
+  {key: 'Jeans', value: 'Jeans', categoryId: '2'},
+  {key: 'Pants', value: 'Pants', categoryId: '2'},
+  {key: 'Shorts', value: 'Shorts', categoryId: '2'},
+  {key: 'Swimwear', value: 'Swimwear', categoryId: '2'},
+  {key: 'Sportswear', value: 'Sportswear', categoryId: '2'},
+  {key: 'Jackets', value: 'Jackets', categoryId: '3'},
+  {key: 'Shirts', value: 'Shirts', categoryId: '3'},
+  {key: 'Sweaters', value: 'Sweaters', categoryId: '3'},
+  {key: 'Jeans', value: 'Jeans', categoryId: '3'},
+  {key: 'Pants', value: 'Pants', categoryId: '3'},
+  {key: 'Shorts', value: 'Shorts', categoryId: '3'},
+  {key: 'Swimwear', value: 'Swimwear', categoryId: '3'},
+  {key: 'Sportswear', value: 'Sportswear', categoryId: '3'},
 ]
 export const Sizes = [
   {key: 'All', value: 'All', category: 'All'},

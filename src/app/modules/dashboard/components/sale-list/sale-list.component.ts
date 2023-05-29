@@ -138,7 +138,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     //
     // make chips for display in the DOM
     localStorage.setItem('displayMode', 'grid');
-
+    // Keyword that is filtered from ChipsKeywordService, then displayed in the DOM
     this.chipsKeywordService.searchKeyword$
       .pipe(untilDestroyed(this))
       .subscribe((result: any[]) => {

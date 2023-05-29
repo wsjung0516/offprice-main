@@ -63,9 +63,11 @@ export class ColorComponent {
   selectValue(data: any) {
     const value = { key: 'color', value: data.key };
     this.selected_color = data.key;
+    this.sharedMenuObservableService.input_keyword.next(data.key);
+    this.sharedMenuObservableService.color.next(data.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
-    this.sharedMenuObservableService.input_keyword.next(data.key);
+
   }
   hexToRgb(hex: string) {
     const bigint = parseInt(hex.slice(1), 16);

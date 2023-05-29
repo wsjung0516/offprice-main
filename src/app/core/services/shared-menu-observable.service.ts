@@ -10,6 +10,7 @@ export class SharedMenuObservableService {
   vendor = new BehaviorSubject<string>('All');
   price = new BehaviorSubject<string>('All');
   category = new BehaviorSubject<string>('All');
+  category1 = new BehaviorSubject<string>('All');
   size = new BehaviorSubject<string>('All');
   material = new BehaviorSubject<string>('All');
   search_period = new BehaviorSubject<string>('All');
@@ -57,8 +58,6 @@ export class SharedMenuObservableService {
   userCoupons$ = this.userCoupons.asObservable();
   isLoggedIn = new Subject<string>();
   isLoggedIn$ = this.isLoggedIn.asObservable();
-  cartegory1 = new Subject<string>();
-  cartegory1$ = this.cartegory1.asObservable();
   
   get input_keyword$() {
     return this.input_keyword.asObservable();
@@ -71,6 +70,9 @@ export class SharedMenuObservableService {
   }
   get category$() {
     return this.category.asObservable();
+  }
+  get category1$() {
+    return this.category1.asObservable();
   }
   get size$() {
     return this.size.asObservable();

@@ -14,8 +14,8 @@ import {
   distinctUntilKeyChanged,
 } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SharedMenuObservableService } from './shared-menu-observable.service';
-import { UserSaleListService } from '../../modules/dashboard/components/sale-list/user-sale-list.service';
+import { RegisterMenuObservableService } from '../../core/services/register-menu-observable.service';
+import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
@@ -25,20 +25,19 @@ import { LocalStorageService } from './local-storage.service';
 @Injectable({
   providedIn: 'root',
 })
-export class MakeTableWhereConditionService {
+export class RegisterTableWhereConditionService {
   searchResult = new Subject<any>();
 
   sort: MatSort;
   paginator: MatPaginator;
-  refreshObservable$: Observable<any> = this.sharedMenuObservableService.refreshData$;
+  refreshObservable$: Observable<any> = this.registerMenuObservableService.refreshData$;
   // refreshObservable$: Observable<any>;
   private displayModeSubject = new BehaviorSubject<string>('grid');
   displayMode$: Observable<string> = this.displayModeSubject.asObservable();
   displayMode = '';
 
   constructor(
-    //private makeObservableService: MakeObservableService,
-    private sharedMenuObservableService: SharedMenuObservableService,
+    private registerMenuObservableService: RegisterMenuObservableService,
     private userSaleListService: UserSaleListService,
     private localStorageService: LocalStorageService
   ) {}
@@ -114,7 +113,7 @@ export class MakeTableWhereConditionService {
       search_period$,
       input_keyword$,
       color$,
-    } = this.sharedMenuObservableService;
+    } = this.registerMenuObservableService;
 
     this.searchConditionObservable$ = combineLatest([
       // this.displayMode$,
@@ -134,7 +133,7 @@ export class MakeTableWhereConditionService {
         this.paginator.firstPage();
         // console.log('make-table tap', val,this.displayMode);
         // Close the mobile menu after selecting an option from the filter menu
-        this.sharedMenuObservableService.showMobileMenu.next(false);
+        this.registerMenuObservableService.showMobileMenu.next(false);
       }),
       filter(() => this.displayMode === 'list'),
       // filter(([displayMode]) => displayMode === 'list'),
@@ -157,6 +156,7 @@ export class MakeTableWhereConditionService {
   } {
     const andArray: any[] = [];
     const orArray: any[] = [];
+    console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color);
     andArray.push({ category1: category1 });
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {

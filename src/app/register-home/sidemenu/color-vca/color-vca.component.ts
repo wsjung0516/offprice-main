@@ -42,8 +42,8 @@ interface IColor {
 
       .box-size {
         width: auto;
-        padding: 0.25rem;
-        height: 2.5rem;
+        padding: 0.2rem;
+        height: 2.0rem;
         margin: 0.2rem;
         border: 1px;
         border-style: solid;

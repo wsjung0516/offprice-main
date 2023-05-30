@@ -37,6 +37,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { ColorVcaComponent } from '../sidemenu/color-vca/color-vca.component';
 import { SizeScaleVcaComponent } from '../sidemenu/size-scale-vca/size-scale-vca.component';
+import { Category1VcaComponent } from '../sidemenu/category1-vca/category1-vca.component';
 import {
   FileData,
   ImageUploadComponent,
@@ -47,8 +48,9 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { RegisterMenuObservableService } from '../core/services/register-menu-observable.service';
 import { RegisterAuthService } from 'src/app/register-home/auth/login/services/register-auth.service';
+import { Categories2, Category, Product } from 'src/app/core/constants/data-define';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
@@ -74,6 +76,7 @@ import { RegisterAuthService } from 'src/app/register-home/auth/login/services/r
     ImageUploadComponent,
     SizeScaleVcaComponent,
     errorTailorImports,
+    Category1VcaComponent
   ],
   templateUrl: './register.component.html',
   styles: [
@@ -112,7 +115,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   imgSmURLs: string[] = [];
   registerForm: FormGroup;
   vendorName: string;
-  categories = Categories;
+  categories: Product[] = [];
   sizes = Sizes;
   progress = 0;
   price = 0;
@@ -121,6 +124,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   sale_list_id = '';
   htmlText: any;
   category = '';
+  selected_category = '';
+  category1: Category = {id: '1',key : 'All',value: ''};
   size: string[] = [];
   sizeArray: string[] = [];
   material: string[] = [];
@@ -156,7 +161,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private userTokenService: UserTokenService,
     private snackBar: MatSnackBar,
     private sharedParentObservableService: SharedParentObservableService,
-    private shredMenuObservableService: SharedMenuObservableService,
+    private registerMenuObservableService: RegisterMenuObservableService,
     private authService: RegisterAuthService
   ) {}
 
@@ -167,7 +172,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     // To edit sale list
     this.calledFromSaleList();
     // Call from table-list.component.ts when complete delete sale list
-    this.shredMenuObservableService.resultDeleteSaleListItem$
+    this.registerMenuObservableService.resultDeleteSaleListItem$
       .pipe(untilDestroyed(this))
       .subscribe((sale_list_id: any) => {
         if (sale_list_id === this.sale_list_id) {
@@ -190,7 +195,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         if (id) {
           this.sale_list_id = id;
           this._saleListService.getSaleList(id).subscribe((res: SaleList) => {
-            console.log('res', res);
+            // console.log('res', res);
             // this.registerForm.patchValue(res,{emitEvent: false});
             this.registerForm.get('vendor').setValue(res.vendor);
             this.registerForm.get('price').setValue(res.price);
@@ -198,20 +203,31 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.imgURLs = res.image_urls.split(',');
             this.imgSmURLs = res.image_sm_urls.split(',');
             this.htmlText = res.description;
-            this.category = res.category;
+            this.category1 = {id:res.category1, key: '', value: ''};
             this.size = res.size.split(',');
             this.sizeArray = res.sizeArray.split(',');
             this.material = res.material.split(',');
             this.color = res.color.split(',');
             this.colorArray = res.colorArray.split(',');
             this.cd.detectChanges();
+            this.setCategory2(res);
           });
         }
       });
   }
+  private setCategory2(res: SaleList) {
+    const id = res.category1;
+    this.categories = Categories2.filter(category => category.categoryId === id);
+    this.selected_category = res.category;
+  }
+
+  
 
   ngAfterViewInit() {
     this.selectedUnit = 'USD';
+    this.categories = Categories2.filter(category => category.categoryId === '1');
+
+    this.getCategory1();
     this.getSizes();
     this.getColors();
     this.getMaterials();
@@ -239,6 +255,18 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  private getCategory1() {
+    this.registerForm
+      .get('category_1')
+      .valueChanges.pipe(untilDestroyed(this))
+      .subscribe((val: Category) => {
+        // console.log('val?', val);
+        if (val && Object.keys(val).length > 0) {
+          this.categories = Categories2.filter(category => category.categoryId === val.id);
+          this.category1 = val;
+        }
+      });
+  }
   private getMaterials() {
     this.registerForm
       .get('material')
@@ -275,7 +303,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       .valueChanges.pipe(untilDestroyed(this))
       .subscribe((val: any[]) => {
         this.nSizes = [];
-        console.log('size ---?', val);
+        //console.log('size ---?', val);
         if (val?.length > 0) {
           val.forEach((element: any) => {
             this.nSizes.push({ name: element.name, value: 0 });
@@ -307,6 +335,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       price: ['', Validators.required],
       size: ['', Validators.required],
       category: ['', Validators.required],
+      category_1: ['', Validators.required],
       material: ['', Validators.required],
       color: ['', Validators.required],
       image_urls: [''],
@@ -428,6 +457,7 @@ vendor:"bbb"
       vendor: data.vendor,
       price: data.price,
       category: data.category,
+      category1: this.category1.id,
       size: tSize.join(','),
       sizeArray: tSizeArray.join(','),
       color: tColor.join(','),
@@ -450,7 +480,7 @@ vendor:"bbb"
   deleteItem() {
     // Call to table-list component to delete item
     console.log('deleteItem', this.sale_list_id);
-    this.shredMenuObservableService.deleteSaleListItem.next(
+    this.registerMenuObservableService.deleteSaleListItem.next(
       this.sale_list_id.toString()
     );
   }

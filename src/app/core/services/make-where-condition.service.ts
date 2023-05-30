@@ -161,7 +161,7 @@ export class MakeWhereConditionService {
   ]: [string, string, string, string, string, string, string, string, string]): {
     where: { and: any[]; or: any[] };
   } {
-    console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color)
+    // console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color)
     const andArray: any[] = [];
     const orArray: any[] = [];
     andArray.push({ category1: category1 });

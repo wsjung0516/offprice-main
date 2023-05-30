@@ -15,7 +15,7 @@ import {
 import { Sizes } from 'src/app/register-home/core/constants/data-define';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { pipe } from 'rxjs';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+// import { RegisterMenuObservableService } from '../../core/services/register-menu-observable.service';
 interface ISize {
   name: string;
   active: boolean;
@@ -52,9 +52,9 @@ interface ISize {
       }
       .box-size {
         width: auto;
-        height: 2.5rem;
+        height: 2.0rem;
         margin: 0.2rem;
-        padding: 0.5rem;
+        padding: 0.25rem;
         border: 1px;
         border-style: solid;
         border-color: gray;
@@ -138,12 +138,12 @@ export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit {
       size.selected = false;
       // size.element?.classList.remove('bg-yellow-500');
     }
-    console.log('this.onChange(this.aSizes);', this.onChange);
+    // console.log('this.onChange(this.aSizes);', this.onChange);
     this.onChange(this.aSizes.filter((size) => size.selected === true));
   }
   handleSubmit(sizes: ISize[]): void {
     const selectedSizes = sizes.filter((size) => size.selected);
-    console.log(selectedSizes);
+    // console.log(selectedSizes);
   }
 
   handleClick(size: ISize): void {

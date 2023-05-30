@@ -44,14 +44,16 @@ import { SearchPeriodComponent } from '../sidemenu/search-period/search-period.c
 import { ColorComponent } from '../sidemenu/color/color.component';
 import {
   SearchKeyword,
-  ChipsKeywordService,
-} from 'src/app/core/services/chips-keyword.service';
+  RegisterChipsKeywordService,
+} from '../core/services/register-chips-keyword.service';
 // import { ChipListComponent } from './chip-list/chip-list.component';
 import { TableListComponent } from '../table-list/table-list.component';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { RegisterMenuObservableService } from '../core/services/register-menu-observable.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
-import { InputKeywordComponent } from 'src/app/modules/layout/components/sidebar/input-keyword/input-keyword.component';
+import { RegisterRemoveChipsKeywordService } from '../core/services/register-remove-chips-keyword.service';
+import { RegisterInputKeywordComponent } from '../core/components/register-input-keyword/register-input-keyword.component';
+import { Category1MenuComponent } from '../sidemenu/category1-menu/category1-menu.component';
+import { CategoryMenuComponent } from '../sidemenu/category-menu/category-menu.component';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
 @UntilDestroy()
 @Component({
@@ -73,8 +75,10 @@ import { InputKeywordComponent } from 'src/app/modules/layout/components/sidebar
     MatChipsModule,
     // ChipListComponent,
     TableListComponent,
-    InputKeywordComponent,
-    ColorComponent
+    RegisterInputKeywordComponent,
+    ColorComponent,
+    Category1MenuComponent,
+    CategoryMenuComponent,
   ],
   templateUrl: './sale-list.component.html',
   styleUrls: ['./sale-list.component.css'],
@@ -104,16 +108,16 @@ export class SaleListComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private sharedMenuObservableService: SharedMenuObservableService,
-    private chipsKeywordService: ChipsKeywordService,
+    private registerMenuObservableService: RegisterMenuObservableService,
+    private registerChipsKeywordService: RegisterChipsKeywordService,
     private cd: ChangeDetectorRef,
-    private removeChipsKeywordService: RemoveChipsKeywordService
+    private registerRemoveChipsKeywordService: RegisterRemoveChipsKeywordService
   ) {
     // Assign the data to the data source for the table to render
     // this.dataSource = new MatTableDataSource(this.saleLists);
   }
   ngOnInit(): void {
-    this.sharedMenuObservableService.reset_input_keyword$
+    this.registerMenuObservableService.reset_input_keyword$
       .pipe(untilDestroyed(this))
       .subscribe((data) => {
         this.reset();
@@ -146,9 +150,10 @@ export class SaleListComponent implements OnInit {
     );
   }
   subscribeToSearchKeywords(): void {
-    this.chipsKeywordService.searchKeyword$
+    this.registerChipsKeywordService.searchKeyword$
       .pipe(untilDestroyed(this))
       .subscribe((result: any[]) => {
+        console.log('subscribeToSearchKeywords', result);
         this.keywords = result.filter(
           (obj) =>
             (obj.value !== '' && obj.key === 'input_keyword') ||
@@ -186,7 +191,7 @@ export class SaleListComponent implements OnInit {
     this.cd.detectChanges();
   }
   async removeChipsKeyword(keyword: SearchKeyword) {
-    await this.removeChipsKeywordService.resetSearchKeyword(keyword);
+    await this.registerRemoveChipsKeywordService.resetSearchKeyword(keyword);
     if (keyword['key'] === 'input_keyword') {
     }
   }

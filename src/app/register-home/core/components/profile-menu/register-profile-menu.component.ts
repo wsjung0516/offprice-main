@@ -14,7 +14,7 @@ import { SessionStorageService } from 'src/app/core/services/session-storage.ser
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RegisterAuthService } from 'src/app/register-home/auth/login/services/register-auth.service';
 import { Router } from '@angular/router';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { RegisterMenuObservableService } from '../../../core/services/register-menu-observable.service';
 import { UserService } from 'src/app/user/user.service';
 import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.directive';
 import { Title } from '@angular/platform-browser';
@@ -50,7 +50,7 @@ export class RegisterProfileMenuComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private router: Router,
-    private sharedMenuObservableService: SharedMenuObservableService,
+    private registerMenuObservableService: RegisterMenuObservableService,
     private userService: UserService,
     private titleService: Title
   ) {}
@@ -115,7 +115,7 @@ export class RegisterProfileMenuComponent implements OnInit, AfterViewInit {
       });
       this.router.navigate(['/']);
       const userId:any = this.sessionStorageService.getItem('userId');
-      this.sharedMenuObservableService.isLoggedIn.next(userId.user_id);
+      this.registerMenuObservableService.isLoggedIn.next(userId.user_id);
     } else {
       this.router.navigate(['/login']);
       this.toggleDropdown();

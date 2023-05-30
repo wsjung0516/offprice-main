@@ -12,6 +12,8 @@
 
 <div class="">
   <div class="ml-2">
+    <app-category1-menu></app-category1-menu>
+    <app-category-menu></app-category-menu>
     <form [formGroup]="userForm">
       <div class="">
         <div class="flex items-center sm:justify-start overflow-x-auto">
@@ -24,7 +26,7 @@
             Vendor
           </div>
           <div (click)="onPrice()" #price class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Price</div>
-          <div (click)="onCategory()" #category class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Category</div>
+          <!-- <div (click)="onCategory()" #category class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Category</div> -->
           <div (click)="onSize()" #size class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Size</div>
           <div (click)="onMaterial()" #material class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Material</div>
           <div (click)="onSearchPeriod()" #search_period class="ml-2 p-2 w-auto h-10 rounded border-2 border-gray-600 text-md items-center flex justify-center cursor-pointer hover:bg-blue-300">Search_Period</div>

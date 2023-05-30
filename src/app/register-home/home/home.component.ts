@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { RegisterMenuObservableService } from '../core/services/register-menu-observable.service';
 // import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
 import { RegisterAuthService } from '../auth/login/services/register-auth.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(
     public dialog: MatDialog,
     private removeChipsKeywordService: RemoveChipsKeywordService,
-    private sharedMenuObservableService: SharedMenuObservableService,
+    private registerMenuObservableService: RegisterMenuObservableService,
     private authService: RegisterAuthService,
     private auth: AngularFireAuth,
     private cd: ChangeDetectorRef,
@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     console.log('Register HomeComponent ngOnInit');
     this.resetLogoutTimer();
-    this.sharedMenuObservableService.closeFeedback$
+    this.registerMenuObservableService.closeFeedback$
       .pipe(untilDestroyed(this))
       .subscribe((close) => {
         const dialogOverlay = document.getElementById('dialog-overlay');
@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     //
     this.titleService.setTitle('Register');
-    this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
+    this.registerMenuObservableService.userCoupons$.subscribe((coupon) => {
       if (coupon) {
         console.log('userCoupons', coupon);
         this.userCoupons = coupon;
@@ -178,7 +178,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.resetKeyword();
   }
   resetKeyword() {
-    const service = this.sharedMenuObservableService;
+    const service = this.registerMenuObservableService;
     const filters: any[] = [
       //   { name: 'vendor', subject: service.vendor, defaultValue: 'All' },
       {

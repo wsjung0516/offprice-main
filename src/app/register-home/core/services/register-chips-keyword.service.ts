@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, from, toArray } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SharedMenuObservableService } from './shared-menu-observable.service';
+import { RegisterMenuObservableService } from './register-menu-observable.service';
 
 export interface SearchKeyword {
   [key: string]: string;
@@ -10,18 +10,18 @@ export interface SearchKeyword {
 @Injectable({
   providedIn: 'root',
 })
-export class ChipsKeywordService {
+export class RegisterChipsKeywordService {
   keywords: SearchKeyword[] = [];
   // keywords: {[key:string]:string}[] = [];
   private searchKeyword = new BehaviorSubject<SearchKeyword[]>([]);
   searchKeyword$ = this.searchKeyword.asObservable();
 
   constructor(
-    private sharedMenuObservableService: SharedMenuObservableService
+    private registerMenuObservableService: RegisterMenuObservableService
   ) {}
   // add keyword ot search keyword array
   addChipKeyword(searchKeyword: { key: string; value: string }) {
-    // console.log('addChipKeyword: ', searchKeyword)
+    console.log('addChipKeyword: ', searchKeyword)
     if (!this.keywords.some((obj) => obj['key'] === searchKeyword.key)) {
       this.keywords.push({
         key: searchKeyword.key,
@@ -49,9 +49,9 @@ export class ChipsKeywordService {
           this.keywords = obj;
           this.searchKeyword.next(obj);
           // Reset value in the makeWhereConditionService
-          if(searchKeyword.key === 'size')this.sharedMenuObservableService.size.next('All');
-          if(searchKeyword.key === 'color')this.sharedMenuObservableService.color.next('All');
-          if(searchKeyword.key === 'material')this.sharedMenuObservableService.material.next('All');
+          if(searchKeyword.key === 'size')this.registerMenuObservableService.size.next('All');
+          if(searchKeyword.key === 'color')this.registerMenuObservableService.color.next('All');
+          if(searchKeyword.key === 'material')this.registerMenuObservableService.material.next('All');
         });
     }
   }

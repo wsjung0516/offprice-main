@@ -1,7 +1,7 @@
 <form [formGroup]="registerForm" errorTailor>
   <div class="grid-container grid md:grid-cols-2 gap-2 xl:grid-cols-3">
     <div class=" bg-blue-50">
-      <div class="m-2">
+      <div class="ml-2">
         <!-- image upload -->
         <app-image-upload formControlName="image_urls"
         [registerStatus]="registerStatus"
@@ -15,8 +15,8 @@
     <div class="bg-blue-50">
       <div class="">
         <!-- Product Name  -->
-        <div class="m-2">
-          <p><span class="text-xl font-bold">Product Name</span></p>
+        <div class="ml-2">
+          <p><span class="font-bold">Product Name</span></p>
           <mat-form-field class="w-full">
             <mat-label>Product Name</mat-label>
             <input matInput type="text" formControlName="product_name" />
@@ -24,8 +24,8 @@
         </div>
         <!-- Product Name b-1 -->
         <!-- Vendor Name b-1 -->
-        <div class="m-2">
-          <p><span class="text-xl font-bold">Vendor</span></p>
+        <div class="ml-2">
+          <p><span class="font-bold">Vendor</span></p>
           <mat-form-field class="w-full">
             <mat-label>Vendor Name</mat-label>
             <input matInput type="text" formControlName="vendor" />
@@ -33,9 +33,9 @@
         </div>
         <!-- Vendor Name b-1 -->
         <!-- Price -->
-        <div class="m-2">
-          <p><span class="text-xl font-bold">Price</span></p>
-          <div class="container mx-auto p-1">
+        <div class="ml-2">
+          <p><span class="font-bold">Price</span></p>
+          <div class="container mx-auto">
             <div class="flex items-center">
               <div class="w-4/5 mr-2">
                 <mat-form-field  class="w-full">
@@ -58,10 +58,15 @@
         </div>
 
         <!-- Price -->
-        <!-- Category -->
-        <p class="m-2"><span class="text-xl font-bold">Category</span></p>
+        <!-- Category1 -->
+        <p class="ml-2"><span class="font-bold">Category1</span></p>
         <div class="m-2 overflow-y-auto">
-          <app-category-vca [category]="category" [reset_category]="reset_category" formControlName="category"></app-category-vca>
+          <app-category1-vca [category1]="category1"  formControlName="category_1"></app-category1-vca>
+        </div>
+        <!-- Category2 -->
+        <p class="ml-2"><span class="font-bold">Category2</span></p>
+        <div class="m-2 overflow-y-auto">
+          <app-category-vca [categories]="categories" [reset_category]="reset_category" [selected_category_data]="selected_category" formControlName="category"></app-category-vca>
         </div>
         <!-- Count -->
         <!-- Editor for comment -->
@@ -76,7 +81,7 @@
       <div class="">
 
         <!-- Size c-1 -->
-        <p class="m-2 mt-4"><span class="text-xl font-bold">Size</span></p>
+        <p class="m-2 mt-4"><span class="font-bold">Size</span></p>
         <!-- <div class="">
           <app-size-scale-vca formControlName="size"></app-size-scale-vca>
         </div> -->
@@ -101,13 +106,13 @@
         </ng-container>
         <!-- Size -->
         <!-- Material c-1 -->
-        <p class="m-2 mt-4"><span class="text-xl font-bold">Material</span></p>
+        <p class="m-2 mt-4"><span class="font-bold">Material</span></p>
         <div class="m-2 overflow-y-auto">
           <app-material-vca [selectedMaterial]="material" [reset_material]="reset_material" formControlName="material"></app-material-vca>
         </div>
         <!-- Material c-1 -->
         <!-- Color -->
-        <p class="m-2 mt-4"><span class="text-xl font-bold">Color</span></p>
+        <p class="m-2 mt-4"><span class="font-bold">Color</span></p>
         <div class="m-2 overflow-y-auto">
           <app-color-vca [selectedColor]="color" [reset_color]="reset_color" formControlName="color"></app-color-vca>
         </div>

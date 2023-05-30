@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
+import { RegisterTableWhereConditionService } from '../core/services/register-table-where-condition.service';
 import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SaleListService } from 'src/app/register-home/sale-list/sale-list.service';
@@ -29,7 +29,7 @@ import { DialogService } from '@ngneat/dialog';
 import { DescriptionDetailDirective } from 'src/app/core/directives/description-detail.directive';
 import { ImageDetailDirective } from 'src/app/core/directives/image-detail.directive';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { RegisterMenuObservableService } from '../core/services/register-menu-observable.service';
 
 @UntilDestroy()
 @Component({
@@ -98,7 +98,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
   userSaleList: UserSaleList;
 
   constructor(
-    private makeTableWhereConditionService: MakeTableWhereConditionService,
+    private registerTableWhereConditionService: RegisterTableWhereConditionService,
     private userSaleListService: UserSaleListService,
     private saleListService: SaleListService,
     private router: Router,
@@ -106,14 +106,14 @@ export class TableListComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private dialogService: DialogService,
     private snackBar: MatSnackBar,
-    private sharedMenuObservableService: SharedMenuObservableService
+    private registerMenuObservableService: RegisterMenuObservableService
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
     console.log('table-list ngOnInit');
     localStorage.setItem('displayMode', 'list');
-    this.sharedMenuObservableService.deleteSaleListItem$
+    this.registerMenuObservableService.deleteSaleListItem$
       .pipe(untilDestroyed(this))
       .subscribe((sale_list_id: string) => {
         console.log('deleteSaleListItem$', sale_list_id);
@@ -121,15 +121,15 @@ export class TableListComponent implements OnInit, AfterViewInit {
       });
   }
   ngAfterViewInit(): void {
-    this.makeTableWhereConditionService.initializeWhereCondition(
+    this.registerTableWhereConditionService.initializeWhereCondition(
       this.sort,
       this.paginator
     );
-    this.makeTableWhereConditionService.setRefreshObservable(
+    this.registerTableWhereConditionService.setRefreshObservable(
       this.refreshObservable
     );
     //
-    this.makeTableWhereConditionService.searchResult$
+    this.registerTableWhereConditionService.searchResult$
       .pipe(untilDestroyed(this))
       .subscribe((data: UserSaleList[]) => {
         // console.log('condition$', data);
@@ -203,7 +203,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
           .subscribe(
             (data: any) => {
               // console.log('deleted---', data);
-              this.sharedMenuObservableService.resultDeleteSaleListItem.next(
+              this.registerMenuObservableService.resultDeleteSaleListItem.next(
                 saleListId
               );
               this.snackBar.open('Deleted Successfully', 'Close', {

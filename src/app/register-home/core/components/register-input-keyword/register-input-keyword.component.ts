@@ -56,7 +56,7 @@ import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-ke
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputKeywordComponent implements OnInit, AfterViewInit {
+export class RegisterInputKeywordComponent implements OnInit, AfterViewInit {
   inputWord: any;
   inputKeyword = '';
   constructor(

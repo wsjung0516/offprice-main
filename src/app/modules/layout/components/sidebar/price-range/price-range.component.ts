@@ -54,12 +54,12 @@ export class PriceRangeComponent {
   priceRange: any;
   priceRanges = [...APrice];
   constructor(
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
     private cd: ChangeDetectorRef
   ) {}
   ngOnInit() {
-    this.SharedMenuObservableService.reset_price$
+    this.sharedMenuObservableService.reset_price$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
@@ -69,7 +69,7 @@ export class PriceRangeComponent {
   selectValue(price: any) {
     const value = { key: 'price', value: price.key };
     this.priceRange = price.value;
-    this.SharedMenuObservableService.price.next(price.value);
+    this.sharedMenuObservableService.price.next(price.value);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     // this.favoriteSeason = data;

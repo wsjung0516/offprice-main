@@ -68,7 +68,7 @@ export class SaleListHeaderComponent
     private localStorageService: LocalStorageService,
     private cd: ChangeDetectorRef,
     private chipsKeywordService: ChipsKeywordService,
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private router: Router,
     private removeChipsKeywordService: RemoveChipsKeywordService
   ) {
@@ -137,7 +137,7 @@ export class SaleListHeaderComponent
     this.cd.detectChanges();
     localStorage.setItem('displayMode', this.displayMode);
     // this.localStorageService.setItem('displayMode', this.displayMode);
-    this.SharedMenuObservableService.gotoHome.next('');
+    this.sharedMenuObservableService.gotoHome.next('');
   }
 
   ngOnDestroy() {

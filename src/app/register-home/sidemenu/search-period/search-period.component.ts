@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { ESearchPeriod } from 'src/app/register-home/core/constants/data-define';
-import { RegisterChipsKeywordService } from '../../core/services/register-chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from '../show-menu-dialog-component/show-menu-dialog-component';
-import { RegisterMenuObservableService } from '../../core/services/register-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-search-period',
@@ -44,14 +44,14 @@ export class SearchPeriodComponent {
   @Input() dialogRef: MatDialogRef<ShowMenuDialogComponent>;
   periods: typeof ESearchPeriod = ESearchPeriod;
   constructor(
-    private registerChipsKeywordService: RegisterChipsKeywordService,
-    private registerMenuObservableService: RegisterMenuObservableService
+    private chipsKeywordService: ChipsKeywordService,
+    private sharedMenuObservableService: SharedMenuObservableService
   ) {}
   selectValue(data: any) {
     const value = { key: 'search_period', value: data.key };
-    this.registerChipsKeywordService.removeChipKeyword(value);
-    this.registerChipsKeywordService.addChipKeyword(value);
-    this.registerMenuObservableService.search_period.next(data.value);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
+    this.sharedMenuObservableService.search_period.next(data.value);
     this.dialogRef.close();
   }
 }

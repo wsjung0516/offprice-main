@@ -12,47 +12,47 @@ import { Categories1, Category } from 'src/app/core/constants/data-define';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-  <div class="bg-gray-200 px-1 py-1 flex items-center">
-    <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide">
-      <div class="inline-flex" [style.margin-left.px]="scrollOffset">
-        <ng-container *ngFor="let button of categories">
-          <button
-            mat-button-toggle
-            class="border-2 border-transparent rounded-full mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
-            [ngClass]="{ selected: selected_category.id === button.id }"
-            [value]="button"
-            (click)="selectValue(button)"
-          >
-            <span class="text-sm">{{ button.key }}</span>
-          </button>
-        </ng-container>
+    <div class="bg-gray-200 px-1 py-1 flex items-center">
+      <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <div class="inline-flex" [style.margin-left.px]="scrollOffset">
+          <ng-container *ngFor="let button of categories">
+            <button
+              mat-button-toggle
+              class="border-1 border-transparent rounded-full mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
+              [ngClass]="{ selected: selected_category.id === button.id }"
+              [value]="button"
+              (click)="selectValue(button)"
+            >
+              <span class="text-sm">{{ button.key }}</span>
+            </button>
+          </ng-container>
+        </div>
       </div>
     </div>
-  </div>
-`,
-styles: [`
-    .button-group {
-      border: 1px solid #ccc;
-      padding: 1px 6px;
-      background-color: #fff;
-      color: #333;
-      font-size: 8px;
-    }
+  `,
+  styles: [
+    `
+      .button-group {
+        border: 1px solid #ccc;
+        padding: 1px 6px;
+        background-color: #fff;
+        color: #333;
+        font-size: 8px;
+      }
 
-    .button-group.selected {
-      background-color: green;
-      color: #fff;
-    }
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
-    }
+      .button-group.selected {
+        background-color: green;
+        color: #fff;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
 
-    /* For IE, Edge and Firefox */
-    .scrollbar-hide {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
-    }
-
+      /* For IE, Edge and Firefox */
+      .scrollbar-hide {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
     `,
   ],
   providers: [
@@ -72,7 +72,7 @@ export class Category1VcaComponent implements ControlValueAccessor {
   onChange: any = () => {};
   onTouch: any = () => {};
   categories = Categories1;
-  selected_category:Category;
+  selected_category: Category;
 
   selectValue(category: Category) {
     this.selected_category = category;

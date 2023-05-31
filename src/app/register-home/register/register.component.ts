@@ -48,9 +48,13 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
-import { RegisterMenuObservableService } from '../core/services/register-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { RegisterAuthService } from 'src/app/register-home/auth/login/services/register-auth.service';
-import { Categories2, Category, Product } from 'src/app/core/constants/data-define';
+import {
+  Categories2,
+  Category,
+  Product,
+} from 'src/app/core/constants/data-define';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
@@ -76,7 +80,7 @@ import { Categories2, Category, Product } from 'src/app/core/constants/data-defi
     ImageUploadComponent,
     SizeScaleVcaComponent,
     errorTailorImports,
-    Category1VcaComponent
+    Category1VcaComponent,
   ],
   templateUrl: './register.component.html',
   styles: [
@@ -125,7 +129,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   htmlText: any;
   category = '';
   selected_category = '';
-  category1: Category = {id: '1',key : 'All',value: ''};
+  category1: Category = { id: '1', key: 'All', value: '' };
   size: string[] = [];
   sizeArray: string[] = [];
   material: string[] = [];
@@ -161,7 +165,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private userTokenService: UserTokenService,
     private snackBar: MatSnackBar,
     private sharedParentObservableService: SharedParentObservableService,
-    private registerMenuObservableService: RegisterMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private authService: RegisterAuthService
   ) {}
 
@@ -172,7 +176,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     // To edit sale list
     this.calledFromSaleList();
     // Call from table-list.component.ts when complete delete sale list
-    this.registerMenuObservableService.resultDeleteSaleListItem$
+    this.sharedMenuObservableService.resultDeleteSaleListItem$
       .pipe(untilDestroyed(this))
       .subscribe((sale_list_id: any) => {
         if (sale_list_id === this.sale_list_id) {
@@ -203,7 +207,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.imgURLs = res.image_urls.split(',');
             this.imgSmURLs = res.image_sm_urls.split(',');
             this.htmlText = res.description;
-            this.category1 = {id:res.category1, key: '', value: ''};
+            this.category1 = { id: res.category1, key: '', value: '' };
             this.size = res.size.split(',');
             this.sizeArray = res.sizeArray.split(',');
             this.material = res.material.split(',');
@@ -217,15 +221,17 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   private setCategory2(res: SaleList) {
     const id = res.category1;
-    this.categories = Categories2.filter(category => category.categoryId === id);
+    this.categories = Categories2.filter(
+      (category) => category.categoryId === id
+    );
     this.selected_category = res.category;
   }
 
-  
-
   ngAfterViewInit() {
     this.selectedUnit = 'USD';
-    this.categories = Categories2.filter(category => category.categoryId === '1');
+    this.categories = Categories2.filter(
+      (category) => category.categoryId === '1'
+    );
 
     this.getCategory1();
     this.getSizes();
@@ -262,7 +268,9 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((val: Category) => {
         // console.log('val?', val);
         if (val && Object.keys(val).length > 0) {
-          this.categories = Categories2.filter(category => category.categoryId === val.id);
+          this.categories = Categories2.filter(
+            (category) => category.categoryId === val.id
+          );
           this.category1 = val;
         }
       });
@@ -480,7 +488,7 @@ vendor:"bbb"
   deleteItem() {
     // Call to table-list component to delete item
     console.log('deleteItem', this.sale_list_id);
-    this.registerMenuObservableService.deleteSaleListItem.next(
+    this.sharedMenuObservableService.deleteSaleListItem.next(
       this.sale_list_id.toString()
     );
   }

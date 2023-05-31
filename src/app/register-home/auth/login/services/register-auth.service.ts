@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GoogleAuthProvider, FacebookAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { RegisterMenuObservableService } from '../../../core/services/register-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 // import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 //import { UserService } from 'src/app/register-home/user-profile/user.service';
 import jwt_decode from 'jwt-decode';
@@ -23,7 +23,7 @@ export class RegisterAuthService {
   constructor(
     private fireauth: AngularFireAuth,
     private router: Router,
-    private registerMenuObservableService: RegisterMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private userService: UserService,
     private sessionStorageService: SessionStorageService,
     private matSnackBar: MatSnackBar,
@@ -127,7 +127,7 @@ export class RegisterAuthService {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
             this.sessionStorageService.removeItem('isRegisterLoggedIn');
-            this.registerMenuObservableService.isLoggedOut.next(true);
+            this.sharedMenuObservableService.isLoggedOut.next(true);
 
             this.router.navigate(['/register-home/login']);
           }
@@ -224,7 +224,7 @@ export class RegisterAuthService {
           );
           this.logout();
         }
-        this.registerMenuObservableService.userCoupons.next(
+        this.sharedMenuObservableService.userCoupons.next(
           ret.quantity.toString()
         );
       } else {

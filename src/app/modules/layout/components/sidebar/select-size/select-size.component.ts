@@ -21,10 +21,10 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
         <button
           #buttonRef
           class="box-size flex items-center justify-center cursor-pointer"
-          [ngClass]="{ 
+          [ngClass]="{
             'bg-blue-200': size.category === 'US',
             'bg-green-200': size.category === 'KR'
-           }"
+          }"
           (click)="selectSize(size)"
         >
           {{ size.key }}
@@ -66,11 +66,11 @@ export class SelectSizeComponent {
   >;
 
   constructor(
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService
   ) {}
   ngOnInit() {
-    this.SharedMenuObservableService.reset_size$
+    this.sharedMenuObservableService.reset_size$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
@@ -81,8 +81,8 @@ export class SelectSizeComponent {
     // console.log('selectSize', size);
     const value = { key: 'size', value: size.key };
     this.selected_size = size.key;
-    this.SharedMenuObservableService.input_keyword.next(size.key);
-    this.SharedMenuObservableService.size.next(size.key);
+    this.sharedMenuObservableService.input_keyword.next(size.key);
+    this.sharedMenuObservableService.size.next(size.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     if (size.key === 'All') {

@@ -124,9 +124,8 @@ export class MakeWhereConditionService {
       tap((val) => {
         this.displayMode = localStorage.getItem('displayMode');
         // console.log('make-where-observable : ', val, this.displayMode);
-                // Close the mobile menu after selecting an option from the filter menu
+        // Close the mobile menu after selecting an option from the filter menu
         this.sharedMenuObservableService.showMobileMenu.next(false);
-
       }),
       filter(() => this.displayMode === 'grid'),
       // filter(([displayMode]) => displayMode === 'grid'),
@@ -158,7 +157,17 @@ export class MakeWhereConditionService {
     search_period,
     input_keyword,
     color,
-  ]: [string, string, string, string, string, string, string, string, string]): {
+  ]: [
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string
+  ]): {
     where: { and: any[]; or: any[] };
   } {
     // console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color)
@@ -171,9 +180,9 @@ export class MakeWhereConditionService {
       andArray.push({ price: { gt: +pric[0], lt: +pric[1] } });
     }
     if (category !== 'All') andArray.push({ category: category });
-    if (size !== 'All') andArray.push({ size: {contains:size} });
-    if (material !== 'All') andArray.push({ material: {contains:material}});
-    if (color !== 'All') andArray.push({ color: {contains:color }});
+    if (size !== 'All') andArray.push({ size: { contains: size } });
+    if (material !== 'All') andArray.push({ material: { contains: material } });
+    if (color !== 'All') andArray.push({ color: { contains: color } });
     if (search_period !== 'All') {
       const day: number = +search_period;
       andArray.push({
@@ -187,7 +196,7 @@ export class MakeWhereConditionService {
       });
     }
     if (input_keyword !== '') {
-      console.log('input_keyword', input_keyword)
+      console.log('input_keyword', input_keyword);
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ store_name: { contains: input_keyword } });
       orArray.push({ product_name: { contains: input_keyword } });
@@ -258,6 +267,6 @@ export class MakeWhereConditionService {
     );
   }
   resetService() {
-    // this.SharedMenuObservableService
+    // this.sharedMenuObservableService
   }
 }

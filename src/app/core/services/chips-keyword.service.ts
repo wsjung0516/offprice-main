@@ -49,9 +49,9 @@ export class ChipsKeywordService {
           this.keywords = obj;
           this.searchKeyword.next(obj);
           // Reset value in the makeWhereConditionService
-          if(searchKeyword.key === 'size')this.sharedMenuObservableService.size.next('All');
-          if(searchKeyword.key === 'color')this.sharedMenuObservableService.color.next('All');
-          if(searchKeyword.key === 'material')this.sharedMenuObservableService.material.next('All');
+          // if(searchKeyword.key === 'size')this.sharedMenuObservableService.size.next('All');
+          // if(searchKeyword.key === 'color')this.sharedMenuObservableService.color.next('All');
+          // if(searchKeyword.key === 'material')this.sharedMenuObservableService.material.next('All');
         });
     }
   }

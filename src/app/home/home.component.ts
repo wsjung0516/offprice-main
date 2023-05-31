@@ -14,7 +14,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserFeedbackComponent } from '../core/components/user-feedback/user-feedback.component';
 import { UserService } from '../user/user.service';
 import { CartItemsService } from '../core/components/cart-items/cart-items.service';
-import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { AuthService } from '../core/auth/login/services/auth.service';
 import { UserTokenService } from '../core/services/user-token.service';
 import { DialogService } from '@ngneat/dialog';
@@ -54,8 +54,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private userTokenService: UserTokenService,
     private dialogService: DialogService,
     private sessionStorageService: SessionStorageService,
-    private titleService: Title,
-  
+    private titleService: Title
   ) {}
   async ngOnInit() {
     // this.loggedUser = this.sessionStorageService.getItem('token');

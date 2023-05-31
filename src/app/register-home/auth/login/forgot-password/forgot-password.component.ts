@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
       <div class="max-w-md">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div class="mb-8">
-            <h1 class="m-3 text-3xl font-bold">Forgot password</h1>
+            <h1 class="m-3 text-2xl font-bold">Forgot password</h1>
           </div>
           <form>
             <div class="mb-4">

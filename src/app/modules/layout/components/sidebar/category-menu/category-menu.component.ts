@@ -1,9 +1,18 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { Categories, Categories2, Product } from 'src/app/core/constants/data-define';
+import {
+  Categories,
+  Categories2,
+  Product,
+} from 'src/app/core/constants/data-define';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { Subscription } from 'rxjs';
@@ -21,7 +30,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
           <ng-container *ngFor="let button of categories">
             <button
               mat-button-toggle
-              class="border-2 border-transparent rounded-full py-2 px-4 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
+              class="border-1 border-transparent rounded-full py-2 px-4 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
               [ngClass]="{ selected: selected_category.key === button.key }"
               [value]="button"
               (click)="onSelect(button)"
@@ -94,11 +103,12 @@ export class CategoryMenuComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     let cat = '';
     this.sharedMenuObservableService.category1$
-    .pipe(untilDestroyed(this)).subscribe((id) => {
-      cat = id;
-      this.categories = Categories2.filter((item) => item.categoryId === cat);
-      this.cd.detectChanges();
-    });
+      .pipe(untilDestroyed(this))
+      .subscribe((id) => {
+        cat = id;
+        this.categories = Categories2.filter((item) => item.categoryId === cat);
+        this.cd.detectChanges();
+      });
   }
   onSelect(category: any) {
     this.selected_category = category;

@@ -32,6 +32,7 @@ import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-item
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { DialogService } from '@ngneat/dialog';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Title } from '@angular/platform-browser';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -94,7 +95,8 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
     private sessionStorageService: SessionStorageService,
     private dialogService: DialogService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private titleService: Title
   ) {
     this.screenSize$ = this.screenSizeService.screenSize$;
     this.updateViewportHeight();
@@ -159,6 +161,8 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngAfterViewInit() {
     //
+    this.titleService.setTitle('offPrice.store');
+
     this.makeWhereConditionService.condition$
       .pipe(untilDestroyed(this))
       .subscribe((data: SaleList[]) => {

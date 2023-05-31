@@ -1,4 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Categories1 } from 'src/app/core/constants/data-define';
@@ -8,14 +12,14 @@ import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-o
   selector: 'app-category1-menu',
   standalone: true,
   imports: [CommonModule, MatIconModule],
-template: `
-    <div class="bg-gray-200 px-1 py-1 flex items-center">
+  template: `
+    <div class="bg-gray-100 px-1 py-1 flex items-center">
       <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide">
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
           <ng-container *ngFor="let button of categories">
             <button
               mat-button-toggle
-              class="border-2 border-transparent rounded-full mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
+              class="border-1 border-transparent rounded-full mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
               [ngClass]="{ selected: selected_category.id === button.id }"
               [value]="button"
               (click)="onSelect(button)"
@@ -27,7 +31,8 @@ template: `
       </div>
     </div>
   `,
-  styles: [`
+  styles: [
+    `
       .button-group {
         border: 1px solid #ccc;
         padding: 1px 6px;
@@ -49,24 +54,22 @@ template: `
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
       }
-  
-  `
+    `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Category1MenuComponent implements AfterViewInit{
+export class Category1MenuComponent implements AfterViewInit {
   constructor(
-    private sharedMenuObservableService: SharedMenuObservableService,
-  ) { }
+    private sharedMenuObservableService: SharedMenuObservableService
+  ) {}
   categories = Categories1;
   buttonWidth = 40;
   scrollDistance = 200;
   scrollOffset = 0;
   selected_category: any = { id: '1', value: 'All' };
   ngAfterViewInit(): void {
-    this.onSelect({id:'1'})
-    setTimeout(()=>{
-    });
+    this.onSelect({ id: '1' });
+    setTimeout(() => {});
   }
   onSelect(category: any) {
     this.selected_category = category;

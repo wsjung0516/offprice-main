@@ -1,4 +1,4 @@
-<nav class="bg-blue-600">
+<nav class="bg-gray-200">
   <div class="mx-auto px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
       <div class="absolute inset-y-0 left-0 flex items-center">
@@ -6,7 +6,7 @@
         <div class="sm:hidden flex justify-between">
           <button
             type="button"
-            class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+            class="inline-flex items-center justify-center rounded-md p-2 text-blue-600 hover:border-blue-700 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-bluewhite"
             aria-controls="mobile-menu"
             aria-expanded="false"
             (click)="mobileMenuOpen()"
@@ -51,13 +51,6 @@
               />
             </svg>
           </button>
-          <div
-            class="mt-1 flex items-center justify-center w-10 h-10 rounded bg-blue-800"
-          >
-            <button mat-icon-button (click)="gotoHome()">
-              <mat-icon class="text-white mt-2">home</mat-icon>
-            </button>
-          </div>
         </div>
       </div>
       <div
@@ -68,21 +61,11 @@
 
             <!-- logo  -->
             <div
-              class="flex items-center justify-center text-blue-600 mr-6 w-28 h-10 border rounded-md bg-slate-50"
+              class="flex items-center justify-center text-blue-600 mr-6 w-28 h-10 border border-blue-600 rounded-md bg-slate-50"
             >
               <span class="font-semibold text-xl tracking-tight text-green-800"
                 >Off<span class="text-2xl text-blue-700">Price</span></span
               >
-            </div>
-            <div class="hidden sm:block">
-              <div
-                class="mt-1 flex items-center justify-center w-10 h-10 rounded bg-blue-800"
-              >
-                <button mat-icon-button (click)="gotoHome()">
-                  <mat-icon class="text-white mt-2">home</mat-icon>
-                </button>
-              </div>
-
             </div>
           </div>
         </div>
@@ -93,7 +76,7 @@
               href="#"
               [routerLink]="['/register-home/home/sale-list']"
               routerLinkActive="active"
-              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-xl font-medium"
+              class="text-blue-600 hover:bg-blue-600 hover:text-white rounded-md mt-1 px-2 py-1 font-medium border border-blue-600"
               aria-current="page"
               >Sales List</a
             >
@@ -102,17 +85,17 @@
               href="#"
               [routerLink]="['/register-home/home/register']"
               routerLinkActive="active"
-              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-xl font-medium"
+              class="text-blue-600 hover:bg-blue-600 hover:text-white rounded-md mt-1 px-2 py-1 font-medium border border-blue-600"
               >Register</a
             >
 
-            <a
+            <!-- <a
               href="#"
               [routerLink]="['/register-home/home/about']"
               routerLinkActive="active"
               class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-xl font-medium"
               >About</a
-            >
+            > -->
           </div>
         </div>
       </div>
@@ -121,7 +104,7 @@
       >
         <!-- <div class="hidden sm:block text-white mr-3">{{ userName }}</div> -->
         <!-- Notification -->
-        <button
+        <!-- <button
           type="button"
           class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
         >
@@ -140,9 +123,18 @@
               d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
             />
           </svg>
-        </button>
+        </button> -->
 
         <!-- Profile dropdown -->
+        <div class="hidden sm:block mr-4">
+          <div class="p-2 w-32 h-8 border border-blue-400 rounded  text-blue-600 flex items-center justify-start" >
+            <div class="flex justify-between">
+              <button type="button" class="" (click)="onGotoShopping()">
+                <span class="">Goto Shopping</span>
+              </button>
+            </div>
+          </div>
+        </div>
         <app-register-profile-menu></app-register-profile-menu>
       </div>
     </div>
@@ -157,7 +149,7 @@
         href="#"
         [routerLink]="['/register-home/home/sale-list']"
         routerLinkActive="active"
-        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        class="text-blue-600 hover:bg-blue-800 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
         (click)="mobileMenuOpen()"
         >Sales List</a
       >
@@ -166,18 +158,18 @@
         href="#"
         [routerLink]="['/register-home/home/register']"
         routerLinkActive="active"
-        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        class="text-blue-600 hover:bg-blue-800 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
         (click)="mobileMenuOpen()"
         >Register</a
       >
-      <a
+      <!-- <a
         href="#"
         [routerLink]="['/register-home/home/about']"
         routerLinkActive="active"
         class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
         (click)="mobileMenuOpen()"
         >About</a
-      >
+      > -->
     </div>
   </div>
 </nav>
@@ -186,3 +178,11 @@
 
 <router-outlet></router-outlet>
 <app-help></app-help>
+<div class="sm:hidden fixed-button fixed top-44 right-0 z-10">
+  <button id="register-button" class="border border-blue-400 bg-white text-blue-600 text-sm w-6 h-32 rounded-l-lg cursor-pointer transition-colors duration-200 ease-in-out flex items-center justify-center hover:bg-gray-100">
+    <div class="transform rotate-90 flex flex-row items-center justify-center space-x-1" (click)="onGotoShopping()">
+      <span>Goto</span>
+      <span>Shopping</span>
+    </div>
+  </button>
+</div>

@@ -64,11 +64,11 @@ export class MaterialComponent implements OnInit {
     ElementRef<HTMLButtonElement>
   >;
   constructor(
-    private SharedMenuObservableService: SharedMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService
   ) {}
   ngOnInit() {
-    this.SharedMenuObservableService.reset_material$
+    this.sharedMenuObservableService.reset_material$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
@@ -77,8 +77,8 @@ export class MaterialComponent implements OnInit {
   selectValue(material: any) {
     const value = { key: 'material', value: material.key };
     this.selected_material = material.key;
-    this.SharedMenuObservableService.input_keyword.next(material.key);
-    this.SharedMenuObservableService.material.next(material.key);
+    this.sharedMenuObservableService.input_keyword.next(material.key);
+    this.sharedMenuObservableService.material.next(material.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }

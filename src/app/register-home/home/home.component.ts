@@ -6,14 +6,14 @@ import {
   HostListener,
 } from '@angular/core';
 import { RegisterComponent } from '../register/register.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SaleListComponent } from '../sale-list/sale-list.component';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
-import { RegisterMenuObservableService } from '../core/services/register-menu-observable.service';
-// import { SharedMenuObservableService } from '../core/services/shared-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+// import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { RegisterAuthService } from '../auth/login/services/register-auth.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -63,8 +63,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   userCoupons = '';
   constructor(
     public dialog: MatDialog,
-    private removeChipsKeywordService: RemoveChipsKeywordService,
-    private registerMenuObservableService: RegisterMenuObservableService,
+    private sharedMenuObservableService: SharedMenuObservableService,
     private authService: RegisterAuthService,
     private auth: AngularFireAuth,
     private cd: ChangeDetectorRef,
@@ -72,12 +71,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private userTokenService: UserTokenService,
     private sharedParentObservableService: SharedParentObservableService,
     private dialogService: DialogService,
-    private titleService: Title
+    private titleService: Title,
+    private router: Router
   ) {}
   ngOnInit() {
     console.log('Register HomeComponent ngOnInit');
     this.resetLogoutTimer();
-    this.registerMenuObservableService.closeFeedback$
+    this.sharedMenuObservableService.closeFeedback$
       .pipe(untilDestroyed(this))
       .subscribe((close) => {
         const dialogOverlay = document.getElementById('dialog-overlay');
@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     //
     this.titleService.setTitle('Register');
-    this.registerMenuObservableService.userCoupons$.subscribe((coupon) => {
+    this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
       if (coupon) {
         console.log('userCoupons', coupon);
         this.userCoupons = coupon;
@@ -173,61 +173,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   logout() {
     this.authService.logout();
   }
-  gotoHome() {
+  onGotoShopping() {
     // To reset the search keyword and positioned selection button to the 'All'.
-    this.resetKeyword();
-  }
-  resetKeyword() {
-    const service = this.registerMenuObservableService;
-    const filters: any[] = [
-      //   { name: 'vendor', subject: service.vendor, defaultValue: 'All' },
-      {
-        reset: service.reset_input_keyword,
-        name: 'input_keyword',
-        subject: service.input_keyword,
-        defaultValue: '',
-      },
-      {
-        reset: service.reset_price,
-        name: 'price',
-        subject: service.price,
-        defaultValue: 'All',
-      },
-      {
-        reset: service.reset_category,
-        name: 'category',
-        subject: service.category,
-        defaultValue: 'All',
-      },
-      {
-        reset: service.reset_size,
-        name: 'size',
-        subject: service.size,
-        defaultValue: 'All',
-      },
-      {
-        reset: service.reset_material,
-        name: 'material',
-        subject: service.material,
-        defaultValue: 'All',
-      },
-      {
-        reset: service.reset_search_period,
-        name: 'search_period',
-        subject: service.search_period,
-        defaultValue: 'All',
-      },
-    ];
-    filters.forEach((filter) => {
-      const { subject, defaultValue, name } = filter;
-      // console.log('subject', subject.value, name)
-      if (subject.value !== defaultValue) {
-        filter.reset.next({});
-        this.removeChipsKeywordService.resetSearchKeyword({
-          key: name,
-          value: '',
-        });
-      }
-    });
+    // this.resetKeyword();
+    this.router.navigate(['/']);
   }
 }

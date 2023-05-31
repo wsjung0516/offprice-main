@@ -26,26 +26,24 @@ import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-ke
   standalone: true,
   imports: [CommonModule, MatIconModule, FormsModule],
   template: `
-    <div
-      class="flex items-center"
-    >
-    <input
-      type="search"
-      [(ngModel)]="inputKeyword"
-      #inputSearch
-      id="default-search"
-      class="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      placeholder="Search"
-      required
-    />
-    <button
-    type="submit"
-    class="text-blue-600 absolute border border-blue-600 right-1  bg-white hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-md text-sm px-2 py-1 "
-    (click)="onInputSearchKeyword(inputSearch.value)"
-    >
-    <mat-icon>search</mat-icon>
-  </button>
-</div>
+    <div class="flex items-center">
+      <input
+        type="search"
+        [(ngModel)]="inputKeyword"
+        #inputSearch
+        id="default-search"
+        class="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-500 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Search"
+        required
+      />
+      <button
+        type="submit"
+        class="text-blue-600 absolute border border-blue-600 right-1  bg-white hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-md text-sm px-2 py-1 "
+        (click)="onInputSearchKeyword(inputSearch.value)"
+      >
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
   `,
   styles: [
     `

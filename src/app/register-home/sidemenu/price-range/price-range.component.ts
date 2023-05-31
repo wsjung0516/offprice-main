@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { APrice } from 'src/app/register-home/core/constants/data-define';
-import { RegisterChipsKeywordService } from '../../core/services/register-chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from '../show-menu-dialog-component/show-menu-dialog-component';
-import { RegisterMenuObservableService } from '../../core/services/register-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-price',
@@ -52,16 +52,16 @@ export class PriceRangeComponent {
   priceRange: any;
   priceRanges = [...APrice];
   constructor(
-    private registerMenuObservableService: RegisterMenuObservableService,
-    private registerChipsKeywordService: RegisterChipsKeywordService
+    private sharedMenuObservableService: SharedMenuObservableService,
+    private chipsKeywordService: ChipsKeywordService
   ) {}
   selectValue(price: { key: string; value: string }) {
     // console.log('priceRange: ', price.value);
     const value = { key: 'price', value: price.key };
     this.priceRange = price.value;
-    this.registerMenuObservableService.price.next(price.value);
-    this.registerChipsKeywordService.removeChipKeyword(value);
-    this.registerChipsKeywordService.addChipKeyword(value);
+    this.sharedMenuObservableService.price.next(price.value);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
     this.dialogRef.close();
   }
 }

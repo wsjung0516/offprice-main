@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Sizes } from 'src/app/register-home/core/constants/data-define';
-import { RegisterChipsKeywordService } from '../../core/services/register-chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from '../show-menu-dialog-component/show-menu-dialog-component';
-import { RegisterMenuObservableService } from '../../core/services/register-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-select-size-vca',
@@ -64,18 +64,18 @@ export class SelectSizeComponent {
   sizes = Sizes;
   selected_size: string = '';
   constructor(
-    private registerMenuObservableService: RegisterMenuObservableService,
-    private registerChipsKeywordService: RegisterChipsKeywordService
+    private sharedMenuObservableService: SharedMenuObservableService,
+    private chipsKeywordService: ChipsKeywordService
   ) {}
 
   selectSize(size: { key: string; value: string }) {
     // console.log(size);
     const value = { key: 'size', value: size.key };
     this.selected_size = size.key;
-    this.registerMenuObservableService.input_keyword.next(size.key);
-    this.registerMenuObservableService.size.next(size.key);
-    this.registerChipsKeywordService.removeChipKeyword(value);
-    this.registerChipsKeywordService.addChipKeyword(value);
+    this.sharedMenuObservableService.input_keyword.next(size.key);
+    this.sharedMenuObservableService.size.next(size.key);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
     this.dialogRef.close();
   }
 }

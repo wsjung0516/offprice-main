@@ -30,7 +30,8 @@ export class MakeTableWhereConditionService {
 
   sort: MatSort;
   paginator: MatPaginator;
-  refreshObservable$: Observable<any> = this.sharedMenuObservableService.refreshData$;
+  refreshObservable$: Observable<any> =
+    this.sharedMenuObservableService.refreshData$;
   // refreshObservable$: Observable<any>;
   private displayModeSubject = new BehaviorSubject<string>('grid');
   displayMode$: Observable<string> = this.displayModeSubject.asObservable();
@@ -97,7 +98,6 @@ export class MakeTableWhereConditionService {
   */
 
   private makeWhereObservable() {
-
     /**
      * 1. display dialog menu (category, size, price, material, search period)
      * 2. select one item and call the behavior subject, which is at the service( show-menu-dialog.service)
@@ -152,11 +152,22 @@ export class MakeTableWhereConditionService {
     search_period,
     input_keyword,
     color,
-  ]: [string, string, string, string, string, string, string, string, string]): {
+  ]: [
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string
+  ]): {
     where: { and: any[]; or: any[] };
   } {
     const andArray: any[] = [];
     const orArray: any[] = [];
+    // console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color);
     andArray.push({ category1: category1 });
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
@@ -164,9 +175,9 @@ export class MakeTableWhereConditionService {
       andArray.push({ price: { gt: +pric[0], lt: +pric[1] } });
     }
     if (category !== 'All') andArray.push({ category: category });
-    if (size !== 'All') andArray.push({ size: {contains:size }});
-    if (material !== 'All') andArray.push({ material: {contains:material}});
-    if (color !== 'All') andArray.push({ color: {contains:color}});
+    if (size !== 'All') andArray.push({ size: { contains: size } });
+    if (material !== 'All') andArray.push({ material: { contains: material } });
+    if (color !== 'All') andArray.push({ color: { contains: color } });
     if (search_period !== 'All') {
       const day: number = +search_period;
       andArray.push({
@@ -246,6 +257,6 @@ export class MakeTableWhereConditionService {
     );
   }
   resetService() {
-    // this.SharedMenuObservableService.resetService();
+    // this.sharedMenuObservableService.resetService();
   }
 }

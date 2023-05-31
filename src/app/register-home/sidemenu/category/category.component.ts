@@ -6,10 +6,10 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { Categories } from 'src/app/register-home/core/constants/data-define';
-import { RegisterChipsKeywordService } from '../../core/services/register-chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from '../show-menu-dialog-component/show-menu-dialog-component';
-import { RegisterMenuObservableService } from '../../core/services/register-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-category-vca',
@@ -55,8 +55,8 @@ import { RegisterMenuObservableService } from '../../core/services/register-menu
 export class CategoryComponent {
   @Input() dialogRef: MatDialogRef<ShowMenuDialogComponent>;
   constructor(
-    private registerMenuObservableService: RegisterMenuObservableService,
-    private registerChipsKeywordService: RegisterChipsKeywordService,
+    private sharedMenuObservableService: SharedMenuObservableService,
+    private chipsKeywordService: ChipsKeywordService
   ) {}
   categories = Categories;
   selected_category = '';
@@ -65,9 +65,9 @@ export class CategoryComponent {
     // console.log('category: ', value);
     const value = { key: 'category', value: category.key };
     this.selected_category = value.key;
-    this.registerMenuObservableService.category.next(category.key);
-    this.registerChipsKeywordService.removeChipKeyword(value);
-    this.registerChipsKeywordService.addChipKeyword(value);
+    this.sharedMenuObservableService.category.next(category.key);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
     this.dialogRef.close();
   }
 }

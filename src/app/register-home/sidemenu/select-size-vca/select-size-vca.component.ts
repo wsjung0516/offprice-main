@@ -15,7 +15,7 @@ import {
 import { Sizes } from 'src/app/register-home/core/constants/data-define';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { pipe } from 'rxjs';
-// import { RegisterMenuObservableService } from '../../core/services/register-menu-observable.service';
+// import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 interface ISize {
   name: string;
   active: boolean;
@@ -52,7 +52,7 @@ interface ISize {
       }
       .box-size {
         width: auto;
-        height: 2.0rem;
+        height: 2rem;
         margin: 0.2rem;
         padding: 0.25rem;
         border: 1px;

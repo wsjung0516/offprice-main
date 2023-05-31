@@ -1,174 +1,220 @@
-<form [formGroup]="registerForm" errorTailor>
-  <div class="grid-container grid md:grid-cols-2 gap-2 xl:grid-cols-3">
-    <div class=" bg-blue-50">
-      <div class="ml-2">
-        <!-- image upload -->
-        <app-image-upload formControlName="image_urls"
-        [registerStatus]="registerStatus"
-        [imageUrls]="imgURLs"
-        [uploadStartStatus]="uploadStartStatus"
-        ></app-image-upload>
-        <!-- image upload -->
-
+<div class="">
+  <form [formGroup]="registerForm" errorTailor>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 xl:grid-cols-3">
+      <div class="bg-blue-50">
+        <div class="ml-2">
+          <!-- image upload -->
+          <app-image-upload
+            formControlName="image_urls"
+            [registerStatus]="registerStatus"
+            [imageUrls]="imgURLs"
+            [uploadStartStatus]="uploadStartStatus"
+          ></app-image-upload>
+          <!-- image upload -->
+        </div>
       </div>
-    </div>
-    <div class="bg-blue-50">
-      <div class="">
-        <!-- Product Name  -->
-        <div class="ml-2">
-          <p><span class="font-bold">Product Name</span></p>
-          <mat-form-field class="w-full">
-            <mat-label>Product Name</mat-label>
-            <input matInput type="text" formControlName="product_name" />
-          </mat-form-field>
-        </div>
-        <!-- Product Name b-1 -->
-        <!-- Vendor Name b-1 -->
-        <div class="ml-2">
-          <p><span class="font-bold">Vendor</span></p>
-          <mat-form-field class="w-full">
-            <mat-label>Vendor Name</mat-label>
-            <input matInput type="text" formControlName="vendor" />
-          </mat-form-field>
-        </div>
-        <!-- Vendor Name b-1 -->
-        <!-- Price -->
-        <div class="ml-2">
-          <p><span class="font-bold">Price</span></p>
-          <div class="container mx-auto">
-            <div class="flex items-center">
-              <div class="w-4/5 mr-2">
-                <mat-form-field  class="w-full">
-                  <mat-label>Price</mat-label>
-                  <input matInput type="number" placeholder="0" formControlName="price">
-                </mat-form-field>
-              </div>
-              <div class="w-1/5">
-                <mat-form-field  class="w-full">
-                  <mat-label>Unit</mat-label>
-                  <mat-select [value]="selectedUnit">
-                    <mat-option value="USD">USD</mat-option>
-                    <mat-option value="WON">WON</mat-option>
-                    <mat-option value="EURO">EURO</mat-option>
-                  </mat-select>
-                </mat-form-field>
+      <div class="bg-blue-50">
+        <div class="">
+          <!-- Product Name  -->
+          <div class="ml-2">
+            <p><span class="font-bold">Product Name</span></p>
+            <mat-form-field class="w-full">
+              <mat-label>Product Name</mat-label>
+              <input matInput type="text" formControlName="product_name" />
+            </mat-form-field>
+          </div>
+          <!-- Product Name b-1 -->
+          <!-- Vendor Name b-1 -->
+          <div class="ml-2">
+            <p><span class="font-bold">Vendor</span></p>
+            <mat-form-field class="w-full">
+              <mat-label>Vendor Name</mat-label>
+              <input matInput type="text" formControlName="vendor" />
+            </mat-form-field>
+          </div>
+          <!-- Vendor Name b-1 -->
+          <!-- Price -->
+          <div class="ml-2">
+            <p><span class="font-bold">Price</span></p>
+            <div class="container mx-auto">
+              <div class="flex items-center">
+                <div class="w-4/5 mr-2">
+                  <mat-form-field class="w-full">
+                    <mat-label>Price</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      placeholder="0"
+                      formControlName="price"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="w-1/5">
+                  <mat-form-field class="w-full">
+                    <mat-label>Unit</mat-label>
+                    <mat-select [value]="selectedUnit">
+                      <mat-option value="USD">USD</mat-option>
+                      <mat-option value="WON">WON</mat-option>
+                      <mat-option value="EURO">EURO</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Price -->
-        <!-- Category1 -->
-        <p class="ml-2"><span class="font-bold">Category1</span></p>
-        <div class="m-2 overflow-y-auto">
-          <app-category1-vca [category1]="category1"  formControlName="category_1"></app-category1-vca>
+          <!-- Price -->
+          <!-- Category1 -->
+          <p class="ml-2"><span class="font-bold">Category1</span></p>
+          <div class="m-2 overflow-y-auto">
+            <app-category1-vca
+              [category1]="category1"
+              formControlName="category_1"
+            ></app-category1-vca>
+          </div>
+          <!-- Category2 -->
+          <p class="ml-2"><span class="font-bold">Category2</span></p>
+          <div class="m-2 overflow-y-auto">
+            <app-category-vca
+              [categories]="categories"
+              [reset_category]="reset_category"
+              [selected_category_data]="selected_category"
+              formControlName="category"
+            ></app-category-vca>
+          </div>
+          <!-- Count -->
+          <!-- Editor for comment -->
+          <div class="m-2">
+            <app-quill-editor
+              [html]="htmlText"
+              (OnCreatedDescription)="createdDescription($event)"
+            ></app-quill-editor>
+          </div>
+          <!-- Editor for comment -->
         </div>
-        <!-- Category2 -->
-        <p class="ml-2"><span class="font-bold">Category2</span></p>
-        <div class="m-2 overflow-y-auto">
-          <app-category-vca [categories]="categories" [reset_category]="reset_category" [selected_category_data]="selected_category" formControlName="category"></app-category-vca>
-        </div>
-        <!-- Count -->
-        <!-- Editor for comment -->
-      <div class="m-2">
-        <app-quill-editor [html]="htmlText" (OnCreatedDescription)="createdDescription($event)"></app-quill-editor>
       </div>
-      <!-- Editor for comment -->
-
-      </div>
-    </div>
-    <div class="bg-blue-50">
-      <div class="">
-
-        <!-- Size c-1 -->
-        <p class="m-2 mt-4"><span class="font-bold">Size</span></p>
-        <!-- <div class="">
-          <app-size-scale-vca formControlName="size"></app-size-scale-vca>
-        </div> -->
-       <div class="m-2 overflow-y-auto">
-          <app-select-size-vca [selectedSize]="size" [reset_size]="reset_size" formControlName="size"></app-select-size-vca>
-        </div>
-        <ng-container>
-          <div class="container mx-auto">
-            <div class="flex flex-wrap items-center justify-center">
-              <div class="w-full md:w-1/2 lg:w-1/3 p-4">
-                <div formArrayName="sizeArray">
-                <div class="flex justify-center">
-                  <div *ngFor="let control of nSizes; let i=index" class="flex flex-col items-center justify-center m-2">
-                    <span class="text-blue-600 font-semibold mr-2">{{ nSizes[i].name }}</span>
-                    <input type="number" class="w-16 text-center" [formControlName]="i" placeholder="Qty" />
+      <div class="bg-blue-50">
+        <div class="">
+          <!-- Size c-1 -->
+          <p class="m-2 mt-4"><span class="font-bold">Size</span></p>
+          <!-- <div class="">
+            <app-size-scale-vca formControlName="size"></app-size-scale-vca>
+          </div> -->
+          <div class="m-2 overflow-y-auto">
+            <app-select-size-vca
+              [selectedSize]="size"
+              [reset_size]="reset_size"
+              formControlName="size"
+            ></app-select-size-vca>
+          </div>
+          <ng-container>
+            <div class="container mx-auto">
+              <div class="flex flex-wrap items-center justify-center">
+                <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+                  <div formArrayName="sizeArray">
+                    <div class="flex justify-center">
+                      <div
+                        *ngFor="let control of nSizes; let i = index"
+                        class="flex flex-col items-center justify-center m-2"
+                      >
+                        <span class="text-blue-600 font-semibold mr-2">{{
+                          nSizes[i].name
+                        }}</span>
+                        <input
+                          type="number"
+                          class="w-16 text-center"
+                          [formControlName]="i"
+                          placeholder="Qty"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-                </div>
               </div>
             </div>
-          </div>
-        </ng-container>
-        <!-- Size -->
-        <!-- Material c-1 -->
-        <p class="m-2 mt-4"><span class="font-bold">Material</span></p>
-        <div class="m-2 overflow-y-auto">
-          <app-material-vca [selectedMaterial]="material" [reset_material]="reset_material" formControlName="material"></app-material-vca>
-        </div>
-        <!-- Material c-1 -->
-        <!-- Color -->
-        <p class="m-2 mt-4"><span class="font-bold">Color</span></p>
-        <div class="m-2 overflow-y-auto">
-          <app-color-vca [selectedColor]="color" [reset_color]="reset_color" formControlName="color"></app-color-vca>
-        </div>
-        <ng-container>
-          <div class="container mx-auto">
-            <div class="flex flex-wrap items-center justify-center">
-              <div class="w-full md:w-1/2 lg:w-1/3 p-4">
-                <div formArrayName="colorArray">
-                <div class="flex justify-center">
-                  <div *ngFor="let color of nColors; let i=index" class="flex flex-col items-center justify-center m-2">
-                    <span class="text-sm text-blue-600 mr-2">{{ color.name }}</span>
-                    <div [style.background-color]="color.value" class="h-9 w-9 rounded-full"></div>
-                    <!-- <input type="number" class="w-16 text-center" [formControlName]="i" placeholder="Qty" /> -->
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-        <!-- Color -->
-        <!-- Upload Image button -->
-
-        <div class="mt-4 flex item-center">
-          <div class="flex justify-between">
-            <!-- <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="uploadImage()" -->
-            <button  (click)="makeUpdateOrCreate()"
-              class="m-2 rounded-md w-44 h-12 text-xl text-white bg-green-600 disabled:bg-red-300 hover:bg-green-800 drop-shadow-xl"
-            >
-            <mat-icon>cloud_upload</mat-icon>
-              Upload Image
-            </button>
-            <div *ngIf="isLoading" class="m-3">
-              <mat-spinner diameter="35"></mat-spinner>
-            </div>
-
-          </div>
-          <!-- <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="cancelUpload()" -->
-          <ng-container *ngIf="registerStatus=== 'update'">
-            <button  (click)="deleteItem()"
-              class="m-2 rounded-md w-20 h-12 text-xl text-black bg-red-400 border-2 border-red-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
-            >
-              Delete
-            </button>
-            <button  (click)="cancelUpload()"
-              class="m-2 rounded-md w-20 h-12 text-xl text-black bg-white border-2 border-green-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
-            >
-              Cancel
-            </button>
           </ng-container>
-        </div>
+          <!-- Size -->
+          <!-- Material c-1 -->
+          <p class="m-2 mt-4"><span class="font-bold">Material</span></p>
+          <div class="m-2 overflow-y-auto">
+            <app-material-vca
+              [selectedMaterial]="material"
+              [reset_material]="reset_material"
+              formControlName="material"
+            ></app-material-vca>
+          </div>
+          <!-- Material c-1 -->
+          <!-- Color -->
+          <p class="m-2 mt-4"><span class="font-bold">Color</span></p>
+          <div class="m-2 overflow-y-auto">
+            <app-color-vca
+              [selectedColor]="color"
+              [reset_color]="reset_color"
+              formControlName="color"
+            ></app-color-vca>
+          </div>
+          <ng-container>
+            <div class="container mx-auto">
+              <div class="flex flex-wrap items-center justify-center">
+                <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+                  <div formArrayName="colorArray">
+                    <div class="flex justify-center">
+                      <div
+                        *ngFor="let color of nColors; let i = index"
+                        class="flex flex-col items-center justify-center m-2"
+                      >
+                        <span class="text-sm text-blue-600 mr-2">{{
+                          color.name
+                        }}</span>
+                        <div
+                          [style.background-color]="color.value"
+                          class="h-9 w-9 rounded-full"
+                        ></div>
+                        <!-- <input type="number" class="w-16 text-center" [formControlName]="i" placeholder="Qty" /> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <!-- Color -->
+          <!-- Upload Image button -->
 
+          <div class="mt-4 flex item-center">
+            <div class="flex justify-between">
+              <!-- <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="uploadImage()" -->
+              <button
+                (click)="makeUpdateOrCreate()"
+                class="m-2 rounded-md w-44 h-12 text-xl text-white bg-green-600 disabled:bg-red-300 hover:bg-green-800 drop-shadow-xl"
+              >
+                <mat-icon>cloud_upload</mat-icon>
+                Upload Image
+              </button>
+              <div *ngIf="isLoading" class="m-3">
+                <mat-spinner diameter="35"></mat-spinner>
+              </div>
+            </div>
+            <!-- <button [disabled]="imgURLs?.length === 0 && registerForm.valid" (click)="cancelUpload()" -->
+            <ng-container *ngIf="registerStatus === 'update'">
+              <button
+                (click)="deleteItem()"
+                class="m-2 rounded-md w-20 h-12 text-xl text-black bg-red-400 border-1 border-red-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
+              >
+                Delete
+              </button>
+              <button
+                (click)="cancelUpload()"
+                class="m-2 rounded-md w-20 h-12 text-xl text-black bg-white border-1 border-green-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
+              >
+                Cancel
+              </button>
+            </ng-container>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <ng-template #loading>
-</ng-template>
-</form>
+    <ng-template #loading> </ng-template>
+  </form>
+</div>
 <pre><code>{{ jsonString }}</code></pre>

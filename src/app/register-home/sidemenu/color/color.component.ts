@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { Colors } from 'src/app/register-home/core/constants/data-define';
-import { RegisterChipsKeywordService } from '../../core/services/register-chips-keyword.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShowMenuDialogComponent } from '../show-menu-dialog-component/show-menu-dialog-component';
-import { RegisterMenuObservableService } from '../../core/services/register-menu-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-color',
@@ -57,15 +57,15 @@ export class ColorComponent {
   colors: typeof Colors = Colors;
   selected_color: string | undefined;
   constructor(
-    private registerChipsKeywordService: RegisterChipsKeywordService,
-    private registerMenuObservableService: RegisterMenuObservableService
+    private chipsKeywordService: ChipsKeywordService,
+    private sharedMenuObservableService: SharedMenuObservableService
   ) {}
   selectValue(data: any) {
-    const value = { key: 'colorsearch_period', value: data.key };
-    this.registerMenuObservableService.input_keyword.next(data.key);
-    this.registerMenuObservableService.color.next(data.key);
-    this.registerChipsKeywordService.removeChipKeyword(value);
-    this.registerChipsKeywordService.addChipKeyword(value);
+    const value = { key: 'color', value: data.key };
+    this.sharedMenuObservableService.input_keyword.next(data.key);
+    this.sharedMenuObservableService.color.next(data.key);
+    this.chipsKeywordService.removeChipKeyword(value);
+    this.chipsKeywordService.addChipKeyword(value);
 
     this.dialogRef.close();
   }

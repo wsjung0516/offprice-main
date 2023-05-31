@@ -61,13 +61,6 @@ export class SidebarComponent implements OnInit {
     this.themeService.theme = !this.themeService.isDark ? 'dark' : 'light';
   }
   signOut() {
-    const isRegisterLoggedIn:any = this.sessionStorageService.getItem('isRegisterLoggedIn');
-    if( isRegisterLoggedIn) {
-      this.snackBar.open('You can not log out because the Register window is still working.', 'Close', {
-        duration: 3000,
-      });
-      return;
-    }
     this.authService.logout();
   }
 }

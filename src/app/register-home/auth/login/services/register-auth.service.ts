@@ -115,7 +115,6 @@ export class RegisterAuthService {
   logout() {
     console.log('logout');
 
-    this.sessionStorageService.removeItem('isRegisterLoggedIn');
     const userId: any = this.sessionStorageService.getItem('userId');
     if (!userId) return;
 
@@ -126,7 +125,6 @@ export class RegisterAuthService {
           if (profile) {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
-            this.sessionStorageService.removeItem('isRegisterLoggedIn');
             this.sharedMenuObservableService.isLoggedOut.next(true);
 
             this.router.navigate(['/register-home/login']);
@@ -183,7 +181,6 @@ export class RegisterAuthService {
       console.log('isSeller', isSeller);
       if (isSeller) {
         this.router.navigate(['/register-home']);
-        this.sessionStorageService.setItem('isRegisterLoggedIn', true);
         this.userService.saveUserProfileToDB(res);
 
         // User Coupons

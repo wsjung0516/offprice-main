@@ -42,6 +42,5 @@ export class RegisterHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.titleService.setTitle(this.title);
   }
   ngOnDestroy(): void {
-    this.sessionStorageService.removeItem('isRegisterLoggedIn');
   }
 }

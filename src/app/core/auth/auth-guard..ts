@@ -44,10 +44,5 @@ export class AuthGuard {
         return false;
       }
     });
-    // if (this.auth.isLoggedIn()) {
-    //   // this.sessionStorageService.setItem('isRegisterLoggedIn', true);
-    //   return true;
-    // } else {
-    // }
   }
 }

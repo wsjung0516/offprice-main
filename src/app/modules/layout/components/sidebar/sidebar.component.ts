@@ -14,6 +14,7 @@ import { ColorComponent } from './color/color.component';
 import { AuthService } from 'src/app/core/auth/login/services/auth.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -42,9 +43,11 @@ export class SidebarComponent implements OnInit {
     private menuService: MenuService,
     private authService: AuthService,
     private sessionStorageService: SessionStorageService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private sharedMenuObservableService: SharedMenuObservableService
   ) {
     this.showSideBar$ = this.menuService.showSideBar$;
+    this.sharedMenuObservableService.showSideBar$ = this.showSideBar$;
     // this.pagesMenu$ = this.menuService.pagesMenu$;
   }
 

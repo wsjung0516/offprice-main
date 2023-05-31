@@ -1,6 +1,15 @@
 <div class="bg-gray-200 dark:bg-night-700">
   <div class="mx-auto px-2 flex justify-between">
     <div class="flex items-center py-2 justify-start">
+      <div class="flex items-center" *ngIf="!(showSideBar$ | async)">
+        <div
+          class="hidden md:block mr-6 px-2 py-1 border border-blue-600 rounded bg-slate-50"
+        >
+          <span class="font-semibold text-xl tracking-tight text-green-800"
+            >off<span class="text-xl text-blue-700">Price</span></span
+          >
+        </div>
+      </div>
       <!-- <div class="flex items-center justify-between py-3.5 md:justify-start"> -->
       <!-- Mobile Navigation Menu Button-->
       <div class="md:order-1 md:hidden">
@@ -24,7 +33,7 @@
     <!-- Logo -->
     <div class="flex items-center">
       <div
-        class="flex items-center justify-center w-24 h-10 mr-6 border-1 border-blue-600 rounded-md bg-slate-50 md:hidden"
+        class="px-2 py-1 mr-6 border border-blue-600 rounded bg-slate-50 md:hidden"
       >
         <span class="font-semibold text-xl tracking-tight text-green-800"
           >Off<span class="text-2xl text-blue-700">Price</span></span

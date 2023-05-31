@@ -27,7 +27,7 @@ import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-item
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
-import { switchMap, tap, Subscription, interval } from 'rxjs';
+import { switchMap, tap, Subscription, interval, Observable } from 'rxjs';
 import { UserService } from 'src/app/user/user.service';
 @UntilDestroy()
 @Component({
@@ -54,6 +54,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   // userName: string;
   newWindow: any;
   subscription: Subscription;
+  showSideBar$: Observable<boolean>;
   @ViewChild('refreshButton', { static: false }) refreshButton: ElementRef;
   // public screenSize$: Observable<any>;
   constructor(
@@ -72,6 +73,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.showSideBar$ = this.sharedMenuObservableService.showSideBar$;
     this.screenSizeService.screenSize$
       .pipe(untilDestroyed(this))
       .subscribe((size) => {

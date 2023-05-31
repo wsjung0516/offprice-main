@@ -60,6 +60,8 @@ export class SharedMenuObservableService {
   isLoggedIn$ = this.isLoggedIn.asObservable();
   resetSearchConditions = new Subject<boolean>();
   resetSearchConditions$ = this.resetSearchConditions.asObservable();
+  showSideBar = new Subject<boolean>();
+  showSideBar$ = this.showSideBar.asObservable();
   
   get input_keyword$() {
     return this.input_keyword.asObservable();

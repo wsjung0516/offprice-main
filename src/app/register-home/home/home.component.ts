@@ -80,8 +80,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.sharedMenuObservableService.closeFeedback$
       .pipe(untilDestroyed(this))
       .subscribe((close) => {
-        const dialogOverlay = document.getElementById('dialog-overlay');
-        dialogOverlay.style.display = 'none';
+        //const dialogOverlay = document.getElementById('dialog-overlay');
+        // dialogOverlay.style.display = 'none';
       });
     this.receiveFeedback();
   }
@@ -129,27 +129,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   dropdown = false;
   private receiveFeedback() {
-    const feedbackButton = document.getElementById('feedback-button');
-    feedbackButton.addEventListener('click', () => {
-      this.userTokenService.getUserToken().subscribe((profile: any) => {
-        if (!profile) {
-          return;
-        }
-      });
-      const dialogOverlay = document.getElementById('dialog-overlay');
-      dialogOverlay.style.display =
-        dialogOverlay.style.display === 'none' ? 'flex' : 'none';
+    // const feedbackButton = document.getElementById('feedback-button');
+    // feedbackButton.addEventListener('click', () => {
+    //   this.userTokenService.getUserToken().subscribe((profile: any) => {
+    //     if (!profile) {
+    //       return;
+    //     }
+    //   });
+    //   const dialogOverlay = document.getElementById('dialog-overlay');
+    //   dialogOverlay.style.display =
+    //     dialogOverlay.style.display === 'none' ? 'flex' : 'none';
 
-      const closeButton = document.getElementById('close-btn');
-      closeButton.addEventListener('click', () => {
-        dialogOverlay.style.display = 'none';
-      });
-    });
+    //   const closeButton = document.getElementById('close-btn');
+    //   closeButton.addEventListener('click', () => {
+    //     dialogOverlay.style.display = 'none';
+    //   });
+    // });
   }
 
   toggleDropdown() {
     this.dropdown = !this.dropdown;
-    // document.getElementById('user-profile-menu-button').classList.toggle('show');
   }
   mobile_menu = true;
   mobileMenuOpen() {

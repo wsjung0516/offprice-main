@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,19 +9,19 @@ export class LocalStorageService {
   private storageItemSubject: BehaviorSubject<any> = new BehaviorSubject(null);
   public storageItem$: Observable<any> = this.storageItemSubject.asObservable();
 
-  constructor() {}
+  constructor(private sessionStorageService: SessionStorageService) {}
 
   setItem(key: string, value: string): void {
-    localStorage.setItem(key, value);
+    this.sessionStorageService.setItem(key, value);
     this.storageItemSubject.next({ key, value });
   }
 
   getItem(key: string): string | null {
-    return localStorage.getItem(key);
+    return this.sessionStorageService.getItem(key);
   }
 
   removeItem(key: string): void {
-    localStorage.removeItem(key);
+    this.sessionStorageService.removeItem(key);
     this.storageItemSubject.next(null);
   }
 }

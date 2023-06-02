@@ -29,10 +29,6 @@ export class ChipsKeywordService {
       });
       this.searchKeyword.next(this.keywords);
     }
-    // if (!this.keywords.some((obj) => obj.key === searchKeyword.key)) {
-    //   this.keywords.push(searchKeyword);
-    //   this.searchKeyword.next(this.keywords);
-    // }
   }
   // remove keyword from search keyword array because new keyword is added 
   // instead of old keyword in the search keyword array 
@@ -42,16 +38,13 @@ export class ChipsKeywordService {
       from(this.keywords)
       .pipe(
         untilDestroyed(this),
-        filter((obj) => obj['key'] !== searchKeyword.key),
+        filter((obj:any) => obj['key'] !== searchKeyword.key),
         toArray()
         )
         .subscribe((obj) => {
+          // console.log('obj: ', obj)
           this.keywords = obj;
           this.searchKeyword.next(obj);
-          // Reset value in the makeWhereConditionService
-          // if(searchKeyword.key === 'size')this.sharedMenuObservableService.size.next('All');
-          // if(searchKeyword.key === 'color')this.sharedMenuObservableService.color.next('All');
-          // if(searchKeyword.key === 'material')this.sharedMenuObservableService.material.next('All');
         });
     }
   }

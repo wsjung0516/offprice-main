@@ -23,7 +23,7 @@ RUN npm run build:prod
 FROM nginx:1.21-alpine
 
 # 빌드 결과물 복사
-COPY --from=build app/dist/offprice-main /usr/share/nginx/html
+COPY --from=build app/dist/offprice-main/browser/ /usr/share/nginx/html
 
 # Nginx 설정 파일 복사 (필요한 경우)
 COPY /src/etc/nginx-custom.conf /etc/nginx/conf.d/default.conf

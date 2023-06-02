@@ -139,7 +139,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     //
     // make chips for display in the DOM
-    localStorage.setItem('displayMode', 'grid');
+    this.sessionStorageService.setItem('displayMode', 'grid');
     // Keyword that is filtered from ChipsKeywordService, then displayed in the DOM
     this.chipsKeywordService.searchKeyword$
       .pipe(untilDestroyed(this))
@@ -154,10 +154,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
     //
-    this.screenSize$.pipe(untilDestroyed(this)).subscribe((result) => {
-      this.sSize = result;
-      this.cd.detectChanges();
-    });
+    this.setScreenSize();
   }
   ngAfterViewInit() {
     //
@@ -166,8 +163,8 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.makeWhereConditionService.condition$
       .pipe(untilDestroyed(this))
       .subscribe((data: SaleList[]) => {
-        // console.log('sale-list data: ', data);
         this.images = [...this.images, ...data];
+        // console.log('sale-list data: ', this.images);
         this.cd.detectChanges();
         this.getConditionalSaleListLength();
       });
@@ -175,6 +172,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.makeWhereConditionService.resetImages$
       .pipe(untilDestroyed(this))
       .subscribe((data: any) => {
+        // console.log('resetImages: ', data);
         this.images = [];
       });
   }
@@ -187,12 +185,34 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.localStorageService.setItem('searchItemsLength', res.toString());
       });
   }
+  takeImage = 20;
+  setScreenSize() {
+    this.screenSizeService.screenSize$
+      .pipe(untilDestroyed(this))
+      .subscribe((result) => {
+        if ( result === 'XSmall') { // xs
+          this.takeImage = 6;
+        } else if ( result === 'Small') { // sm 
+          this.takeImage = 8;
+        } else if ( result === 'Medium') { // md
+          this.takeImage = 12;
+        } else if ( result === 'Large') { // lg
+          this.takeImage = 16;
+        } else if ( result === 'XLarge') { // xl  
+          this.takeImage = 20;
+        }
+        this.sessionStorageService.setItem('takeImageCount', this.takeImage.toString());
+
+      });
+  }
   onScroll(index: number) {
-    //
-    if (index + 20 > this.images.length) {
+    // console.log('scroll index: ', index, this.takeImage);
+   
+
+    if (index + this.takeImage > this.images.length) {
       this.makeWhereConditionService.scrollObservable.next({
         skip: this.images.length,
-        take: 20,
+        take: this.takeImage,
       });
     }
     index > 1 ? (this.showScrollToTop = true) : (this.showScrollToTop = false);

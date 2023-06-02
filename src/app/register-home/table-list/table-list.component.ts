@@ -30,13 +30,14 @@ import { DescriptionDetailDirective } from 'src/app/core/directives/description-
 import { ImageDetailDirective } from 'src/app/core/directives/image-detail.directive';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @UntilDestroy()
 @Component({
   selector: 'app-table-list',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableModule,
@@ -106,13 +107,14 @@ export class TableListComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private dialogService: DialogService,
     private snackBar: MatSnackBar,
-    private sharedMenuObservableService: SharedMenuObservableService
+    private sharedMenuObservableService: SharedMenuObservableService,
+    private sessionStorageService: SessionStorageService
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
     console.log('table-list ngOnInit');
-    localStorage.setItem('displayMode', 'list');
+    this.sessionStorageService.setItem('displayMode', 'list');
     this.sharedMenuObservableService.deleteSaleListItem$
       .pipe(untilDestroyed(this))
       .subscribe((sale_list_id: string) => {
@@ -145,7 +147,6 @@ export class TableListComponent implements OnInit, AfterViewInit {
       .subscribe((res: number) => {
         // console.log('getConditionalSaleListLength', res);
         // To display the number of search results in the search bar
-        // this.localStorageService.setItem('searchItemsLength', res.toString());
 
         this.paginator.length = res;
         this.cd.detectChanges();
@@ -161,7 +162,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
     //
     // console.log('editSaleList', saleList);
 
-    localStorage.setItem('registerStatus', 'update');
+    this.sessionStorageService.setItem('registerStatus', 'update');
     this.router
       .navigate(['/register-home/home/register', { id: saleList.sale_list_id }])
       .then();

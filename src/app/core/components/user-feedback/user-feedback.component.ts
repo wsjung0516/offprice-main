@@ -21,7 +21,7 @@ declare let Email: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserFeedbackComponent {
-  textData = '';
+  textData: HTMLTextAreaElement;
   subjectData = '';
   constructor(
     private sharedMenuObservableService: SharedMenuObservableService,
@@ -33,8 +33,10 @@ export class UserFeedbackComponent {
 
   sendMsg(subject: string, msg: any) {
     // const profile: any = this.sessionStorageService.getItem('token');
-    const textarea = document.getElementById('message') as HTMLTextAreaElement;
-    const data = textarea.value.replace(/\n/g, '<br>');
+    // const textarea = document.getElementById('message') as HTMLTextAreaElement;
+    // const data = textarea.value.replace(/\n/g, '<br>');
+    const data = this.textData.value.replace(/\n/g, '<br>');
+
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       console.log('message', profile);
       if (profile) {
@@ -80,7 +82,7 @@ export class UserFeedbackComponent {
         duration: 2000,
       });
       this.subjectData = '';
-      this.textData = '';
+      this.textData = null;
       this.cd.detectChanges();
       this.sharedMenuObservableService.closeFeedback.next(true);
     });

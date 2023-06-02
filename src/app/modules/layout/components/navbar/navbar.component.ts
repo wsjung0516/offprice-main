@@ -93,7 +93,6 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('resetSearchConditions is called');
         this.gotoHome();
       });
-
   }
   profile: any;
   ngAfterViewInit(): void {
@@ -110,6 +109,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         tap((isLoggedIn: any) => {}),
         untilDestroyed(this),
         switchMap((user_id: string) => {
+          console.log('isLoggedIn - user_id', user_id)
           return this.userService.getUser(user_id);
         })
       )

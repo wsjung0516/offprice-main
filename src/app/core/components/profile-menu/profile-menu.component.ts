@@ -23,7 +23,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 @UntilDestroy()
 @Component({
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatSnackBarModule, ClickOutsideDirective],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    ClickOutsideDirective,
+  ],
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
   styles: [
@@ -59,18 +64,18 @@ export class ProfileMenuComponent implements OnInit, AfterViewInit {
     private titleService: Title
   ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   initials = '';
   ngAfterViewInit(): void {
-    this.sharedMenuObservableService.isLoggedOut$.pipe(untilDestroyed(this))
-    .subscribe((isLoggedOut: boolean) => {
-      if (isLoggedOut) {
-        this.initials = 'Guest';
-        this.authService.logout();
-        this.cd.detectChanges();
-      }
-    });
+    this.sharedMenuObservableService.isLoggedOut$
+      .pipe(untilDestroyed(this))
+      .subscribe((isLoggedOut: boolean) => {
+        if (isLoggedOut) {
+          this.initials = 'Guest';
+          this.authService.logout();
+          this.cd.detectChanges();
+        }
+      });
     const userId: any = this.sessionStorageService.getItem('userId');
     if (userId) {
       this.isLoggedIn = true;
@@ -78,9 +83,10 @@ export class ProfileMenuComponent implements OnInit, AfterViewInit {
         this.userName = user.first_name;
         this.userEmail = user.email;
         const names = [user.first_name, user.last_name];
-        this.initials = names[0].substring(0, 1).toUpperCase() + names[names.length - 1].substring(0, 1).toUpperCase();
+        this.initials =
+          names[0].substring(0, 1).toUpperCase() +
+          names[names.length - 1].substring(0, 1).toUpperCase();
         this.cd.detectChanges();
-        
       });
       // console.log('profile-menu. profile', profile);
     } else {

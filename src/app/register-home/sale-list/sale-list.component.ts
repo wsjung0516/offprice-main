@@ -56,7 +56,7 @@ import { Category1MenuComponent } from 'src/app/modules/layout/components/sideba
 import { CategoryMenuComponent } from 'src/app/modules/layout/components/sidebar/category-menu/category-menu.component';
 import { ResetSearchConditionsComponent } from 'src/app/core/components/reset-search-conditions/reset-search-conditions.component';
 import { Title } from '@angular/platform-browser';
-import { LocalStorageService } from '../core/services/local-storage.service';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { SaleListService } from './sale-list.service';
 import { UserSaleListService } from './user-sale-list.service';
 import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
@@ -134,11 +134,6 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       .subscribe((data) => {
         this.resetAllConditions();
       });
-    this.sharedMenuObservableService.reset_input_keyword$
-      .pipe(untilDestroyed(this))
-      .subscribe((data) => {
-        this.reset();
-      });
     this.subscribeToSearchKeywords();
     this.subscribeToLocalStorageItem();
 
@@ -203,6 +198,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     this.localStorageService.storageItem$
       .pipe(untilDestroyed(this))
       .subscribe((item) => {
+        console.log('subscribeToLocalStorageItem', item); 
         if (item && item.key === 'searchItemsLength') {
           this.searchItemLength = +item.value;
           this.cd.detectChanges();
@@ -293,10 +289,6 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy() {}
-  reset() {
-    this.inputKeyword = '';
-    this.cd.detectChanges();
-  }
   async removeChipsKeyword(keyword: SearchKeyword) {
     await this.removeChipsKeywordService.resetSearchKeyword(keyword);
     if (keyword['key'] === 'input_keyword') {

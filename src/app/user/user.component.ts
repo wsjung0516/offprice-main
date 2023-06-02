@@ -1,7 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { UserService } from './user.service';
+import { UserService } from '../core/components/user-profile/user.service';
 import { User } from 'src/app/core/models/user.model';
 import {
   combineLatest,
@@ -56,7 +62,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     FormsModule,
     ReactiveFormsModule,
     CreateUserComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
   ],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
@@ -91,12 +97,7 @@ export class UserComponent implements OnInit {
     // 'Subscribe',
     'Action',
   ];
-  categoryColumns: string[] = [
-    'first_name',
-    'last_name',
-    'email',
-    'zipcode',
-  ];
+  categoryColumns: string[] = ['first_name', 'last_name', 'email', 'zipcode'];
 
   dataSource: MatTableDataSource<User>;
   selectedValue: FormControl;
@@ -138,14 +139,16 @@ export class UserComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.dataSource.data = data;
         this.getConditionalUserLength();
-      })
-    })
+      });
+    });
   }
   private getConditionalUserLength() {
-    this.userService.getConditionalUserLength(this.oldWhere).subscribe((users: User[]) => {
-      this.paginator.length = users.length;
-      // console.log('this.old where, length', this.oldWhere,this.paginator.length);
-    })
+    this.userService
+      .getConditionalUserLength(this.oldWhere)
+      .subscribe((users: User[]) => {
+        this.paginator.length = users.length;
+        // console.log('this.old where, length', this.oldWhere,this.paginator.length);
+      });
   }
   getUser(id: string) {
     this.userService.getUser(id).subscribe((data: any) => {

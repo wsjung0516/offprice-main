@@ -29,19 +29,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { User } from 'src/app/core/models/user.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { format } from 'date-fns';
-import { UserService } from '../user.service';
+import { UserService } from 'src/app/user/user.service';
 // import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  Observable,
-} from 'rxjs';
+import { Observable } from 'rxjs';
 interface Data {
   user: Partial<User>;
   disabled: boolean;
   mode: string;
 }
 import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+} from '@angular/material/dialog';
 @Component({
   selector: 'app-create-user-profile',
   standalone: true,
@@ -59,7 +61,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
     MatTooltipModule,
     ConfirmDialogComponent,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
     // NzModalModule,
   ],
   templateUrl: './create-user.component.html',
@@ -94,22 +96,20 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
   });
   constructor(
     private userService: UserService,
-    public dialogRef: MatDialogRef<CreateUserComponent>,
-    // @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  ) {}
+    public dialogRef: MatDialogRef<CreateUserComponent>
+  ) // @Inject(MAT_DIALOG_DATA) public data: DialogData,
+  {}
   // private dialog = inject(DialogService);
   isDirty$: Observable<boolean>;
 
   beforeClose$: Observable<boolean>;
-  ngOnInit() {
-  }
+  ngOnInit() {}
   ngAfterViewInit() {
     setTimeout(() => {
       // this.mode = this.ref.data.mode;
       // this.user-profile = this.ref.data.user-profile;
       // this.disabled = this.ref.data.disabled;
       this.displayUser(this.user);
-
     }, 0);
   }
   onSubmit() {
@@ -168,9 +168,8 @@ export class CreateUserComponent implements OnInit, AfterViewInit {
       this.userId = user.user_id ? user.user_id.toString() : '';
       this.createdDate = format(
         new Date(user.created_at),
-        'MM/dd/yyyy hh:mm:ss',
+        'MM/dd/yyyy hh:mm:ss'
       );
     }
   }
 }
-

@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { GoogleAuthProvider, FacebookAuthProvider, User } from '@angular/fire/auth';
+import {
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  User,
+} from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { UserService } from 'src/app/user/user.service';
@@ -9,7 +13,7 @@ import { SessionStorageService } from '../../../services/session-storage.service
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { Observable, map, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import  jwt_decode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import { UserCouponsService } from 'src/app/core/services/user-coupons.service';
 declare const FB: any;
 @Injectable({
@@ -102,7 +106,9 @@ export class AuthService {
           console.log('createUserCoupon', ret);
         });
       } else {
-        this.sharedMenuObservableService.userCoupons.next(ret.quantity.toString());
+        this.sharedMenuObservableService.userCoupons.next(
+          ret.quantity.toString()
+        );
       }
     });
   }
@@ -210,7 +216,6 @@ export class AuthService {
           this.userService.saveUserProfileToDB(res);
           // User Coupons
           this.checkIfUserCouponsAvailable();
-
         });
       },
       (err) => {

@@ -34,7 +34,7 @@ import { User } from 'src/app/core/models/user.model';
 // import { User } from 'src/app/register-home/core/models/user.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { format } from 'date-fns';
-import { UserService } from './user.service';
+import { UserService } from 'src/app/user/user.service';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {

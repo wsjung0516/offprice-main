@@ -20,6 +20,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { LocalStorageService } from './local-storage.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @UntilDestroy()
 @Injectable({
@@ -41,7 +42,8 @@ export class MakeTableWhereConditionService {
     //private makeObservableService: MakeObservableService,
     private sharedMenuObservableService: SharedMenuObservableService,
     private userSaleListService: UserSaleListService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private sessionStorageService: SessionStorageService
   ) {}
   eventCount = 0;
   searchConditionObservable$: Observable<any>;
@@ -130,7 +132,7 @@ export class MakeTableWhereConditionService {
     ]).pipe(
       untilDestroyed(this),
       tap((val) => {
-        this.displayMode = localStorage.getItem('displayMode');
+        this.displayMode = this.sessionStorageService.getItem('displayMode');
         this.paginator.firstPage();
         // console.log('make-table tap', val,this.displayMode);
         // Close the mobile menu after selecting an option from the filter menu

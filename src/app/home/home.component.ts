@@ -12,7 +12,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserFeedbackComponent } from '../core/components/user-feedback/user-feedback.component';
-import { UserService } from '../user/user.service';
+import { UserService } from 'src/app/user/user.service';
 import { CartItemsService } from '../core/components/cart-items/cart-items.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { AuthService } from '../core/auth/login/services/auth.service';
@@ -70,13 +70,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     this.resetLogoutTimer();
-    this.sharedMenuObservableService.closeFeedback$
-      .pipe(untilDestroyed(this))
-      .subscribe((close) => {
-        const dialogOverlay = document.getElementById('dialog-overlay');
-        dialogOverlay.style.display = 'none';
-      });
-    this.receiveFeedback();
+    // this.sharedMenuObservableService.closeFeedback$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((close) => {
+    //     const dialogOverlay = document.getElementById('dialog-overlay');
+    //     dialogOverlay.style.display = 'none';
+    //   });
+    // this.receiveFeedback();
   }
   // Logout after 30 minutes of inactivity
   @HostListener('window:mousemove')
@@ -93,11 +93,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.titleService.setTitle('offPrice');
     const title = this.titleService.getTitle();
-    console.log('offPrice-main-title', title);
+    // console.log('offPrice-main-title', title);
     // Check if register button can be displayed
-    console.log('AppComponent ngAfterViewInit');
     // To prevent from showing register button in child page
-    // const isStartMenuPassed = localStorage.getItem('isStartMenuPassed');
     const userId = this.sessionStorageService.getItem('userId');
     if (userId) return;
     // if (title === 'offPrice') {
@@ -122,31 +120,31 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // }
   }
 
-  private receiveFeedback() {
-    const feedbackButton = document.getElementById('feedback-button');
-    feedbackButton.addEventListener('click', () => {
-      this.userTokenService.getUserToken().subscribe((loggedUser: any) => {
-        if (!loggedUser) {
-          this.router.navigate(['/login']);
-          return;
-        }
-      });
+  // private receiveFeedback() {
+  //   const feedbackButton = document.getElementById('feedback-button');
+  //   feedbackButton.addEventListener('click', () => {
+  //     this.userTokenService.getUserToken().subscribe((loggedUser: any) => {
+  //       if (!loggedUser) {
+  //         this.router.navigate(['/login']);
+  //         return;
+  //       }
+  //     });
 
-      const dialogOverlay = document.getElementById('dialog-overlay');
-      dialogOverlay.style.display =
-        dialogOverlay.style.display === 'none' ? 'flex' : 'none';
+  //     const dialogOverlay = document.getElementById('dialog-overlay');
+  //     dialogOverlay.style.display =
+  //       dialogOverlay.style.display === 'none' ? 'flex' : 'none';
 
-      const closeButton = document.getElementById('close-btn');
-      closeButton.addEventListener('click', () => {
-        dialogOverlay.style.display = 'none';
-      });
-    });
-  }
-  acitveTab = 'tab1';
-  setActiveTab(tabId: string) {
-    this.acitveTab = tabId;
-  }
-  isActiveTab(tabId: string) {
-    return this.acitveTab === tabId;
-  }
+  //     const closeButton = document.getElementById('close-btn');
+  //     closeButton.addEventListener('click', () => {
+  //       dialogOverlay.style.display = 'none';
+  //     });
+  //   });
+  // }
+  // acitveTab = 'tab1';
+  // setActiveTab(tabId: string) {
+  //   this.acitveTab = tabId;
+  // }
+  // isActiveTab(tabId: string) {
+  //   return this.acitveTab === tabId;
+  // }
 }

@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
 import { InputKeywordComponent } from './../../../layout/components/sidebar/input-keyword/input-keyword.component';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -70,7 +71,8 @@ export class SaleListHeaderComponent
     private chipsKeywordService: ChipsKeywordService,
     private sharedMenuObservableService: SharedMenuObservableService,
     private router: Router,
-    private removeChipsKeywordService: RemoveChipsKeywordService
+    private removeChipsKeywordService: RemoveChipsKeywordService,
+    private sessionStorageService: SessionStorageService
   ) {
     this.showMobileMenu$ = this.menuService.showMobileMenu$;
     this.screenSize$ = this.screenSizeService.screenSize$;
@@ -83,7 +85,7 @@ export class SaleListHeaderComponent
     this.subscribeToLocalStorageItem();
   }
   ngAfterViewInit() {
-    this.displayMode = localStorage.getItem('displayMode');
+    this.displayMode = this.sessionStorageService.getItem('displayMode');
     this.cd.detectChanges();
   }
   subscribeToScreenSize(): void {
@@ -135,7 +137,7 @@ export class SaleListHeaderComponent
       this.router.navigate(['dashboard/sale_list']);
     }
     this.cd.detectChanges();
-    localStorage.setItem('displayMode', this.displayMode);
+    this.sessionStorageService.setItem('displayMode', this.displayMode);
     // this.localStorageService.setItem('displayMode', this.displayMode);
     this.sharedMenuObservableService.gotoHome.next('');
   }

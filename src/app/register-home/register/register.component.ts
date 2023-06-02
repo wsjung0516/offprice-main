@@ -171,7 +171,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading = false;
-    this.registerStatus = localStorage.getItem('registerStatus') ?? 'create';
+    this.registerStatus = this.sessionStorageService.getItem('registerStatus') ?? 'create';
     this.initRegisterForm();
     // To edit sale list
     this.calledFromSaleList();
@@ -411,7 +411,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       if (profile) {
         finalData.user_id = profile.user.uid;
-        console.log('finalData', finalData);
+        // console.log('finalData', finalData);
         this.createSaleList(finalData, profile);
         this.authService.checkIfUserCouponsAvailable();
       }
@@ -529,6 +529,6 @@ vendor:"bbb"
     // this.registerForm.patchValue({ description: event.html });
   }
   ngOnDestroy() {
-    localStorage.setItem('registerStatus', 'create');
+    this.sessionStorageService.setItem('registerStatus', 'create');
   }
 }

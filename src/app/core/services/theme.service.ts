@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,14 +9,16 @@ export class ThemeService {
   public default = 'light';
   public themeChanged: BehaviorSubject<string> = new BehaviorSubject(this.theme);
 
-  constructor() {}
+  constructor(
+    private sessionStorageService: SessionStorageService
+  ) {}
 
   public get theme(): string {
-    return localStorage.getItem('theme') ?? this.default;
+    return this.sessionStorageService.getItem('theme') ?? this.default;
   }
 
   public set theme(value: string) {
-    localStorage.setItem('theme', value);
+    this.sessionStorageService.setItem('theme', value);
     this.themeChanged.next(value);
   }
 

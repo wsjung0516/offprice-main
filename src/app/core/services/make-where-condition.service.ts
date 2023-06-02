@@ -3,6 +3,7 @@ import {
   BehaviorSubject,
   combineLatest,
   distinctUntilChanged,
+  distinctUntilKeyChanged,
   filter,
   last,
   map,
@@ -21,6 +22,7 @@ import { SharedMenuObservableService } from './shared-menu-observable.service';
 import { SaleListService } from './../../modules/dashboard/components/sale-list/sale-list.service';
 import { SaleList } from '../models/sale-list.model';
 import { LocalStorageService } from './local-storage.service';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @UntilDestroy()
 @Injectable({
@@ -47,13 +49,14 @@ export class MakeWhereConditionService {
   constructor(
     private saleListService: SaleListService,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private sessionStorageService: SessionStorageService
   ) {
     // this.makeObservableService.makeWhereObservable();
     this.makeWhereObservable();
     setTimeout(() => {
       this.makeSortNWhereCondition().subscribe((data: any) => {
-        // console.log('make-where data:--------- ', data)
+        // console.log('makeSortNWhereCondition data: ', data)
         this.condition.next(data);
       });
       this.localStorageService.storageItem$.subscribe((item) => {
@@ -72,9 +75,6 @@ export class MakeWhereConditionService {
   get resetImages$(): Observable<any> {
     return this.resetImages.asObservable();
   }
-  setScrollObservable(value: any) {
-    this.scrollObservable.next(value);
-  }
 
   /**
   0:{vendor: 'All'}
@@ -89,7 +89,7 @@ export class MakeWhereConditionService {
   private makeWhereObservable() {
     let andArray: any[] = [];
     let orArray: any[] = [];
-    const displayMode$ = of(localStorage.getItem('displayMode'));
+    const displayMode$ = of(this.sessionStorageService.getItem('displayMode'));
     /**
      * 1. display dialog menu (category, size, price, material, search period)
      * 2. select one item and call the behavior subject, which is at the service( show-menu-dialog.service)
@@ -122,7 +122,7 @@ export class MakeWhereConditionService {
     ]).pipe(
       untilDestroyed(this),
       tap((val) => {
-        this.displayMode = localStorage.getItem('displayMode');
+        this.displayMode = this.sessionStorageService.getItem('displayMode');
         // console.log('make-where-observable : ', val, this.displayMode);
         // Close the mobile menu after selecting an option from the filter menu
         this.sharedMenuObservableService.showMobileMenu.next(false);
@@ -133,6 +133,7 @@ export class MakeWhereConditionService {
       tap((val) => {
         this.eventCount++;
         // Whenever the where condition is changed, the scrollObservable is reset to the initial value.
+        // console.log('make-where-observable eventCount: ', this.eventCount)
         if (this.eventCount > 0) {
           // this.images = [];
           this.resetImages.next({
@@ -173,11 +174,13 @@ export class MakeWhereConditionService {
     // console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color)
     const andArray: any[] = [];
     const orArray: any[] = [];
+    
     andArray.push({ category1: category1 });
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
       const pric = price.split(',');
       andArray.push({ price: { gt: +pric[0], lt: +pric[1] } });
+      // console.log(' andArray', andArray)
     }
     if (category !== 'All') andArray.push({ category: category });
     if (size !== 'All') andArray.push({ size: { contains: size } });
@@ -210,15 +213,24 @@ export class MakeWhereConditionService {
   }
 
   private makeSortNWhereCondition(): Observable<any> {
+    const takeImageCount = this.sessionStorageService.getItem('takeImageCount');
     return combineLatest([
-      this.scrollObservable$.pipe(startWith({ skip: 0, take: 20 })),
+      this.scrollObservable$.pipe(
+        startWith({ skip: 0, take: +takeImageCount }),
+        distinctUntilKeyChanged('skip'),
+        // tap((val) => console.log('scrollObservable: ', val))
+        ),
       this.searchConditionObservable$,
     ]).pipe(
       untilDestroyed(this),
-      map(([scrollData, searchData]) =>
-        this.extractWhereAndScrollData(scrollData, searchData)
+      map(([scrollData, searchData]) =>{
+        return this.extractWhereAndScrollData(scrollData, searchData)
+      }
       ),
-      switchMap((data: any) => this.fetchSaleLists(data))
+      switchMap((data: any) => this.fetchSaleLists(data)),
+      tap((data) => {
+        // console.log('fetchSaleList result data: ', data);
+      }),
     );
   }
 
@@ -240,7 +252,7 @@ export class MakeWhereConditionService {
     } else if (searchData.where && searchData.where['and'].length === 0) {
       where = null;
     }
-
+    
     if (searchData.where && searchData.where['or'].length > 0) {
       whereOR = searchData.where['or'];
       // this.images = [];

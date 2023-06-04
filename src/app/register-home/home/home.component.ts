@@ -20,7 +20,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { HelpComponent } from '../core/components/help/help.component';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
-import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
 import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 import { LoaderComponent } from 'src/app/core/components/loader/loader.component';
 import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.directive';
@@ -69,7 +68,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private sessionStorageService: SessionStorageService,
     private userTokenService: UserTokenService,
-    private sharedParentObservableService: SharedParentObservableService,
     private dialogService: DialogService,
     private titleService: Title,
     private router: Router
@@ -119,7 +117,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     //     this.userName = name;
     //     this.cd.detectChanges();
     //   });
-    this.sharedParentObservableService.isProfileMenuOpen$
+    this.sharedMenuObservableService.isProfileMenuOpen$
       .pipe(untilDestroyed(this))
       .subscribe((isOpen) => {
         this.isProfileMenuOpen = isOpen;

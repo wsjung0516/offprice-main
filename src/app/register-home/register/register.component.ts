@@ -47,20 +47,22 @@ import { Size, Color } from '../core/constants/data-define';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { RegisterAuthService } from 'src/app/register-home/auth/login/services/register-auth.service';
 import {
   Categories2,
   Category,
   Product,
+  IStatus
 } from 'src/app/core/constants/data-define';
+import { StatusVcaComponent } from '../sidemenu/status-vca/status-vca.component';
+import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     MatCardModule,
     MatButtonModule,
     QuillEditorComponent,
@@ -81,6 +83,7 @@ import {
     SizeScaleVcaComponent,
     errorTailorImports,
     Category1VcaComponent,
+    StatusVcaComponent
   ],
   templateUrl: './register.component.html',
   styles: [
@@ -151,6 +154,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   reset_color = false;
   reset_material = false;
   reset_category = false;
+  sale_status: IStatus = { key: 'sale', value: 'sale' } ;
 
   constructor(
     private fb: FormBuilder,
@@ -164,9 +168,9 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private sessionStorageService: SessionStorageService,
     private userTokenService: UserTokenService,
     private snackBar: MatSnackBar,
-    private sharedParentObservableService: SharedParentObservableService,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private authService: RegisterAuthService
+    private authService: RegisterAuthService,
+    private deleteSaleListItemService: DeleteSaleListItemService
   ) {}
 
   ngOnInit() {
@@ -199,7 +203,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         if (id) {
           this.sale_list_id = id;
           this._saleListService.getSaleList(id).subscribe((res: SaleList) => {
-            // console.log('res', res);
+            console.log('res', res);
             // this.registerForm.patchValue(res,{emitEvent: false});
             this.registerForm.get('vendor').setValue(res.vendor);
             this.registerForm.get('price').setValue(res.price);
@@ -208,6 +212,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.imgSmURLs = res.image_sm_urls.split(',');
             this.htmlText = res.description;
             this.category1 = { id: res.category1, key: '', value: '' };
+            this.sale_status = { key: res.status1, value: res.status1 };
             this.size = res.size.split(',');
             this.sizeArray = res.sizeArray.split(',');
             this.material = res.material.split(',');
@@ -229,16 +234,19 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.selectedUnit = 'USD';
-    this.categories = Categories2.filter(
-      (category) => category.categoryId === '1'
-    );
+    // this.sale_status = { id:'1', key: 'sale', value: '' } ;
+
+    // this.categories = Categories2.filter(
+    //   (category) => category.categoryId === '1'
+    // );
 
     this.getCategory1();
     this.getSizes();
     this.getColors();
     this.getMaterials();
     this.getImageUrls();
-    this.sharedParentObservableService.isImageLoading$
+    this.getSaleStatus();
+    this.sharedMenuObservableService.isImageLoading$
       .pipe(untilDestroyed(this))
       .subscribe((val: boolean) => {
         this.isLoading = val;
@@ -272,6 +280,18 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             (category) => category.categoryId === val.id
           );
           this.category1 = val;
+        }
+      });
+  }
+  status1 = 'sale';
+  private getSaleStatus() {
+    this.registerForm
+      .get('status')
+      .valueChanges.pipe(untilDestroyed(this))
+      .subscribe((val: IStatus) => {
+        // console.log('val?', val);
+        if (val ) {
+          this.status1 = val.key;
         }
       });
   }
@@ -343,11 +363,12 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       price: ['', Validators.required],
       size: ['', Validators.required],
       category: ['', Validators.required],
-      category_1: ['', Validators.required],
+      category_1: ['1', Validators.required],
       material: ['', Validators.required],
       color: ['', Validators.required],
-      image_urls: [''],
-      user_id: [''],
+      status: ['sale', Validators.required],
+      image_urls: [''], // This value is assigned after processing in image-upload.component.ts
+      user_id: [''],    // This value is assigned in uploadSaleListToDB()
       sizeArray: this.fb.array(this.createSizeFormControls()),
       colorArray: this.fb.array(this.createColorFormControls()),
     });
@@ -378,7 +399,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         this.imgSmURLs
       );
       console.log('this.registerForm.value', this.registerForm.value);
-      // if( this.registerForm.valid) {
+      if( this.registerForm.valid) {
       this._saleListService
         .updateSaleList(this.sale_list_id, finalData)
         .subscribe((res: any) => {
@@ -387,11 +408,11 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
           this._router.navigate(['/register-home/home/sale-list']);
         });
 
-      // } else {
-      //   this.snackBar.open('Please check the field conditions!', 'Close', {
-      //     duration: 3000,
-      //   });
-      // }
+      } else {
+        this.snackBar.open('Please check the field conditions!', 'Close', {
+          duration: 3000,
+        });
+      }
     }
   }
 
@@ -399,9 +420,19 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.registerStatus === 'update') {
       this.updateSaleList();
     } else {
-      this.uploadStartStatus = true;
+      // Check form validation
+      if( this.registerForm.valid) {
+        // Start upload image, Send signal to image-upload.component.ts
+        this.uploadStartStatus = true;
+      } else {
+        console.log('this.registerForm.valid', this.registerForm.valid, this.registerForm.value);
+        this.snackBar.open('Please check the input fields!', 'Close', {
+          duration: 3000,
+        });
+      }
     }
   }
+  // This function is called from image-upload.component.ts through this.getImageUrls()
   private uploadSaleListToDB() {
     const finalData = this.deserializeData(
       this.registerForm.value,
@@ -471,8 +502,9 @@ vendor:"bbb"
       color: tColor.join(','),
       colorArray: tColorArray.join(','),
       material: this.nMaterials,
+      status1: this.status1,
     };
-    console.log('final data', adata);
+    // console.log('final data', adata);
     return adata;
   }
   deleteEditImage(index: number) {}
@@ -488,9 +520,7 @@ vendor:"bbb"
   deleteItem() {
     // Call to table-list component to delete item
     console.log('deleteItem', this.sale_list_id);
-    this.sharedMenuObservableService.deleteSaleListItem.next(
-      this.sale_list_id.toString()
-    );
+    this.deleteSaleListItemService.delete(this.sale_list_id.toString());
   }
 
   private createSaleList(data: Partial<SaleList>, user: any) {
@@ -499,26 +529,22 @@ vendor:"bbb"
     this.registerForm.patchValue({
       user_id: user.user.uid,
     });
-    // Check form validation
-    if (this.registerForm.status === 'VALID') {
-      // submit form
-      this._saleListService
-        .createSaleList(data)
-        // .createSaleList(this.registerForm.value)
-        .subscribe((res: any) => {
-          console.log('res', res);
-          this._notificationService.success('Register success');
-          this.registerForm.reset();
-          this.imgURLs = [];
-          this.imgSmURLs = [];
-          this.htmlText = '';
-          this.uploadStartStatus = false;
-          this.reset_size = true;
-          this.reset_material = true;
-          this.reset_color = true;
-          this.reset_category = true;
-        });
-    }
+    this._saleListService
+      .createSaleList(data)
+      // .createSaleList(this.registerForm.value)
+      .subscribe((res: any) => {
+        // console.log('res', res);
+        this._notificationService.success('Register success');
+        this.registerForm.reset();
+        this.imgURLs = [];
+        this.imgSmURLs = [];
+        this.htmlText = '';
+        this.uploadStartStatus = false;
+        this.reset_size = true;
+        this.reset_material = true;
+        this.reset_color = true;
+        this.reset_category = true;
+      });
   }
 
   // Receive data from quill editor

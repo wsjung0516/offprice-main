@@ -6,12 +6,6 @@
       If you leave a message, I will response to you
     </p>
     <form class="contact_form" action="#">
-      <!-- <div class="relative mb-4">
-        <label for="name" class="leading-7 text-sm text-gray-600">Name</label>
-        <input type="text" id="name" name="name" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-        <label for="email" class="leading-7 text-sm text-gray-600">Email</label>
-        <input type="email" id="email" name="email" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-      </div> -->
       <div class="relative mb-4">
         <label for="subjedt" class="leading-7 text-sm text-gray-600">Subject</label>
         <input #subject type="text" [(ngModel)]="subjectData" id="subject" name="subject" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
@@ -20,9 +14,15 @@
         <label for="message" class="leading-7 text-sm text-gray-600">Message</label>
         <textarea #textArea [(ngModel)]="textData" id="message" name="message" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
       </div>
-      <button type="button" (click)="sendMsg(subject.value, textArea.value)" class="text-white bg-green-700 border-0 py-2 px-6 focus:outline-none hover:bg-green-900 rounded text-lg">
-        Leave Message
-      </button>
+      <div class="flex justify-center space-x-2">
+        <button type="button" (click)="sendMsg(subject.value, textArea.value)" class="text-white bg-green-700 border-0 py-2 px-2 focus:outline-none hover:bg-green-900 rounded text-lg">
+          Leave Message
+        </button>
+        <button type="button" (click)="onCancel()" class="text-gray-800 bg-white border border-gray-500 py-2 px-2 focus:outline-none hover:bg-gray-300 rounded text-lg">
+          Cancel
+        </button>
+
+      </div>
     </form>
     <p class="text-xs text-gray-500 mt-3"></p>
   </div>

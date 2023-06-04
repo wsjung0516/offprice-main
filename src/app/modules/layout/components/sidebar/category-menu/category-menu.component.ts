@@ -25,17 +25,18 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   imports: [CommonModule, MatIconModule],
   template: `
     <div class="bg-gray-200 px-1 py-2 flex items-center">
-      <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide">
+      <!-- <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide"> -->
+      <div class="flex-1 hover:overflow-scroll whitespace-nowrap">
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
           <ng-container *ngFor="let button of categories">
             <button
               mat-button-toggle
-              class="border-1 border-transparent rounded-full py-2 px-4 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
-              [ngClass]="{ selected: selected_category.key === button.key }"
+              class="border border-transparent rounded-full py-2 px-4 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
+              [ngClass]="{ selected: selected_category.key === button.key, group1: button.group === '1', group2: button.group === '2' }"
               [value]="button"
               (click)="onSelect(button)"
             >
-              {{ button.key }}
+              <span class="">{{ button.key }}</span>
             </button>
           </ng-container>
         </div>
@@ -55,11 +56,17 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
         background-color: #007bff;
         color: #fff;
       }
+      .group1 {
+        border: 1px solid #ef4444;
+      }
+      .group2 {
+        border: 1px solid #84cc16;
+      }
       .scrollbar-hide::-webkit-scrollbar {
         display: none;
       }
 
-      /* For IE, Edge and Firefox */
+      /* For IE, Edge and Firefox  #10b981  #84cc16 #eab308 #0ea5e9 #8b5cf6 #78716c*/
       .scrollbar-hide {
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */

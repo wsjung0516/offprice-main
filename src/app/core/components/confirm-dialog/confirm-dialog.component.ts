@@ -49,9 +49,10 @@ interface Data {
   ]
 })
 export class ConfirmDialogComponent {
-  ref: DialogRef<Data> = inject(DialogRef);
+  // ref: DialogRef<Data> = inject(DialogRef);
   message: string = this.ref.data.message;
   title: string = this.ref.data.title;
+  constructor(public ref: DialogRef) { }
   onOk() {
     this.ref.close(true);
   }

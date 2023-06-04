@@ -19,7 +19,7 @@ import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-o
           <ng-container *ngFor="let button of categories">
             <button
               mat-button-toggle
-              class="border-1 border-transparent rounded-full mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
+              class="border border-transparent rounded-full mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
               [ngClass]="{ selected: selected_category.id === button.id }"
               [value]="button"
               (click)="onSelect(button)"

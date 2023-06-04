@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ChangeDetectorRef,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,8 +11,12 @@ import { SessionStorageService } from '../../services/session-storage.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { UserTokenService } from '../../services/user-token.service';
 import { UserFeedbackService } from './user-feedback.service';
+import { DialogRef } from '@ngneat/dialog';
 
 declare let Email: any;
+interface Data {
+  title: string;
+}
 @Component({
   selector: 'app-user-feedback',
   standalone: true,
@@ -21,7 +26,8 @@ declare let Email: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserFeedbackComponent {
-  textData: HTMLTextAreaElement;
+  ref: DialogRef<Data, boolean> = inject(DialogRef);
+  textData = '';
   subjectData = '';
   constructor(
     private sharedMenuObservableService: SharedMenuObservableService,
@@ -32,18 +38,23 @@ export class UserFeedbackComponent {
   ) {}
 
   sendMsg(subject: string, msg: any) {
-    // const profile: any = this.sessionStorageService.getItem('token');
-    // const textarea = document.getElementById('message') as HTMLTextAreaElement;
-    // const data = textarea.value.replace(/\n/g, '<br>');
-    const data = this.textData.value.replace(/\n/g, '<br>');
+    const data = this.textData.replace(/\n/g, '<br>');
 
     this.userTokenService.getUserToken().subscribe((profile: any) => {
-      console.log('message', profile);
+      // console.log('message', profile);
       if (profile) {
         this.sendMessage(subject, profile, data);
         this.sendMessageToDB(subject, profile, data);
+        this.ref.close(true);
+      } else {
+        this.snackBar.open('Please login first', 'Close', {
+          duration: 2000,
+        });
       }
     });
+  }
+  onCancel() {
+    this.ref.close(false);
   }
   private sendMessageToDB(subject: string, profile: any, data: string) {
     const da = {

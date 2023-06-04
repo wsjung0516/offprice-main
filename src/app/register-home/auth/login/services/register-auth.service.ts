@@ -127,7 +127,8 @@ export class RegisterAuthService {
             this.sessionStorageService.removeItem('userId');
             this.sharedMenuObservableService.isLoggedOut.next(true);
 
-            this.router.navigate(['/register-home/login']);
+            this.router.navigate(['/']);
+            // this.router.navigate(['/register-home/login']);
           }
         });
       },

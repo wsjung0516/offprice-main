@@ -179,6 +179,15 @@
             </div>
           </ng-container>
           <!-- Color -->
+          <!-- Status -->
+          <p class="m-2 mt-4"><span class="font-bold">Status</span></p>
+          <div class="m-2 overflow-y-auto">
+            <app-status-vca
+              [status1]="sale_status"
+              formControlName="status"
+            ></app-status-vca>
+          </div>
+
           <!-- Upload Image button -->
 
           <div class="mt-4 flex item-center">
@@ -199,13 +208,13 @@
             <ng-container *ngIf="registerStatus === 'update'">
               <button
                 (click)="deleteItem()"
-                class="m-2 rounded-md w-20 h-12 text-xl text-black bg-red-400 border-1 border-red-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
+                class="m-2 rounded-md w-20 h-12 text-xl text-black bg-red-400 border border-red-600 disabled:bg-red-300 hover:bg-red-600 drop-shadow-xl"
               >
                 Delete
               </button>
               <button
                 (click)="cancelUpload()"
-                class="m-2 rounded-md w-20 h-12 text-xl text-black bg-white border-1 border-green-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
+                class="m-2 rounded-md w-20 h-12 text-xl text-black bg-white border border-green-600 disabled:bg-red-300 hover:bg-gray-400 drop-shadow-xl"
               >
                 Cancel
               </button>

@@ -52,8 +52,6 @@ export class SharedMenuObservableService {
   isLoggedOut$ = this.isLoggedOut.asObservable();
   resultDeleteSaleListItem = new Subject<string>();
   resultDeleteSaleListItem$ = this.resultDeleteSaleListItem.asObservable();
-  deleteSaleListItem = new Subject<string>();
-  deleteSaleListItem$ = this.deleteSaleListItem.asObservable();
   userCoupons = new Subject<string>();
   userCoupons$ = this.userCoupons.asObservable();
   isLoggedIn = new Subject<string>();
@@ -62,7 +60,10 @@ export class SharedMenuObservableService {
   resetSearchConditions$ = this.resetSearchConditions.asObservable();
   showSideBar = new Subject<boolean>();
   showSideBar$ = this.showSideBar.asObservable();
-  
+  isImageLoading = new Subject<boolean>();
+  isImageLoading$ = this.isImageLoading.asObservable();
+  isProfileMenuOpen = new Subject<boolean>();
+  isProfileMenuOpen$ = this.isProfileMenuOpen.asObservable();
   get input_keyword$() {
     return this.input_keyword.asObservable();
   }

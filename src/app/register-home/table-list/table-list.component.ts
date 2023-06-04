@@ -20,7 +20,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { SearchKeyword } from 'src/app/core/services/chips-keyword.service';
 import { MatIconModule } from '@angular/material/icon';
 
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+// import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../core/components/confirm-dialog/confirm-dialog.component';
 import { DetailsItemComponent } from '../core/components/details-item/details-item.component';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
@@ -28,9 +28,10 @@ import { UserSaleListService } from '../sale-list/user-sale-list.service';
 import { DialogService } from '@ngneat/dialog';
 import { DescriptionDetailDirective } from 'src/app/core/directives/description-detail.directive';
 import { ImageDetailDirective } from 'src/app/core/directives/image-detail.directive';
-import { MatSnackBar } from '@angular/material/snack-bar';
+// import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
+import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
 
 @UntilDestroy()
 @Component({
@@ -43,7 +44,7 @@ import { SessionStorageService } from 'src/app/core/services/session-storage.ser
     MatTableModule,
     RouterModule,
     MatIconModule,
-    MatDialogModule,
+    // MatDialogModule,
     ConfirmDialogComponent,
     DescriptionDetailDirective,
     ImageDetailDirective,
@@ -67,6 +68,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
     'description',
     'created_at',
     'image_urls',
+    'status1',
     'action',
   ];
   displayedTitle: string[] = [
@@ -82,6 +84,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
     'Description',
     'CreatedAt',
     'Image',
+    'Status',
     'Action',
   ];
 
@@ -103,26 +106,22 @@ export class TableListComponent implements OnInit, AfterViewInit {
     private userSaleListService: UserSaleListService,
     private saleListService: SaleListService,
     private router: Router,
-    private dialog: MatDialog,
+    // private dialog: MatDialog,
+    // private snackBar: MatSnackBar,
     private cd: ChangeDetectorRef,
     private dialogService: DialogService,
-    private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private sessionStorageService: SessionStorageService
+    private sessionStorageService: SessionStorageService,
+    private deleteSaleListItemService: DeleteSaleListItemService
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
     console.log('table-list ngOnInit');
     this.sessionStorageService.setItem('displayMode', 'list');
-    this.sharedMenuObservableService.deleteSaleListItem$
-      .pipe(untilDestroyed(this))
-      .subscribe((sale_list_id: string) => {
-        console.log('deleteSaleListItem$', sale_list_id);
-        this.onDeletedSaleList(sale_list_id);
-      });
   }
   ngAfterViewInit(): void {
+
     this.makeTableWhereConditionService.initializeWhereCondition(
       this.sort,
       this.paginator
@@ -171,57 +170,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
   }
   onDeletedSaleList(saleList: SaleList | string) {
     console.log('onDeletedSaleList', saleList);
-    const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Confirm Remove Sales List',
-        message: 'Are you sure, you want to remove?',
-      },
-    });
-    let saleListId: string;
-    if (typeof saleList === 'string') {
-      saleListId = saleList;
-    } else {
-      saleListId = saleList.sale_list_id;
-    }
-    confirmDialog.afterClosed().subscribe((result: any) => {
-      if (result === true) {
-        this.saleListService
-          .deleteSaleList(saleListId)
-          .pipe(
-            switchMap((data: SaleList) => {
-              // Delete images from Google Cloud Storage
-              const urls = data.image_urls.split(',');
-              return from(urls).pipe(
-                concatMap((url: string) => {
-                  const fileName = url.match(/.*\/(.+\..+)/)[1];
-                  // console.log('fileName---', fileName);
-                  return this.saleListService.deleteImageFromBucket(fileName);
-                })
-              );
-            }),
-            untilDestroyed(this)
-          )
-          .subscribe(
-            (data: any) => {
-              // console.log('deleted---', data);
-              this.sharedMenuObservableService.resultDeleteSaleListItem.next(
-                saleListId
-              );
-              this.snackBar.open('Deleted Successfully', 'Close', {
-                duration: 2000,
-              });
-              // this.refreshObservable.next();
-            },
-            (error: any) => {
-              this.snackBar.open(
-                'Deleting is failed because this item is reserved already by someone',
-                'Close',
-                {}
-              );
-            }
-          );
-      }
-    });
+    this.deleteSaleListItemService.delete(saleList);
   }
   openDetailsItem(row: UserSaleList) {
     const mobileMode = window.matchMedia('(max-width: 576px)').matches;

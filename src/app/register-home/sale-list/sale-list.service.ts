@@ -61,6 +61,7 @@ export class SaleListService {
   }
   createSaleList(data: Partial<SaleList>): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list`;
+    console.log('createSaleList -- data: ', data);
     return this.http
       .post<SaleList>(url, { data }, { headers: this.headers })
       .pipe(map((data) => data));

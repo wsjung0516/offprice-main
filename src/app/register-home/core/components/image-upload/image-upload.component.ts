@@ -43,7 +43,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SharedParentObservableService } from 'src/app/core/services/shared-parent-observable.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { pipe } from 'rxjs';
 import { set } from 'date-fns';
 export interface FileData {
@@ -145,7 +145,7 @@ export class ImageUploadComponent
     private restApiService: RestApiService,
     private compressImageService: CompressImageService,
     private snackBar: MatSnackBar,
-    private sharedParentObservableService: SharedParentObservableService
+    private sharedMenuObservableService: SharedMenuObservableService
   ) {}
   ngOnInit(): void {}
   ngAfterViewInit(): void {}
@@ -198,7 +198,7 @@ export class ImageUploadComponent
       .pipe(
         tap(() => {
           this.isLoading = true;
-          this.sharedParentObservableService.isImageLoading.next(true);
+          this.sharedMenuObservableService.isImageLoading.next(true);
         }),
         takeUntil(this.destroy$),
         concatMap((file: File) =>
@@ -214,11 +214,11 @@ export class ImageUploadComponent
           this.tempArr = [];
           this.compressedFiles = [];
           this.isLoading = false;
-          this.sharedParentObservableService.isImageLoading.next(false);
+          this.sharedMenuObservableService.isImageLoading.next(false);
           this.onChange(res);
         },
         (err) => {
-          this.sharedParentObservableService.isImageLoading.next(false);
+          this.sharedMenuObservableService.isImageLoading.next(false);
           this.isLoading = false;
           this.snackBar.open(err.message, 'Close', {
             duration: 2000,

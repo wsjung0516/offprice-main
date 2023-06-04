@@ -25,9 +25,9 @@
         class="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded text-gray-400 transition-all duration-200 focus:outline-none hover:text-gray-500 dark:text-night-400 dark:hover:text-night-300"
         [ngClass]="{ 'rotate-180': !(showSideBar$ | async) }"
       >
-        <svg-icon src="assets/icons/solid/chevron-double-left.svg">
+        <!-- <svg-icon src="assets/icons/solid/chevron-double-left.svg">
           [svgClass]="'h-5 w-5'">
-        </svg-icon>
+        </svg-icon> -->
       </button>
     </div>
 
@@ -53,11 +53,13 @@
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <svg-icon (click)="toggleSidebar()"
+            <img src="assets/images/ruler.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="Material">
+
+            <!-- <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/measurement.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
-          </svg-icon>
+          </svg-icon> -->
           <ng-container *ngIf="(showSideBar$ | async)">
             <span > Size</span>
               <span class="transition group-open:rotate-180">
@@ -87,11 +89,13 @@
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <svg-icon (click)="toggleSidebar()"
+            <img src="assets/images/dollar.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="Price">
+  
+            <!-- <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/best-price.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
-          </svg-icon>
+          </svg-icon> -->
           <ng-container *ngIf="(showSideBar$ | async)">
             <span> Price</span>
               <span class="transition group-open:rotate-180">
@@ -121,11 +125,13 @@
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-          <svg-icon (click)="toggleSidebar()"
+          <img src="assets/images/calendar.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="Calendar">
+
+          <!-- <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/calendar.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
-          </svg-icon>
+          </svg-icon> -->
           <ng-container *ngIf="(showSideBar$ | async)">
             <span>Period</span>
               <span class="transition group-open:rotate-180">
@@ -155,11 +161,12 @@
             <summary 
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <svg-icon (click)="toggleSidebar()" tp="color"
+            <img src="assets/images/color.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="color">
+            <!-- <svg-icon (click)="toggleSidebar()" tp="color"
             src="assets/icons/outline/color-palette.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
-          </svg-icon>
+          </svg-icon> -->
           <ng-container *ngIf="(showSideBar$ | async)">
             <span> Color</span>
               <span class="transition group-open:rotate-180">
@@ -189,11 +196,12 @@
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <svg-icon (click)="toggleSidebar()"
+            <img src="assets/images/textile.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="Material">
+            <!-- <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/textile.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
-            >
-            </svg-icon>
+            > 
+            </svg-icon> -->
             <ng-container *ngIf="(showSideBar$ | async)">
               <span> Material</span>
               <span class="transition group-open:rotate-180">
@@ -258,11 +266,11 @@
     <div
       class="group flex h-9 cursor-pointer items-center justify-start rounded p-2 hover:bg-gray-100 dark:hover:bg-night-600"
     >
-      <svg-icon
+      <!-- <svg-icon
         src="assets/icons/outline/logout.svg"
         [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
       >
-      </svg-icon>
+      </svg-icon> -->
 
       <a (click)="signOut()"
         class="ml-3 truncate text-xs font-semibold tracking-wide text-gray-600 focus:outline-none dark:text-night-100"
@@ -282,11 +290,11 @@
     <div
       class="group flex h-9 cursor-pointer items-center justify-start rounded p-2 hover:bg-gray-100 dark:hover:bg-night-600"
     >
-      <svg-icon
+      <!-- <svg-icon
         src="assets/icons/outline/information-circle.svg"
         [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
       >
-      </svg-icon>
+      </svg-icon> -->
 
       <a
         target="_blank"

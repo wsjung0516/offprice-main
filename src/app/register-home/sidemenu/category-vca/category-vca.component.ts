@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ChangeDetectorRef, AfterViewInit, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ControlValueAccessor,
@@ -16,7 +16,7 @@ import { Categories, Product } from 'src/app/core/constants/data-define';
       <ng-container *ngFor="let category of category_list">
         <button
           class="box-size flex items-center justify-center cursor-pointer"
-          [ngClass]="{ sel_class: category.key === selected_category }"
+          [ngClass]="{ sel_class: category.key === selected_category, group1: category.group === '1', group2: category.group === '2' }"
           (click)="selectValue(category)"
         >
           {{ category.key }}
@@ -44,6 +44,12 @@ import { Categories, Product } from 'src/app/core/constants/data-define';
         background-color: #2962ff;
         color: white;
       }
+      .group1 {
+        border: 2px solid #ef4444;
+      }
+      .group2 {
+        border: 2px solid #84cc16;
+      }
     `,
   ],
   providers: [
@@ -54,22 +60,36 @@ import { Categories, Product } from 'src/app/core/constants/data-define';
     },
   ],
 })
-export class CategoryVcaComponent implements ControlValueAccessor {
-  @Input() set categories(value: any[]) {
-    // this.selected_category = value;
-    this.category_list = [...value];
-  }
-  @Input() set selected_category_data(value: string) {
-    if( value) {
-      this.selected_category = value;
-    }
-  }
+export class CategoryVcaComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnChanges {
+  @Input() categories: any[];
+  @Input() selected_category_data: string;
   @Input() set reset_category(value: boolean) {
     if( value) {
       this.selected_category = '';
     }    
   }
-  constructor() {}
+  constructor(private elRef: ElementRef,
+    private cd: ChangeDetectorRef) {}
+  ngOnInit(): void {
+    // console.log('ngOnInit: ', this.category_list);
+  }
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit: ', this.category_list, this.categories);
+    this.category_list = [...this.categories];
+    if (this.selected_category_data) {
+      this.selected_category = this.selected_category_data;
+    }
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('ngOnChanges: ', changes);
+    if(changes['selected_category_data'] && changes['selected_category_data'].currentValue) {
+      this.selected_category = changes['selected_category_data'].currentValue;
+      this.onChange(this.selected_category);
+    }
+    if( changes['categories'] && changes['categories'].currentValue) {
+      this.category_list = [...this.categories];
+    }
+  }
   onChange: any = () => {};
   onTouch: any = () => {};
   // categories = Categories;

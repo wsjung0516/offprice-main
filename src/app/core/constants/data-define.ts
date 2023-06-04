@@ -8,6 +8,7 @@ export interface Product {
   key: string;
   value: string;
   categoryId: string;
+  group: string;
 }
 export const Categories1: Category[] = [
   {id: '1', key: 'Women', value:'women'},
@@ -15,32 +16,70 @@ export const Categories1: Category[] = [
   {id: '3', key: 'Kids', value:'kids'},
 ]
 export const Categories2: Product[] = [
-  {key: 'Dresses', value: 'Dresses', categoryId: '1'},
-  {key: 'Tops', value: 'Tops', categoryId: '1'},
-  {key: 'Sweater', value: 'Sweaters', categoryId: '1'},
-  {key: 'Jacket', value: 'Jackets', categoryId: '1'},
-  {key: 'Jeans', value: 'Jeans', categoryId: '1'},
-  {key: 'Pants', value: 'Pants', categoryId: '1'},
-  {key: 'Skirts', value: 'Skirts', categoryId: '1'},
-  {key: 'Swimwear', value: 'Swimwear', categoryId: '1'},
-  {key: 'Sportswear', value: 'Sportswear', categoryId: '1'},
-  {key: 'Jackets', value: 'Jackets', categoryId: '2'},
-  {key: 'Shirts', value: 'Shirts', categoryId: '2'},
-  {key: 'Sweater', value: 'Sweaters', categoryId: '2'},
-  {key: 'Jeans', value: 'Jeans', categoryId: '2'},
-  {key: 'Pants', value: 'Pants', categoryId: '2'},
-  {key: 'Shorts', value: 'Shorts', categoryId: '2'},
-  {key: 'Swimwear', value: 'Swimwear', categoryId: '2'},
-  {key: 'Sportswear', value: 'Sportswear', categoryId: '2'},
-  {key: 'Jackets', value: 'Jackets', categoryId: '3'},
-  {key: 'Shirts', value: 'Shirts', categoryId: '3'},
-  {key: 'Sweaters', value: 'Sweaters', categoryId: '3'},
-  {key: 'Jeans', value: 'Jeans', categoryId: '3'},
-  {key: 'Pants', value: 'Pants', categoryId: '3'},
-  {key: 'Shorts', value: 'Shorts', categoryId: '3'},
-  {key: 'Swimwear', value: 'Swimwear', categoryId: '3'},
-  {key: 'Sportswear', value: 'Sportswear', categoryId: '3'},
+  {key: 'Tops', value: 'Tops', categoryId: '1', group: '1'},
+  {key: 'Blouses', value: 'Blouses', categoryId: '1', group: '1'},
+  {key: 'Bodysuits', value: 'Bodysuits', categoryId: '1', group: '1'},
+  {key: 'Casual', value: 'Casual', categoryId: '1', group: '1'},
+  {key: 'Dresses', value: 'Dresses', categoryId: '1', group: '1'},
+  {key: 'Suit', value: 'Suit', categoryId: '1', group: '1'},
+  {key: 'T-Shirts', value: 'T-Shirts', categoryId: '1', group: '1'},
+
+  {key: 'Bottoms', value: 'Bottoms', categoryId: '1', group: '2'},
+  {key: 'Jeans', value: 'Jeans', categoryId: '1', group: '2'},
+  {key: 'Joggers', value: 'Joggers', categoryId: '1', group: '2'},
+  {key: 'Leggings', value: 'Leggings', categoryId: '1', group: '2'},
+  {key: 'Pants', value: 'Pants', categoryId: '1', group: '2'},
+  {key: 'Shorts', value: 'Shorts', categoryId: '1', group: '2'},
+  {key: 'Skirts', value: 'Skirts', categoryId: '1', group: '2'},
+
+  {key: 'Activewear', value: 'Activewear', categoryId: '1', group: '3'},
+  {key: 'Jumpsuits', value: 'Jumpsuits', categoryId: '1', group: '3'},
+  {key: 'Lingerie', value: 'Lingerie', categoryId: '1', group: '3'},
+  {key: 'Loungewear', value: 'Loungewear', categoryId: '1', group: '3'},
+  {key: 'Outerwear', value: 'Outerwear', categoryId: '1', group: '3'},
+  {key: 'PlusSize', value: 'PlusSize', categoryId: '1', group: '3'},
+  {key: 'Sets', value: 'Sets', categoryId: '1', group: '3'},
+  {key: 'SweaterKnit', value: 'SweaterKnit', categoryId: '1', group: '3'},
+  {key: 'Swimwear', value: 'Swimwear', categoryId: '1', group: '3'},
+
+
+  {key: 'Jackets', value: 'Jackets', categoryId: '2', group: '3'},
+  {key: 'Shirts', value: 'Shirts', categoryId: '2', group: '3'},
+  {key: 'Sweater', value: 'Sweaters', categoryId: '2', group: '3'},
+  {key: 'Jeans', value: 'Jeans', categoryId: '2', group: '3'},
+  {key: 'Pants', value: 'Pants', categoryId: '2', group: '3'},
+  {key: 'Shorts', value: 'Shorts', categoryId: '2', group: '3'},
+  {key: 'Swimwear', value: 'Swimwear', categoryId: '2', group: '3'},
+  {key: 'Sportswear', value: 'Sportswear', categoryId: '2', group: '3'},
+
+  {key: 'Jackets', value: 'Jackets', categoryId: '3', group: '3'},
+  {key: 'Shirts', value: 'Shirts', categoryId: '3', group: '3'},
+  {key: 'Sweaters', value: 'Sweaters', categoryId: '3', group: '3'},
+  {key: 'Jeans', value: 'Jeans', categoryId: '3', group: '3'},
+  {key: 'Pants', value: 'Pants', categoryId: '3', group: '3'},
+  {key: 'Shorts', value: 'Shorts', categoryId: '3', group: '3'},
+  {key: 'Swimwear', value: 'Swimwear', categoryId: '3', group: '3'},
+  {key: 'Sportswear', value: 'Sportswear', categoryId: '3', group: '3'},
 ]
+export interface IStatus {
+  // id: string;
+  key: string;
+  value: string;
+}
+export const Status: IStatus[] = [
+  { key: 'Sale', value: 'Sale'},
+  { key: 'Reserved', value: 'Reserved'},
+  { key: 'Pending', value: 'Pending'},
+  { key: 'Sold', value: 'Sold'},
+  { key: 'Canceled', value: 'Canceled'},
+]
+// export const Status: IStatus[] = [
+//   {id: '1', key: 'Sale', value: 'Sale'},
+//   {id: '2', key: 'Reserved', value: 'Reserved'},
+//   {id: '3', key: 'Pending', value: 'Pending'},
+//   {id: '4', key: 'Sold', value: 'Sold'},
+//   {id: '5', key: 'Canceled', value: 'Canceled'},
+// ]
 export const Sizes = [
   {key: 'All', value: 'All', category: 'All'},
   {key: 'XS', value: 'XS', category: 'BASE'},

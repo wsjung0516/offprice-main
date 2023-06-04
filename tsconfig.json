@@ -25,7 +25,7 @@
     ],
     "strictNullChecks": false,
     "paths": {
-      "tslib" : ["/node_modules/tslib/tslib.d.ts"]
+      "tslib" : ["assets/ts/tslib.d.ts"]
     }
   },
   "angularCompilerOptions": {

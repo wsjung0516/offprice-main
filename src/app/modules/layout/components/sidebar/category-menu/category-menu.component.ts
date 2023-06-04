@@ -26,7 +26,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   template: `
     <div class="bg-gray-200 px-1 py-2 flex items-center">
       <!-- <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide"> -->
-      <div class="flex-1 hover:overflow-scroll whitespace-nowrap">
+      <div class="flex-1 overflow-x-auto hover:overflow-scroll whitespace-nowrap">
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
           <ng-container *ngFor="let button of categories">
             <button

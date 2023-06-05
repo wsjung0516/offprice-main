@@ -59,7 +59,7 @@ import { Title } from '@angular/platform-browser';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { SaleListService } from './sale-list.service';
 import { UserSaleListService } from './user-sale-list.service';
-import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
+import { MakeRegisterWhereConditionService } from '../core/services/make-register-where-condition.service';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
 @UntilDestroy()
 @Component({
@@ -123,7 +123,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     private titleService: Title,
     private localStorageService: LocalStorageService,
     private userSaleListService: UserSaleListService,
-    private makeTableWhereConditionService: MakeTableWhereConditionService
+    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService
   ) {
     // Assign the data to the data source for the table to render
     // this.dataSource = new MatTableDataSource(this.saleLists);
@@ -140,7 +140,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     this.titleService.setTitle('SaleList');
-    this.makeTableWhereConditionService.searchResult$
+    this.makeRegisterWhereConditionService.searchResult$
       .pipe(untilDestroyed(this))
       .subscribe((data: any) => {
         // console.log('condition$', data);
@@ -198,7 +198,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     this.localStorageService.storageItem$
       .pipe(untilDestroyed(this))
       .subscribe((item) => {
-        console.log('subscribeToLocalStorageItem', item); 
+        // console.log('subscribeToLocalStorageItem', item); 
         if (item && item.key === 'searchItemsLength') {
           this.searchItemLength = +item.value;
           this.cd.detectChanges();

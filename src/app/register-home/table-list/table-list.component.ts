@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
+import { MakeRegisterWhereConditionService } from '../core/services/make-register-where-condition.service';
 import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SaleListService } from 'src/app/register-home/sale-list/sale-list.service';
@@ -102,7 +102,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
   userSaleList: UserSaleList;
 
   constructor(
-    private makeTableWhereConditionService: MakeTableWhereConditionService,
+    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService,
     private userSaleListService: UserSaleListService,
     private saleListService: SaleListService,
     private router: Router,
@@ -117,20 +117,20 @@ export class TableListComponent implements OnInit, AfterViewInit {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
-    console.log('table-list ngOnInit');
+    console.log('register-home table-list ngOnInit');
     this.sessionStorageService.setItem('displayMode', 'list');
   }
   ngAfterViewInit(): void {
-
-    this.makeTableWhereConditionService.initializeWhereCondition(
+    console.log('register-home table-list ngAfterViewInit');
+    this.makeRegisterWhereConditionService.initializeWhereCondition(
       this.sort,
       this.paginator
     );
-    this.makeTableWhereConditionService.setRefreshObservable(
+    this.makeRegisterWhereConditionService.setRefreshObservable(
       this.refreshObservable
     );
     //
-    this.makeTableWhereConditionService.searchResult$
+    this.makeRegisterWhereConditionService.searchResult$
       .pipe(untilDestroyed(this))
       .subscribe((data: UserSaleList[]) => {
         // console.log('condition$', data);
@@ -144,7 +144,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
     this.userSaleListService
       .getConditionalUserSaleListLength()
       .subscribe((res: number) => {
-        // console.log('getConditionalSaleListLength', res);
+        // console.log('register-home getConditionalSaleListLength', res);
         // To display the number of search results in the search bar
 
         this.paginator.length = res;

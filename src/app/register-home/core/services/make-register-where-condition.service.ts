@@ -14,19 +14,19 @@ import {
   distinctUntilKeyChanged,
 } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SharedMenuObservableService } from './shared-menu-observable.service';
-import { UserSaleListService } from '../../modules/dashboard/components/sale-list/user-sale-list.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { UserSaleListService } from '../../sale-list/user-sale-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
-import { LocalStorageService } from './local-storage.service';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @UntilDestroy()
 @Injectable({
   providedIn: 'root',
 })
-export class MakeTableWhereConditionService {
+export class MakeRegisterWhereConditionService {
   searchResult = new Subject<any>();
 
   sort: MatSort;

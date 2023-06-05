@@ -12,6 +12,7 @@ export class UserSaleListService {
   baseUrl = environment.url;
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
   headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
+  where: string;
   getUserSaleLists(
     skip: number,
     take: number,
@@ -21,11 +22,13 @@ export class UserSaleListService {
   ): Observable<UserSaleList[]> {
     // console.log('getUserSaleList', skip, take, orderBy, where, whereOR)
     const whereData = this.buildWhereData(where, whereOR);
+    
 
     const order = JSON.stringify(orderBy);
     let url = `${this.baseUrl}/user-sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
+      this.where = `?where=${JSON.stringify(whereData)}`;
     }
     // console.log('saleLists', url)
     return this.http
@@ -61,7 +64,8 @@ export class UserSaleListService {
   // getConditionalSaleListLength(where: any): Observable<UserSaleList[]> {
   getConditionalUserSaleListLength(): Observable<number> {
     let url: string;
-    url = `${this.baseUrl}/user-sale-list/length`;
+    url = `${this.baseUrl}/user-sale-list/length` + this.where;
+    console.log('getConditionalSaleListLength', url, this.where);
     return this.http.get(url).pipe(map((data: any) => data));
   }
   createUserSaleList(data: Partial<UserSaleList>): Observable<UserSaleList> {

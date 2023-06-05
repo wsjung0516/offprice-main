@@ -21,6 +21,7 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
 })
 export class UserSaleListService {
   baseUrl = environment.url;
+  where = '';
   constructor(
     private http: HttpClient,
     private snackBar: MatSnackBar,
@@ -48,6 +49,7 @@ export class UserSaleListService {
         let url = `${this.baseUrl}/user-sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
         if (whereData) {
           url += `&where=${JSON.stringify(whereData)}`;
+          this.where = `?where=${JSON.stringify(whereData)}`;
         }
         // console.log('saleLists', url)
         return this.http.get<UserSaleList[]>(url);
@@ -80,7 +82,7 @@ export class UserSaleListService {
   // getConditionalSaleListLength(where: any): Observable<UserSaleList[]> {
   getConditionalUserSaleListLength(): Observable<number> {
     let url: string;
-    url = `${this.baseUrl}/user-sale-list/length`;
+    url = `${this.baseUrl}/user-sale-list/length` + this.where;
     return this.http.get(url).pipe(map((data: any) => data));
   }
   createUserSaleList(data: Partial<UserSaleList>): Observable<UserSaleList> {

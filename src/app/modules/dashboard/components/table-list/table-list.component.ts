@@ -151,7 +151,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userSaleListService
       .getConditionalUserSaleListLength()
       .subscribe((res: number) => {
-        console.log('getConditionalSaleListLength', res);
+        // console.log('getConditionalSaleListLength', res);
         // To display the number of search results in the search bar
         this.localStorageService.setItem('searchItemsLength', res.toString());
 

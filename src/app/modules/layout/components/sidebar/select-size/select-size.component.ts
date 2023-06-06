@@ -83,6 +83,7 @@ export class SelectSizeComponent {
     this.selected_size = size.key;
     this.sharedMenuObservableService.input_keyword.next(size.key);
     this.sharedMenuObservableService.size.next(size.key);
+    this.sharedMenuObservableService.closeSideBar.next(true);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     if (size.key === 'All') {

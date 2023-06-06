@@ -68,6 +68,7 @@ export class SearchPeriodComponent {
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     this.sharedMenuObservableService.search_period.next(data.value);
+    this.sharedMenuObservableService.closeSideBar.next(true);
     if (data.key === 'All') {
       this.reset();
     }

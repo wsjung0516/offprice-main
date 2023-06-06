@@ -66,6 +66,8 @@ export class SharedMenuObservableService {
   isProfileMenuOpen$ = this.isProfileMenuOpen.asObservable();
   searchResult = new Subject<any[]>();
   searchResult$ = this.searchResult.asObservable();
+  closeSideBar = new Subject<boolean>();
+  closeSideBar$ = this.closeSideBar.asObservable();
   get input_keyword$() {
     return this.input_keyword.asObservable();
   }

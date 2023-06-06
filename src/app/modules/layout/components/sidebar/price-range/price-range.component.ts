@@ -70,6 +70,7 @@ export class PriceRangeComponent {
     const value = { key: 'price', value: price.key };
     this.priceRange = price.value;
     this.sharedMenuObservableService.price.next(price.value);
+    this.sharedMenuObservableService.closeSideBar.next(true);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     // this.favoriteSeason = data;

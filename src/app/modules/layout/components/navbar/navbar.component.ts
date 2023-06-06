@@ -90,7 +90,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sharedMenuObservableService.resetSearchConditions$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
-        console.log('resetSearchConditions is called');
+        // console.log('resetSearchConditions is called');
         this.gotoHome();
       });
   }
@@ -199,6 +199,12 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         reset: service.reset_material,
         name: 'material',
         subject: service.material,
+        defaultValue: 'All',
+      },
+      {
+        reset: service.reset_color,
+        name: 'color',
+        subject: service.color,
         defaultValue: 'All',
       },
       {

@@ -65,6 +65,7 @@ export class ColorComponent {
     this.selected_color = data.key;
     this.sharedMenuObservableService.input_keyword.next(data.key);
     this.sharedMenuObservableService.color.next(data.key);
+    this.sharedMenuObservableService.closeSideBar.next(true);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
 

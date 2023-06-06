@@ -199,7 +199,7 @@ export class MakeWhereConditionService {
       });
     }
     if (input_keyword !== '') {
-      console.log('input_keyword', input_keyword);
+      // console.log('input_keyword', input_keyword);
       orArray.push({ vendor: { contains: input_keyword } });
       orArray.push({ store_name: { contains: input_keyword } });
       orArray.push({ product_name: { contains: input_keyword } });

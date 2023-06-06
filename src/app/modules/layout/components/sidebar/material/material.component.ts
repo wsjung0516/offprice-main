@@ -79,6 +79,7 @@ export class MaterialComponent implements OnInit {
     this.selected_material = material.key;
     this.sharedMenuObservableService.input_keyword.next(material.key);
     this.sharedMenuObservableService.material.next(material.key);
+    this.sharedMenuObservableService.closeSideBar.next(true);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }

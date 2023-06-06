@@ -38,30 +38,24 @@
 
     <!-- Menu Items -->
     <!-- component -->
-    <!-- 
-    FAQ - Frequently Asked Questions TailwindCSS Component
-    with <details> and <summary> tag with custom [open] animation.
-    Created by Surjith S M (@surjithctly)
-    See more components: https://web3components.dev 
--->
 
     <div class="max-w-screen-xl mx-auto px-5 bg-white min-h-sceen">
       <div class="grid divide-y divide-neutral-200 max-w-xl mx-auto mt-8">
 
         <div class="py-2">
-          <details class="group">
+          <details class="group" #details (click)="onToggleMenu(details)">
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <img src="assets/images/ruler.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="Material">
-
+            <img src="assets/images/ruler.png" alt="offprice.store" class="w-5 h-5" tp="Price">
+  
             <!-- <svg-icon (click)="toggleSidebar()"
-            src="assets/icons/outline/measurement.svg"
+            src="assets/icons/outline/best-price.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
           </svg-icon> -->
           <ng-container *ngIf="(showSideBar$ | async)">
-            <span > Size</span>
+            <span> Size</span>
               <span class="transition group-open:rotate-180">
                 <svg
                   fill="none"
@@ -85,11 +79,11 @@
           </details>
         </div>
         <div class="py-2">
-          <details class="group">
+          <details class="group" #details (click)="onToggleMenu(details)">
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <img src="assets/images/dollar.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="Price">
+            <img src="assets/images/dollar.png" alt="offprice.store" class="w-5 h-5" tp="Price">
   
             <!-- <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/best-price.svg"
@@ -121,13 +115,13 @@
           </details>
         </div>
         <div class="py-2">
-          <details class="group">
+          <details class="group"  #details (click)="onToggleMenu(details)">
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
           <!-- <img src="assets/images/calendar.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="Calendar"> -->
 
-          <svg-icon (click)="toggleSidebar()"
+          <svg-icon 
             src="assets/icons/outline/calendar.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
           >
@@ -157,11 +151,11 @@
           </details>
         </div>
         <div class="py-2">
-          <details class="group">
+          <details class="group" #details (click)="onToggleMenu(details)">
             <summary 
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <img src="assets/images/color.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="color">
+            <img src="assets/images/color.png" alt="offprice.store" class="w-5 h-5" tp="color">
             <!-- <svg-icon (click)="toggleSidebar()" tp="color"
             src="assets/icons/outline/color-palette.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
@@ -192,11 +186,11 @@
           </details>
         </div>
         <div class="py-2">
-          <details class="group">
+          <details class="group"  #details (click)="onToggleMenu(details)">
             <summary
               class="flex justify-between items-center font-medium cursor-pointer list-none"
             >
-            <img src="assets/images/textile.png" alt="offprice.store" class="w-5 h-5" (click)="toggleSidebar()" tp="Material">
+            <img src="assets/images/textile.png" alt="offprice.store" class="w-5 h-5"  tp="Material">
             <!-- <svg-icon (click)="toggleSidebar()"
             src="assets/icons/outline/textile.svg"
             [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"

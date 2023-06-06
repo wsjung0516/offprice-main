@@ -24,14 +24,14 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   standalone: true,
   imports: [CommonModule, MatIconModule],
   template: `
-    <div class="bg-gray-200 px-1 py-2 flex items-center">
+    <div class="bg-gray-200 px-1 py-1 flex items-center">
       <!-- <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide"> -->
       <div class="flex-1 overflow-x-auto hover:overflow-scroll whitespace-nowrap">
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
           <ng-container *ngFor="let button of categories">
             <button
               mat-button-toggle
-              class="border border-transparent rounded-full py-2 px-4 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
+              class="border border-transparent rounded-full py-1 px-2 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
               [ngClass]="{ selected: selected_category.key === button.key, group1: button.group === '1', group2: button.group === '2' }"
               [value]="button"
               (click)="onSelect(button)"
@@ -47,7 +47,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     `
       .button-group {
         border: 1px solid #ccc;
-        padding: 5px 10px;
+        padding: 1px 5px;
         background-color: #fff;
         color: #333;
       }

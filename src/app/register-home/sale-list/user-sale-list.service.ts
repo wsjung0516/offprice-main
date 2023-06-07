@@ -50,6 +50,9 @@ export class UserSaleListService {
         if (whereData) {
           url += `&where=${JSON.stringify(whereData)}`;
           this.where = `?where=${JSON.stringify(whereData)}`;
+        } else {
+          const tmp = { AND: [{ category1: '1' }] };
+          this.where = `?where=${JSON.stringify(tmp)}`;
         }
         // console.log('saleLists', url)
         return this.http.get<UserSaleList[]>(url);

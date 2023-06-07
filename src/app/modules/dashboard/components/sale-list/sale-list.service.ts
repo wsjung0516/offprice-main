@@ -29,6 +29,9 @@ export class SaleListService {
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
       this.reservedWhere = `?where=${JSON.stringify(whereData)}`;
+    } else {
+      const tmp = {AND: [{category1: '1'}]};
+      this.reservedWhere = `?where=${JSON.stringify(tmp)}`;
     }
     // console.log('getSaleLists- url', url)
     return this.http

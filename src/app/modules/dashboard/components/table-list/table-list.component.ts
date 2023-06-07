@@ -125,10 +125,10 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
-    console.log('table-list init');
+    // console.log('table-list init');
   }
   ngAfterViewInit(): void {
-    console.log('table-list afterviewinit');
+    // console.log('table-list afterviewinit');
     this.makeTableWhereConditionService.initializeWhereCondition(
       this.sort,
       this.paginator

@@ -28,10 +28,11 @@ export class SaleListService {
       url += `&where=${JSON.stringify(whereData)}`;
       this.where =`?where=${JSON.stringify(whereData)}`;
     } else {
-      this.where = `?where=${JSON.stringify(undefined)}`;
+      const tmp = {AND: [{category1: '1'}]};
+      this.where = `?where=${JSON.stringify(tmp)}`;
     }
     return this.http.get<SaleList[]>(url).pipe(
-      tap((data) => console.log('data: ----', data))
+      // tap((data) => console.log('data: ----', data))
       // shareReplay(1)
     );
   }

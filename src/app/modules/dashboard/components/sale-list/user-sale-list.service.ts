@@ -23,14 +23,14 @@ export class UserSaleListService {
     // console.log('getUserSaleList', skip, take, orderBy, where, whereOR)
     const whereData = this.buildWhereData(where, whereOR);
     
-
     const order = JSON.stringify(orderBy);
     let url = `${this.baseUrl}/user-sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
       this.where = `?where=${JSON.stringify(whereData)}`;
     } else {
-      this.where = `?where=${JSON.stringify(undefined)}`;
+      const tmp = {AND: [{category1: '1'}]};
+      this.where = `?where=${JSON.stringify(tmp)}`;
     }
     // console.log('saleLists', url)
     return this.http
@@ -67,7 +67,7 @@ export class UserSaleListService {
   getConditionalUserSaleListLength(): Observable<number> {
     let url: string;
     url = `${this.baseUrl}/user-sale-list/length` + this.where;
-    console.log('getConditionalSaleListLength', url, this.where);
+    // console.log('getConditionalSaleListLength', url, this.where);
     return this.http.get(url).pipe(map((data: any) => data));
   }
   createUserSaleList(data: Partial<UserSaleList>): Observable<UserSaleList> {

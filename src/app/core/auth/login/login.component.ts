@@ -29,17 +29,14 @@ import { Title } from '@angular/platform-browser';
         <div class="mb-8 text-center">
           <h1 class="my-3 text-4xl font-bold">Log in</h1>
         </div>
-        <form
-          novalidate=""
-          action=""
-          class="space-y-12 ng-untouched ng-pristine ng-valid"
-        >
+        <form action="" class="space-y-12 ng-untouched ng-pristine ng-valid">
           <div class="space-y-4">
             <div>
               <label for="email" class="block mb-2 text-sm"
                 >Email address</label
               >
               <input
+                autocomplete="off"
                 type="email"
                 name="email"
                 id="email"
@@ -60,6 +57,7 @@ import { Title } from '@angular/platform-browser';
                 >
               </div>
               <input
+                autocomplete="off"
                 type="password"
                 name="password"
                 id="password"

@@ -29,6 +29,8 @@ export class UserSaleListService {
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
       this.where = `?where=${JSON.stringify(whereData)}`;
+    } else {
+      this.where = `?where=${JSON.stringify(undefined)}`;
     }
     // console.log('saleLists', url)
     return this.http

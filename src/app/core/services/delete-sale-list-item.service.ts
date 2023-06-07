@@ -59,6 +59,9 @@ export class DeleteSaleListItemService {
               this.snackBar.open('Deleted Successfully', 'Close', {
                 duration: 2000,
               });
+              // To refresh the table.
+              this.sharedMenuObservableService.refreshData.next('');
+
               // this.refreshObservable.next();
             },
             (error: any) => {

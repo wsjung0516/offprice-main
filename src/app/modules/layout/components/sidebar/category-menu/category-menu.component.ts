@@ -60,7 +60,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
         border: 1px solid #ef4444;
       }
       .group2 {
-        border: 1px solid #84cc16;
+        border: 1px solid #4f46e5;
       }
       .scrollbar-hide::-webkit-scrollbar {
         display: none;

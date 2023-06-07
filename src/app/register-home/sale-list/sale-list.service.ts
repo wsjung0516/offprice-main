@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class SaleListService {
   baseUrl = environment.url;
+  where = '';
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
   headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
 
@@ -25,6 +26,9 @@ export class SaleListService {
     let url = `${this.baseUrl}/sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
+      this.where =`?where=${JSON.stringify(whereData)}`;
+    } else {
+      this.where = `?where=${JSON.stringify(undefined)}`;
     }
     return this.http.get<SaleList[]>(url).pipe(
       tap((data) => console.log('data: ----', data))
@@ -56,7 +60,7 @@ export class SaleListService {
   }
   // getConditionalSaleListLength(where: any): Observable<SaleList[]> {
   getConditionalSaleListLength(): Observable<number> {
-    const url = `${this.baseUrl}/sale-list/length`;
+    const url = `${this.baseUrl}/sale-list/length` + this.where;
     return this.http.get<number>(url).pipe(map((data) => data));
   }
   createSaleList(data: Partial<SaleList>): Observable<SaleList> {

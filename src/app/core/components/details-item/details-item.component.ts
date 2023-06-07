@@ -23,6 +23,7 @@ import { MatCardModule } from '@angular/material/card';
 import { CartItemsService } from '../cart-items/cart-items.service';
 import { SharedMenuObservableService } from '../../services/shared-menu-observable.service';
 import { UserTokenService } from '../../services/user-token.service';
+import { set } from 'date-fns';
 export interface Data {
   data: Partial<UserSaleList>;
 }
@@ -152,6 +153,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
             this.snackBar.open('Deleted from cart', 'Success', {
               duration: 2000,
             });
+            // To maintain the cart item dialog.
             this.sharedMenuObservableService.refreshCartItemsButton.next(true);
             this.sharedMenuObservableService.closeCartItemsDialog.next(true);
           });

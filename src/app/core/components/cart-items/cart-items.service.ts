@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable, of, shareReplay, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 // import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,9 +25,11 @@ export class CartItemsService {
   headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
 
   getCartItems(where?: any): Observable<CartItems[]> {
-    let url = `${this.baseUrl}/cart/get-items?where=${JSON.stringify(where)}`;
+    // To remove cache issue add date to the url
+    const date = new Date();
+    let url = `${this.baseUrl}/cart/get-items?date=${date}&where=${JSON.stringify(where)}`;
     return this.http
-      .get<CartItems[]>(url)
+      .get<CartItems[]>(url )
       .pipe
       // tap(data => console.log('getCartItems:--- ', data)),
       ();

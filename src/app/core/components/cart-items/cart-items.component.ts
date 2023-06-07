@@ -63,7 +63,6 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
             return this.findFirstRowService.findFirstRows(data);
           })
         ).subscribe((items: CartItems[]) => {
-          // console.log('items -----', items);
           this.items = items;
           this.cd.detectChanges();
         })
@@ -121,6 +120,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
                 this.snackBar.open('Deleted from cart', 'success', {
                   duration: 2000,
                 });
+                // To maintain the cart item dialog open.
                 this.sharedMenuObservableService.refreshCartItemsButton.next(true);
               }
             });

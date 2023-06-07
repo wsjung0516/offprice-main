@@ -234,12 +234,6 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.selectedUnit = 'USD';
-    // this.sale_status = { id:'1', key: 'sale', value: '' } ;
-
-    // this.categories = Categories2.filter(
-    //   (category) => category.categoryId === '1'
-    // );
-
     this.getCategory1();
     this.getSizes();
     this.getColors();
@@ -406,7 +400,9 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
           // If update status is finished, change status to create
           this._notificationService.success('Update successfully');
           this._router.navigate(['/register-home/home/sale-list']);
-        });
+            // To refresh the table.
+            this.sharedMenuObservableService.refreshData.next('');
+          });
 
       } else {
         this.snackBar.open('Please check the field conditions!', 'Close', {
@@ -521,6 +517,9 @@ vendor:"bbb"
     // Call to table-list component to delete item
     console.log('deleteItem', this.sale_list_id);
     this.deleteSaleListItemService.delete(this.sale_list_id.toString());
+    // To refresh the table.
+    this.sharedMenuObservableService.refreshData.next('');
+
   }
 
   private createSaleList(data: Partial<SaleList>, user: any) {
@@ -544,6 +543,9 @@ vendor:"bbb"
         this.reset_material = true;
         this.reset_color = true;
         this.reset_category = true;
+            // To refresh the table.
+        this.sharedMenuObservableService.refreshData.next('');
+
       });
   }
 

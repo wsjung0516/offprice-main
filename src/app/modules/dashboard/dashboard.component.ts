@@ -23,6 +23,7 @@ CommonModule,
     <div class="py-2 px-2">
     <div class="flex justify-start">
       <app-category1-menu></app-category1-menu>
+      <!-- refresh button -->
       <app-reset-search-conditions></app-reset-search-conditions>
     </div>
       <app-category-menu></app-category-menu>

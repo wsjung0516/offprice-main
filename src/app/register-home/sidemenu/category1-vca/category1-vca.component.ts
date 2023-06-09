@@ -6,6 +6,7 @@ import {
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { Categories1, Category } from 'src/app/core/constants/data-define';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
 @Component({
   selector: 'app-category1-vca',
@@ -67,7 +68,9 @@ export class Category1VcaComponent implements ControlValueAccessor {
   @Input() set category1(value: Category) {
     this.selected_category = value;
   }
-  constructor() {}
+  constructor(
+    private sharedMenuObservableService: SharedMenuObservableService
+  ) {}
   scrollOffset = 0;
   onChange: any = () => {};
   onTouch: any = () => {};
@@ -77,6 +80,7 @@ export class Category1VcaComponent implements ControlValueAccessor {
   selectValue(category: Category) {
     this.selected_category = category;
     // console.log('category1-vca.component.ts: category: ', category);
+    this.sharedMenuObservableService.category1.next(category.id);
     this.onChange(this.selected_category);
   }
   writeValue(value: any): void {

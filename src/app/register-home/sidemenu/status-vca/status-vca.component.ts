@@ -5,6 +5,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -69,7 +70,7 @@ import { IStatus, Status } from 'src/app/core/constants/data-define';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatusVcaComponent implements ControlValueAccessor {
+export class StatusVcaComponent implements ControlValueAccessor, OnChanges {
   @Input() set status1(value: IStatus) {
     this.selected_status = value;
   }
@@ -93,5 +94,8 @@ export class StatusVcaComponent implements ControlValueAccessor {
   }
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
+  }
+  ngOnChanges(): void {
+    this.onChange(this.selected_status);
   }
 }

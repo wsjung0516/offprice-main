@@ -60,6 +60,7 @@ import { LocalStorageService } from 'src/app/core/services/local-storage.service
 import { SaleListService } from './sale-list.service';
 import { UserSaleListService } from './user-sale-list.service';
 import { MakeRegisterWhereConditionService } from '../core/services/make-register-where-condition.service';
+import { CategorySubmenuComponent } from '../sidemenu/category-submenu/category-submenu.component';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
 @UntilDestroy()
 @Component({
@@ -86,6 +87,7 @@ import { MakeRegisterWhereConditionService } from '../core/services/make-registe
     Category1MenuComponent,
     CategoryMenuComponent,
     ResetSearchConditionsComponent,
+    CategorySubmenuComponent
   ],
   templateUrl: './sale-list.component.html',
   styleUrls: ['./sale-list.component.css'],

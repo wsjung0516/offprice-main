@@ -1,0 +1,148 @@
+<p><span class="text-md text-gray-500">Value: </span><span class="text-blue-600 text-xl">{{selected_category}}</span></p>
+<div class="bg-gray-200 px-1 py-1 flex items-center">
+  <div class="flex flex-wrap whitespace-nowrap">
+    <div cdkMenuBar class="inline-flex flex-wrap">
+        <ng-container *ngFor="let button of tgroups">
+          <button cdkMenuItem [cdkMenuTriggerFor]="getTemplate(button.id)" 
+            class="border border-transparent rounded-full py-1 px-2 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
+            [value]="button"
+            >
+            <span class="">{{ button.key }}</span>
+          </button>
+        </ng-container>
+
+    </div>
+  </div>
+</div>
+<!-- Women -->
+<ng-template #Tops> 
+  <div class="category-submenu " cdkMenu>
+    <button *ngFor="let item of getItemList('1')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Bottoms>
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('2')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Dresses >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('3')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Outerwear >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('4')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Activewear >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('5')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Jumpsuits >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('6')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Swimwear >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('7')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Plussize >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('8')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Sweaters >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('9')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Lingerie >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('10')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Loungewear >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('11')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Suits >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('12')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<ng-template #Partywear >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('13')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<!-- Men -->
+<ng-template #m_Activewear >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('1')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<ng-template #m_Jeans >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('2')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<ng-template #m_Outerwear >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('3')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<ng-template #m_Casual >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('4')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<ng-template #m_Shorts >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('5')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<ng-template #m_Sweater >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('6')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<ng-template #m_Swimwear >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('7')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<ng-template #m_Tops >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('8')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+
+<!-- Kids -->
+<ng-template #k_Girls >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('1')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<ng-template #k_Boys >
+  <div class="category-submenu" cdkMenu>
+    <button *ngFor="let item of getItemList('2')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>

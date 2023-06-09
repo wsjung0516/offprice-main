@@ -27,7 +27,7 @@ import { Categories, Sizes } from '../core/constants/data-define';
 import { SelectSizeVcaComponent } from '../sidemenu/select-size-vca/select-size-vca.component';
 import { MaterialVcaComponent } from '../sidemenu/material-vca/material-vca.component';
 // import { ProgressComponent } from 'src/app/core/services/progress.component';
-import { CategoryVcaComponent } from '../sidemenu/category-vca/category-vca.component';
+import { CategorySubmenuVcaComponent } from '../sidemenu/category-submenu-vca/category-submenu-vca.component';
 import { SaleListService } from '../sale-list/sale-list.service';
 import { NotificationService } from '../core/services/notification.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -73,7 +73,7 @@ import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-lis
     MatRadioModule,
     SelectSizeVcaComponent,
     MaterialVcaComponent,
-    CategoryVcaComponent,
+    CategorySubmenuVcaComponent,
     ColorVcaComponent,
     // ProgressComponent,
     RouterModule,
@@ -212,6 +212,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.imgSmURLs = res.image_sm_urls.split(',');
             this.htmlText = res.description;
             this.category1 = { id: res.category1, key: '', value: '' };
+            this.selected_category = res.category;
             this.sale_status = { key: res.status1, value: res.status1 };
             this.size = res.size.split(',');
             this.sizeArray = res.sizeArray.split(',');
@@ -219,17 +220,9 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.color = res.color.split(',');
             this.colorArray = res.colorArray.split(',');
             this.cd.detectChanges();
-            this.setCategory2(res);
           });
         }
       });
-  }
-  private setCategory2(res: SaleList) {
-    const id = res.category1;
-    this.categories = Categories2.filter(
-      (category) => category.categoryId === id
-    );
-    this.selected_category = res.category;
   }
 
   ngAfterViewInit() {
@@ -360,7 +353,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       category_1: ['1', Validators.required],
       material: ['', Validators.required],
       color: ['', Validators.required],
-      status: ['sale', Validators.required],
+      status: ['', Validators.required],
       image_urls: [''], // This value is assigned after processing in image-upload.component.ts
       user_id: [''],    // This value is assigned in uploadSaleListToDB()
       sizeArray: this.fb.array(this.createSizeFormControls()),

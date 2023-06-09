@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ChangeDetectorRef, AfterViewInit, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, ElementRef, Input, ChangeDetectorRef, AfterViewInit, OnInit, SimpleChanges, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ControlValueAccessor,
@@ -59,6 +59,7 @@ import { Categories, Product } from 'src/app/core/constants/data-define';
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryVcaComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnChanges {
   @Input() categories: any[];

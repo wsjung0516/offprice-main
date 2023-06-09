@@ -75,12 +75,10 @@
           <!-- Category2 -->
           <p class="ml-2"><span class="font-bold">Category2</span></p>
           <div class="m-2 overflow-y-auto">
-            <app-category-vca
-              [categories]="categories"
-              [reset_category]="reset_category"
-              [selected_category_data]="selected_category"
+            <app-category-submenu-vca
+              [selected_category]="selected_category"
               formControlName="category"
-            ></app-category-vca>
+            ></app-category-submenu-vca>
           </div>
           <!-- Count -->
           <!-- Editor for comment -->

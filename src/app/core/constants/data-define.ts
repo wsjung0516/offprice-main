@@ -1,20 +1,208 @@
-export interface Category {
+export interface Category1 { // Women, Men, Kids
   id: string;
   key: string;
   value: string;
 }
+export interface Group {  // Tops, Bottoms, Activewear, Jumpsuits, Lingerie,  SweaterKnit, Swimwear
+  id: string;
+  key: string;
+  value: string;
+}
+export interface Prod {
+  key: string;
+  value: string;
+  categoryId: string;
+  groupId: string;
+}
+export const enum ECat {
+  c1, // Women
+  c2, // Men
+  c3  // Kids
+}
+export const tGroups: Group[] = [
+  {id: '1', key: 'Tops', value: 'Tops'},
+  {id: '2', key: 'Bottoms', value: 'Bottoms'},
+  {id: '3', key: 'Activewear', value: 'Activewear'},
+]
+export const tProducts: Prod[] = [
+  {categoryId: '1', groupId:'1', key: 'Tops', value:'Tops'},
+  {categoryId: '1', groupId:'1', key: 'Blouse', value:'Blouse'},
+  {categoryId: '1', groupId:'1', key: 'Bodysuits', value:'Bodysuits'},
+  {categoryId: '1', groupId:'1', key: 'Botton-Down Shirts', value:'Botton-Down Shirts'},
+  {categoryId: '1', groupId:'1', key: 'Casual', value:'Casual'},
+  {categoryId: '1', groupId:'1', key: 'Crops', value:'Crops'},
+  {categoryId: '1', groupId:'1', key: 'Dressy_Tops', value:'Dressy_Tops'},
+  {categoryId: '1', groupId:'1', key: 'Fashion_Tops', value:'Fashion_Tops'},
+  {categoryId: '1', groupId:'1', key: 'Graphic', value:'Graphic'},
+  {categoryId: '1', groupId:'1', key: 'Tank_And_Tube', value:'Tank_And_Tube'},
+  {categoryId: '1', groupId:'1', key: 'T-Shirts_and_Polo', value:'T-Shirts_and_Polo'},
+  {categoryId: '1', groupId:'1', key: 'Tunics', value:'Tunics'},
 
+  {categoryId: '1', groupId:'2', key: 'Bottoms', value:'Bottoms'},
+  {categoryId: '1', groupId:'2', key: 'Jeans', value:'Jeans'},
+  {categoryId: '1', groupId:'2', key: 'Joggers', value:'Joggers'},
+  {categoryId: '1', groupId:'2', key: 'Leggings', value:'Leggings'},
+  {categoryId: '1', groupId:'2', key: 'Pants', value:'Pants'},
+  {categoryId: '1', groupId:'2', key: 'Shorts', value:'Shorts'},
+  {categoryId: '1', groupId:'2', key: 'Skirts', value:'Skirts'},
+
+  {categoryId: '1', groupId:'3', key: 'Dresses', value:'Dresses'},
+  {categoryId: '1', groupId:'3', key: 'Bodycon', value:'Bodycon'},
+  {categoryId: '1', groupId:'3', key: 'Casual_Dress', value:'Casual_Dress'},
+  {categoryId: '1', groupId:'3', key: 'Classic_and_Casual', value:'Classic_and_Casual'},
+  {categoryId: '1', groupId:'3', key: 'Fashion_Dress', value:'Fashion_Dress'},
+  {categoryId: '1', groupId:'3', key: 'Maxi_Dress', value:'Maxi_Dress'},
+  {categoryId: '1', groupId:'3', key: 'Midi', value:'Midi'},
+  {categoryId: '1', groupId:'3', key: 'Mini', value:'Mini'},
+  {categoryId: '1', groupId:'3', key: 'Night_Out', value:'Night_Out'},
+  {categoryId: '1', groupId:'3', key: 'Vacation', value:'Vacation'},
+
+  {categoryId: '1', groupId:'4', key: 'Outerwear', value:'Outerwear'},
+  {categoryId: '1', groupId:'4', key: 'Anorak_Parka', value:'Anorak_Parka'},
+  {categoryId: '1', groupId:'4', key: 'Cape', value:'Cape'},
+  {categoryId: '1', groupId:'4', key: 'Coats', value:'Coats'},
+  {categoryId: '1', groupId:'4', key: 'Jackets', value:'Jackets'},
+  {categoryId: '1', groupId:'4', key: 'Kimonos', value:'Kimonos'},
+  {categoryId: '1', groupId:'4', key: 'Poncho_and_Shawl', value:'Pohch_and_Shawl'},
+  {categoryId: '1', groupId:'4', key: 'Raincoat', value:'Raincoat'},
+  {categoryId: '1', groupId:'4', key: 'Vests', value:'Vests'},
+
+  {categoryId: '1', groupId:'5', key: 'Activewear', value:'Activewear'},
+  {categoryId: '1', groupId:'5', key: 'Shirts_and_Tees', value:'Shirts_and_Tees'},
+  {categoryId: '1', groupId:'5', key: 'Sports_Bra', value:'Sports_Bra'},
+  {categoryId: '1', groupId:'5', key: 'Sweatshirts', value:'Sweatshirts'},
+
+  {categoryId: '1', groupId:'6', key: 'Jumpsuits_Rompers', value:'Jumpsuits_Rompers'},
+  {categoryId: '1', groupId:'6', key: 'Jumpsuits', value:'Jumpsuits'},
+  {categoryId: '1', groupId:'6', key: 'Rompers', value:'Rompers'},
+    
+  {categoryId: '1', groupId:'7', key: 'Swimwear', value:'Swimwear'},
+  {categoryId: '1', groupId:'7', key: 'Bikini', value:'Bikini'},
+  {categoryId: '1', groupId:'7', key: 'Cover-Ups', value:'Cover-Ups'},
+  {categoryId: '1', groupId:'7', key: 'Monokini', value:'Monokini'},
+  {categoryId: '1', groupId:'7', key: 'One-Pieces', value:'One-Pieces'},
+  {categoryId: '1', groupId:'7', key: 'Tankini', value:'Tankini'},
+
+  {categoryId: '1', groupId:'8', key: 'Plus-Size', value:'Plus-Size'},
+  {categoryId: '1', groupId:'8', key: 'p_Activewear', value:'p_Activewear'},
+  {categoryId: '1', groupId:'8', key: 'p_Bottoms', value:'p_Bottoms'},
+  {categoryId: '1', groupId:'8', key: 'p_Dresses', value:'p_Dresses'},
+  {categoryId: '1', groupId:'8', key: 'p_Jumpsuits_Rompers', value:'p_Jumpsuits_Rompers'},
+  {categoryId: '1', groupId:'8', key: 'p_Lingerie', value:'p_Lingerie'},
+  {categoryId: '1', groupId:'8', key: 'p_Loungewear', value:'p_Loungewear'},
+  {categoryId: '1', groupId:'8', key: 'p_Outerwear', value:'p_Outerwear'},
+  {categoryId: '1', groupId:'8', key: 'p_Sets', value:'p_Sets'},
+  {categoryId: '1', groupId:'8', key: 'p_Swim', value:'p_Swim'},
+  {categoryId: '1', groupId:'8', key: 'p_Tops', value:'p_Tops'},
+
+  {categoryId: '1', groupId:'9', key: 'Sweater_Knit', value:'Sweater_Knit'},
+  {categoryId: '1', groupId:'9', key: 'Cardigan', value:'Cardigan'},
+  {categoryId: '1', groupId:'9', key: 'Hoodie', value:'Hoodie'},
+  {categoryId: '1', groupId:'9', key: 'Pullover', value:'Pullover'},
+  {categoryId: '1', groupId:'9', key: 'Sweaters', value:'Sweters'},
+  {categoryId: '1', groupId:'9', key: 'Turtleneck', value:'Turtleneck'},
+
+  {categoryId: '1', groupId:'10', key: 'Lingerie', value:'Lingerie'},
+  {categoryId: '1', groupId:'10', key: 'Bra', value:'Bra'},
+  {categoryId: '1', groupId:'10', key: 'Bralette', value:'Bralette'},
+  {categoryId: '1', groupId:'10', key: 'Corsets', value:'Corsets'},
+  {categoryId: '1', groupId:'10', key: 'Intimates', value:'Intimates'},
+  {categoryId: '1', groupId:'10', key: 'Panties', value:'Panties'},
+  {categoryId: '1', groupId:'10', key: 'Sets', value:'Sets'},
+  {categoryId: '1', groupId:'10', key: 'Shapewear', value:'Shapewear'},
+
+  {categoryId: '1', groupId:'11', key: 'Loungewear', value:'Loungewear'},
+  {categoryId: '1', groupId:'11', key: 'l_Pants', value:'l_Pants'},
+  {categoryId: '1', groupId:'11', key: 'l_Sets', value:'l_Sets'},
+  {categoryId: '1', groupId:'11', key: 'l_Tops', value:'l_Tops'},
+
+  {categoryId: '1', groupId:'12', key: 'Suits', value:'Suits'},
+  {categoryId: '1', groupId:'12', key: 's_Pants', value:'s_Pants'},
+  {categoryId: '1', groupId:'12', key: 's_Skirts', value:'s_Skirts'},
+  
+  {categoryId: '1', groupId:'13', key: 'Party_Dresses', value:'Party_Dresses'},
+  {categoryId: '1', groupId:'13', key: 'Bridal_Dresses', value:'Bridal_Dresses'},
+  {categoryId: '1', groupId:'13', key: 'Bridesmaid', value:'Bridesmaid'},
+  {categoryId: '1', groupId:'13', key: 'Cocktail_Dresses', value:'Cocktail_Dresses'},
+  {categoryId: '1', groupId:'13', key: 'Evening_Gowns', value:'Evening_Gowns'},
+  {categoryId: '1', groupId:'13', key: 'Mother_and_Club', value:'Mother_and_Club'},
+  {categoryId: '1', groupId:'13', key: 'Party_and_Club', value:'Party_and_Club'},
+  {categoryId: '1', groupId:'13', key: 'Prom_Dresses', value:'Prom_Dresses'},
+  {categoryId: '1', groupId:'13', key: 'Semiformal', value:'Semiformal'},
+  
+  {categoryId: '2', groupId:'1', key: 'Activewear', value:'Activewear'},
+  {categoryId: '2', groupId:'1', key: 'Bottoms', value:'Bottoms'},
+  {categoryId: '2', groupId:'1', key: 'Tops', value:'Tops'},
+  {categoryId: '2', groupId:'1', key: 'Tracksuits_Sets', value:'Tracksuits_Sets'},
+  
+  {categoryId: '2', groupId:'2', key: 'Jeans_Denim', value:'Jeans_Denim'},
+  {categoryId: '2', groupId:'2', key: 'Denim_Shirts', value:'Denim_Shirts'},
+  {categoryId: '2', groupId:'2', key: 'Denim_Jackets', value:'Denim_Jackets'},
+  {categoryId: '2', groupId:'2', key: 'Denim_Shorts', value:'Denim_Shorts'},
+
+  {categoryId: '2', groupId:'3', key: 'Outerwear', value:'Outerwear'},
+  {categoryId: '2', groupId:'3', key: 'Coats', value:'Coats'},
+  {categoryId: '2', groupId:'3', key: 'Jackets_Blazers', value:'Jackets_Blazers'},
+  {categoryId: '2', groupId:'3', key: 'Vests', value:'Vests'},
+
+  {categoryId: '2', groupId:'4', key: 'Casual_Pants', value:'Casual_Pants'},
+  {categoryId: '2', groupId:'4', key: 'Slacks_Dress_Pants', value:'Slacks_Dress_Pants'},
+  {categoryId: '2', groupId:'4', key: 'Sweatpants_Joggers', value:'Sweatpants_Joggers'},
+
+  {categoryId: '2', groupId:'5', key: 'Casual_Shorts', value:'Casual_Shorts'},
+  {categoryId: '2', groupId:'5', key: 'Dress_Shorts', value:'Dress_Shorts'},
+  {categoryId: '2', groupId:'5', key: 'Sweat_Shorts', value:'Sweat_Shorts'},
+
+  {categoryId: '2', groupId:'6', key: 'Sweaters_Cardigans', value:'Sweaters_Cardigans'},
+  {categoryId: '2', groupId:'6', key: 'Sweaters', value:'Sweters'},
+  {categoryId: '2', groupId:'6', key: 'Cardigans', value:'Cardigans'},
+  {categoryId: '2', groupId:'6', key: 'Sweaters_Vests', value:'Sweaters_Vests'},
+
+  {categoryId: '2', groupId:'7', key: 'Swimwear', value:'Swimwear'},
+  {categoryId: '2', groupId:'7', key: 'Trunks', value:'Trunks'},
+  {categoryId: '2', groupId:'7', key: 'Rash_Guards', value:'Raash_Guards'},
+
+  {categoryId: '2', groupId:'8', key: 'Tops', value:'Tops'},
+  {categoryId: '2', groupId:'8', key: 'Casual_Shirts', value:'Casual_Shirts'},
+  {categoryId: '2', groupId:'8', key: 'Dress_Shirts', value:'Dress_Shirts'},
+  {categoryId: '2', groupId:'8', key: 'Graphic_T-Shirts', value:'Graphic_T-Shirts'},
+  {categoryId: '2', groupId:'8', key: 'Polos', value:'Polos'},
+  {categoryId: '2', groupId:'8', key: 'Sweatshirts_Hoodies', value:'Sweatshirts_Hoodies'},
+  {categoryId: '2', groupId:'8', key: 'Tanks', value:'Tanks'},
+  {categoryId: '2', groupId:'8', key: 'T-Shirts', value:'T-Shirts'},
+
+
+  {categoryId: '3', groupId:'1', key: 'Girls_Apparel', value:'Girls_Apparel'},
+  {categoryId: '3', groupId:'1', key: 'Dresses', value:'Dresses'},
+  {categoryId: '3', groupId:'1', key: 'Jeans_Denim', value:'Jeans_Denim'},
+  {categoryId: '3', groupId:'1', key: 'Outerwear', value:'Outerwear'},
+  {categoryId: '3', groupId:'1', key: 'Pants_Leggings', value:'Pants_Leggings'},
+  {categoryId: '3', groupId:'1', key: 'Party_Dresses', value:'Party_Dresses'},
+  {categoryId: '3', groupId:'1', key: 'Rompers_Jumpsutis', value:'Romper_Jumpsuits'},
+  {categoryId: '3', groupId:'1', key: 'Sets', value:'Sets'},
+  {categoryId: '3', groupId:'1', key: 'Skirts', value:'Skirts'},
+  {categoryId: '3', groupId:'1', key: 'Swimwear_Cover-ups', value:'Swimwear_Cover-ups'},
+  {categoryId: '3', groupId:'1', key: 'Tops', value:'Tops'},
+  {categoryId: '3', groupId:'1', key: 'Underwear_Bras', value:'Underwear_Bras'},
+
+
+  {categoryId: '3', groupId:'2', key: 'Boys_Apparel', value:'Boys_Apparel'},
+  {categoryId: '3', groupId:'2', key: 'Activewear_Sleepwear', value:'Activewear_Sleepwear'},
+  {categoryId: '3', groupId:'2', key: 'Dresswear', value:'Dresswear'},
+  {categoryId: '3', groupId:'2', key: 'Jeans_Denim', value:'Jean_Denim'},
+  {categoryId: '3', groupId:'2', key: 'Outerwear', value:'Outerwear'},
+  {categoryId: '3', groupId:'2', key: 'Pants', value:'Pants'},
+  {categoryId: '3', groupId:'2', key: 'Swimwear', value:'Swimwear'},
+  {categoryId: '3', groupId:'2', key: 'Tops', value:'Tops'},
+  {categoryId: '3', groupId:'2', key: 'Underwear', value:'Underwear'},
+
+]
 export interface Product {
   key: string;
   value: string;
   categoryId: string;
   group: string;
 }
-export const Categories1: Category[] = [
-  {id: '1', key: 'Women', value:'women'},
-  {id: '2', key: 'Men', value:'men'},
-  {id: '3', key: 'Kids', value:'kids'},
-]
 export const Categories2: Product[] = [
   {key: 'Tops', value: 'Tops', categoryId: '1', group: '1'},
   {key: 'Blouses', value: 'Blouses', categoryId: '1', group: '1'},
@@ -61,6 +249,17 @@ export const Categories2: Product[] = [
   {key: 'Swimwear', value: 'Swimwear', categoryId: '3', group: '3'},
   {key: 'Sportswear', value: 'Sportswear', categoryId: '3', group: '3'},
 ]
+export interface Category {
+  id: string;
+  key: string;
+  value: string;
+}
+
+export const Categories1: Category[] = [
+  {id: '1', key: 'Women', value:'women'},
+  {id: '2', key: 'Men', value:'men'},
+  {id: '3', key: 'Kids', value:'kids'},
+]
 export interface IStatus {
   // id: string;
   key: string;
@@ -73,13 +272,6 @@ export const Status: IStatus[] = [
   { key: 'Sold', value: 'Sold'},
   { key: 'Canceled', value: 'Canceled'},
 ]
-// export const Status: IStatus[] = [
-//   {id: '1', key: 'Sale', value: 'Sale'},
-//   {id: '2', key: 'Reserved', value: 'Reserved'},
-//   {id: '3', key: 'Pending', value: 'Pending'},
-//   {id: '4', key: 'Sold', value: 'Sold'},
-//   {id: '5', key: 'Canceled', value: 'Canceled'},
-// ]
 export const Sizes = [
   {key: 'All', value: 'All', category: 'All'},
   {key: 'XS', value: 'XS', category: 'BASE'},

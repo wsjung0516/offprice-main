@@ -1,0 +1,97 @@
+.category-submenu-bar-item {
+  cursor: pointer;
+  border: none;
+
+  user-select: none;
+  min-width: 34px;
+  line-height: 26px;
+  padding: 0 16px;
+}
+
+.category-submenu-bar-item:hover {
+  background-color: rgb(154, 154, 164);
+}
+
+.category-submenu {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 150px;
+  max-width: 200px;
+  background-color: whitesmoke;
+  border: gray 1px solid;
+  padding: 6px 0;
+  border-radius: 10px;
+}
+
+.category-submenu hr {
+  width: 100%;
+  color: rgba(0, 0, 0, 0.12);
+}
+
+.category-submenu .category-submenu-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.category-submenu .category-submenu-item {
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+
+  user-select: none;
+  min-width: 64px;
+  line-height: 28px;
+  padding: 0 8px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex: 1;
+}
+
+.category-submenu-item > span {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.category-submenu .category-submenu-item:hover {
+  background-color: rgb(208, 208, 208);
+}
+
+.category-submenu .category-submenu-item[role='menuitemradio'][aria-checked='true'] {
+  background-color: rgb(225, 225, 225);
+}
+.category-submenu .category-submenu-item[role='menuitemcheckbox'][aria-checked='true'] {
+  background-color: rgb(225, 225, 225);
+}
+.category-submenu .category-submenu-item:active {
+  background-color: rgb(170, 170, 170);
+}
+
+.category-submenu-bar-item[aria-expanded='true'],
+.category-submenu-item[aria-expanded='true'] {
+  background-color: rgb(208, 208, 208) !important;
+}
+
+.button-group {
+  border: 1px solid gray;
+  padding: 1px 5px;
+  background-color: #fff;
+  color: #333;
+}
+
+.button-group.selected {
+  background-color: #007bff;
+  color: #fff;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox  #10b981  #84cc16 #eab308 #0ea5e9 #8b5cf6 #78716c*/
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

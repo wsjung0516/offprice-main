@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, NgModule, OnInit, ChangeDetectorRef, ElementRef, Renderer2  } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, NgModule, OnInit, ChangeDetectorRef, ElementRef, Renderer2, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ControlValueAccessor,
@@ -64,7 +64,7 @@ interface IColor {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorVcaComponent implements ControlValueAccessor, OnInit {
+export class ColorVcaComponent implements ControlValueAccessor, OnInit, OnChanges {
   @Input() set selectedColor(value: string[]) {
     this.selectedColorIndex = value.map(val => {
       return this.colors.findIndex(color => color.key === val);
@@ -116,7 +116,9 @@ export class ColorVcaComponent implements ControlValueAccessor, OnInit {
     }));
     this.aColors = acolor;
   }
-
+  ngOnChanges(): void {
+    this.onChange(this.aColors.filter((color) => color.selected === true));
+  }
   toggleSize(color: IColor): void {
     color.active = !color.active;
     if (color.active) {

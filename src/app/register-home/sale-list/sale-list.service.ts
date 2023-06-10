@@ -74,7 +74,7 @@ export class SaleListService {
   updateSaleList(id: string, data: Partial<SaleList>): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list/${id}`;
     return this.http
-      .patch(url, { data }, { observe: 'response' })
+      .patch(url, { data })
       .pipe(map((data: any) => data));
   }
   deleteSaleList(id: string): Observable<SaleList> {

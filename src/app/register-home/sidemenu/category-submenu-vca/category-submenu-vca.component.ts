@@ -66,6 +66,11 @@ import { Subject, take, takeUntil } from 'rxjs';
 })
 export class CategorySubmenuVcaComponent implements ControlValueAccessor, AfterViewInit, OnDestroy, OnChanges {
   @Input() selected_category: string;
+  @Input() set reset_category_submenu( value: boolean ) {
+    if( value ) {
+      this.selected_category = '1';
+    }
+  }
   categories: Category[] = [];
   buttonWidth = 40;
   scrollDistance = 200;

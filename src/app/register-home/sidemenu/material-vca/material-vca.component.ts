@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, NgModule, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, NgModule, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ControlValueAccessor,
@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { EMaterial } from 'src/app/register-home/core/constants/data-define';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { map } from 'rxjs';
 interface IMaterial {
   name: string;
   active: boolean;
@@ -16,7 +17,7 @@ interface IMaterial {
   selector: 'app-material-vca',
   standalone: true,
   imports: [CommonModule, FormsModule, MatCheckboxModule],
-  template: `
+template: `
     <div class="flex_wrap">
       <button
         *ngFor="let material of aMaterials"
@@ -70,27 +71,9 @@ interface IMaterial {
     },
   ],
 })
-export class MaterialVcaComponent implements ControlValueAccessor, OnInit {
-  @Input() set selectedMaterial(value: string[]) {
-    this.selectedMaterialIndex = value.map(val => {
-      return this.materials.findIndex(material => material.key === val);
-    });
-    this.aMaterials = this.materials.map((material, index) => ({
-      name: material.key,
-      active: this.selectedMaterialIndex.includes(index),
-      selected: this.selectedMaterialIndex.includes(index),
-    }));
-    // console.log('selectedMaterial', this.selectedMaterialIndex);
-    this.selectedMaterialIndex.forEach(index => {
-      const selectedButton:any = this.elRef.nativeElement.querySelectorAll('.box-material')[index];
+export class MaterialVcaComponent implements ControlValueAccessor, OnInit, OnChanges {
+  @Input() selectedMaterial: string[];
 
-      // 클릭 이벤트를 발생시킵니다.
-      if (selectedButton) {
-        selectedButton.click();
-      }
-
-    });
-  }
   @Input() set reset_material(value: boolean) {
     if(value) {
       this.initializeMaterial();
@@ -112,6 +95,13 @@ export class MaterialVcaComponent implements ControlValueAccessor, OnInit {
   ngOnInit(): void {
     this.initializeMaterial();
   }
+  ngOnChanges(): void {
+    if (this.selectedMaterial) {
+      this.setInitialValue(this.selectedMaterial);
+    }
+    const material = this.aMaterials.filter((material) => material.selected === true).map((material) => material.name);
+    this.onChange(material);
+  }
   private initializeMaterial() {
     const amaterial = this.materials.map((material) => ({
       name: material.value,
@@ -119,6 +109,26 @@ export class MaterialVcaComponent implements ControlValueAccessor, OnInit {
       selected: false
     }));
     this.aMaterials = amaterial;
+  }
+  private setInitialValue(value: string[]) {
+    this.selectedMaterialIndex = value.map(val => {
+      return this.materials.findIndex(material => material.key === val);
+    });
+    this.aMaterials = this.materials.map((material, index) => ({
+      name: material.key,
+      active: this.selectedMaterialIndex.includes(index),
+      selected: this.selectedMaterialIndex.includes(index),
+    }));
+    // console.log('selectedMaterial', this.selectedMaterialIndex);
+    this.selectedMaterialIndex.forEach(index => {
+      const selectedButton: any = this.elRef.nativeElement.querySelectorAll('.box-material')[index];
+
+      // 클릭 이벤트를 발생시킵니다.
+      if (selectedButton) {
+        selectedButton.click();
+      }
+
+    });
   }
 
   togglematerial(material: IMaterial): void {

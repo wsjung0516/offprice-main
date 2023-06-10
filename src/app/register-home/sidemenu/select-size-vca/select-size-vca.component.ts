@@ -4,18 +4,22 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  FormGroup,
   FormsModule,
   NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { Sizes } from 'src/app/register-home/core/constants/data-define';
-import { untilDestroyed } from '@ngneat/until-destroy';
-import { pipe } from 'rxjs';
 // import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+
 interface ISize {
   name: string;
   active: boolean;
@@ -26,7 +30,7 @@ interface ISize {
 @Component({
   selector: 'app-select-size-vca',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
     <div class="flex_wrap">
       <button
@@ -43,6 +47,23 @@ interface ISize {
         {{ size.name }}
       </button>
     </div>
+    <form [formGroup]="sizeFormGroup">
+      <div formArrayName="sizeArray">
+        <div class="flex justify-center">
+          <div *ngFor="let size of nSizes; let i = index"
+            class="flex flex-col items-center justify-center m-2"
+          >
+            <span class="text-blue-600 font-semibold mr-2">{{ size.name }}</span>
+            <input
+              type="number"
+              class="w-16 text-center"
+              [formControlName]="i"
+              placeholder="Qty"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
   `,
   styles: [
     `
@@ -81,8 +102,67 @@ interface ISize {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit {
-  @Input() set selectedSize(value: string[]) {
+export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit, OnChanges {
+  @Input()selectedSize: string[];
+  @Input()sizeArrayData: string[];
+
+  @Input() set reset_size(value: boolean) {
+    if (value) {
+      this.initializeSize();
+    }
+  }
+  selectedSizeIndex: number[] = [];
+  aSizes: ISize[] = [];
+  nSizes: { name: string; value: number }[] = [];
+  sizeArray: string[] = [];
+  sizeFormGroup: FormGroup;
+  
+  constructor(private cd: ChangeDetectorRef,
+     private elRef: ElementRef,
+     private fb: FormBuilder) {
+      this.sizeFormGroup = this.fb.group({
+        sizeArray: this.fb.array(this.createSizeFormControls()),
+       });
+    }
+  
+  onChange: any = () => {};
+  onTouch: any = () => {};
+  sizes: any[] = Sizes;
+  sizeValue: string[] = [];
+  selected_size: string[] = [];
+  ngOnInit(): void {
+    this.initializeSize();
+    this.sizeFormGroup.get('sizeArray').valueChanges.subscribe((value) => {
+      this.sizeArray = value;
+       // console.log('sizeArray----', this.sizeArray);
+       this.onChange({size: this.sizeValue, sizeArray:value});
+
+    });
+
+  }
+  ngOnChanges(): void {
+    // console.log('this.selectedSize', this.selectedSize);
+    if (this.selectedSize && this.selectedSize.length > 0 && this.sizeArrayData && this.sizeArrayData.length > 0) {
+      this.setInitialValue(this.selectedSize, this.sizeArrayData);
+      const size = this.aSizes.filter((size) => size.selected === true).map((size) => size.name);
+      const sizeArray = this.sizeArrayData;
+      this.onChange({size, sizeArray});
+    }
+  }
+
+  private initializeSize() {
+    const asize = this.sizes.map((size) => ({
+      name: size.value,
+      active: false,
+      selected: false,
+      category: size.category,
+    }));
+    this.aSizes = asize;
+    this.nSizes = [];
+    // Upload to the parent component (register-home.component.ts)
+    this.sizeFormGroup.get('sizeArray').reset();
+  }
+  private setInitialValue(value: string[], sizeData: string[]) {
     this.selectedSizeIndex = value.map((val) => {
       return this.sizes.findIndex((size) => size.key === val);
     });
@@ -94,39 +174,37 @@ export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit {
     }));
     // console.log('selectedSize', this.selectedSizeIndex);
     this.selectedSizeIndex.forEach((index) => {
-      const selectedButton: any =
-        this.elRef.nativeElement.querySelectorAll('.box-size')[index];
+      const selectedButton: any = this.elRef.nativeElement.querySelectorAll('.box-size')[index];
 
-      // 클릭 이벤트를 발생시킵니다.
+      // 클릭 이벤트를 발생시킨다.
       if (selectedButton) {
         selectedButton.click();
       }
     });
-  }
-  @Input() set reset_size(value: boolean) {
-    if (value) {
-      this.initializeSize();
+
+    if (value?.length > 0) {
+      // Display the size name and value
+      this.showSizeNameNSizeData(value, sizeData);
     }
   }
-  selectedSizeIndex: number[] = [];
-  aSizes: ISize[] = [];
-  constructor(private cd: ChangeDetectorRef, private elRef: ElementRef) {}
-  onChange: any = () => {};
-  onTouch: any = () => {};
-  sizes: any[] = Sizes;
-  selected_size: string[] = [];
-  ngOnInit(): void {
-    this.initializeSize();
-  }
 
-  private initializeSize() {
-    const asize = this.sizes.map((size) => ({
-      name: size.value,
-      active: false,
-      selected: false,
-      category: size.category,
-    }));
-    this.aSizes = asize;
+  private showSizeNameNSizeData(value: string[], sizeData: string[]) {
+    this.nSizes = [];
+    value.forEach((element: any, index) => {
+      this.nSizes.push({ name: element, value: 0 });
+    });
+    // Display the sizeArray data
+    let element: string[] = [];
+    // 사이즈의 종류를 20개 이상으로 선택하지 않을 것으로 가정한다.
+    for (let i = 0; i < 20; i++) {
+      element[i] = i < sizeData.length ? sizeData[i] : '';
+    }
+    const sizeArrayControl = this.sizeFormGroup.get('sizeArray');
+    if (sizeArrayControl) {
+      sizeArrayControl.reset();
+      sizeArrayControl.setValue(element);
+    }
+    this.cd.detectChanges();
   }
 
   toggleSize(size: ISize): void {
@@ -139,7 +217,11 @@ export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit {
       // size.element?.classList.remove('bg-yellow-500');
     }
     // console.log('this.onChange(this.aSizes);', this.onChange);
-    this.onChange(this.aSizes.filter((size) => size.selected === true));
+    const sizes = this.aSizes.filter((size) => size.selected === true).map((size) => size.name);
+    this.sizeValue = sizes;
+    const sizeArray = this.sizeArray;
+    this.showSizeNameNSizeData(sizes, sizeArray);
+    // this.onChange({size:sizes, sizeArray});
   }
   handleSubmit(sizes: ISize[]): void {
     const selectedSizes = sizes.filter((size) => size.selected);
@@ -169,4 +251,14 @@ export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit {
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
+  private createSizeFormControls(): FormControl[] {
+    const formControls: FormControl[] = [];
+    // 사이즈의 종류를 20개 이상으로 선택하지 않을 것으로 가정한다.
+    // 20개를 미리 생성했다.
+    for (let i = 0; i < 20; i++) {
+      formControls.push(this.fb.control(''));
+    }
+    return formControls;
+  }
+
 }

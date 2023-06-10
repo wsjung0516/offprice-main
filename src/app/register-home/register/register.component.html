@@ -72,11 +72,12 @@
               formControlName="category_1"
             ></app-category1-vca>
           </div>
-          <!-- Category2 -->
+          <!-- Category submenu -->
           <p class="ml-2"><span class="font-bold">Category2</span></p>
           <div class="m-2 overflow-y-auto">
             <app-category-submenu-vca
               [selected_category]="selected_category"
+              [reset_category_submenu]="reset_category_submenu"
               formControlName="category"
             ></app-category-submenu-vca>
           </div>
@@ -101,36 +102,11 @@
           <div class="m-2 overflow-y-auto">
             <app-select-size-vca
               [selectedSize]="size"
+              [sizeArrayData]="sizeArray"
               [reset_size]="reset_size"
               formControlName="size"
             ></app-select-size-vca>
           </div>
-          <ng-container>
-            <div class="container mx-auto">
-              <div class="flex flex-wrap items-center justify-center">
-                <div class="w-full md:w-1/2 lg:w-1/3 p-4">
-                  <div formArrayName="sizeArray">
-                    <div class="flex justify-center">
-                      <div
-                        *ngFor="let control of nSizes; let i = index"
-                        class="flex flex-col items-center justify-center m-2"
-                      >
-                        <span class="text-blue-600 font-semibold mr-2">{{
-                          nSizes[i].name
-                        }}</span>
-                        <input
-                          type="number"
-                          class="w-16 text-center"
-                          [formControlName]="i"
-                          placeholder="Qty"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ng-container>
           <!-- Size -->
           <!-- Material c-1 -->
           <p class="m-2 mt-4"><span class="font-bold">Material</span></p>
@@ -151,37 +127,13 @@
               formControlName="color"
             ></app-color-vca>
           </div>
-          <ng-container>
-            <div class="container mx-auto">
-              <div class="flex flex-wrap items-center justify-center">
-                <div class="w-full md:w-1/2 lg:w-1/3 p-4">
-                  <div formArrayName="colorArray">
-                    <div class="flex justify-center">
-                      <div
-                        *ngFor="let color of nColors; let i = index"
-                        class="flex flex-col items-center justify-center m-2"
-                      >
-                        <span class="text-sm text-blue-600 mr-2">{{
-                          color.name
-                        }}</span>
-                        <div
-                          [style.background-color]="color.value"
-                          class="h-9 w-9 rounded-full"
-                        ></div>
-                        <!-- <input type="number" class="w-16 text-center" [formControlName]="i" placeholder="Qty" /> -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ng-container>
           <!-- Color -->
           <!-- Status -->
           <p class="m-2 mt-4"><span class="font-bold">Status</span></p>
           <div class="m-2 overflow-y-auto">
             <app-status-vca
-              [status1]="sale_status"
+              [status1]="status1"
+              [reset_status]="reset_status"
               formControlName="status"
             ></app-status-vca>
           </div>
@@ -224,4 +176,3 @@
     <ng-template #loading> </ng-template>
   </form>
 </div>
-<pre><code>{{ jsonString }}</code></pre>

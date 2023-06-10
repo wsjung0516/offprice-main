@@ -7,6 +7,8 @@ import {
   Input,
   OnChanges,
   OnInit,
+  QueryList,
+  ViewChildren,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -27,11 +29,13 @@ import { IStatus, Status } from 'src/app/core/constants/data-define';
     <div class="flex_wrap">
       <ng-container *ngFor="let status of aStatus">
           <button
+            #buttons
             type="button"
             class="box-size flex items-center justify-center cursor-pointer"
             (click)="onSelect(status)"
             [ngClass]="{ sel_class: selected_status.key === status.key}"
             >
+            <!-- [ngClass]="{ sel_class: selected_status.key === status.key}" -->
             {{ status.key }} 
           </button>
       </ng-container>
@@ -70,22 +74,43 @@ import { IStatus, Status } from 'src/app/core/constants/data-define';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatusVcaComponent implements ControlValueAccessor, OnChanges {
-  @Input() set status1(value: IStatus) {
-    this.selected_status = value;
+export class StatusVcaComponent implements ControlValueAccessor, OnChanges, AfterViewInit {
+  @Input() status1: string;
+  @Input() set reset_status(value: boolean) {
+    if (value) {
+      this.initializeStatus();
+    }
   }
+  @ViewChildren('buttons') buttons: QueryList<ElementRef>; 
   aStatus = Status;
   constructor(private cd: ChangeDetectorRef, private elRef: ElementRef) {}
   onChange: any = () => {};
   onTouch: any = () => {};
-  selected_status: IStatus;
+  selected_status: IStatus = Status[0];
 
   onSelect(status: IStatus) {
     // console.log('status: ', status);
     this.selected_status = status;
-    this.onChange(this.selected_status);
+    this.onChange(status.key);
+    // this.onChange(this.selected_status);
   }
-
+  ngAfterViewInit(): void {
+    const index = this.aStatus.findIndex((status) => status.key === this.status1);  
+    this.clickButton(index);
+  }
+  clickButton(index: number = 0) {
+    // console.log('index: ', index, this.buttons);
+    // Make sure the buttons exist before trying to click one
+    if (this.buttons && this.buttons.length > index) {
+      this.buttons.toArray()[index].nativeElement.click();
+      // Run change detection immediately
+      this.cd.detectChanges();
+    }
+  }
+  initializeStatus() {
+    this.selected_status = Status[0];
+    this.cd.detectChanges();
+  }
   writeValue(value: any): void {
     // this.priceRange = value;
   }
@@ -96,6 +121,6 @@ export class StatusVcaComponent implements ControlValueAccessor, OnChanges {
     this.onTouch = fn;
   }
   ngOnChanges(): void {
-    this.onChange(this.selected_status);
+    this.onChange(this.status1);
   }
 }

@@ -54,24 +54,23 @@ export class MakeRegisterWhereConditionService {
   initializeWhereCondition(sort: MatSort, paginator: MatPaginator) {
     this.sort = sort;
     this.paginator = paginator;
-
-    this.makeWhereObservable();
-
-    this.makeTableWhereCondition()
-      .pipe(untilDestroyed(this))
-      .subscribe((data: UserSaleList[]) => {
-        // console.log('make-table-where', data);
-        this.searchResult.next(data);
-      });
-    this.localStorageService.storageItem$
-      .pipe(tap((item) => {}))
-      .subscribe((item) => {
-        if (item && item.key === 'displayMode') {
-          // console.log('item', item);
-          this.displayModeSubject.next(item.value);
-        }
-      });
     setTimeout(() => {
+      this.makeWhereObservable();
+
+      this.makeTableWhereCondition()
+        .pipe(untilDestroyed(this))
+        .subscribe((data: UserSaleList[]) => {
+          // console.log('make-table-where', data);
+          this.searchResult.next(data);
+        });
+      this.localStorageService.storageItem$
+        .pipe(tap((item) => {}))
+        .subscribe((item) => {
+          if (item && item.key === 'displayMode') {
+            // console.log('item', item);
+            this.displayModeSubject.next(item.value);
+          }
+        });
     }, 0);
   }
   setRefreshObservable(refreshObservable: Observable<any>) {
@@ -217,8 +216,8 @@ export class MakeRegisterWhereConditionService {
       this.refreshObservable$
     ).pipe(
       untilDestroyed(this),
-      skip(1),
-      startWith({}),
+      // skip(1),
+      // startWith({}),
       map((data: any) => {
         // where and condition event is triggered. (price, category, size, material, search_period)
         if (data.where && data.where['and'].length > 0) {

@@ -57,6 +57,7 @@ import {
 } from 'src/app/core/constants/data-define';
 import { StatusVcaComponent } from '../sidemenu/status-vca/status-vca.component';
 import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
+import { Meta, Title } from '@angular/platform-browser';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
@@ -169,10 +170,20 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
     private authService: RegisterAuthService,
-    private deleteSaleListItemService: DeleteSaleListItemService
+    private deleteSaleListItemService: DeleteSaleListItemService,
+    private metaTagService: Meta,
+    private titleService: Title,
   ) {}
 
   ngOnInit() {
+    this.metaTagService.updateTag(
+      {
+        name: 'description',
+        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+      },
+    );
+    this.titleService.setTitle('Sell on offprice.store');
+
     this.isLoading = false;
     this.registerStatus = this.sessionStorageService.getItem('registerStatus') ?? 'create';
     this.initRegisterForm();
@@ -277,8 +288,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         this.imgURLs,
         this.imgSmURLs
       );
-      console.log('this.registerForm.value', this.registerForm.value);
-      console.log('finalData', finalData);
+      // console.log('this.registerForm.value', this.registerForm.value);
+      // console.log('finalData', finalData);
       if( this.registerForm.valid) {
         this._saleListService
           .updateSaleList(this.sale_list_id, finalData)

@@ -55,7 +55,7 @@ import { InputKeywordComponent } from 'src/app/modules/layout/components/sidebar
 import { Category1MenuComponent } from 'src/app/modules/layout/components/sidebar/category1-menu/category1-menu.component';
 import { CategoryMenuComponent } from 'src/app/modules/layout/components/sidebar/category-menu/category-menu.component';
 import { ResetSearchConditionsComponent } from 'src/app/core/components/reset-search-conditions/reset-search-conditions.component';
-import { Title } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { SaleListService } from './sale-list.service';
 import { UserSaleListService } from './user-sale-list.service';
@@ -123,6 +123,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private removeChipsKeywordService: RemoveChipsKeywordService,
     private titleService: Title,
+    private metaTagService: Meta,
     private localStorageService: LocalStorageService,
     private userSaleListService: UserSaleListService,
     private makeRegisterWhereConditionService: MakeRegisterWhereConditionService
@@ -131,6 +132,11 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     // this.dataSource = new MatTableDataSource(this.saleLists);
   }
   ngOnInit(): void {
+    this.metaTagService.updateTag({
+      name: 'description',
+      content: 'off price clothes, whole sale on offPrice, https://offprice.store',
+    });
+    this.titleService.setTitle('whole sale on offprice.store');
     this.sharedMenuObservableService.resetSearchConditions$
       .pipe(untilDestroyed(this))
       .subscribe((data) => {

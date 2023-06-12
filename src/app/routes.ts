@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { HelpComponent } from './core/components/help/help.component';
 
 export const routes: Routes = [
   {
@@ -12,6 +13,10 @@ export const routes: Routes = [
   {
     path: 'register-home',
     loadChildren: () => import('./register-home/register-home.module').then((m) => m.RegisterHomeModule),
+  },
+  {
+    path: 'help',
+    component: HelpComponent,
   },
   { path: '**', redirectTo: 'error/404' },
 ];

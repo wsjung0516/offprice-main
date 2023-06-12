@@ -284,13 +284,13 @@
     <div
       class="group flex h-9 cursor-pointer items-center justify-start rounded p-2 hover:bg-gray-100 dark:hover:bg-night-600"
     >
-      <!-- <svg-icon
+      <svg-icon (click)="onHelp()"
         src="assets/icons/outline/information-circle.svg"
         [svgClass]="'h-5 w-5 text-gray-400 dark:text-night-400'"
       >
-      </svg-icon> -->
+      </svg-icon>
 
-      <a
+      <a 
         target="_blank"
         href="https://github.com/luciano-work/angular-tailwind"
         class="ml-3 truncate text-[10px] font-semibold tracking-wide text-gray-600 focus:outline-none dark:text-night-100"

@@ -106,6 +106,9 @@ export class ProfileMenuComponent implements OnInit, AfterViewInit {
     this.mobile_menu = !this.mobile_menu;
     // document.getElementById('mobile-menu').classList.toggle('show');
   }
+  onManual() {
+    window.open('/help', '_blank');
+  }
   openProfile() {
     const userId: any = this.sessionStorageService.getItem('userId');
     if (!userId) {

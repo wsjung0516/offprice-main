@@ -116,7 +116,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       details.open = false;
     });
   }
-
+  onHelp() {
+    console.log('onHelp')
+    window.open('/help', '_blank')
+  }
 
   // onToggleMenu(clickedDetails: HTMLElement) {
   //   this.detailsElements.forEach((detailsElement) => {

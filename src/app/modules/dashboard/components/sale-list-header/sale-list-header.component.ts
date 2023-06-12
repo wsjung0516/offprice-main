@@ -136,10 +136,10 @@ export class SaleListHeaderComponent
       this.displayMode = 'grid';
       this.router.navigate(['dashboard/sale_list']);
     }
-    this.cd.detectChanges();
     this.sessionStorageService.setItem('displayMode', this.displayMode);
     // this.localStorageService.setItem('displayMode', this.displayMode);
     this.sharedMenuObservableService.gotoHome.next('');
+    this.cd.detectChanges();
   }
 
   ngOnDestroy() {

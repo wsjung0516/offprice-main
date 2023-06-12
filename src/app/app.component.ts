@@ -9,15 +9,16 @@ import {
 import { HomeComponent } from './home/home.component';
 import { BehaviorSubject } from 'rxjs';
 import { Meta, Title } from '@angular/platform-browser';
+import { HelpComponent } from './core/components/help/help.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, HomeComponent],
+  imports: [CommonModule, HomeComponent, HelpComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  title = 'angular-app';
+  title = 'offprice-main';
   static isBrowser = new BehaviorSubject<boolean>(null);
   constructor(@Inject(PLATFORM_ID) private platformId: any,
   private metaTagService: Meta,
@@ -27,10 +28,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.metaTagService.addTags([
       {
-        name: 'keywords',
-        content: 'off price clothes, off price sale, https://offprice.store',
+        name: 'keyword',
+        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
       },
-      { name: 'wholesale', content: 'offprice.store, https://offprice.store' },
+      {
+        name: 'description',
+        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+      },
+      { name: 'robots', content: 'index, follow' },
       { name: 'author', content: 'Wonsup Jung' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { name: 'date', content: '2023-06-01', scheme: 'YYYY-MM-DD' },

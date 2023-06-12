@@ -20,7 +20,7 @@ import { UserTokenService } from '../core/services/user-token.service';
 import { DialogService } from '@ngneat/dialog';
 import { StartMenuComponent } from '../core/components/start-menu/start-menu.component';
 import { SessionStorageService } from '../core/services/session-storage.service';
-import { Title } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
 import { FeedbackButtonComponent } from '../core/components/feedback-button/feedback-button.component';
 @UntilDestroy()
 @Component({
@@ -54,11 +54,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private userTokenService: UserTokenService,
     private dialogService: DialogService,
     private sessionStorageService: SessionStorageService,
-    private titleService: Title
+    private titleService: Title,
+    private metaTagService: Meta
   ) {}
   async ngOnInit() {
     // this.loggedUser = this.sessionStorageService.getItem('token');
-    console.log('AppComponent ngOnInit -1');
+    this.metaTagService.updateTag(
+      {
+        name: 'description',
+        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+      },
+    );
+    // console.log('AppComponent ngOnInit -1');
     this.userTokenService.getUserToken().subscribe((loggedUser: any) => {
       // console.log('AppComponent ngOnInit', loggedUser);
       if (loggedUser) {

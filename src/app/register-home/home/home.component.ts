@@ -27,7 +27,7 @@ import { DialogService } from '@ngneat/dialog';
 import { BuyCouponsComponent } from '../core/components/buy-coupons/buy-coupons.component';
 import { FeedbackButtonComponent } from 'src/app/core/components/feedback-button/feedback-button.component';
 import { RegisterProfileMenuComponent } from '../core/components/profile-menu/register-profile-menu.component';
-import { Title } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
 
 // import { LoginModule } from '../login/login.module';
 @UntilDestroy()
@@ -70,10 +70,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private userTokenService: UserTokenService,
     private dialogService: DialogService,
     private titleService: Title,
+    private metaTagService: Meta,
     private router: Router
   ) {}
   ngOnInit() {
-    console.log('Register HomeComponent ngOnInit');
+    // console.log('Register HomeComponent ngOnInit');
+    this.metaTagService.updateTag(
+      {
+        name: 'description',
+        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+      },
+    );
+    this.titleService.setTitle('offprice main page')
     this.resetLogoutTimer();
     this.sharedMenuObservableService.closeFeedback$
       .pipe(untilDestroyed(this))

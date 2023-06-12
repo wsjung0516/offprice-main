@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
 // import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { set } from 'date-fns';
 // import { SharedParentObservableService } from '../core/services/shared-parent-observable.service';
-import { Title } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @Component({
@@ -32,10 +32,16 @@ export class RegisterHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     // private sharedMenuObservableService: SharedMenuObservableService,
     // private sharedParentObservableService: SharedParentObservableService,
     private titleService: Title,
+    private metaTagService: Meta,
     private sessionStorageService: SessionStorageService
   ) {}
 
   ngOnInit(): void {
+    this.metaTagService.updateTag({
+      name: 'description',
+      content: 'off price clothes, sell on offPrice, https://offprice.store',
+    });
+    this.titleService.setTitle('Sell on offprice.store');
     console.log('RegisterHomeComponent ngOnInit');
   }
   ngAfterViewInit(): void {

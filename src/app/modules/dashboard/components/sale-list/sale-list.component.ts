@@ -32,7 +32,7 @@ import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-item
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { DialogService } from '@ngneat/dialog';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Title } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -96,7 +96,8 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     private sessionStorageService: SessionStorageService,
     private dialogService: DialogService,
     private breakpointObserver: BreakpointObserver,
-    private titleService: Title
+    private titleService: Title,
+    private metaTagService: Meta,
   ) {
     this.screenSize$ = this.screenSizeService.screenSize$;
     this.updateViewportHeight();
@@ -138,6 +139,12 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnInit(): void {
     //
+    this.metaTagService.updateTag(
+      {
+        name: 'description',
+        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+      },
+    );
     // make chips for display in the DOM
     this.sessionStorageService.setItem('displayMode', 'grid');
     // Keyword that is filtered from ChipsKeywordService, then displayed in the DOM
@@ -158,7 +165,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngAfterViewInit() {
     //
-    this.titleService.setTitle('offPrice.store');
+    this.titleService.setTitle('offPrice');
 
     this.makeWhereConditionService.condition$
       .pipe(untilDestroyed(this))

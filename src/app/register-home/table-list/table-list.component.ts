@@ -32,6 +32,7 @@ import { ImageDetailDirective } from 'src/app/core/directives/image-detail.direc
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
+import { Meta, Title } from '@angular/platform-browser';
 
 @UntilDestroy()
 @Component({
@@ -112,12 +113,21 @@ export class TableListComponent implements OnInit, AfterViewInit {
     private dialogService: DialogService,
     private sharedMenuObservableService: SharedMenuObservableService,
     private sessionStorageService: SessionStorageService,
-    private deleteSaleListItemService: DeleteSaleListItemService
+    private deleteSaleListItemService: DeleteSaleListItemService,
+    private metaTagService: Meta,
+    private titleService: Title
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
-    console.log('register-home table-list ngOnInit');
+    this.metaTagService.updateTag(
+      {
+        name: 'description',
+        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+      },
+    );
+    this.titleService.setTitle('Sell on offprice.store');
+    // console.log('register-home table-list ngOnInit');
     this.sessionStorageService.setItem('displayMode', 'list');
   }
   ngAfterViewInit(): void {

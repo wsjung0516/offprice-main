@@ -35,10 +35,9 @@ export class UserSaleListService {
     // console.log('saleLists', url)
     return this.http
       .get<UserSaleList[]>(url)
-      .pipe
-      // tap(data => console.log('data: ', data)),
-      // shareReplay(1)
-      ();
+      .pipe (
+        // tap(data => console.log('data: ', data))
+      );
   }
 
   private buildWhereData(

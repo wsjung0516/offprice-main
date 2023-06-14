@@ -44,6 +44,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
   // Logout after 30 minutes of inactivity
   ngAfterViewInit() {
-    this.titleService.setTitle('wholesale clothes, off price store');
+    // this.titleService.setTitle('wholesale clothes, off price store');
   }
 }

@@ -374,6 +374,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       .subscribe((response: any) => {
         //console.log('response', response);
         // this.ref.close(true);
+        this.dialogRef.close(response);
       });
   }
   updateUser() {

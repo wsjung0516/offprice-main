@@ -83,11 +83,11 @@ export class StartMenuComponent implements AfterViewInit {
     // this.cd.detectChanges();
   }
   onClose(data: string) {
-    if (data == 'shopping') {
+    if (data === 'shopping') {
       // this.titleService.setTitle('offPrice');
       this.ref.close(true);
-    } else if (data == 'register') {
-      // this.titleService.setTitle('Register');
+    } else if (data === 'register') {
+      this.titleService.setTitle('Register');
       this.ref.close(true);
     }
   }

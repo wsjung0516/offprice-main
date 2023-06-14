@@ -85,16 +85,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
     //   });
     // this.receiveFeedback();
   }
-  // Logout after 30 minutes of inactivity
+  // 
   @HostListener('window:mousemove')
   @HostListener('window:keypress')
   resetLogoutTimer() {
     clearTimeout(this.logoutTimer);
     this.logoutTimer = setTimeout(() => {
+      const userId = this.sessionStorageService.getItem('userId');
+      if( userId ) {
       this.auth.signOut().then(() => {
-        this.authService.logout();
-        alert('You have been logged out after 30 minutes of inactivity.');
-      });
+          this.authService.logout();
+          alert('You have been logged out after 30 minutes of inactivity.');
+        });
+      }
     }, 30 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {
@@ -105,53 +108,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // To prevent from showing register button in child page
     const userId = this.sessionStorageService.getItem('userId');
     if (userId) return;
-    // if (title === 'offPrice') {
-    //   const ref = this.dialogService.open(StartMenuComponent, {
-    //     data: {
-    //       title: 'start',
-    //     },
-    //     width: '340px',
-    //     // backdrop: false,
-    //     // enableClose: false,
-    //     closeButton: false,
-    //   });
-    //   ref.afterClosed$.subscribe((result) => {
-    //     if (result) {
-    //       console.log('ref.afterClosed$.subscribe', result);
-    //       // localStorage.setItem('isStartMenuPassed', 'true');
-    //       this.isRegisterButton = true;
-    //       this.titleService.setTitle('Register');
-    //       this.cd.detectChanges();
-    //     }
-    //   });
-    // }
   }
 
-  // private receiveFeedback() {
-  //   const feedbackButton = document.getElementById('feedback-button');
-  //   feedbackButton.addEventListener('click', () => {
-  //     this.userTokenService.getUserToken().subscribe((loggedUser: any) => {
-  //       if (!loggedUser) {
-  //         this.router.navigate(['/login']);
-  //         return;
-  //       }
-  //     });
-
-  //     const dialogOverlay = document.getElementById('dialog-overlay');
-  //     dialogOverlay.style.display =
-  //       dialogOverlay.style.display === 'none' ? 'flex' : 'none';
-
-  //     const closeButton = document.getElementById('close-btn');
-  //     closeButton.addEventListener('click', () => {
-  //       dialogOverlay.style.display = 'none';
-  //     });
-  //   });
-  // }
-  // acitveTab = 'tab1';
-  // setActiveTab(tabId: string) {
-  //   this.acitveTab = tabId;
-  // }
-  // isActiveTab(tabId: string) {
-  //   return this.acitveTab === tabId;
-  // }
 }

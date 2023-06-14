@@ -102,7 +102,7 @@ export class AuthService {
     this.userCouponsService.getUserCoupons().subscribe((ret: any) => {
       // console.log('user coupon', ret.quantity);
       if (!ret) {
-        this.userCouponsService.createUserCoupon(200).subscribe((ret: any) => {
+        this.userCouponsService.createUserCoupon(300).subscribe((ret: any) => {
           console.log('createUserCoupon', ret);
         });
       } else {

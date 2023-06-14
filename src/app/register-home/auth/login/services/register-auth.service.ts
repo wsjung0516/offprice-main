@@ -7,14 +7,10 @@ import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-o
 //import { UserService } from 'src/app/register-home/user-profile/user.service';
 import jwt_decode from 'jwt-decode';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { Observable, map, of, tap } from 'rxjs';
-import { User } from 'src/app/core/models/user.model';
-import { MatDialog } from '@angular/material/dialog';
-import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 import { UserService } from 'src/app/user/user.service';
-import { UserCouponsService } from 'src/app/core/services/user-coupons.service';
+import { CheckIfSellerSetService } from 'src/app/core/services/check-if-seller-is-set.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -22,15 +18,16 @@ export class RegisterAuthService {
   token: any;
   constructor(
     private fireauth: AngularFireAuth,
-    private router: Router,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private userService: UserService,
+    private router: Router,
     private sessionStorageService: SessionStorageService,
-    private matSnackBar: MatSnackBar,
-    private dialog: MatDialog,
+    private userService: UserService,
     private userTokenService: UserTokenService,
-    private userCouponsService: UserCouponsService
-  ) {}
+    private checkIfSellerSetService: CheckIfSellerSetService
+  ) // private dialog: MatDialog,
+  // private matSnackBar: MatSnackBar,
+  // private userCouponsService: UserCouponsService
+  {}
   isLoggedIn(): boolean {
     // console.log('this.token', this.token);
     const userId: any = this.sessionStorageService.getItem('userId');
@@ -70,7 +67,7 @@ export class RegisterAuthService {
           this.userService.saveUserProfileToDB(res);
 
           if (res.user?.emailVerified == true) {
-            this.checkIfSellerIsSet(ret, res);
+            this.router.navigate(['/register-home']);
           } else {
             this.router.navigate(['/login/verify-email']);
           }
@@ -121,7 +118,7 @@ export class RegisterAuthService {
     this.fireauth.signOut().then(
       () => {
         this.userTokenService.getUserToken().subscribe((profile: any) => {
-          // console.log('profile', profile);
+          console.log('profile', profile);
           if (profile) {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
@@ -169,85 +166,13 @@ export class RegisterAuthService {
       (res) => {
         this.createUserTokenFn(res).subscribe((ret: any) => {
           // console.log('createUserTokenFn -2', ret);
-          this.checkIfSellerIsSet(ret, res);
+          this.router.navigate(['/register-home']);
         });
       },
       (err) => {
         alert(err.message);
       }
     );
-  }
-  private checkIfSellerIsSet(ret: any, res: any) {
-    this.isSellerChecked(ret.user.uid).subscribe((isSeller: boolean) => {
-      console.log('isSeller', isSeller);
-      if (isSeller) {
-        this.router.navigate(['/register-home']);
-        this.userService.saveUserProfileToDB(res);
-
-        // User Coupons
-        this.checkIfUserCouponsAvailable();
-      } else {
-        // Input profile information
-        this.inputProfileInfo(res).subscribe((ret: any) => {
-          // console.log('inputProfileInfo', ret);
-          if (ret?.body.seller === true) {
-            this.router.navigate(['/register-home']);
-            return;
-          }
-        });
-      }
-    });
-  }
-
-  public checkIfUserCouponsAvailable() {
-    this.userCouponsService.getUserCoupons().subscribe((ret: any) => {
-      // console.log('user coupon', ret.quantity);
-      if (ret) {
-        if (ret.quantity <= 5) {
-          this.matSnackBar.open(
-            'You have ' + ret.quantity + ' coupons left',
-            'OK',
-            {
-              duration: 5000,
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-            }
-          );
-        }
-        if (ret.quantity === 0) {
-          this.matSnackBar.open(
-            'You have ' + ret.quantity + ' coupons left',
-            'OK',
-            {}
-          );
-          this.logout();
-        }
-        this.sharedMenuObservableService.userCoupons.next(
-          ret.quantity.toString()
-        );
-      } else {
-        this.userCouponsService.createUserCoupon(200).subscribe((ret: any) => {
-          console.log('createUserCoupon', ret);
-        });
-      }
-    });
-  }
-
-  private isSellerChecked(uid: string): Observable<boolean> {
-    return this.userService.getUser(uid).pipe(
-      tap((user: any) => {
-        // console.log('isSellerChecked', user);
-      }),
-      map((user: any) => {
-        return user.seller;
-      })
-    );
-  }
-  private inputProfileInfo(res: any): Observable<any> {
-    const dialogRef = this.dialog.open(UserProfileComponent, {});
-
-    return dialogRef.afterClosed();
-    // To show the register button
   }
   facebookSignIn() {
     return this.fireauth.signInWithPopup(new FacebookAuthProvider()).then(

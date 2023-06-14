@@ -29,6 +29,7 @@ import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { switchMap, tap, Subscription, interval, Observable, of } from 'rxjs';
 import { UserService } from 'src/app/user/user.service';
+import { Meta, Title } from '@angular/platform-browser';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -69,7 +70,9 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     private cartItemsService: CartItemsService,
     private userTokenService: UserTokenService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private titleService: Title,
+    private metaService: Meta,
   ) {}
 
   ngOnInit(): void {
@@ -164,6 +167,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   onRegister() {
     // this.newWindow = window.open('/register-home');
     // window.focus();
+    this.titleService.setTitle('Register');
     this.router.navigate(['/register-home']);
   }
 

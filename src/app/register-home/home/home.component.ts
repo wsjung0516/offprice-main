@@ -97,10 +97,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   resetLogoutTimer() {
     clearTimeout(this.logoutTimer);
     this.logoutTimer = setTimeout(() => {
+      const userId = this.sessionStorageService.getItem('userId');
+      if( userId ) {
       this.auth.signOut().then(() => {
-        this.authService.logout();
-        alert('You have been logged out after 30 minutes of inactivity.');
-      });
+          this.authService.logout();
+          alert('You have been logged out after 30 minutes of inactivity.');
+        });
+      }
     }, 30 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {

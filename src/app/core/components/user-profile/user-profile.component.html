@@ -13,7 +13,6 @@
             <mat-label>First Name</mat-label>
             <input
               class="placeholder-red-300"
-              readonly
               matInput
               formControlName="first_name"
               placeholder="First Name"
@@ -23,7 +22,6 @@
           <mat-form-field class="">
             <mat-label>Last Name</mat-label>
             <input
-              readonly
               matInput
               formControlName="last_name"
               placeholder="Last Name"
@@ -35,20 +33,19 @@
           <!-- <mat-form-field class="" > -->
           <mat-label>Email</mat-label>
           <input
-            *ngIf="disabled"
             readonly
             matInput
             formControlName="email"
             placeholder="Email"
             value=""
           />
-          <input
+          <!-- <input
             *ngIf="!disabled"
             matInput
             formControlName="email"
             placeholder="Email"
             value=""
-          />
+          /> -->
         </mat-form-field>
         <div class="grid grid-cols-2 gap-4">
           <mat-form-field class="">

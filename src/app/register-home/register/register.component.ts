@@ -63,7 +63,7 @@ import { Meta, Title } from '@angular/platform-browser';
   selector: 'app-register',
   standalone: true,
   imports: [
-  CommonModule,
+CommonModule,
     MatCardModule,
     MatButtonModule,
     QuillEditorComponent,
@@ -337,7 +337,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         finalData.user_id = profile.user.uid;
         // console.log('finalData', finalData);
         this.createSaleList(finalData, profile);
-        this.authService.checkIfUserCouponsAvailable();
+        //this.authService.checkIfUserCouponsAvailable();
+        // this.checkIfSellerSetService.checkIfUserCouponsAvailable();
       }
     });
   }

@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       { charset: 'UTF-8' },
     ]);
   }
-  // Logout after 30 minutes of inactivity
+  // 
   ngAfterViewInit() {
     // this.titleService.setTitle('wholesale clothes, off price store');
   }

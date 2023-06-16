@@ -17,11 +17,12 @@ import { Router } from '@angular/router';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { UserService } from 'src/app/user/user.service';
 import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.directive';
-import { Title } from '@angular/platform-browser';
+import { Meta, Title } from '@angular/platform-browser';
+import { AboutComponent } from 'src/app/core/components/about/about.component';
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     MatDialogModule,
     MatSnackBarModule,
     ClickOutsideDirective,
@@ -57,7 +58,8 @@ export class RegisterProfileMenuComponent implements OnInit, AfterViewInit {
     private router: Router,
     private sharedMenuObservableService: SharedMenuObservableService,
     private userService: UserService,
-    private titleService: Title
+    private titleService: Title,
+    private metaService: Meta
   ) {}
 
   ngOnInit(): void {}
@@ -114,6 +116,12 @@ export class RegisterProfileMenuComponent implements OnInit, AfterViewInit {
 
       this.toggleDropdown();
     });
+  }
+  openAbout() {
+    // this.router.navigate(['/about']);
+    this.dialog.open(AboutComponent,{
+    });
+    this.toggleDropdown();
   }
   login() {
     this.router.navigate(['/login']);

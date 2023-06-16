@@ -89,6 +89,7 @@ interface Data {
 })
 export class UserProfileComponent implements OnInit, AfterViewInit {
   // ref: DialogRef<Data> = inject(DialogRef);
+  @ViewChild('templateName') tName: TemplateRef<any>;
 
   title = 'Update User';
   userId: string;
@@ -97,7 +98,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   user: Partial<User> = {};
   disabled = false;
   mode = 'Update';
-  @ViewChild('templateName') tName: TemplateRef<any>;
 
   address = '';
   cities: { key: any }[][] = [];

@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       });
     this.receiveFeedback();
   }
-  // Logout after 30 minutes of inactivity
+  // Logout after 60 minutes of inactivity
   @HostListener('window:mousemove')
   @HostListener('window:keypress')
   resetLogoutTimer() {
@@ -101,10 +101,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if( userId ) {
       this.auth.signOut().then(() => {
           this.authService.logout();
-          alert('You have been logged out after 30 minutes of inactivity.');
+          alert('You have been logged out after 60 minutes of inactivity.');
         });
       }
-    }, 30 * 60 * 1000); // 30분
+    }, 60 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {
     //

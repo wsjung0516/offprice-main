@@ -91,7 +91,8 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   // ref: DialogRef<Data> = inject(DialogRef);
   @ViewChild('templateName') tName: TemplateRef<any>;
 
-  title = 'Update User';
+  title = '';
+  currentTitle = '';
   userId: string;
   createdDate: string;
 
@@ -119,7 +120,8 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     private matDialog: MatDialog,
     private userTokenService: UserTokenService,
     private snackBar: MatSnackBar,
-    private titleService: Title
+    private titleService: Title,
+    private sessionStorageService: SessionStorageService
   ) {}
 
   contactForm = new UntypedFormGroup({
@@ -161,8 +163,8 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // To prvevent from writing the seller information because seller info
     // is managed by register-home module.
-    this.title = this.titleService.getTitle();
-
+    // this.title = this.titleService.getTitle();
+    this.currentTitle = this.sessionStorageService.getItem('title')
     this.userTokenService
       .getUserToken()
       .pipe(

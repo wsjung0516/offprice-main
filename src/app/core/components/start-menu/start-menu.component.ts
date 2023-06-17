@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DialogRef } from '@ngneat/dialog';
 import { Title } from '@angular/platform-browser';
+import { SessionStorageService } from '../../services/session-storage.service';
 interface Data {
   title: string;
 }
@@ -16,7 +17,7 @@ interface Data {
   selector: 'app-start-menu',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  template: `
+template: `
     <ng-container>
       <div
         class="z-100 flex h-48 w-76 bg-white flex-col rounded-md items-center justify-center opacity-1 "
@@ -76,7 +77,8 @@ interface Data {
 export class StartMenuComponent implements AfterViewInit {
   title = '';
   ref: DialogRef<Data> = inject(DialogRef);
-  constructor(private titleService: Title, private cd: ChangeDetectorRef) {}
+  constructor(private titleService: Title, private cd: ChangeDetectorRef,
+    private sessionStorageService: SessionStorageService) {}
   ngAfterViewInit(): void {
     // this.title = 'user register';
     console.log('start-menu title: ', this.title);
@@ -88,6 +90,7 @@ export class StartMenuComponent implements AfterViewInit {
       this.ref.close(true);
     } else if (data === 'register') {
       this.titleService.setTitle('Register');
+      this.sessionStorageService.setItem('title','Register');
       this.ref.close(true);
     }
   }

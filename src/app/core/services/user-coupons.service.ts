@@ -30,7 +30,7 @@ export class UserCouponsService {
     const url = `${this.baseUrl}/user-coupons/${user_id}/${coupon_id}`;
     return this.http.get<any>(url).pipe(
       tap((data) => {
-        console.log('user coupons: ', data);
+        // console.log('user coupons: ', data);
       }),
       map((data: any) => data),
       shareReplay(1)

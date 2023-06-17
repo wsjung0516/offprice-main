@@ -168,6 +168,8 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.newWindow = window.open('/register-home');
     // window.focus();
     this.titleService.setTitle('Register');
+    this.sessionStorageService.setItem('title','Register');
+
     this.router.navigate(['/register-home']);
   }
 

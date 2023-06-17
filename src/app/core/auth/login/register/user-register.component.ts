@@ -5,12 +5,13 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  template: `
+template: `
     <div class="flex mx-auto  items-center justify-center min-h-screen">
       <div
         class="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-50 text-gray-800"
@@ -75,10 +76,12 @@ export class UserRegisterComponent implements OnInit {
   email = '';
   password = '';
 
-  constructor(private auth: AuthService, private titleService: Title) {}
+  constructor(private auth: AuthService, private titleService: Title,
+    private sessionStorageService: SessionStorageService) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('Register');
+    this.sessionStorageService.setItem('title', 'Register')
     // console.log('UserRegisterComponent ngOnInit')
   }
 

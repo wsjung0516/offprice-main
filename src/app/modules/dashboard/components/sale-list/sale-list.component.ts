@@ -110,13 +110,13 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     ]).subscribe(result => {
       if (result.matches) {
         if (result.breakpoints[Breakpoints.XSmall]) {
-          this.itemSize = 140;
-        } else if (result.breakpoints[Breakpoints.Small]) {
-          this.itemSize = 120;
-        } else if (result.breakpoints[Breakpoints.Medium]) {
           this.itemSize = 100;
-        } else if (result.breakpoints[Breakpoints.Large]) {
+        } else if (result.breakpoints[Breakpoints.Small]) {
+          this.itemSize = 90;
+        } else if (result.breakpoints[Breakpoints.Medium]) {
           this.itemSize = 80;
+        } else if (result.breakpoints[Breakpoints.Large]) {
+          this.itemSize = 70;
         } else if (result.breakpoints[Breakpoints.XLarge]) {
           this.itemSize = 60;
         }
@@ -166,6 +166,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     //
     this.titleService.setTitle('offPrice');
+    this.sessionStorageService.setItem('title', 'offPrice');
 
     this.makeWhereConditionService.condition$
       .pipe(untilDestroyed(this))

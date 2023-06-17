@@ -51,6 +51,8 @@ export class RegisterHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngAfterViewInit(): void {
     this.titleService.setTitle(this.title);
+    this.sessionStorageService.setItem('title','Register');
+
     setTimeout(() => {
       const userId:any = this.sessionStorageService.getItem('userId');
       const ret = this.checkIfSellerSetService.isChecked(userId.user_id).subscribe((ret: any) => {

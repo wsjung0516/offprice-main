@@ -103,6 +103,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.titleService.setTitle('offPrice');
     const title = this.titleService.getTitle();
+    this.sessionStorageService.setItem('title', 'offPrice');
     // console.log('offPrice-main-title', title);
     // Check if register button can be displayed
     // To prevent from showing register button in child page

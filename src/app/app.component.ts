@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.metaTagService.addTags([
       {
-        name: 'keyword',
+        name: 'keywords',
         content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
       },
       {

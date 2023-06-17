@@ -17,6 +17,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { set } from 'date-fns';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AboutComponent } from 'src/app/core/components/about/about.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 @UntilDestroy()
 @Component({
   selector: 'app-sidebar',
@@ -31,6 +33,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     SearchPeriodComponent,
     ColorComponent,
     MatIconModule,
+    MatDialogModule
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
@@ -49,7 +52,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private sessionStorageService: SessionStorageService,
     private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private dialog: MatDialog 
   ) {
     this.showSideBar$ = this.menuService.showSideBar$;
     this.sharedMenuObservableService.showSideBar$ = this.showSideBar$;
@@ -116,9 +120,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       details.open = false;
     });
   }
-  onHelp() {
-    console.log('onHelp')
-    window.open('/help', '_blank')
+  openAbout() {
+    // this.router.navigate(['/about']);
+    this.dialog.open(AboutComponent,{
+    });
   }
 
   // onToggleMenu(clickedDetails: HTMLElement) {

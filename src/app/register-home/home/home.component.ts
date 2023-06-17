@@ -109,6 +109,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     //
     this.titleService.setTitle('Register');
+    this.sessionStorageService.setItem('title','Register');
+
     this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
       if (coupon) {
         console.log('userCoupons', coupon);

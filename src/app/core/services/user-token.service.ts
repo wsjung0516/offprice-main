@@ -39,7 +39,7 @@ export class UserTokenService {
   }
   createUserToken(value: any): Observable<any> {
     const url = `${this.baseUrl}/user-token`;
-    console.log('create UserToken: ', url);
+    // console.log('create UserToken: ', url);
     const token = JSON.stringify(value);
     const data = { user_id: value.user.uid, token: token };
     return this.http.post(url, { data }).pipe(

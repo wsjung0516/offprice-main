@@ -76,7 +76,6 @@ export class AuthService {
   login(email: string, password: string) {
     this.fireauth.signInWithEmailAndPassword(email, password).then(
       (res) => {
-        // console.log('res' , res)
         this.createUserTokenFn(res).subscribe((ret: any) => {
           // this.sharedMenuObservableService.displayName.next(res.user.displayName);
           this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
@@ -103,7 +102,7 @@ export class AuthService {
       // console.log('user coupon', ret.quantity);
       if (!ret) {
         this.userCouponsService.createUserCoupon(300).subscribe((ret: any) => {
-          console.log('createUserCoupon', ret);
+          // console.log('createUserCoupon', ret);
         });
       } else {
         this.sharedMenuObservableService.userCoupons.next(
@@ -116,7 +115,7 @@ export class AuthService {
   private createUserTokenFn(res: any): Observable<any> {
     return this.userTokenService.createUserToken(res).pipe(
       map((ret: any) => {
-        console.log('createUserTokenFn', ret);
+        // console.log('createUserTokenFn', ret);
         const value = JSON.parse(ret.token);
         const data = {
           id: ret.token_id,

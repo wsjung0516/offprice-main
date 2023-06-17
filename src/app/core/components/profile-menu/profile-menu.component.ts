@@ -25,7 +25,7 @@ import { AboutComponent } from '../about/about.component';
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+CommonModule,
     MatDialogModule,
     MatSnackBarModule,
     ClickOutsideDirective,
@@ -82,12 +82,15 @@ export class ProfileMenuComponent implements OnInit, AfterViewInit {
     if (userId) {
       this.isLoggedIn = true;
       this.userService.getUser(userId.user_id).subscribe((user: any) => {
-        this.userName = user.first_name;
-        this.userEmail = user.email;
-        const names = [user.first_name, user.last_name];
-        this.initials =
-          names[0].substring(0, 1).toUpperCase() +
-          names[names.length - 1].substring(0, 1).toUpperCase();
+        // console.log('profile-menu. user', user);
+        this.userName = user?.first_name ?? '';
+        const firstName = user?.first_name ?? '';
+        const lastName = user?.last_name ?? ''; 
+        this.userEmail = user?.email ?? '';
+        const names = [firstName, lastName];
+        this.initials = 
+          names[0]?.substring(0, 1).toUpperCase() +
+          names[names.length - 1]?.substring(0, 1).toUpperCase();
         this.cd.detectChanges();
       });
       // console.log('profile-menu. profile', profile);

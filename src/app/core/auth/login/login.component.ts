@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LoginModule } from './login.module';
 import { Title } from '@angular/platform-browser';
+import { SessionStorageService } from '../../services/session-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -117,12 +118,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
   constructor(
     private auth: AuthService,
     private titleService: Title,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private sessionStorageService: SessionStorageService
   ) {}
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.titleService.setTitle('Login');
+    this.sessionStorageService.setItem('title', 'Login');
+
     const title = this.titleService.getTitle();
     this.cd.detectChanges();
     console.log('title: ', title);

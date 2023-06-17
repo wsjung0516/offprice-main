@@ -4,12 +4,13 @@ import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  template: `
+template: `
       <div class="flex mx-auto  items-center justify-center min-h-screen">
       <div
         class="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-50 text-gray-800"
@@ -63,10 +64,13 @@ import { RouterModule } from '@angular/router';
 export class ForgotPasswordComponent implements OnInit {
   email = '';
 
-  constructor(private auth: AuthService, private titleService: Title) {}
+  constructor(private auth: AuthService, private titleService: Title,
+    private sessionStorageService: SessionStorageService) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('Forgot password');
+    this.sessionStorageService.setItem('title', 'Forgot password');
+
   }
 
   forgotPassword() {

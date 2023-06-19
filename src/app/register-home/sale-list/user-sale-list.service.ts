@@ -46,6 +46,7 @@ export class UserSaleListService {
         const whereData = this.buildWhereData(where, whereOR);
 
         const order = JSON.stringify(orderBy);
+        
         let url = `${this.baseUrl}/user-sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
         if (whereData) {
           url += `&where=${JSON.stringify(whereData)}`;
@@ -55,7 +56,7 @@ export class UserSaleListService {
           this.where = `?where=${JSON.stringify(tmp)}`;
         }
         // console.log('saleLists', url)
-        return this.http.get<UserSaleList[]>(url);
+        return this.http.get<UserSaleList[]>(url).pipe();
       })
     );
   }

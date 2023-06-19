@@ -89,7 +89,7 @@ export class StartMenuComponent implements AfterViewInit {
       // this.titleService.setTitle('offPrice');
       this.ref.close(true);
     } else if (data === 'register') {
-      this.titleService.setTitle('Register');
+      this.titleService.setTitle('off price sales register');
       this.sessionStorageService.setItem('title','Register');
       this.ref.close(true);
     }

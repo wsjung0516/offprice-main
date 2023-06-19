@@ -44,13 +44,13 @@ export class RegisterHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.metaTagService.updateTag({
       name: 'description',
-      content: 'off price clothes, sell on offPrice, https://offprice.store',
+      content: 'Explore our closeout section for unbeatable prices on clearance items.',
     });
-    this.titleService.setTitle('Sell on offprice.store');
+    this.titleService.setTitle('off price wholesale marketplace');
     console.log('RegisterHomeComponent ngOnInit');
   }
   ngAfterViewInit(): void {
-    this.titleService.setTitle(this.title);
+    this.titleService.setTitle('off price wholesale marketplace');
     this.sessionStorageService.setItem('title','Register');
 
     setTimeout(() => {

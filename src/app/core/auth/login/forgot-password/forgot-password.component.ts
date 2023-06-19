@@ -68,7 +68,7 @@ export class ForgotPasswordComponent implements OnInit {
     private sessionStorageService: SessionStorageService) {}
 
   ngOnInit(): void {
-    this.titleService.setTitle('Forgot password');
+    this.titleService.setTitle('forgot password');
     this.sessionStorageService.setItem('title', 'Forgot password');
 
   }

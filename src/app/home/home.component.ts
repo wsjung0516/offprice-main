@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.metaTagService.updateTag(
       {
         name: 'description',
-        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+        content: 'Discover amazing discounts and deals at our off-price store.',
       },
     );
     // console.log('AppComponent ngOnInit -1');
@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }, 60 * 60 * 1000); // 30분
   }
   ngAfterViewInit() {
-    this.titleService.setTitle('offPrice');
+    this.titleService.setTitle('off price wholesale');
     const title = this.titleService.getTitle();
     this.sessionStorageService.setItem('title', 'offPrice');
     // console.log('offPrice-main-title', title);

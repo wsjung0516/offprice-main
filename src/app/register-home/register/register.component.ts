@@ -58,6 +58,7 @@ import {
 import { StatusVcaComponent } from '../sidemenu/status-vca/status-vca.component';
 import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
 import { Meta, Title } from '@angular/platform-browser';
+import { MakeRegisterWhereConditionService } from './../core/services/make-register-where-condition.service';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
@@ -173,16 +174,17 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private deleteSaleListItemService: DeleteSaleListItemService,
     private metaTagService: Meta,
     private titleService: Title,
+    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService
   ) {}
 
   ngOnInit() {
     this.metaTagService.updateTag(
       {
         name: 'description',
-        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+        content: "Don't miss out on our closeout sale with incredible discounts on select products.",
       },
     );
-    this.titleService.setTitle('Sell on offprice.store');
+    this.titleService.setTitle('closeout sale');
 
     this.isLoading = false;
     this.registerStatus = this.sessionStorageService.getItem('registerStatus') ?? 'create';
@@ -213,7 +215,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         if (id) {
           this.sale_list_id = id;
           this._saleListService.getSaleList(id).subscribe((res: SaleList) => {
-            console.log('res', res);
+            // console.log('res', res);
             // this.registerForm.patchValue(res,{emitEvent: false});
             this.registerForm.get('vendor').setValue(res.vendor);
             this.registerForm.get('price').setValue(res.price);
@@ -281,26 +283,26 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   updateSaleList() {
-    console.log('updateSaleList', this.registerForm.value);
+    // console.log('updateSaleList', this.registerForm.value, this.imgURLs);
     if (this.registerStatus === 'update') {
-      const finalData = this.deserializeData(
+      const finalData = this.makeUpdateData(
         this.registerForm.value,
         this.imgURLs,
         this.imgSmURLs
       );
       // console.log('this.registerForm.value', this.registerForm.value);
-      // console.log('finalData', finalData);
-      if( this.registerForm.valid) {
-        this._saleListService
-          .updateSaleList(this.sale_list_id, finalData)
-          .subscribe((res: any) => {
-            // If update status is finished, change status to create
-            this._notificationService.success('Update successfully');
-            this._router.navigate(['/register-home/home/sale-list']);
-              // To refresh the table.
-              this.sharedMenuObservableService.refreshData.next('');
-            });
+      console.log('finalData', finalData);
+      this._saleListService
+        .updateSaleList(this.sale_list_id, finalData)
+        .subscribe((res: any) => {
+          // If update status is finished, change status to create
+          this._notificationService.success('Update successfully');
+          this._router.navigate(['/register-home/home/sale-list']);
+            // To refresh the table.
+            this.makeRegisterWhereConditionService.refreshObservable.next('');
+          });
 
+      if( this.registerForm.valid) {
       } else {
         this.snackBar.open('Please check the field conditions!', 'Close', {
           duration: 3000,
@@ -357,6 +359,45 @@ sizeArray:(3) ['100', '200', '300']
 user_id:"8e2452c0-bf35-4ece-acdf-6ff434bc1197"
 vendor:"bbb"
 */
+  private makeUpdateData(
+    data: any,
+    // data: Partial<SaleList>,
+    image_urls: string[],
+    image_sm_urls: string[]
+  ) {
+
+    console.log('data', data);
+    const adata: any = {
+      product_name: data.product_name,
+      // user_id: user.user.uid,
+      description: data.description !== '' ? data.description : '',
+      // image_urls: image_urls.join(','),
+      // image_sm_urls: image_sm_urls.join(','),
+      vendor: data.vendor,
+      price: data.price,
+      category: data.category,
+      category1: this.category1.id,
+      size: data.size !== '' ? data.size.size.join(',') : '',
+      sizeArray: data.size !== '' ? data.size.sizeArray.filter((item:any) =>  item !== '').join(',') : '',
+      color: data.color !== '' ? data.color.join(',') : '',
+      material: data.material !== '' ? data.material.join(',') : '',
+      colorArray: '',
+      status1: data.status !== '' ? data.status : 'Sale',
+    };
+    if (adata.size === '' || adata.color === '' || adata.material === '') {
+      if (adata.size === '') {
+        delete adata.size;
+        delete adata.sizeArray;
+      }
+      if (adata.color === '') {
+        delete adata.color;
+      }
+      if (adata.material === '') {
+        delete adata.material;
+      }
+    }
+    return adata;
+  }
   private deserializeData(
     data: any,
     // data: Partial<SaleList>,
@@ -364,11 +405,11 @@ vendor:"bbb"
     image_sm_urls: string[]
   ) {
 
-    // console.log('data', data);
+    console.log('data', data);
     const adata: Partial<SaleList> = {
       product_name: data.product_name,
       // user_id: user.user.uid,
-      description: this.description,
+      description: data.description !== '' ? data.description : '',
       image_urls: image_urls.join(','),
       image_sm_urls: image_sm_urls.join(','),
       vendor: data.vendor,
@@ -380,7 +421,7 @@ vendor:"bbb"
       color: data.color.join(','),
       colorArray: '',
       material: data.material.join(','),
-      status1: this.status1,
+      status1: data.status,
     };
     return adata;
   }
@@ -399,7 +440,7 @@ vendor:"bbb"
     console.log('deleteItem', this.sale_list_id);
     this.deleteSaleListItemService.delete(this.sale_list_id.toString());
     // To refresh the table.
-    this.sharedMenuObservableService.refreshData.next('');
+    this.makeRegisterWhereConditionService.refreshObservable.next('');
 
   }
 
@@ -427,7 +468,7 @@ vendor:"bbb"
         this.reset_status = true;
         this.reset_category_submenu = true;
         // To refresh the table.
-        this.sharedMenuObservableService.refreshData.next('');
+        this.makeRegisterWhereConditionService.refreshObservable.next('');
 
       });
   }

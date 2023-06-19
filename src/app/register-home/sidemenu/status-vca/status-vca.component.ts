@@ -35,7 +35,6 @@ import { IStatus, Status } from 'src/app/core/constants/data-define';
             (click)="onSelect(status)"
             [ngClass]="{ sel_class: selected_status.key === status.key}"
             >
-            <!-- [ngClass]="{ sel_class: selected_status.key === status.key}" -->
             {{ status.key }} 
           </button>
       </ng-container>
@@ -95,9 +94,13 @@ export class StatusVcaComponent implements ControlValueAccessor, OnChanges, Afte
     // this.onChange(this.selected_status);
   }
   ngAfterViewInit(): void {
-    const index = this.aStatus.findIndex((status) => status.key === this.status1);  
+    this.initializeButton();
+  }
+  private initializeButton() {
+    const index = this.aStatus.findIndex((status) => status.key === this.status1);
     this.clickButton(index);
   }
+
   clickButton(index: number = 0) {
     // console.log('index: ', index, this.buttons);
     // Make sure the buttons exist before trying to click one
@@ -121,6 +124,7 @@ export class StatusVcaComponent implements ControlValueAccessor, OnChanges, Afte
     this.onTouch = fn;
   }
   ngOnChanges(): void {
+    this.initializeButton();
     this.onChange(this.status1);
   }
 }

@@ -40,7 +40,7 @@ export class UserService {
 
     return this.http.get<User>(url).pipe(
       map((data: any) => data),
-      shareReplay(1)
+      // shareReplay(1)
     );
   }
   getConditionalUserLength(where: any): Observable<User[]> {

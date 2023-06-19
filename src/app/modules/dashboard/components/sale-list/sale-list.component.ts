@@ -110,13 +110,13 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     ]).subscribe(result => {
       if (result.matches) {
         if (result.breakpoints[Breakpoints.XSmall]) {
-          this.itemSize = 100;
+          this.itemSize = 140;
         } else if (result.breakpoints[Breakpoints.Small]) {
-          this.itemSize = 90;
+          this.itemSize = 100;
         } else if (result.breakpoints[Breakpoints.Medium]) {
           this.itemSize = 80;
         } else if (result.breakpoints[Breakpoints.Large]) {
-          this.itemSize = 70;
+          this.itemSize = 60;
         } else if (result.breakpoints[Breakpoints.XLarge]) {
           this.itemSize = 60;
         }
@@ -165,13 +165,13 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngAfterViewInit() {
     //
-    this.titleService.setTitle('offPrice');
+    this.titleService.setTitle('off price closeout marketplace');
     this.sessionStorageService.setItem('title', 'offPrice');
 
     this.makeWhereConditionService.condition$
       .pipe(untilDestroyed(this))
       .subscribe((data: SaleList[]) => {
-        this.images = [...this.images, ...data];
+        this.images = [...this.images, ...data].filter((item) => item.status1 === 'Sale');
         // console.log('sale-list data: condition$ ', this.images);
         this.cd.detectChanges();
         this.getConditionalSaleListLength();

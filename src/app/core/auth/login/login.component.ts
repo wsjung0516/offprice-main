@@ -124,7 +124,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
-    this.titleService.setTitle('Login');
+    this.titleService.setTitle('login');
     this.sessionStorageService.setItem('title', 'Login');
 
     const title = this.titleService.getTitle();

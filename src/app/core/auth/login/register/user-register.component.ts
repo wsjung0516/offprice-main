@@ -80,7 +80,7 @@ export class UserRegisterComponent implements OnInit {
     private sessionStorageService: SessionStorageService) {}
 
   ngOnInit(): void {
-    this.titleService.setTitle('Register');
+    this.titleService.setTitle('off price sales register');
     this.sessionStorageService.setItem('title', 'Register')
     // console.log('UserRegisterComponent ngOnInit')
   }

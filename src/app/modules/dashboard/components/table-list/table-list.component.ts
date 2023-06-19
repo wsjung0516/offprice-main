@@ -75,7 +75,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     'material',
     'description',
     'created_at',
-    'image_urls',
+    'image_sm_urls',
     'store_name',
     'action',
 

@@ -118,7 +118,7 @@ export class ColorVcaComponent implements ControlValueAccessor, OnInit, OnChange
     this.aColors = acolor;
   }
   ngOnChanges(): void {
-    console.log('selectedColor', this.selectedColor);
+    // console.log('selectedColor', this.selectedColor);
     this.setInitialValue();
     this.getColors();
     this.onChange(this.selectedColor);
@@ -178,7 +178,7 @@ export class ColorVcaComponent implements ControlValueAccessor, OnInit, OnChange
   }
   handleSubmit(colors: IColor[]): void {
     const selectedcolors = colors.filter((color) => color.selected);
-    console.log(selectedcolors);
+    // console.log(selectedcolors);
   }
 
   handleClick(color: IColor): void {

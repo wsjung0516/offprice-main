@@ -20,7 +20,7 @@
             <p><span class="font-bold">Product Name</span></p>
             <mat-form-field class="w-full">
               <mat-label>Product Name</mat-label>
-              <input matInput type="text" formControlName="product_name" />
+              <input matInput type="text" formControlName="product_name" autocomplete="off" />
             </mat-form-field>
           </div>
           <!-- Product Name b-1 -->
@@ -29,7 +29,7 @@
             <p><span class="font-bold">Vendor</span></p>
             <mat-form-field class="w-full">
               <mat-label>Vendor Name</mat-label>
-              <input matInput type="text" formControlName="vendor" />
+              <input matInput type="text" formControlName="vendor" autocomplete="off" />
             </mat-form-field>
           </div>
           <!-- Vendor Name b-1 -->
@@ -42,7 +42,7 @@
                   <mat-form-field class="w-full">
                     <mat-label>Price</mat-label>
                     <input
-                      matInput
+                      matInput  autocomplete="off"
                       type="number"
                       placeholder="0"
                       formControlName="price"

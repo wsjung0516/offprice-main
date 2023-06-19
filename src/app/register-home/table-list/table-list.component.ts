@@ -16,7 +16,7 @@ import { SaleListService } from 'src/app/register-home/sale-list/sale-list.servi
 import { SaleList } from 'src/app/core/models/sale-list.model';
 // import { SaleList } from 'src/app/register-home/core/models/sale-list.model';
 import { concatMap, from, Subject, switchMap } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { SearchKeyword } from 'src/app/core/services/chips-keyword.service';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -53,8 +53,9 @@ import { Meta, Title } from '@angular/platform-browser';
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MakeRegisterWhereConditionService],
 })
-export class TableListComponent implements OnInit, AfterViewInit {
+export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = [
@@ -68,7 +69,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
     'material',
     'description',
     'created_at',
-    'image_urls',
+    'image_sm_urls',
     'status1',
     'action',
   ];
@@ -94,7 +95,6 @@ export class TableListComponent implements OnInit, AfterViewInit {
   length = 100;
   disabled = false;
   mode: string;
-  refreshObservable = new Subject();
   oldOrderBy: {} = {};
   keywords: SearchKeyword[] = [];
   // saleLists: SaleList[] = [];
@@ -111,7 +111,6 @@ export class TableListComponent implements OnInit, AfterViewInit {
     // private snackBar: MatSnackBar,
     private cd: ChangeDetectorRef,
     private dialogService: DialogService,
-    private sharedMenuObservableService: SharedMenuObservableService,
     private sessionStorageService: SessionStorageService,
     private deleteSaleListItemService: DeleteSaleListItemService,
     private metaTagService: Meta,
@@ -123,10 +122,10 @@ export class TableListComponent implements OnInit, AfterViewInit {
     this.metaTagService.updateTag(
       {
         name: 'description',
-        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+        content: 'Take advantage of our clearance offers for fantastic deals on a wide range of products',
       },
     );
-    this.titleService.setTitle('Sell on offprice.store');
+    this.titleService.setTitle('closeout marketplace');
     // console.log('register-home table-list ngOnInit');
     this.sessionStorageService.setItem('displayMode', 'list');
   }
@@ -136,14 +135,11 @@ export class TableListComponent implements OnInit, AfterViewInit {
       this.sort,
       this.paginator
     );
-    this.makeRegisterWhereConditionService.setRefreshObservable(
-      this.refreshObservable
-    );
-    //
+    
     this.makeRegisterWhereConditionService.searchResult$
       .pipe(untilDestroyed(this))
       .subscribe((data: UserSaleList[]) => {
-        // console.log('condition$', data);
+        // console.log('searchResult$', data);
         this.dataSource.sort = this.sort;
         this.dataSource.data = data;
         this.getConditionalUserSaleListLength();
@@ -181,7 +177,7 @@ export class TableListComponent implements OnInit, AfterViewInit {
   onDeletedSaleList(saleList: SaleList | string) {
     console.log('onDeletedSaleList', saleList);
     this.deleteSaleListItemService.delete(saleList);
-  }
+   }
   openDetailsItem(row: UserSaleList) {
     const mobileMode = window.matchMedia('(max-width: 576px)').matches;
     const width = mobileMode ? '100%' : '58%';
@@ -205,5 +201,8 @@ export class TableListComponent implements OnInit, AfterViewInit {
   // check if sale_list_id is already reserved in the table of CartItems
   isReserved(sale_list_id: string) {
     return this.saleListService.isReservedSaleItem(sale_list_id);
+  }
+  ngOnDestroy(): void {
+    this.makeRegisterWhereConditionService.resetService();
   }
 }

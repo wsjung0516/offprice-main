@@ -11,7 +11,7 @@
         <ng-container
           *ngIf="
             column !== 'action' &&
-            column !== 'image_urls' &&
+            column !== 'image_sm_urls' &&
             column !== 'created_at' &&
             column !== 'description' &&
             column !== 'color' && 
@@ -53,14 +53,18 @@
             </div>
           </td>
         </ng-container>
-        <ng-container *ngIf="column === 'image_urls'">
+        <ng-container *ngIf="column === 'image_sm_urls'">
           <td mat-cell *matCellDef="let row">
-            <div
-              class="w-10 h-10 rounded-full"
-              imageDetail
-              [image]="row[column].split(',')[0]"
-            >
-              <img [src]="row[column].split(',')[0]" alt="user" />
+            <div class="flex">
+              <ng-container *ngFor="let image of row[column].split(',')">
+                <div
+                  class="w-8 h-10 rounded-full"
+                  imageDetail
+                  [image]="image"
+                >
+                  <img [src]="image" alt="offprice.store" />
+                </div>
+              </ng-container>
             </div>
           </td>
         </ng-container>

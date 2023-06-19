@@ -39,6 +39,7 @@ import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   debounceTime,
+  delay,
   distinctUntilChanged,
   filter,
   Observable,
@@ -169,12 +170,14 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       .getUserToken()
       .pipe(
         filter((profile: any) => !!profile),
+        delay(500), // Insert to prevent from making userService.getUser() error
         switchMap((profile: any) => {
+          console.log('user', profile);
           return this.userService.getUser(profile.user.uid);
         })
       )
       .subscribe((user) => {
-        console.log('user', user);
+         if( user === null) return;
         this.userId = user.user_id;
         this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
         this.contactForm.patchValue(user);

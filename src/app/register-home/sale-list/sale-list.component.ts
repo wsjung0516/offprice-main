@@ -134,9 +134,9 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.metaTagService.updateTag({
       name: 'description',
-      content: 'off price clothes, whole sale on offPrice, https://offprice.store',
+      content: 'Get ready for big savings with our clearance sale event.',
     });
-    this.titleService.setTitle('whole sale on offprice.store');
+    this.titleService.setTitle('clearance sale');
     this.sharedMenuObservableService.resetSearchConditions$
       .pipe(untilDestroyed(this))
       .subscribe((data) => {
@@ -147,7 +147,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
 
   }
   ngAfterViewInit() {
-    this.titleService.setTitle('SaleList');
+    this.titleService.setTitle('Wholesale off price store');
     this.makeRegisterWhereConditionService.searchResult$
       .pipe(untilDestroyed(this))
       .subscribe((data: any) => {

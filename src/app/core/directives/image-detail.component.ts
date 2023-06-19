@@ -7,7 +7,7 @@ interface Data {
 @Component({
     selector: 'app-image-detail',
     template: `
-        <div class="w-96 h-144 overflow-hidden">
+        <div class="w-auto h-auto overflow-hidden">
            <img [src]="image" class="min-h-full" alt="offprice.store">
         </div>
     `,

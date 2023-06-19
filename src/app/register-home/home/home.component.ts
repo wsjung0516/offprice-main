@@ -78,10 +78,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.metaTagService.updateTag(
       {
         name: 'description',
-        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+        content: 'Explore our closeout section for unbeatable prices on clearance items.',
       },
     );
-    this.titleService.setTitle('offprice main page')
+    this.titleService.setTitle('off price wholesale')
     this.resetLogoutTimer();
     this.sharedMenuObservableService.closeFeedback$
       .pipe(untilDestroyed(this))
@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     //
-    this.titleService.setTitle('Register');
+    this.titleService.setTitle('off price wholesale marketplace register');
     this.sessionStorageService.setItem('title','Register');
 
     this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {

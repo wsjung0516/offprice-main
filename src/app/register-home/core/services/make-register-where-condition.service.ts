@@ -12,8 +12,10 @@ import {
   switchMap,
   tap,
   distinctUntilKeyChanged,
+  takeUntil,
+  distinctUntilChanged,
 } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+// import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { UserSaleListService } from '../../sale-list/user-sale-list.service';
 import { MatSort } from '@angular/material/sort';
@@ -22,7 +24,7 @@ import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 
-@UntilDestroy()
+// @UntilDestroy()
 @Injectable({
   providedIn: 'root',
 })
@@ -31,9 +33,10 @@ export class MakeRegisterWhereConditionService {
 
   sort: MatSort;
   paginator: MatPaginator;
-  refreshObservable$: Observable<any> =
-    this.sharedMenuObservableService.refreshData$;
-  // refreshObservable$: Observable<any>;
+  resetObservable = new Subject<any>();
+  resetObservable$ = this.resetObservable.asObservable();
+  refreshObservable = new Subject<any>();  
+  refreshObservable$ = this.refreshObservable.asObservable();
   private displayModeSubject = new BehaviorSubject<string>('grid');
   displayMode$: Observable<string> = this.displayModeSubject.asObservable();
   displayMode = '';
@@ -58,7 +61,7 @@ export class MakeRegisterWhereConditionService {
       this.makeWhereObservable();
 
       this.makeTableWhereCondition()
-        .pipe(untilDestroyed(this))
+        .pipe(takeUntil(this.resetObservable$))
         .subscribe((data: UserSaleList[]) => {
           // console.log('make-table-where', data);
           this.searchResult.next(data);
@@ -129,7 +132,7 @@ export class MakeRegisterWhereConditionService {
       input_keyword$,
       color$,
     ]).pipe(
-      untilDestroyed(this),
+      takeUntil(this.resetObservable$),
       tap((val) => {
         this.displayMode = this.sessionStorageService.getItem('displayMode');
         this.paginator.firstPage();
@@ -215,7 +218,10 @@ export class MakeRegisterWhereConditionService {
       this.searchConditionObservable$,
       this.refreshObservable$
     ).pipe(
-      untilDestroyed(this),
+      //untilDestroyed(this),
+      // tap((data) => {console.log('make-table-where tap--', data)}),
+      takeUntil(this.resetObservable$),
+      distinctUntilChanged(),
       // skip(1),
       // startWith({}),
       map((data: any) => {
@@ -247,6 +253,7 @@ export class MakeRegisterWhereConditionService {
       }),
       switchMap((data: any) => {
         const { where, orderBy, whereOR } = data;
+        // console.log('where', where, 'whereOR', whereOR, 'orderBy', orderBy);
         return this.userSaleListService.getUserSaleLists(
           this.paginator.pageIndex * this.paginator.pageSize, // skip
           this.paginator.pageSize, // take
@@ -258,6 +265,11 @@ export class MakeRegisterWhereConditionService {
     );
   }
   resetService() {
+    this.resetObservable.next({});
+    this.resetObservable.complete();
+    this.searchConditionObservable$.subscribe().unsubscribe();
+    // console.log('register-home table-list ngOnDestroy');
+
     // this.sharedMenuObservableService.resetService();
   }
 }

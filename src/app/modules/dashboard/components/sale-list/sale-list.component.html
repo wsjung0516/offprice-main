@@ -33,7 +33,7 @@
       class="viewport" #viewport [ngStyle]="{'height': viewportHeight}"
     >
     <div class="grid grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6">
-      <div *cdkVirtualFor="let image of images" class="image-container">
+      <div *cdkVirtualFor="let image of showingImages" class="image-container">
         <div class="bg-green-100" (click)="selectImage(image)">
           <div class="relative w-full h-52 sm:h-56 md:h-60 lg:h-64 xl:h-72 2xl:h-80 overflow-hidden cursor-pointer">
             <img

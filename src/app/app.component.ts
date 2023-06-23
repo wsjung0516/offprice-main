@@ -29,11 +29,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.metaTagService.addTags([
       {
         name: 'keywords',
-        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+        content: '[Closeout, Clearance, Wholesale, Off price] offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
       },
       {
         name: 'description',
-        content: 'offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
+        content: '[Closeout, Clearance, Wholesale, Off price] offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
       },
       { name: 'robots', content: 'index, follow' },
       { name: 'author', content: 'Wonsup Jung' },

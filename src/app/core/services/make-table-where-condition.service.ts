@@ -171,6 +171,7 @@ export class MakeTableWhereConditionService {
     const orArray: any[] = [];
     // console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color);
     andArray.push({ category1: category1 });
+    andArray.push({ status1: 'Sale' });
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
       const pric = price.split(',');

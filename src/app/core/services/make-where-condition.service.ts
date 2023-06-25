@@ -5,17 +5,13 @@ import {
   distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
-  last,
   map,
-  merge,
   Observable,
   of,
-  skip,
   startWith,
   Subject,
   switchMap,
   tap,
-  zip,
 } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SharedMenuObservableService } from './shared-menu-observable.service';
@@ -176,6 +172,7 @@ export class MakeWhereConditionService {
     const orArray: any[] = [];
     
     andArray.push({ category1: category1 });
+    andArray.push({ status1: 'Sale' });
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
       const pric = price.split(',');

@@ -124,7 +124,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   images: any[] = [];
-  showingImages: any[] = [];
   itemSize: number; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   // itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   isLoggedIn: boolean;
@@ -173,7 +172,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(untilDestroyed(this))
       .subscribe((data: SaleList[]) => {
         this.images = [...this.images, ...data];
-        this.showingImages = [...this.images, ...data].filter((item) => item.status1 === 'Sale');
         // There may be different searchItemsLength value of showing images because of omitted images,
         // which has the status1 as 'Canceled', 'Sold','Reserved'.
         this.cd.detectChanges();
@@ -185,7 +183,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((data: any) => {
         // console.log('resetImages: ', data);
         this.images = [];
-        this.showingImages = [];
       });
   }
   private getConditionalSaleListLength() {
@@ -219,8 +216,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   onScroll(index: number) {
     // console.log('scroll index: ', index, this.takeImage);
-   
-
     if (index + this.takeImage > this.images.length) {
       this.makeWhereConditionService.scrollObservable.next({
         skip: this.images.length,

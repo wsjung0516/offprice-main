@@ -138,7 +138,7 @@ export class SaleListHeaderComponent
     }
     this.sessionStorageService.setItem('displayMode', this.displayMode);
     // this.localStorageService.setItem('displayMode', this.displayMode);
-    this.sharedMenuObservableService.gotoHome.next('');
+    this.sharedMenuObservableService.resetSearchConditions.next(true);
     this.cd.detectChanges();
   }
 

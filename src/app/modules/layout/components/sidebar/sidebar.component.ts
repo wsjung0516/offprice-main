@@ -19,6 +19,7 @@ import { set } from 'date-fns';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AboutComponent } from 'src/app/core/components/about/about.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { TippyDirective } from '@ngneat/helipopper';
 @UntilDestroy()
 @Component({
   selector: 'app-sidebar',
@@ -33,7 +34,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     SearchPeriodComponent,
     ColorComponent,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    TippyDirective
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],

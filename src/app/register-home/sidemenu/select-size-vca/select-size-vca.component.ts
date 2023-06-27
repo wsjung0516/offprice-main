@@ -68,7 +68,7 @@ export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit, OnC
   }
   ngAfterViewInit(): void {
     this.designSizeMenuService.getMySize().subscribe((data: any) => {
-      console.log('getMySize: ', data);
+      // console.log('getMySize: ', data);
       this.selectedSizes = data;
       this.cd.detectChanges();      
     });    // console.log('this.selectedSizes', this.selectedSizes);

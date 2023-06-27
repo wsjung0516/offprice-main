@@ -31,8 +31,6 @@ export class SharedMenuObservableService {
   reset_color = new Subject<string>();
   reset_color$ = this.reset_color.asObservable();
   //
-  gotoHome = new Subject<string>();
-  gotoHome$ = this.gotoHome.asObservable();
   cart_badge_count = new Subject<string>();
   cart_badge_count$ = this.cart_badge_count.asObservable();
   refreshCartItemsButton = new ReplaySubject<boolean>();

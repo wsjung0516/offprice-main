@@ -84,17 +84,11 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sSize = size;
         this.cd.detectChanges();
       });
-    this.sharedMenuObservableService.gotoHome$
-      .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        console.log('gotoHome');
-        this.gotoHome();
-      });
     this.sharedMenuObservableService.resetSearchConditions$
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         // console.log('resetSearchConditions is called');
-        this.gotoHome();
+        this.resetSearchConditions();
       });
   }
   profile: any;
@@ -154,10 +148,12 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   public toggleMobileMenu(): void {
     this.menuService.showMobileMenu = true;
   }
-  gotoHome() {
+  resetSearchConditions() {
     // To reset the search keyword and positioned selection button to the 'All'.
+    // console.log('resetSearchConditions is called');
     this.resetKeyword();
     this.makeTableWhereConditionService.resetSort();
+    this.makeTableWhereConditionService.refreshObservable.next('');
   }
   openCart() {
     this.dialogService.open(CartItemsComponent, {

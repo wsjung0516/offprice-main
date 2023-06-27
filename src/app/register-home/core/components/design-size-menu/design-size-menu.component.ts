@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Sizes } from 'src/app/core/constants/data-define';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DesignSizeMenuService } from './design-size-menu.service';
+import { TippyDirective } from '@ngneat/helipopper';
 // import { filter } from 'rxjs';
 
 interface ISize {
@@ -34,67 +35,10 @@ interface ISize {
   CommonModule,
     FormsModule, 
     ReactiveFormsModule, 
-    MatIconModule
+    MatIconModule,
+    TippyDirective
   ],
-  template: `
-    <div class="m-2">
-      <h2 class="ml-2 text font-bold text-gray-600">Sizes 
-      <mat-icon (click)="onSizeHelp()"><span class="cursor-pointer">help</span></mat-icon></h2>
-      <div class="flex_wrap bg-gray-100">
-        <button
-          *ngFor="let size of aSizes"
-          type="button"
-          class="box-size flex items-center justify-center cursor-pointer hover:text-blue-500"
-          [ngClass]="{
-            sel_class: size.selected,
-            'bg-blue-200': size.category === 'US',
-            'bg-green-200': size.category === 'KR'
-          }"
-          (click)="handleClick(size)"
-        >
-          {{ size.name }}
-        </button>
-      </div>
-      <form [formGroup]="sizeFormGroup">
-        <div formArrayName="sizeArray">
-          <div class="flex justify-center">
-            <div *ngFor="let size of nSizes; let i = index"
-              class="flex flex-col items-center justify-center m-2"
-            >
-              <span class="text-blue-600 font-semibold mr-2">{{ size.name }}</span>
-              <input
-                type="number"
-                class="w-16 text-center"
-                [formControlName]="i"
-                placeholder="Qty"
-              />
-            </div>
-            <ng-container *ngIf="sizeFormGroup.get('sizeArray')">
-              <button (click)="onAddSize()" type="button" class="bg-green-600 text-white rounded mt-4 px-2 h-8">+</button>
-            </ng-container>
-          </div>
-        </div>
-      </form>
-      <h2 class="ml-2 text font-bold text-gray-600">Selected Size Menu</h2>
-    <div class="flex flex-wrap">
-      <ng-container *ngFor="let size of selectedSizes">
-        <button class="mt-2 border border-green-500 rounded-full px-2 mx-1 text-gray-500 hover:text-blue-600 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
-          [value]="size"
-          >
-          <div class="flex items-center">
-            <span class="text-sm text-gray-700 hover:text-blue-600">{{size}}</span>
-            <button (click)="removeSizeMenu(size)">
-              <mat-icon class="ml-2 mt-1 text-gray-400">cancel</mat-icon>
-            </button>
-          </div>
-        </button>
-      </ng-container>
-    </div>
-    <ng-container *ngIf="selectedSizes.length > 0">
-      <button type="button" class="bg-green-600 hover:bg-green-800 text-white ml-2 py-2 px-4 rounded-md mt-2" (click)="onSaveSizeMenu()">Save Size Menu</button>
-    </ng-container>
-    </div>
-  `,
+  templateUrl: './design-size-menu.component.html',
   styles: [
     `
       .flex_wrap {
@@ -174,31 +118,6 @@ export class DesignSizeMenuComponent implements OnInit, AfterViewInit {
     this.nSizes = [];
     // Upload to the parent component (register-home.component.ts)
     this.sizeFormGroup.get('sizeArray').reset();
-  }
-  private setInitialValue(value: string[], sizeData: string[]) {
-    this.selectedSizeIndex = value.map((val) => {
-      return this.sizes.findIndex((size) => size.key === val);
-    });
-    this.aSizes = this.sizes.map((size, index) => ({
-      name: size.key,
-      active: this.selectedSizeIndex.includes(index),
-      selected: this.selectedSizeIndex.includes(index),
-      category: size.category,
-    }));
-    // console.log('selectedSize', this.selectedSizeIndex);
-    this.selectedSizeIndex.forEach((index) => {
-      const selectedButton: any = this.elRef.nativeElement.querySelectorAll('.box-size')[index];
-
-      // 클릭 이벤트를 발생시킨다.
-      if (selectedButton) {
-        selectedButton.click();
-      }
-    });
-
-    if (value?.length > 0) {
-      // Display the size name and value
-      this.showSizeNameNSizeData(value, sizeData);
-    }
   }
 
   private showSizeNameNSizeData(value: string[], sizeData: string[]) {

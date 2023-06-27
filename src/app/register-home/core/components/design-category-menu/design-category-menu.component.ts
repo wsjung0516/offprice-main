@@ -30,6 +30,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DesignCategoryMenuService } from './design-category-menu.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { TippyDirective } from '@ngneat/helipopper';
 
 /** @title Google Docs Menu Bar. */
 // @UntilDestroy()
@@ -49,7 +50,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     CdkMenuItemCheckbox,
     CdkMenuItemRadio,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    TippyDirective
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DesignCategoryMenuService]

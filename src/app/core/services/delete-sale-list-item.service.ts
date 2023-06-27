@@ -9,6 +9,7 @@ import { concatMap, from, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DialogService } from '@ngneat/dialog';
 import { MakeRegisterWhereConditionService } from './../../register-home/core/services/make-register-where-condition.service';
+import { MakeTableWhereConditionService } from './make-table-where-condition.service';
 @UntilDestroy()
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,8 @@ export class DeleteSaleListItemService {
     private dialog: DialogService,
     private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService
+    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService,
+    private makeTableWhereConditionService: MakeTableWhereConditionService
   ) {}
   delete(saleList: SaleList | string) {
     const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
@@ -47,9 +49,7 @@ export class DeleteSaleListItemService {
                   const fileName = url.match(/.*\/(.+\..+)/)[1];
                   // console.log('fileName---', fileName);
                   // To refresh the table.
-                  this.makeRegisterWhereConditionService.refreshObservable.next(
-                    ''
-                  );
+                  this.makeRegisterWhereConditionService.refreshObservable.next('');
 
                   return this.saleListService.deleteImageFromBucket(fileName);
                 })
@@ -67,7 +67,7 @@ export class DeleteSaleListItemService {
                 duration: 2000,
               });
               // To refresh the table.
-              this.sharedMenuObservableService.refreshData.next('');
+              this.makeTableWhereConditionService.refreshObservable.next('');
 
               // this.refreshObservable.next();
             },

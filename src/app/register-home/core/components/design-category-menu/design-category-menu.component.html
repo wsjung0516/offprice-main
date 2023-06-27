@@ -1,8 +1,8 @@
 <div class="m-2">
-  <h2 class="ml-2 text font-bold text-gray-600">Categories 
-    <mat-icon (click)="onHelp()"><span class="cursor-pointer">help</span></mat-icon></h2>
+  <h2 class="ml-1 text font-bold text-gray-600">Categories 
+    <mat-icon [tp]="tpl" tpVariation="popper" tpPlacement="bottom"><span class="cursor-pointer">help</span></mat-icon></h2>
 
-  <div class="bg-gray-100 px-1 flex items-center">
+  <div class="bg-gray-100 flex items-center">
     <div class="">
       <div cdkMenuBar class="inline-flex flex-wrap">
         <!-- <ng-container *ngFor="let button of tgroups"> -->
@@ -17,7 +17,7 @@
       </div>
     </div>
   </div>
-  <h2 class="ml-2 mt-4 text font-bold text-gray-600">Selected Category Menu</h2>
+  <h2 class="mt-4 text font-bold text-gray-600">Selected Category Menu</h2>
   <div class="flex flex-wrap">
     <ng-container *ngFor="let cat of selectedCategories">
       <button class="mt-2 border border-green-500 rounded-full px-2 mx-1  hover:text-blue-600 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
@@ -25,7 +25,7 @@
         >
         <div class="flex items-center">
           <span class="text-sm text-gray-400">{{cat.group}}</span>
-          <span class="ml-1">{{ cat.category }}</span>
+          <span class="">{{ cat.category }}</span>
           <button (click)="removeCategoryMenu(cat)">
             <mat-icon class="ml-2 mt-1 text-gray-400">cancel</mat-icon>
           </button>
@@ -167,5 +167,52 @@
 <ng-template #k_Boys >
   <div class="category-submenu" cdkMenu>
     <button *ngFor="let item of getItemList('2')" class="category-submenu-item" cdkMenuItem (click)="onSelect(item)">{{item.key}}</button>
+  </div>
+</ng-template>
+<!-- Help -->
+<ng-template #tpl let-hide>
+  <video class="w-96" controls="">
+    <source
+      src="https://wsjung0516.s3.us-west-1.amazonaws.com/offprice/design-category-menu-2023-06-27.mp4"
+      type="video/mp4"
+    />
+  </video>
+  <div class="">
+    <h3 class="text-blue-600">Design Category Menu</h3>
+    <ul class="list-decimal ml-6">
+      <li>
+        This feature allows sellers to easily, quickly, and accurately register
+        their products by specifying the categories commonly used by users.
+      </li>
+      <li>
+        Sellers search for the categories they commonly use from the existing
+        registered categories.
+      </li>
+      <li>
+        Click on the found category, and it will be displayed in the "Selected
+        Category Menu".
+      </li>
+      <li>
+        If multiple items need to be selected, repeat the above step (Step 3)
+        for each item.
+      </li>
+      <li>
+        To remove a selected item from the list, click the "close button" of the
+        selected category, and it will be removed from the selected list.
+      </li>
+      <li>
+        After selecting all the relevant categories, click the "Save Category
+        Menu" button.
+      </li>
+      <li>
+        To verify if the saved result has been properly reflected, click the
+        "Register" button in the top menu.
+      </li>
+      <li>
+        Press the Refresh button on the redirected page to navigate to the
+        product registration screen.
+      </li>
+      <li>Check the menu for Category2 on the product registration screen.</li>
+    </ul>
   </div>
 </ng-template>

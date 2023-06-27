@@ -31,9 +31,8 @@ export class MakeTableWhereConditionService {
 
   sort: MatSort;
   paginator: MatPaginator;
-  refreshObservable$: Observable<any> =
-    this.sharedMenuObservableService.refreshData$;
-  // refreshObservable$: Observable<any>;
+  refreshObservable = new Subject<any>();
+  refreshObservable$ = this.refreshObservable.asObservable();
   private displayModeSubject = new BehaviorSubject<string>('grid');
   displayMode$: Observable<string> = this.displayModeSubject.asObservable();
   displayMode = '';

@@ -28,7 +28,6 @@ export class MakeWhereConditionService {
   condition = new Subject<any>();
 
   resetImages = new Subject<any>();
-  refreshObservable$: Observable<any>;
   private displayModeSubject = new Subject<number>();
   displayMode$: Observable<number> = this.displayModeSubject.asObservable();
   displayMode = '';

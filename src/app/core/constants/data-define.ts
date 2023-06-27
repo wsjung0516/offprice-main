@@ -22,7 +22,17 @@ export const enum ECat {
 export const tGroups: Group[] = [
   {id: '1', key: 'Tops', value: 'Tops'},
   {id: '2', key: 'Bottoms', value: 'Bottoms'},
-  {id: '3', key: 'Activewear', value: 'Activewear'},
+  {id: '3', key: 'Dresses', value: 'Dresses'},
+  {id: '4', key: 'Outerwear', value: 'Outerwear'},
+  {id: '5', key: 'Activewear', value: 'Activewear'},
+  {id: '6', key: 'Jumpsuits_Rompers', value: 'Jumpsuits_Rompers'},
+  {id: '7', key: 'Swimwear', value: 'Swimwear'},
+  {id: '8', key: 'Plus-Size', value: 'Plus-Size'},
+  {id: '9', key: 'Sweater_Knit', value: 'Sweater_Knit'},
+  {id: '10', key: 'Lingerie', value: 'Lingerie'},
+  {id: '11', key: 'Loungewear', value: 'Loungewear'},
+  {id: '12', key: 'Suits', value: 'Suits'},
+  {id: '13', key: 'Party_Dresses', value: 'Party_Dresses'},
 ]
 export const tProducts: Prod[] = [
   {categoryId: '1', groupId:'1', key: 'Tops', value:'Tops'},

@@ -15,7 +15,9 @@ export const routes: Routes = [
     component: RegisterHomeComponent,
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('./home/home-routing.module').then((m) => m.HomeRoutingModule),
+      import('./modules/home/home-routing.module').then(
+        (m) => m.HomeRoutingModule
+      ),
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

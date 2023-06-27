@@ -9,10 +9,10 @@ import { CommonModule } from '@angular/common';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MakeRegisterWhereConditionService } from '../core/services/make-register-where-condition.service';
+import { MakeRegisterWhereConditionService } from '../../core/services/make-register-where-condition.service';
 import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { SaleListService } from 'src/app/register-home/sale-list/sale-list.service';
+import { SaleListService } from 'src/app/register-home/modules/sale-list/sale-list.service';
 import { SaleList } from 'src/app/core/models/sale-list.model';
 // import { SaleList } from 'src/app/register-home/core/models/sale-list.model';
 import { concatMap, from, Subject, switchMap } from 'rxjs';
@@ -21,8 +21,8 @@ import { SearchKeyword } from 'src/app/core/services/chips-keyword.service';
 import { MatIconModule } from '@angular/material/icon';
 
 // import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../core/components/confirm-dialog/confirm-dialog.component';
-import { DetailsItemComponent } from '../core/components/details-item/details-item.component';
+import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
+import { DetailsItemComponent } from '../../core/components/details-item/details-item.component';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { UserSaleListService } from '../sale-list/user-sale-list.service';
 import { DialogService } from '@ngneat/dialog';
@@ -39,7 +39,7 @@ import { Meta, Title } from '@angular/platform-browser';
   selector: 'app-table-list',
   standalone: true,
   imports: [
-  CommonModule,
+    CommonModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableModule,
@@ -119,12 +119,11 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
-    this.metaTagService.updateTag(
-      {
-        name: 'description',
-        content: 'Take advantage of our clearance offers for fantastic deals on a wide range of products',
-      },
-    );
+    this.metaTagService.updateTag({
+      name: 'description',
+      content:
+        'Take advantage of our clearance offers for fantastic deals on a wide range of products',
+    });
     this.titleService.setTitle('closeout marketplace');
     // console.log('register-home table-list ngOnInit');
     this.sessionStorageService.setItem('displayMode', 'list');
@@ -135,7 +134,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sort,
       this.paginator
     );
-    
+
     this.makeRegisterWhereConditionService.searchResult$
       .pipe(untilDestroyed(this))
       .subscribe((data: UserSaleList[]) => {
@@ -177,7 +176,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   onDeletedSaleList(saleList: SaleList | string) {
     console.log('onDeletedSaleList', saleList);
     this.deleteSaleListItemService.delete(saleList);
-   }
+  }
   openDetailsItem(row: UserSaleList) {
     const mobileMode = window.matchMedia('(max-width: 576px)').matches;
     const width = mobileMode ? '100%' : '58%';

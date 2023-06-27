@@ -17,7 +17,7 @@ import {
 } from 'rxjs';
 // import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
-import { UserSaleListService } from '../../sale-list/user-sale-list.service';
+import { UserSaleListService } from '../../modules/sale-list/user-sale-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
@@ -35,7 +35,7 @@ export class MakeRegisterWhereConditionService {
   paginator: MatPaginator;
   resetObservable = new Subject<any>();
   resetObservable$ = this.resetObservable.asObservable();
-  refreshObservable = new Subject<any>();  
+  refreshObservable = new Subject<any>();
   refreshObservable$ = this.refreshObservable.asObservable();
   private displayModeSubject = new BehaviorSubject<string>('grid');
   displayMode$: Observable<string> = this.displayModeSubject.asObservable();

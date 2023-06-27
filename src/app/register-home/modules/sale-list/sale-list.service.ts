@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SaleList } from 'src/app/core/models/sale-list.model';
 import { map, Observable, shareReplay, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
@@ -26,15 +26,17 @@ export class SaleListService {
     let url = `${this.baseUrl}/sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
     if (whereData) {
       url += `&where=${JSON.stringify(whereData)}`;
-      this.where =`?where=${JSON.stringify(whereData)}`;
+      this.where = `?where=${JSON.stringify(whereData)}`;
     } else {
-      const tmp = {AND: [{category1: '1'}]};
+      const tmp = { AND: [{ category1: '1' }] };
       this.where = `?where=${JSON.stringify(tmp)}`;
     }
-    return this.http.get<SaleList[]>(url).pipe(
+    return this.http
+      .get<SaleList[]>(url)
+      .pipe
       // tap((data) => console.log('data: ----', data))
       // shareReplay(1)
-    );
+      ();
   }
 
   private buildWhereData(
@@ -73,9 +75,7 @@ export class SaleListService {
   }
   updateSaleList(id: string, data: Partial<SaleList>): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list/${id}`;
-    return this.http
-      .patch(url, { data })
-      .pipe(map((data: any) => data));
+    return this.http.patch(url, { data }).pipe(map((data: any) => data));
   }
   deleteSaleList(id: string): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list/${id}`;

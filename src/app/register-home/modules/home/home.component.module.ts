@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ClickOutsideDirective } from '../core/directives/click-outside.directive';
+import { ClickOutsideDirective } from '../../core/directives/click-outside.directive';
 
 @NgModule({
   imports: [],

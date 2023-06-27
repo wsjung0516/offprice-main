@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SaleListComponent } from '../sale-list/sale-list.component';
 import { RegisterComponent } from '../register/register.component';
-import { AboutComponent } from '../about/about.component';
-import { AuthGuard } from '../../core/auth/auth-guard.';
+import { AboutComponent } from '../../about/about.component';
+import { AuthGuard } from '../../../core/auth/auth-guard.';
 import { HomeComponent } from './home.component';
+import { DesignMenuComponent } from '../design-menu/design-menu.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -15,8 +16,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'register' },
       { path: 'sale-list', component: SaleListComponent },
       { path: 'register', component: RegisterComponent },
-      // { path: 'sale-list', component: SaleListComponent, canActivate: [AuthGuard]},
-      // { path: 'register', component: RegisterComponent, canActivate: [AuthGuard]},
+      { path: 'design-menu', component: DesignMenuComponent },
       { path: 'about', component: AboutComponent },
     ],
   },

@@ -14,19 +14,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 // import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
-import { RegisterAuthService } from '../auth/login/services/register-auth.service';
+import { RegisterAuthService } from '../../auth/login/services/register-auth.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
-import { HelpComponent } from '../core/components/help/help.component';
+import { HelpComponent } from '../../core/components/help/help.component';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { UserProfileComponent } from 'src/app/core/components/user-profile/user-profile.component';
 import { LoaderComponent } from 'src/app/core/components/loader/loader.component';
 import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.directive';
 import { DialogService } from '@ngneat/dialog';
-import { BuyCouponsComponent } from '../core/components/buy-coupons/buy-coupons.component';
+import { BuyCouponsComponent } from '../../core/components/buy-coupons/buy-coupons.component';
 import { FeedbackButtonComponent } from 'src/app/core/components/feedback-button/feedback-button.component';
-import { RegisterProfileMenuComponent } from '../core/components/profile-menu/register-profile-menu.component';
+import { RegisterProfileMenuComponent } from '../../core/components/profile-menu/register-profile-menu.component';
 import { Meta, Title } from '@angular/platform-browser';
 
 // import { LoginModule } from '../login/login.module';
@@ -75,13 +75,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ) {}
   ngOnInit() {
     // console.log('Register HomeComponent ngOnInit');
-    this.metaTagService.updateTag(
-      {
-        name: 'description',
-        content: 'Explore our closeout section for unbeatable prices on clearance items.',
-      },
-    );
-    this.titleService.setTitle('off price wholesale')
+    this.metaTagService.updateTag({
+      name: 'description',
+      content:
+        'Explore our closeout section for unbeatable prices on clearance items.',
+    });
+    this.titleService.setTitle('off price wholesale');
     this.resetLogoutTimer();
     this.sharedMenuObservableService.closeFeedback$
       .pipe(untilDestroyed(this))
@@ -98,8 +97,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     clearTimeout(this.logoutTimer);
     this.logoutTimer = setTimeout(() => {
       const userId = this.sessionStorageService.getItem('userId');
-      if( userId ) {
-      this.auth.signOut().then(() => {
+      if (userId) {
+        this.auth.signOut().then(() => {
           this.authService.logout();
           alert('You have been logged out after 60 minutes of inactivity.');
         });
@@ -109,7 +108,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     //
     this.titleService.setTitle('off price wholesale marketplace register');
-    this.sessionStorageService.setItem('title','Register');
+    this.sessionStorageService.setItem('title', 'Register');
 
     this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
       if (coupon) {
@@ -150,7 +149,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     //   const dialogOverlay = document.getElementById('dialog-overlay');
     //   dialogOverlay.style.display =
     //     dialogOverlay.style.display === 'none' ? 'flex' : 'none';
-
     //   const closeButton = document.getElementById('close-btn');
     //   closeButton.addEventListener('click', () => {
     //     dialogOverlay.style.display = 'none';

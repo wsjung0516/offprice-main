@@ -23,27 +23,27 @@ import {
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
-import { Categories, Sizes } from '../core/constants/data-define';
-import { SelectSizeVcaComponent } from '../sidemenu/select-size-vca/select-size-vca.component';
-import { MaterialVcaComponent } from '../sidemenu/material-vca/material-vca.component';
+import { Categories, Sizes } from '../../core/constants/data-define';
+import { SelectSizeVcaComponent } from '../../sidemenu/select-size-vca/select-size-vca.component';
+import { MaterialVcaComponent } from '../../sidemenu/material-vca/material-vca.component';
 // import { ProgressComponent } from 'src/app/core/services/progress.component';
-import { CategorySubmenuVcaComponent } from '../sidemenu/category-submenu-vca/category-submenu-vca.component';
-import { SaleListService } from '../sale-list/sale-list.service';
-import { NotificationService } from '../core/services/notification.service';
+import { CategoryVcaComponent } from '../../sidemenu/category-vca/category-vca.component';
+import { SaleListService } from '../../modules/sale-list/sale-list.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { ColorVcaComponent } from '../sidemenu/color-vca/color-vca.component';
-import { SizeScaleVcaComponent } from '../sidemenu/size-scale-vca/size-scale-vca.component';
-import { Category1VcaComponent } from '../sidemenu/category1-vca/category1-vca.component';
+import { ColorVcaComponent } from '../../sidemenu/color-vca/color-vca.component';
+import { SizeScaleVcaComponent } from '../../sidemenu/size-scale-vca/size-scale-vca.component';
+import { Category1VcaComponent } from '../../sidemenu/category1-vca/category1-vca.component';
 import {
   FileData,
   ImageUploadComponent,
-} from '../core/components/image-upload/image-upload.component';
+} from '../../core/components/image-upload/image-upload.component';
 import { SaleList } from 'src/app/core/models/sale-list.model';
-import { Size, Color } from '../core/constants/data-define';
+import { Size, Color } from '../../core/constants/data-define';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -53,18 +53,18 @@ import {
   Categories2,
   Category,
   Product,
-  IStatus
+  IStatus,
 } from 'src/app/core/constants/data-define';
-import { StatusVcaComponent } from '../sidemenu/status-vca/status-vca.component';
+import { StatusVcaComponent } from '../../sidemenu/status-vca/status-vca.component';
 import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
 import { Meta, Title } from '@angular/platform-browser';
-import { MakeRegisterWhereConditionService } from './../core/services/make-register-where-condition.service';
+import { MakeRegisterWhereConditionService } from './../../core/services/make-register-where-condition.service';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-CommonModule,
+    CommonModule,
     MatCardModule,
     MatButtonModule,
     QuillEditorComponent,
@@ -75,7 +75,7 @@ CommonModule,
     MatRadioModule,
     SelectSizeVcaComponent,
     MaterialVcaComponent,
-    CategorySubmenuVcaComponent,
+    CategoryVcaComponent,
     ColorVcaComponent,
     // ProgressComponent,
     RouterModule,
@@ -85,7 +85,7 @@ CommonModule,
     SizeScaleVcaComponent,
     errorTailorImports,
     Category1VcaComponent,
-    StatusVcaComponent
+    StatusVcaComponent,
   ],
   templateUrl: './register.component.html',
   styles: [
@@ -135,8 +135,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   category = '';
   selected_category = '';
   category1: Category = { id: '1', key: 'All', value: '' };
-  size: string[] = [];
-  sizeArray: string[] = [];
+  size = '';
+  sizeArray = '';
   material: string[] = [];
   color: string[] = [];
   isLoading = false;
@@ -153,8 +153,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   reset_material = false;
   reset_category = false;
   reset_status = false;
-  reset_category_submenu = false;
-  status1 = 'Sale' ;
+  status1 = 'Sale';
   // sale_status: IStatus = { key: 'sale', value: 'sale' } ;
 
   constructor(
@@ -178,16 +177,16 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.metaTagService.updateTag(
-      {
-        name: 'description',
-        content: "Don't miss out on our closeout sale with incredible discounts on select products.",
-      },
-    );
+    this.metaTagService.updateTag({
+      name: 'description',
+      content:
+        "Don't miss out on our closeout sale with incredible discounts on select products.",
+    });
     this.titleService.setTitle('closeout sale');
 
     this.isLoading = false;
-    this.registerStatus = this.sessionStorageService.getItem('registerStatus') ?? 'create';
+    this.registerStatus =
+      this.sessionStorageService.getItem('registerStatus') ?? 'create';
     this.initRegisterForm();
     // To edit sale list
     this.calledFromSaleList();
@@ -215,7 +214,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         if (id) {
           this.sale_list_id = id;
           this._saleListService.getSaleList(id).subscribe((res: SaleList) => {
-            // console.log('res', res);
+            console.log('res', res);
             // this.registerForm.patchValue(res,{emitEvent: false});
             this.registerForm.get('vendor').setValue(res.vendor);
             this.registerForm.get('price').setValue(res.price);
@@ -226,8 +225,10 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.category1 = { id: res.category1, key: '', value: '' };
             this.selected_category = res.category;
             this.status1 = res.status1;
-            this.size = res.size.split(',');
-            this.sizeArray = res.sizeArray.split(',');
+            this.size = res.size;
+            this.sizeArray = res.sizeArray;
+            // this.size = res.size.split(',');
+            // this.sizeArray = res.sizeArray.split(',');
             this.material = res.material.split(',');
             this.color = res.color.split(',');
             this.cd.detectChanges();
@@ -277,10 +278,9 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       color: ['', Validators.required],
       status: ['', Validators.required],
       image_urls: [''], // This value is assigned after processing in image-upload.component.ts
-      user_id: [''],    // This value is assigned in uploadSaleListToDB()
+      user_id: [''], // This value is assigned in uploadSaleListToDB()
     });
   }
-
 
   updateSaleList() {
     // console.log('updateSaleList', this.registerForm.value, this.imgURLs);
@@ -298,11 +298,11 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
           // If update status is finished, change status to create
           this._notificationService.success('Update successfully');
           this._router.navigate(['/register-home/home/sale-list']);
-            // To refresh the table.
-            this.makeRegisterWhereConditionService.refreshObservable.next('');
-          });
+          // To refresh the table.
+          this.makeRegisterWhereConditionService.refreshObservable.next('');
+        });
 
-      if( this.registerForm.valid) {
+      if (this.registerForm.valid) {
       } else {
         this.snackBar.open('Please check the field conditions!', 'Close', {
           duration: 3000,
@@ -316,7 +316,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       this.updateSaleList();
     } else {
       // Check form validation
-      if( this.registerForm.valid) {
+      if (this.registerForm.valid) {
         // Start upload image, Send signal to image-upload.component.ts
         this.uploadStartStatus = true;
       } else {
@@ -365,7 +365,6 @@ vendor:"bbb"
     image_urls: string[],
     image_sm_urls: string[]
   ) {
-
     console.log('data', data);
     const adata: any = {
       product_name: data.product_name,
@@ -377,8 +376,16 @@ vendor:"bbb"
       price: data.price,
       category: data.category,
       category1: this.category1.id,
-      size: data.size !== '' ? data.size.size.join(',') : '',
-      sizeArray: data.size !== '' ? data.size.sizeArray.filter((item:any) =>  item !== '').join(',') : '',
+      size: data.size !== '' ? data.size.size : '',
+      sizeArray:
+        data.size !== ''
+          ? data.size.sizeArray
+          : '',
+      // size: data.size !== '' ? data.size.size.join(',') : '',
+      // sizeArray:
+      //   data.size !== ''
+      //     ? data.size.sizeArray.filter((item: any) => item !== '').join(',')
+      //     : '',
       color: data.color !== '' ? data.color.join(',') : '',
       material: data.material !== '' ? data.material.join(',') : '',
       colorArray: '',
@@ -404,7 +411,6 @@ vendor:"bbb"
     image_urls: string[],
     image_sm_urls: string[]
   ) {
-
     console.log('data', data);
     const adata: Partial<SaleList> = {
       product_name: data.product_name,
@@ -416,8 +422,12 @@ vendor:"bbb"
       price: data.price,
       category: data.category,
       category1: this.category1.id,
-      size: data.size.size.join(','),
-      sizeArray: data.size.sizeArray.filter((item:any) =>  item !== '').join(','),
+      size: data.size.size,
+      sizeArray: data.size.sizeArray,
+      // size: data.size.size.join(','),
+      // sizeArray: data.size.sizeArray
+      //   .filter((item: any) => item !== '')
+      //   .join(','),
       color: data.color.join(','),
       colorArray: '',
       material: data.material.join(','),
@@ -441,7 +451,6 @@ vendor:"bbb"
     this.deleteSaleListItemService.delete(this.sale_list_id.toString());
     // To refresh the table.
     this.makeRegisterWhereConditionService.refreshObservable.next('');
-
   }
 
   private createSaleList(data: Partial<SaleList>, user: any) {
@@ -466,10 +475,8 @@ vendor:"bbb"
         this.reset_color = true;
         this.reset_category = true;
         this.reset_status = true;
-        this.reset_category_submenu = true;
         // To refresh the table.
         this.makeRegisterWhereConditionService.refreshObservable.next('');
-
       });
   }
 

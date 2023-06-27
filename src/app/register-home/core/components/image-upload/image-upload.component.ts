@@ -117,12 +117,13 @@ export class ImageUploadComponent
       this.imgURLs = [];
     }
   }
-  @Input() set imageUrls(val: string[]) {
-    // console.log('imageUrls ---', val);
-    this.imgURLs = val;
-    this.count = 0;
-    this.cd.detectChanges();
-  }
+  @Input() imageUrls: string[];
+  // @Input() set imageUrls(val: string[]) {
+  //   // console.log('imageUrls ---', val);
+  //   this.imgURLs = val;
+  //   this.count = 0;
+  //   this.cd.detectChanges();
+  // }
   imgURLs: string[] = [];
   imgURL: string | null = null;
   selectedImage = '';
@@ -151,8 +152,9 @@ export class ImageUploadComponent
   ngAfterViewInit(): void {}
   ngOnChanges(changes: SimpleChanges): void {
     // console.log('ngOnChanges ---',changes);
-    if (this.imageUrls && this.imageUrls.length > 0) {
-      this.imgURL = this.imageUrls[0];
+    if( changes['imageUrls'] && changes['imageUrls'].currentValue) {
+      this.imgURLs = changes['imageUrls'].currentValue;
+      this.count = 0;
       this.cd.detectChanges();
     }
   }

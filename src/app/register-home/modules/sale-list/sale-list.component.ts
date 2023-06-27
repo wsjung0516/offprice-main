@@ -26,7 +26,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ConfirmDialogComponent } from '../core/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
 import {
   MatDialogModule,
   MatDialog,
@@ -34,14 +34,14 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
-import { ShowMenuDialogComponent } from '../sidemenu/show-menu-dialog-component/show-menu-dialog-component';
-import { MaterialComponent } from '../sidemenu/material/material.component';
+import { ShowMenuDialogComponent } from '../../sidemenu/show-menu-dialog-component/show-menu-dialog-component';
+import { MaterialComponent } from '../../sidemenu/material/material.component';
 import { ComponentType } from '@angular/cdk/portal';
-import { PriceRangeComponent } from '../sidemenu/price-range/price-range.component';
-import { SelectSizeComponent } from '../sidemenu/select-size/select-size.component';
-import { CategoryComponent } from '../sidemenu/category/category.component';
-import { SearchPeriodComponent } from '../sidemenu/search-period/search-period.component';
-import { ColorComponent } from '../sidemenu/color/color.component';
+import { PriceRangeComponent } from '../../sidemenu/price-range/price-range.component';
+import { SelectSizeComponent } from '../../sidemenu/select-size/select-size.component';
+import { CategoryComponent } from '../../sidemenu/category/category.component';
+import { SearchPeriodComponent } from '../../sidemenu/search-period/search-period.component';
+import { ColorComponent } from '../../sidemenu/color/color.component';
 import {
   SearchKeyword,
   ChipsKeywordService,
@@ -59,8 +59,8 @@ import { Meta, Title } from '@angular/platform-browser';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { SaleListService } from './sale-list.service';
 import { UserSaleListService } from './user-sale-list.service';
-import { MakeRegisterWhereConditionService } from '../core/services/make-register-where-condition.service';
-import { CategorySubmenuComponent } from '../sidemenu/category-submenu/category-submenu.component';
+import { MakeRegisterWhereConditionService } from '../../core/services/make-register-where-condition.service';
+import { CategorySubmenuComponent } from '../../sidemenu/category-submenu/category-submenu.component';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
 @UntilDestroy()
 @Component({
@@ -87,7 +87,7 @@ import { CategorySubmenuComponent } from '../sidemenu/category-submenu/category-
     Category1MenuComponent,
     CategoryMenuComponent,
     ResetSearchConditionsComponent,
-    CategorySubmenuComponent
+    CategorySubmenuComponent,
   ],
   templateUrl: './sale-list.component.html',
   styleUrls: ['./sale-list.component.css'],
@@ -144,7 +144,6 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       });
     this.subscribeToSearchKeywords();
     this.subscribeToLocalStorageItem();
-
   }
   ngAfterViewInit() {
     this.titleService.setTitle('Wholesale off price store');
@@ -206,7 +205,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     this.localStorageService.storageItem$
       .pipe(untilDestroyed(this))
       .subscribe((item) => {
-        // console.log('subscribeToLocalStorageItem', item); 
+        // console.log('subscribeToLocalStorageItem', item);
         if (item && item.key === 'searchItemsLength') {
           this.searchItemLength = +item.value;
           this.cd.detectChanges();

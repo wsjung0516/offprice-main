@@ -75,11 +75,11 @@
           <!-- Category submenu -->
           <p class="ml-2"><span class="font-bold">Category2</span></p>
           <div class="m-2 overflow-y-auto">
-            <app-category-submenu-vca
-              [selected_category]="selected_category"
-              [reset_category_submenu]="reset_category_submenu"
+            <app-category-vca
+              [init_category]="selected_category"
+              [reset_category]="reset_category"
               formControlName="category"
-            ></app-category-submenu-vca>
+            ></app-category-vca>
           </div>
           <!-- Count -->
           <!-- Editor for comment -->
@@ -101,8 +101,8 @@
           </div> -->
           <div class="m-2 overflow-y-auto">
             <app-select-size-vca
-              [selectedSize]="size"
-              [sizeArrayData]="sizeArray"
+              [init_size]="size"
+              [init_sizeArray]="sizeArray"
               [reset_size]="reset_size"
               formControlName="size"
             ></app-select-size-vca>

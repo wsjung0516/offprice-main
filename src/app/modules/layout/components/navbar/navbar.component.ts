@@ -157,7 +157,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   openCart() {
     this.dialogService.open(CartItemsComponent, {
-      // width: '800px'
+       // width: auto
     });
   }
   onRegister() {

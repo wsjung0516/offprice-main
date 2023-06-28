@@ -9,6 +9,7 @@ export  interface CartItems {
   quantity: number;
   sale_list_id: number;
   size: string;
+  color: string;
   user_id: string;
   vendor: string;
 }

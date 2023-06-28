@@ -30,9 +30,9 @@ export class CartItemsService {
     let url = `${this.baseUrl}/cart/get-items?date=${date}&where=${JSON.stringify(where)}`;
     return this.http
       .get<CartItems[]>(url )
-      .pipe
-      // tap(data => console.log('getCartItems:--- ', data)),
-      ();
+      .pipe(
+        // tap(data => console.log('getCartItems:--- ', data)),
+      );
   }
   getCartItemsLength(userId?: string): Observable<number> {
     return this.getCartItems({ user_id: userId })
@@ -40,6 +40,7 @@ export class CartItemsService {
         switchMap((data: any[]) => {
           return this.findFirstRowService.findFirstRows(data);
         }),
+        tap(data => console.log('getCartItems:--- ', data)),
         map((data: any[]) => data.length),
       )
   }

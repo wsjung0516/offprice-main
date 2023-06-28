@@ -33,6 +33,7 @@ templateUrl: './cart-items.component.html' ,
 export class CartItemsComponent implements OnInit, AfterViewInit {
   items: CartItems[] = [];
   ref: DialogRef<any> = inject(DialogRef);
+  totalPrice = 0;
   constructor(
     private cartItemsService: CartItemsService,
     private cd: ChangeDetectorRef,
@@ -64,6 +65,10 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
           })
         ).subscribe((items: CartItems[]) => {
           this.items = items;
+          console.log('this.items: ', this.items);
+          this.totalPrice = items.reduce((acc, item) => {
+            return acc + item.price;
+          }, 0);
           this.cd.detectChanges();
         })
       }

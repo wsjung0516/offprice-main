@@ -56,7 +56,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   newWindow: any;
   subscription: Subscription;
   showSideBar$: Observable<boolean>;
-  @ViewChild('refreshButton', { static: false }) refreshButton: ElementRef;
+  @ViewChild('openCartButton', { static: false }) refreshButton: ElementRef;
   // public screenSize$: Observable<any>;
   constructor(
     private menuService: MenuService,

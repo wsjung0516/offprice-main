@@ -42,9 +42,14 @@ import {
   delay,
   distinctUntilChanged,
   filter,
+  from,
+  groupBy,
+  map,
   Observable,
   skip,
   switchMap,
+  tap,
+  toArray,
 } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -58,6 +63,8 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { errorTailorImports } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
+import { group } from 'console';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 interface Data {
   user_id: string;
@@ -67,7 +74,7 @@ interface Data {
   selector: 'app-user-profile',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -82,6 +89,7 @@ interface Data {
     // ConfirmDialogComponent,
     MatSelectModule,
     MatDialogModule,
+    MatAutocompleteModule,
     errorTailorImports,
   ],
   templateUrl: './user-profile.component.html',
@@ -91,7 +99,7 @@ interface Data {
 export class UserProfileComponent implements OnInit, AfterViewInit {
   // ref: DialogRef<Data> = inject(DialogRef);
   @ViewChild('templateName') tName: TemplateRef<any>;
-
+  myControl = new FormControl('');
   title = '';
   currentTitle = '';
   userId: string;
@@ -101,13 +109,13 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   disabled = false;
   mode = 'Update';
 
-  address = '';
-  cities: { key: any }[][] = [];
-  selectedCity: { key: any }[][] = [];
-  states: { key: any }[][] = [];
-  selectedState: { key: any }[][] = [];
-  countries: { key: any }[][] = [];
-  selectedCountry: { key: any }[][] = [];
+  address:  { key: any }[][] = [];
+  // cities: { key: any }[][] = [];
+  // selectedCity: { key: any }[][] = [];
+  // states: { key: any }[][] = [];
+  // selectedState: { key: any }[][] = [];
+  // countries: { key: any }[][] = [];
+  // selectedCountry: { key: any }[][] = [];
   postalCode: string[] = [];
 
   firstName = '';
@@ -133,9 +141,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     phone_no: new UntypedFormControl('', Validators.pattern(/^[\d\-]+$/)),
     address1: new UntypedFormControl('', Validators.required),
     address2: new UntypedFormControl(),
-    city: new UntypedFormControl(),
-    state: new UntypedFormControl(),
-    country: new UntypedFormControl(),
     subscribe: new UntypedFormControl(false, Validators.requiredTrue),
     seller: new UntypedFormControl(false),
     store_name: new UntypedFormControl(),
@@ -147,9 +152,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     ),
     store_address1: new UntypedFormControl(),
     store_address2: new UntypedFormControl(),
-    store_city: new UntypedFormControl(),
-    store_state: new UntypedFormControl(),
-    store_country: new UntypedFormControl(),
     store_zipcode: new UntypedFormControl('', Validators.pattern(/^\d+$/)),
   });
   private dialog = inject(DialogService);
@@ -199,9 +201,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       );
       const registerNoControl = this.contactForm.get('register_no');
       const storeAddress1Control = this.contactForm.get('store_address1');
-      const storeCityControl = this.contactForm.get('store_city');
-      const storeStateControl = this.contactForm.get('store_state');
-      const storeCountryControl = this.contactForm.get('store_country');
       const storeZipcodeControl = this.contactForm.get('store_zipcode');
 
       if (sellerValue) {
@@ -209,18 +208,12 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         representativeNameControl.setValidators([Validators.required]);
         registerNoControl.setValidators([Validators.required, einValidator()]);
         storeAddress1Control.setValidators([Validators.required]);
-        storeCityControl.setValidators([Validators.required]);
-        storeStateControl.setValidators([Validators.required]);
-        storeCountryControl.setValidators([Validators.required]);
         storeZipcodeControl.setValidators([Validators.required]);
       } else {
         storeNameControl.clearValidators();
         representativeNameControl.clearValidators();
         registerNoControl.clearValidators();
         storeAddress1Control.clearValidators();
-        storeCityControl.clearValidators();
-        storeStateControl.clearValidators();
-        storeCountryControl.clearValidators();
         storeZipcodeControl.clearValidators();
       }
 
@@ -228,12 +221,10 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       representativeNameControl.updateValueAndValidity();
       registerNoControl.updateValueAndValidity();
       storeAddress1Control.updateValueAndValidity();
-      storeCityControl.updateValueAndValidity();
-      storeStateControl.updateValueAndValidity();
-      storeCountryControl.updateValueAndValidity();
       storeZipcodeControl.updateValueAndValidity();
     });
   }
+  tmpArray: any[] = [];
   private completeAddress(control: string, arg: number) {
     this.contactForm
       .get(control)
@@ -252,52 +243,22 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       .subscribe((response) => {
         const searchResults = response as any;
         // Extract the city, state, and country information from the search results
-        // console.log('searchResults', searchResults);
-        const city = searchResults?.results?.map((result: any) => {
-          return result.address_components
-            .filter((component: any) => {
-              return (
-                component.types.includes('locality') ||
-                component.types.includes('neighborhood') ||
-                component.types.includes('political')
-              );
-            })
-            .map((item: any) => item.short_name);
-        });
-        let cities: any[] = [];
-        city[0]?.forEach((item: any) => {
-          cities.push({ key: item });
-        });
-        this.cities[arg] = [...cities];
-        //
-        const stat = searchResults?.results?.map((result: any) => {
-          return result.address_components
-            .filter((component: any) => {
-              return (
-                component.types.includes('administrative_area_level_2') ||
-                component.types.includes('administrative_area_level_1')
-              );
-            })
-            .map((item: any) => item.short_name);
-        });
-        let state: any[] = [];
-        stat[0]?.forEach((item: any) => {
-          state.push({ key: item });
-        });
-        this.states[arg] = [...state];
-        //
-        const count = searchResults?.results?.map((result: any) => {
-          return result.address_components
-            .filter((component: any) => {
-              return component.types.includes('country');
-            })
-            .map((item: any) => item.short_name);
-        });
-        let country: any[] = [];
-        count[0]?.forEach((item: any) => {
-          country.push({ key: item });
-        });
-        this.countries[arg] = [...country];
+        if (searchResults.status === 'OK') {
+          // console.log('searchResults', searchResults, searchResults.status);
+          let cities: any[] = [];
+          from(searchResults.results).pipe(
+            untilDestroyed(this),
+              map((result: any) => {
+                return {key: result.formatted_address};
+              }),
+              toArray(),
+            ).subscribe((result: any) => {
+              this.address[arg] = [...result]
+              // console.log('result', result, this.address[arg]);
+            }
+          );
+        }
+
         //
         const postal = searchResults?.results?.map((result: any) => {
           return result.address_components.filter((component: any) =>
@@ -327,24 +288,12 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         .get('store_address2')
         .setValue(this.contactForm.get('address2').value);
       this.contactForm
-        .get('store_city')
-        .setValue(this.contactForm.get('city').value);
-      this.contactForm
-        .get('store_state')
-        .setValue(this.contactForm.get('state').value);
-      this.contactForm
-        .get('store_country')
-        .setValue(this.contactForm.get('country').value);
-      this.contactForm
         .get('store_zipcode')
         .setValue(this.contactForm.get('zipcode').value);
       this.cd.detectChanges();
     } else {
       this.contactForm.get('store_address1').setValue('', { emitEvent: false });
       this.contactForm.get('store_address2').setValue('');
-      this.contactForm.get('store_city').setValue('');
-      this.contactForm.get('store_state').setValue('');
-      this.contactForm.get('store_country').setValue('');
       this.contactForm.get('store_zipcode').setValue('');
       this.cd.detectChanges();
     }

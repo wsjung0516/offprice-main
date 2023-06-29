@@ -159,7 +159,9 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cd.detectChanges();
       });
   }
-
+  trackByFn(index: number, item: UserSaleList) {
+    return item.sale_list_id;
+  }
   getUserSaleList(id: string) {
     this.userSaleListService.getUserSaleList(id).subscribe((data: any) => {
       // console.log(data);

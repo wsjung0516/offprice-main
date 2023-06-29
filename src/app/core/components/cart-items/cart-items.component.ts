@@ -65,7 +65,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
           })
         ).subscribe((items: CartItems[]) => {
           this.items = items;
-          console.log('this.items: ', this.items);
+          // console.log('this.items: ', this.items);
           this.totalPrice = items.reduce((acc, item) => {
             return acc + item.price;
           }, 0);

@@ -39,25 +39,23 @@
             placeholder="Email"
             value=""
           />
-          <!-- <input
-            *ngIf="!disabled"
-            matInput
-            formControlName="email"
-            placeholder="Email"
-            value=""
-          /> -->
         </mat-form-field>
-        <div class="grid grid-cols-2 gap-4">
-          <mat-form-field class="">
+        <div class="w-full">
+          <mat-form-field class="w-full">
             <mat-label>Address 1</mat-label>
-            <input
-              matInput
-              formControlName="address1"
-              placeholder=""
-              value=""
-            />
+            <input type="text"
+                   placeholder="address"
+                   aria-label="address"
+                   matInput
+                   formControlName="address1"
+                   [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let option of address[0]" [value]="option.key">
+                {{option.key}}
+              </mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="">
+          <mat-form-field class="w-full">
             <mat-label>Address 2</mat-label>
             <input
               matInput
@@ -67,37 +65,8 @@
             />
           </mat-form-field>
         </div>
-        <div class="grid grid-cols-3 gap-4">
-          <mat-form-field appearance="fill">
-            <mat-label>City</mat-label>
-            <mat-select formControlName="city">
-              <mat-option *ngFor="let city of cities[0]" [value]="city.key">{{
-                city.key
-              }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>State</mat-label>
-            <mat-select [(value)]="selectedState[0]" formControlName="state">
-              <mat-option *ngFor="let state of states[0]" [value]="state.key">{{
-                state.key
-              }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Country</mat-label>
-            <mat-select
-              [(value)]="selectedCountry[0]"
-              formControlName="country"
-            >
-              <mat-option
-                *ngFor="let country of countries[0]"
-                [value]="country.key"
-                >{{ country.key }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-        </div>
+        
+
         <div class="grid grid-cols-2 gap-2">
           <mat-form-field class="">
             <mat-label>Postal Code</mat-label>
@@ -205,68 +174,32 @@
               >
             </section>
 
-            <div class="grid grid-cols-2 gap-4">
-              <mat-form-field class="">
-                <mat-label>Store Address 1</mat-label>
-                <input
-                  matInput
-                  formControlName="store_address1"
-                  placeholder="Address 1"
-                  value=""
-                />
+            <div class="w-full">
+              <mat-form-field class="w-full">
+                <mat-label>Address 1</mat-label>
+                <input type="text"
+                       placeholder="Pick one"
+                       aria-label="store_address"
+                       matInput
+                       formControlName="store_address1"
+                       [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let option of address[1]" [value]="option.key">
+                    {{option.key}}
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
-              <mat-form-field class="">
-                <mat-label>Store Address 2</mat-label>
+              <mat-form-field class="w-full">
+                <mat-label>Address 2</mat-label>
                 <input
                   matInput
                   formControlName="store_address2"
-                  placeholder="Address 2"
+                  placeholder=""
                   value=""
                 />
               </mat-form-field>
             </div>
-            <div class="grid grid-cols-3 gap-4">
-              <mat-form-field appearance="fill">
-                <mat-label>Store City</mat-label>
-                <mat-select
-                  [(value)]="selectedCity[1]"
-                  formControlName="store_city"
-                >
-                  <mat-option
-                    *ngFor="let city of cities[1]"
-                    [value]="city.key"
-                    >{{ city.key }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field appearance="fill">
-                <mat-label>store State</mat-label>
-                <mat-select
-                  [(value)]="selectedState[1]"
-                  formControlName="store_state"
-                >
-                  <mat-option
-                    *ngFor="let state of states[1]"
-                    [value]="state.key"
-                    >{{ state.key }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field appearance="fill">
-                <mat-label>Store Country</mat-label>
-                <mat-select
-                  [(value)]="selectedCountry[1]"
-                  formControlName="store_country"
-                >
-                  <mat-option
-                    *ngFor="let country of countries[1]"
-                    [value]="country.key"
-                    >{{ country.key }}</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-2 gap-2">
               <mat-form-field class="">
                 <mat-label>Store Postal Code</mat-label>
                 <input

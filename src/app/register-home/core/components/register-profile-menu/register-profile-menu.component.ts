@@ -72,10 +72,12 @@ export class RegisterProfileMenuComponent implements OnInit, AfterViewInit {
         this.userName = user.first_name;
         this.userEmail = user.email;
         const names = [user.first_name, user.last_name];
-        this.initials =
-          names[0].substring(0, 1).toUpperCase() +
-          names[names.length - 1].substring(0, 1).toUpperCase();
-        this.cd.detectChanges();
+        if( names[0] && names[1]) {
+          this.initials =
+            names[0].substring(0, 1).toUpperCase() +
+            names[names.length - 1].substring(0, 1).toUpperCase();
+          this.cd.detectChanges();
+        }
       });
       // console.log('profile-menu. profile', profile);
     } else {

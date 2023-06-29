@@ -1,4 +1,4 @@
-<div class="flex flex-col max-w-3xl p-3 space-y-4 sm:p-6 max-h-[calc(100vh-5rem)]">
+<div class="flex flex-col max-w-3xl p-3 space-y-4 sm:p-6 max-h-[calc(100vh-4rem)]">
 	<h2 class="text-xl font-semibold">Your cart</h2>
   <div class="overflow-y-auto">
     <ul class="flex flex-col divide-y divide-gray-700 ">
@@ -21,7 +21,7 @@
                     <div class="text-sm leading-3 text-black  pt-2">Color:</div>
                     <div class="flex">
                       <ng-container  *ngFor="let color of item.color.split(',')">
-                        <div class="w-5 h-5 rounded-full mr-2"
+                        <div class="w-5 h-5 rounded-full mr-1"
                         [ngStyle]="{ 'background-color': color.trim() }"
                         >
                         <!-- [ngClass]="'rounded-full'" -->
@@ -81,7 +81,7 @@
       <p class="font-semibold">Total amount:
         <span class="font-semibold text-xl">$ {{totalPrice}}</span>
       </p>
-      <p class="text-sm ">Not including taxes and shipping costs</p>
+      <p class="text-xs ">Not including taxes and shipping costs</p>
     </div>
     <div class="flex justify-end space-x-4" (click)="ref.close()">
       <button type="button" class="px-6 py-1 border rounded-md border-green-600">Back

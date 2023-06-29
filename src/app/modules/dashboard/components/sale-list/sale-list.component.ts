@@ -131,6 +131,9 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:resize', ['$event']) onResize(event: Event) {
     this.updateViewportHeight();
   }
+  trackByFn(index: number, item: any) {
+    return item.id;
+  }
   updateViewportHeight() {
     // 높이를 계산하고 "viewportHeight" 속성에 할당합니다.
     const headerHeight = 225; // 헤더 높이를 원하는 값으로 변경합니다.

@@ -26,7 +26,7 @@ import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.dir
 import { DialogService } from '@ngneat/dialog';
 import { BuyCouponsComponent } from '../../core/components/buy-coupons/buy-coupons.component';
 import { FeedbackButtonComponent } from 'src/app/core/components/feedback-button/feedback-button.component';
-import { RegisterProfileMenuComponent } from '../../core/components/profile-menu/register-profile-menu.component';
+import { RegisterProfileMenuComponent } from '../../core/components/register-profile-menu/register-profile-menu.component';
 import { Meta, Title } from '@angular/platform-browser';
 
 // import { LoginModule } from '../login/login.module';
@@ -100,10 +100,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if (userId) {
         this.auth.signOut().then(() => {
           this.authService.logout();
-          alert('You have been logged out after 60 minutes of inactivity.');
+          alert('You have been logged out after 120 minutes of inactivity.');
         });
       }
-    }, 60 * 60 * 1000); // 30분
+    }, 120 * 60 * 1000); // 120분
   }
   ngAfterViewInit() {
     //

@@ -95,10 +95,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if( userId ) {
       this.auth.signOut().then(() => {
           this.authService.logout();
-          alert('You have been logged out after 60 minutes of inactivity.');
+          alert('You have been logged out after 120 minutes of inactivity.');
         });
       }
-    }, 60 * 60 * 1000); // 30분
+    }, 120 * 60 * 1000); // 120분
   }
   ngAfterViewInit() {
     this.titleService.setTitle('off price wholesale');

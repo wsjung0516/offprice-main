@@ -145,6 +145,9 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cd.detectChanges();
       });
   }
+  trackByFn(index: number, item: UserSaleList) {
+    return item.sale_list_id;
+  }
   private getConditionalUserSaleListLength() {
     this.userSaleListService
       .getConditionalUserSaleListLength()

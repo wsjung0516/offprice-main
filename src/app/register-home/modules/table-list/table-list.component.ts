@@ -33,6 +33,7 @@ import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-o
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
 import { Meta, Title } from '@angular/platform-browser';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @UntilDestroy()
 @Component({
@@ -113,6 +114,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialogService: DialogService,
     private sessionStorageService: SessionStorageService,
     private deleteSaleListItemService: DeleteSaleListItemService,
+    private localStorageService: LocalStorageService,
     private metaTagService: Meta,
     private titleService: Title
   ) {
@@ -154,6 +156,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((res: number) => {
         // console.log('register-home getConditionalSaleListLength', res);
         // To display the number of search results in the search bar
+        this.localStorageService.setItem('searchItemsLength', res.toString());
 
         this.paginator.length = res;
         this.cd.detectChanges();

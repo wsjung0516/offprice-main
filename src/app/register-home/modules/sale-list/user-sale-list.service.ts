@@ -51,12 +51,16 @@ export class UserSaleListService {
         if (whereData) {
           url += `&where=${JSON.stringify(whereData)}`;
           this.where = `?where=${JSON.stringify(whereData)}`;
-        } else {
-          const tmp = { AND: [{ category1: '1' }] };
-          this.where = `?where=${JSON.stringify(tmp)}`;
+        // } else {
+        //   const tmp = { AND: [{ category1: '1' }] };
+        //   this.where = `?where=${JSON.stringify(tmp)}`;
         }
         // console.log('saleLists', url)
-        return this.http.get<UserSaleList[]>(url).pipe();
+        return this.http.get<UserSaleList[]>(url).pipe(
+          tap((data) => {
+            // console.log('saleLists', data)
+          }),
+        );
       })
     );
   }
@@ -87,6 +91,7 @@ export class UserSaleListService {
   getConditionalUserSaleListLength(): Observable<number> {
     let url: string;
     url = `${this.baseUrl}/user-sale-list/length` + this.where;
+    // console.log('url', url);
     return this.http.get(url).pipe(map((data: any) => data));
   }
   createUserSaleList(data: Partial<UserSaleList>): Observable<UserSaleList> {

@@ -14,7 +14,7 @@ export interface SaleList{
   size: string;
   sizeArray: string;
   color: string;
-  colorArray: string;
+  quantity: number;
   material: string;
   status1: string;
   status2: string;

@@ -27,7 +27,7 @@ import { Categories, Sizes } from '../../core/constants/data-define';
 import { SelectSizeVcaComponent } from '../../sidemenu/select-size-vca/select-size-vca.component';
 import { MaterialVcaComponent } from '../../sidemenu/material-vca/material-vca.component';
 // import { ProgressComponent } from 'src/app/core/services/progress.component';
-import { CategoryVcaComponent } from '../../sidemenu/category-vca/category-vca.component';
+import { MyCategoryVcaComponent } from '../../sidemenu/my-category-vca/my-category-vca.component';
 import { SaleListService } from '../../modules/sale-list/sale-list.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -75,7 +75,7 @@ import { MakeRegisterWhereConditionService } from './../../core/services/make-re
     MatRadioModule,
     SelectSizeVcaComponent,
     MaterialVcaComponent,
-    CategoryVcaComponent,
+    MyCategoryVcaComponent,
     ColorVcaComponent,
     // ProgressComponent,
     RouterModule,
@@ -137,6 +137,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   category1: Category = { id: '1', key: 'All', value: '' };
   size = '';
   sizeArray = '';
+  quantity = 0;
   material: string[] = [];
   color: string[] = [];
   isLoading = false;
@@ -214,8 +215,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         if (id) {
           this.sale_list_id = id;
           this._saleListService.getSaleList(id).subscribe((res: SaleList) => {
-            console.log('res', res);
-            // this.registerForm.patchValue(res,{emitEvent: false});
+            // console.log('res', res);
             this.registerForm.get('vendor').setValue(res.vendor);
             this.registerForm.get('price').setValue(res.price);
             this.registerForm.get('product_name').setValue(res.product_name);
@@ -227,8 +227,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.status1 = res.status1;
             this.size = res.size;
             this.sizeArray = res.sizeArray;
-            // this.size = res.size.split(',');
-            // this.sizeArray = res.sizeArray.split(',');
+            this.quantity = res.quantity;
             this.material = res.material.split(',');
             this.color = res.color.split(',');
             this.cd.detectChanges();
@@ -272,6 +271,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       description: [''],
       price: ['', Validators.required],
       size: ['', Validators.required],
+      quantity: [ 0, Validators.required],
       category: ['', Validators.required],
       category_1: ['1', Validators.required],
       material: ['', Validators.required],
@@ -377,10 +377,7 @@ vendor:"bbb"
       category: data.category,
       category1: this.category1.id,
       size: data.size !== '' ? data.size.size : '',
-      sizeArray:
-        data.size !== ''
-          ? data.size.sizeArray
-          : '',
+      sizeArray: data.size !== '' ? data.size.sizeArray : '',
       // size: data.size !== '' ? data.size.size.join(',') : '',
       // sizeArray:
       //   data.size !== ''
@@ -424,12 +421,8 @@ vendor:"bbb"
       category1: this.category1.id,
       size: data.size.size,
       sizeArray: data.size.sizeArray,
-      // size: data.size.size.join(','),
-      // sizeArray: data.size.sizeArray
-      //   .filter((item: any) => item !== '')
-      //   .join(','),
       color: data.color.join(','),
-      colorArray: '',
+      quantity: 0,
       material: data.material.join(','),
       status1: data.status,
     };

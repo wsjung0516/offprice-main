@@ -33,7 +33,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { User } from 'src/app/core/models/user.model';
 // import { User } from 'src/app/register-home/core/models/user.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import { UserService } from 'src/app/user/user.service';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -174,21 +174,23 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         filter((profile: any) => !!profile),
         delay(500), // Insert to prevent from making userService.getUser() error
         switchMap((profile: any) => {
-          console.log('user', profile);
+          // console.log('user', profile);
           return this.userService.getUser(profile.user.uid);
         })
       )
       .subscribe((user) => {
-         if( user === null) return;
-        this.userId = user.user_id;
-        this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
-        this.contactForm.patchValue(user);
-        this.contactForm.get('address1').setValue(user.address1);
-        this.contactForm.get('store_address1').setValue(user.store_address1);
-
-        this.cd.detectChanges();
-        this.completeAddress('address1', 0);
-        this.completeAddress('store_address1', 1);
+        setTimeout(() => {
+          if( user === null) return;
+          this.userId = user.user_id;
+          this.createdDate = format(new Date(user.created_at), 'dd/MM/yyyy');
+          this.contactForm.patchValue(user);
+          this.contactForm.get('address1').setValue(user.address1);
+          this.contactForm.get('store_address1').setValue(user.store_address1);
+  
+          this.cd.detectChanges();
+          this.completeAddress('address1', 0);
+          this.completeAddress('store_address1', 1);
+        });
       });
     // this.user-profile = this.ref.data.user-profile;
     // this.disabled = this.ref.data.disabled;
@@ -224,7 +226,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       storeZipcodeControl.updateValueAndValidity();
     });
   }
-  tmpArray: any[] = [];
   private completeAddress(control: string, arg: number) {
     this.contactForm
       .get(control)
@@ -245,7 +246,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
         // Extract the city, state, and country information from the search results
         if (searchResults.status === 'OK') {
           // console.log('searchResults', searchResults, searchResults.status);
-          let cities: any[] = [];
           from(searchResults.results).pipe(
             untilDestroyed(this),
               map((result: any) => {
@@ -340,6 +340,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     this.userService
       .updateUser(this.userId, user)
       .subscribe((response: any) => {
+        console.log('update user response', response);
         this.dialogRef.close(response);
       });
   }
@@ -355,11 +356,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       hasBackdrop: false,
       disableClose: true,
     });
-    // this.dialog.open(TermsAndConditionsComponent, {
-    //   data: { data: 'Terms and Conditions' },
-
-    //   backdrop: false
-    // });
   }
   closeDialog() {
     this.dialogRef.close();

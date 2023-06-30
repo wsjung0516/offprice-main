@@ -10,21 +10,18 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  ControlValueAccessor,
   FormsModule,
-  NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { Categories, Product } from 'src/app/core/constants/data-define';
 import { DesignCategoryMenuService } from '../../core/components/design-category-menu/design-category-menu.service';
+import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
+import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 
 @Component({
-  selector: 'app-category-vca',
+  selector: 'app-my-category',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-  <p><span class="text-md text-gray-500">Value: </span>
-  <span class="text-blue-600 font-bold">{{selected_category}}</span>
-  </p>
     <div class="flex_wrap">
       <ng-container *ngFor="let cat of selectedCategories">
         <button
@@ -41,63 +38,38 @@ import { DesignCategoryMenuService } from '../../core/components/design-category
     </div>
   `,
   styles: [],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: CategoryVcaComponent,
-      multi: true,
-    },
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CategoryVcaComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnChanges
-{
-  @Input() init_category: string;
-  @Input() reset_category: boolean;
+export class MyCategoryComponent implements OnInit, AfterViewInit {
   selectedCategories: any[] = [];
-  onChange: any = () => {};
-  onTouch: any = () => {};
   selected_category = '';
   category_list: Product[] = [];
   constructor(
     private cd: ChangeDetectorRef,
-    private designCategoryMenuService: DesignCategoryMenuService
+    private designCategoryMenuService: DesignCategoryMenuService,
+    private sharedMenuObservableService: SharedMenuObservableService,
+    private chipsKeywordService: ChipsKeywordService
   ) {}
   ngOnInit(): void {
     // console.log('ngOnInit: ', this.category_list);
   }
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit: ', this.category_list);
+    // console.log('ngAfterViewInit: ');
     this.designCategoryMenuService.getMyCategory().subscribe((data) => {
       // console.log('getMyCategory: ', data);
       this.selectedCategories = data;
       this.cd.detectChanges();
     });
   }
-  ngOnChanges(changes: SimpleChanges) {
-    // console.log('ngOnChanges: ', changes);
-    if (changes['init_category'] && changes['init_category'].currentValue) {
-      this.selected_category = changes['init_category'].currentValue;
-      this.onChange(this.selected_category);
-    }
-    if (changes['reset_category'] && changes['reset_category'].currentValue) {
-      this.selected_category = '';
-    }
-  }
 
   selectValue(value: {group: string, category: string}) {
-    // console.log('category: ', value);
-    this.selected_category = value.category;
-    this.onChange(value.category);
-  }
-  writeValue(value: any): void {
-    // this.categories = value;
-  }
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-  registerOnTouched(fn: any): void {
-    this.onTouch = fn;
+    console.log('category: ', value);
+    // this.selected_category = value.category;
+    const value1 = { key: 'category', value: value.category };
+    // this.selected_category = value.key;
+    this.sharedMenuObservableService.category.next(value.category);
+    this.chipsKeywordService.removeChipKeyword(value1);
+    this.chipsKeywordService.addChipKeyword(value1);
+    // this.onChange(value.category);
   }
 }

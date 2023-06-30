@@ -14,6 +14,7 @@ import {
   distinctUntilKeyChanged,
   takeUntil,
   distinctUntilChanged,
+  ReplaySubject,
 } from 'rxjs';
 // import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
@@ -74,7 +75,7 @@ export class MakeRegisterWhereConditionService {
             this.displayModeSubject.next(item.value);
           }
         });
-    }, 0);
+    });
   }
   setRefreshObservable(refreshObservable: Observable<any>) {
     this.refreshObservable$ = refreshObservable;
@@ -172,7 +173,7 @@ export class MakeRegisterWhereConditionService {
     const andArray: any[] = [];
     const orArray: any[] = [];
     // console.log('buildWhereCondition', vendor, price, category, category1, size, material, search_period, input_keyword, color);
-    andArray.push({ category1: category1 });
+    // andArray.push({ category1: category1 });
     if (vendor !== 'All') andArray.push({ vendor: vendor });
     if (price !== 'All') {
       const pric = price.split(',');

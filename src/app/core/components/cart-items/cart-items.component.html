@@ -1,19 +1,19 @@
-<div class="flex flex-col max-w-3xl p-3 space-y-4 sm:p-6 max-h-[calc(100vh-4rem)]">
+<div class="flex flex-col max-w-3xl p-3 space-y-4 sm:p-6 max-h-[calc(95vh-3rem)]">
 	<h2 class="text-xl font-semibold">Your cart</h2>
   <div class="overflow-y-auto">
     <ul class="flex flex-col divide-y divide-gray-700 ">
       <li class="flex flex-col py-2 sm:flex-row sm:justify-between" *ngFor="let item of items" >
         <div class="flex w-full space-x-2 sm:space-x-4">
-          <div class="w-1/2 cursor-pointer" (click)="onSelectDetail(item)">
-            <img [src]="item.image_urls.split(',')[0]" alt="Black Leather Bag" class="h-full object-center object-cover " />
+          <div class="w-2/5 cursor-pointer" (click)="onSelectDetail(item)">
+            <img [src]="item.image_urls.split(',')[0]" alt="{{item.category}}" class="h-full object-center object-cover  aspect-w-3 aspect-h-4" />
           </div>
-          <div class="flex flex-col justify-between w-full pb-4">
+          <div class="w-3/5 flex flex-col justify-between pb-4">
             <div class="flex justify-between w-full pb-2 space-x-2">
-              <div class="w-1/2 flex flex-col justify-center">
+              <div class="flex flex-col justify-center">
                 <div class="flex items-center justify-between w-full pt-1">
                   <p class="text-base font-black leading-none text-gray-800 ">{{item.product_name}}</p>
                 </div>
-                <div class="grid grid-cols-2 gap-1 mt-2">
+                <div class="grid grid-cols-2 gap-5 sm:gap-1 mt-2">
                     <div class="text-sm leading-3 text-black  pt-2">Vendor:</div>
                     <div class="text-sm leading-3 text-black  pt-2">{{item.vendor}}</div>
                 </div>
@@ -37,8 +37,22 @@
                   <div class="block sm:hidden text-sm leading-3 text-black  pt-2">{{item.size}}:{{item.sizeArray}}</div>
                 </div>
                 <div class="grid grid-cols-2 gap-1 mt-2">
-                    <div class="hidden sm:block text-sm leading-3 text-black  pt-2">Quantity:</div>
+                    <div class="hidden sm:block text-sm leading-3 text-black  pt-2">Unit:</div>
                     <div class="hidden sm:block text-sm leading-3 text-black  pt-2">{{item.sizeArray}}</div>
+                </div>
+                <div class="grid grid-cols-2 gap-1 mt-2">
+                    <div class="hidden sm:block text-sm leading-3 text-black  pt-2">Quantity:</div>
+                    <div class="hidden sm:block text-sm leading-3 text-black  pt-2">
+                      <input type="number" class="text-sm w-10 h-6 border border-gray-300 rounded-md text-center" 
+                        [(ngModel)]="item.quantity" 
+                        (change)="onChangeQuantity(item)">
+                    </div>
+                    <div class="block sm:hidden text-sm leading-3 text-black  pt-2">Qty:</div>
+                    <div class="block sm:hidden text-sm leading-3 text-black  pt-2">
+                      <input type="number" class="text-sm w-10 h-6 border border-gray-300 rounded-md text-center" 
+                        [(ngModel)]="item.quantity" 
+                        (change)="onChangeQuantity(item)">
+                    </div>
                 </div>
                 <div class="grid grid-cols-2 gap-1 mt-2">
                     <div class="hidden sm:block text-sm leading-3 text-black  pt-2">Material:</div>
@@ -70,26 +84,26 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-4 h-4 fill-current">
                   <path d="M453.122,79.012a128,128,0,0,0-181.087.068l-15.511,15.7L241.142,79.114l-.1-.1a128,128,0,0,0-181.02,0l-6.91,6.91a128,128,0,0,0,0,181.019L235.485,449.314l20.595,21.578.491-.492.533.533L276.4,450.574,460.032,266.94a128.147,128.147,0,0,0,0-181.019ZM437.4,244.313,256.571,425.146,75.738,244.313a96,96,0,0,1,0-135.764l6.911-6.91a96,96,0,0,1,135.713-.051l38.093,38.787,38.274-38.736a96,96,0,0,1,135.765,0l6.91,6.909A96.11,96.11,0,0,1,437.4,244.313Z"></path>
                 </svg>
-                <span>Add to favorites</span>
+                <span>Favorites</span>
               </button>
             </div>
           </div>
         </div>
       </li>
     </ul>
-    <div class="space-y-1 text-right">
-      <p class="font-semibold">Total amount:
-        <span class="font-semibold text-xl">$ {{totalPrice}}</span>
-      </p>
-      <p class="text-xs ">Not including taxes and shipping costs</p>
-    </div>
-    <div class="flex justify-end space-x-4" (click)="ref.close()">
-      <button type="button" class="px-6 py-1 border rounded-md border-green-600">Back
-        <span class="sr-only sm:not-sr-only">to shop</span>
-      </button>
-      <button type="button" class="px-6 py-1 border text-white rounded-md bg-green-600  hover:bg-green-800">
-        <span class="sr-only sm:not-sr-only">Continue to</span>Checkout
-      </button>
-    </div>
+  </div>
+  <div class="space-y-1 text-right">
+    <p class="font-semibold">Total amount:
+      <span class="font-semibold text-xl">$ {{totalPrice}}</span>
+    </p>
+    <p class="text-xs ">Not including taxes and shipping costs</p>
+  </div>
+  <div class="flex justify-end space-x-4" (click)="ref.close()">
+    <button type="button" class="px-6 py-1 border rounded-md border-green-600">Back
+      <span class="sr-only sm:not-sr-only">to shop</span>
+    </button>
+    <button type="button" class="px-6 py-1 border text-white rounded-md bg-green-600  hover:bg-green-800">
+      <span class="sr-only sm:not-sr-only">Continue to</span>Checkout
+    </button>
   </div>
 </div>

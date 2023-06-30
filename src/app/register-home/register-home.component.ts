@@ -2,15 +2,11 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  HostListener,
   OnInit,
   OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-// import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
-import { set } from 'date-fns';
-// import { SharedParentObservableService } from '../core/services/shared-parent-observable.service';
 import { Meta, Title } from '@angular/platform-browser';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { CheckIfSellerSetService } from '../core/services/check-if-seller-is-set.service';
@@ -31,14 +27,12 @@ template: `
 export class RegisterHomeComponent implements OnInit, AfterViewInit, OnDestroy {
   title = 'Register';
   constructor(
-    // private sharedMenuObservableService: SharedMenuObservableService,
-    // private sharedParentObservableService: SharedParentObservableService,
     private titleService: Title,
     private metaTagService: Meta,
     private sessionStorageService: SessionStorageService,
     private checkIfSellerSetService: CheckIfSellerSetService,
     private authService: RegisterAuthService,
-    // private router: Router,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +41,7 @@ export class RegisterHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       content: 'Explore our closeout section for unbeatable prices on clearance items.',
     });
     this.titleService.setTitle('off price wholesale marketplace');
-    console.log('RegisterHomeComponent ngOnInit');
+    // console.log('RegisterHomeComponent ngOnInit');
   }
   ngAfterViewInit(): void {
     this.titleService.setTitle('off price wholesale marketplace');
@@ -58,7 +52,7 @@ export class RegisterHomeComponent implements OnInit, AfterViewInit, OnDestroy {
       const ret = this.checkIfSellerSetService.isChecked(userId.user_id).subscribe((ret: any) => {
         if( ret  === false ) {
           this.authService.logout();
-          // this.router.navigate(['/register-home']);
+          // this.router.navigate(['/']);
         }
       });
     },100);

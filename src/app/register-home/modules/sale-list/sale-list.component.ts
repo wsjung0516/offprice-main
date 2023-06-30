@@ -61,6 +61,8 @@ import { SaleListService } from './sale-list.service';
 import { UserSaleListService } from './user-sale-list.service';
 import { MakeRegisterWhereConditionService } from '../../core/services/make-register-where-condition.service';
 import { CategorySubmenuComponent } from '../../sidemenu/category-submenu/category-submenu.component';
+import { MyCategoryComponent } from '../../sidemenu/my-category/my-category.component';
+import { SEOService } from 'src/app/core/services/SEO.service';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
 @UntilDestroy()
 @Component({
@@ -84,10 +86,11 @@ import { CategorySubmenuComponent } from '../../sidemenu/category-submenu/catego
     TableListComponent,
     InputKeywordComponent,
     ColorComponent,
-    Category1MenuComponent,
+    // Category1MenuComponent,
     CategoryMenuComponent,
     ResetSearchConditionsComponent,
-    CategorySubmenuComponent,
+    MyCategoryComponent
+    //CategorySubmenuComponent,
   ],
   templateUrl: './sale-list.component.html',
   styleUrls: ['./sale-list.component.css'],
@@ -122,21 +125,16 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     private chipsKeywordService: ChipsKeywordService,
     private cd: ChangeDetectorRef,
     private removeChipsKeywordService: RemoveChipsKeywordService,
-    private titleService: Title,
-    private metaTagService: Meta,
+    private seoService: SEOService,
     private localStorageService: LocalStorageService,
-    private userSaleListService: UserSaleListService,
-    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService
   ) {
     // Assign the data to the data source for the table to render
     // this.dataSource = new MatTableDataSource(this.saleLists);
   }
   ngOnInit(): void {
-    this.metaTagService.updateTag({
-      name: 'description',
-      content: 'Get ready for big savings with our clearance sale event.',
-    });
-    this.titleService.setTitle('clearance sale');
+    this.seoService.updateTitle('clearance sale');
+    this.seoService.updateDescription('Get ready for big savings with our clearance sale event.');
+    
     this.sharedMenuObservableService.resetSearchConditions$
       .pipe(untilDestroyed(this))
       .subscribe((data) => {
@@ -146,23 +144,8 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     this.subscribeToLocalStorageItem();
   }
   ngAfterViewInit() {
-    this.titleService.setTitle('Wholesale off price store');
-    this.makeRegisterWhereConditionService.searchResult$
-      .pipe(untilDestroyed(this))
-      .subscribe((data: any) => {
-        // console.log('condition$', data);
-        this.getConditionalUserSaleListLength();
-      });
-  }
-  private getConditionalUserSaleListLength() {
-    this.userSaleListService
-      .getConditionalUserSaleListLength()
-      .subscribe((res: number) => {
-        // console.log('getConditionalSaleListLength', res);
-        // To display the number of search results in the search bar
-        this.localStorageService.setItem('searchItemsLength', res.toString());
-        this.cd.detectChanges();
-      });
+    console.log('ngAfterViewInit');
+    this.seoService.updateTitle('Wholesale off price store');
   }
   onVendor() {}
   onPrice() {

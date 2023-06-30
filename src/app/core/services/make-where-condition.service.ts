@@ -51,7 +51,7 @@ export class MakeWhereConditionService {
     this.makeWhereObservable();
     setTimeout(() => {
       this.makeSortNWhereCondition().subscribe((data: any) => {
-        console.log('makeSortNWhereCondition data: ', data.length)
+        // console.log('makeSortNWhereCondition data: ', data.length)
         this.condition.next(data);
       });
       this.localStorageService.storageItem$.pipe(untilDestroyed(this)).subscribe((item: any) => {

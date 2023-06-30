@@ -15,31 +15,34 @@
       </div>
       <div class="bg-blue-50">
         <div class="">
-          <!-- Product Name  -->
-          <div class="ml-2">
-            <p><span class="font-bold">Product Name</span></p>
-            <mat-form-field class="w-full">
-              <mat-label>Product Name</mat-label>
-              <input matInput type="text" formControlName="product_name" autocomplete="off" />
-            </mat-form-field>
+          <div class="flex justify-between">
+            <!-- Product Name  -->
+            <div class="ml-2 w-1/2">
+              <p><span class="font-bold">Product Name</span></p>
+              <mat-form-field class="w-full">
+                <mat-label>Product Name</mat-label>
+                <input matInput type="text" formControlName="product_name" autocomplete="off" />
+              </mat-form-field>
+            </div>
+            <!-- Product Name b-1 -->
+            <!-- Vendor Name b-1 -->
+            <div class="ml-2 w-1/2">
+              <p><span class="font-bold">Vendor</span></p>
+              <mat-form-field class="w-full">
+                <mat-label>Vendor Name</mat-label>
+                <input matInput type="text" formControlName="vendor" autocomplete="off" />
+              </mat-form-field>
+            </div>
+            <!-- Vendor Name b-1 -->
+
           </div>
-          <!-- Product Name b-1 -->
-          <!-- Vendor Name b-1 -->
-          <div class="ml-2">
-            <p><span class="font-bold">Vendor</span></p>
-            <mat-form-field class="w-full">
-              <mat-label>Vendor Name</mat-label>
-              <input matInput type="text" formControlName="vendor" autocomplete="off" />
-            </mat-form-field>
-          </div>
-          <!-- Vendor Name b-1 -->
           <!-- Price -->
-          <div class="ml-2">
-            <p><span class="font-bold">Price</span></p>
-            <div class="container mx-auto">
-              <div class="flex items-center">
-                <div class="w-4/5 mr-2">
-                  <mat-form-field class="w-full">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="ml-2">
+              <p><span class="font-bold">Price</span></p>
+              <div class="flex items-center justify-between">
+                <div class="w-3/5 mr-2">
+                  <mat-form-field class="">
                     <mat-label>Price</mat-label>
                     <input
                       matInput  autocomplete="off"
@@ -49,8 +52,8 @@
                     />
                   </mat-form-field>
                 </div>
-                <div class="w-1/5">
-                  <mat-form-field class="w-full">
+                <div class="w-2/5 mr-3">
+                  <mat-form-field class="w-24">
                     <mat-label>Unit</mat-label>
                     <mat-select [value]="selectedUnit">
                       <mat-option value="USD">USD</mat-option>
@@ -61,9 +64,24 @@
                 </div>
               </div>
             </div>
+            <!-- Quantity -->
+            <div class="ml-2">
+              <div class="container mx-auto">
+                <p><span class="font-bold mr-3">Quantity</span></p>
+                <mat-form-field class="w-full">
+                  <mat-label>Quantity</mat-label>
+                  <input
+                    matInput
+                    autocomplete="off"
+                    type="number"
+                    placeholder="0"
+                    formControlName="quantity"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- Quantity -->
           </div>
-
-          <!-- Price -->
           <!-- Category1 -->
           <p class="ml-2"><span class="font-bold">Category1</span></p>
           <div class="m-2 overflow-y-auto">
@@ -75,13 +93,13 @@
           <!-- Category submenu -->
           <p class="ml-2"><span class="font-bold">Category2</span></p>
           <div class="m-2 overflow-y-auto">
-            <app-category-vca
+            <app-my-category-vca
               [init_category]="selected_category"
               [reset_category]="reset_category"
               formControlName="category"
-            ></app-category-vca>
+            ></app-my-category-vca>
           </div>
-          <!-- Count -->
+          <!--  -->
           <!-- Editor for comment -->
           <div class="m-2">
             <app-quill-editor

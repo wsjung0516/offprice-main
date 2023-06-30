@@ -131,8 +131,8 @@ export class RegisterProfileMenuComponent implements OnInit, AfterViewInit {
   }
   logout() {
     this.registerAuthService.logout();
-    this.isLoggedIn = false;
     this.toggleDropdown();
+    this.isLoggedIn = false;
   }
   // Profile dropdown
 }

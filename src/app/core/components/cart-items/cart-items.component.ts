@@ -13,13 +13,16 @@ import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-l
 import { DetailsItemComponent } from '../details-item/details-item.component';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { UserTokenService } from '../../services/user-token.service';
+import { FormsModule } from '@angular/forms';
 @UntilDestroy()
 @Component({
   selector: 'app-cart-items',
   standalone: true,
-  imports: [CommonModule,
-MatSnackBarModule,
-    ConfirmDialogComponent
+  imports: [
+    CommonModule,
+    MatSnackBarModule,
+    ConfirmDialogComponent,
+    FormsModule
   ],
 templateUrl: './cart-items.component.html' ,
   styles: [`
@@ -73,6 +76,9 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
         })
       }
     });
+  }
+  onChangeQuantity(item: CartItems) {
+    
   }
   onSelectDetail(item: CartItems) {
     const sale_list_id = item.sale_list_id.toString();

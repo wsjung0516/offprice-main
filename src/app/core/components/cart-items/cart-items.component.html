@@ -1,23 +1,23 @@
-<div class="flex flex-col max-w-3xl p-3 space-y-4 sm:p-6 max-h-[calc(95vh-3rem)]">
+<div class="flex flex-col max-w-3xl p-3 space-y-4 sm:p-6 max-h-[calc(95vh-5rem)]">
 	<h2 class="text-xl font-semibold">Your cart</h2>
   <div class="overflow-y-auto">
     <ul class="flex flex-col divide-y divide-gray-700 ">
       <li class="flex flex-col py-2 sm:flex-row sm:justify-between" *ngFor="let item of items" >
         <div class="flex w-full space-x-2 sm:space-x-4">
           <div class="w-2/5 cursor-pointer" (click)="onSelectDetail(item)">
-            <img [src]="item.image_urls.split(',')[0]" alt="{{item.category}}" class="h-full object-center object-cover  aspect-w-3 aspect-h-4" />
+            <img [src]="item.image_urls.split(',')[0]" alt="{{item.category}}" class="h-auto object-center object-cover  aspect-w-3 aspect-h-4" />
           </div>
           <div class="w-3/5 flex flex-col justify-between pb-4">
-            <div class="flex justify-between w-full pb-2 space-x-2">
+            <div class="flex justify-between h-auto w-full pb-2 space-x-2">
               <div class="flex flex-col justify-center">
                 <div class="flex items-center justify-between w-full pt-1">
                   <p class="text-base font-black leading-none text-gray-800 ">{{item.product_name}}</p>
                 </div>
-                <div class="grid grid-cols-2 gap-5 sm:gap-1 mt-2">
+                <div class="grid grid-cols-2 gap-5 sm:gap-1 mt-1">
                     <div class="text-sm leading-3 text-black  pt-2">Vendor:</div>
                     <div class="text-sm leading-3 text-black  pt-2">{{item.vendor}}</div>
                 </div>
-                <div class="grid grid-cols-2 gap-1 mt-2">
+                <div class="grid grid-cols-2 gap-1 mt-1">
                     <div class="text-sm leading-3 text-black  pt-2">Color:</div>
                     <div class="flex">
                       <ng-container  *ngFor="let color of item.color.split(',')">
@@ -31,30 +31,32 @@
                       </ng-container>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-1 mt-2">
+                <div class="grid grid-cols-2 gap-1 mt-1">
                   <div class="text-sm leading-3 text-black  pt-2">Size:</div>
                   <div class="hidden sm:block text-sm leading-3 text-black  pt-2">{{item.size}}</div>
                   <div class="block sm:hidden text-sm leading-3 text-black  pt-2">{{item.size}}:{{item.sizeArray}}</div>
                 </div>
-                <div class="grid grid-cols-2 gap-1 mt-2">
+                <div class="grid grid-cols-2 gap-1 mt-1">
                     <div class="hidden sm:block text-sm leading-3 text-black  pt-2">Unit:</div>
                     <div class="hidden sm:block text-sm leading-3 text-black  pt-2">{{item.sizeArray}}</div>
                 </div>
-                <div class="grid grid-cols-2 gap-1 mt-2">
+                <div class="grid grid-cols-2 gap-1 mt-1">
                     <div class="hidden sm:block text-sm leading-3 text-black  pt-2">Quantity:</div>
                     <div class="hidden sm:block text-sm leading-3 text-black  pt-2">
                       <input type="number" class="text-sm w-10 h-6 border border-gray-300 rounded-md text-center" 
                         [(ngModel)]="item.quantity" 
-                        (change)="onChangeQuantity(item)">
+                        (change)="onChangeQuantity(item)"
+                        (input)="onChangeQuantity(item)" min="1">
                     </div>
                     <div class="block sm:hidden text-sm leading-3 text-black  pt-2">Qty:</div>
                     <div class="block sm:hidden text-sm leading-3 text-black  pt-2">
                       <input type="number" class="text-sm w-10 h-6 border border-gray-300 rounded-md text-center" 
                         [(ngModel)]="item.quantity" 
-                        (change)="onChangeQuantity(item)">
+                        (change)="onChangeQuantity(item)"
+                        (input)="onChangeQuantity(item)" min="1">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-1 mt-2">
+                <div class="grid grid-cols-2 gap-1 mt-1">
                     <div class="hidden sm:block text-sm leading-3 text-black  pt-2">Material:</div>
                     <div class="text-sm leading-3 text-black  pt-2">{{item.material}}</div>
                 </div>
@@ -98,11 +100,11 @@
     </p>
     <p class="text-xs ">Not including taxes and shipping costs</p>
   </div>
-  <div class="flex justify-end space-x-4" (click)="ref.close()">
-    <button type="button" class="px-6 py-1 border rounded-md border-green-600">Back
+  <div class="flex justify-end space-x-4" >
+    <button (click)="ref.close()" type="button" class="px-6 py-1 border rounded-md border-green-600">Back
       <span class="sr-only sm:not-sr-only">to shop</span>
     </button>
-    <button type="button" class="px-6 py-1 border text-white rounded-md bg-green-600  hover:bg-green-800">
+    <button (click)="onCheckout()" type="button" class="px-6 py-1 border text-white rounded-md bg-green-600  hover:bg-green-800">
       <span class="sr-only sm:not-sr-only">Continue to</span>Checkout
     </button>
   </div>

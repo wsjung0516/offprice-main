@@ -70,35 +70,49 @@
         </div>
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
-            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <a
-              href="#"
-              [routerLink]="['/register-home/home/sale-list']"
-              routerLinkActive="active"
-              class="text-gray-500 hover:bg-blue-400 hover:text-white rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
-              aria-current="page"
-              >Sales List</a
-            >
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 " -->
+
             <a
               href="#"
               [routerLink]="['/register-home/home/register']"
               routerLinkActive="active"
-              class="text-gray-500 hover:bg-blue-400 hover:text-white rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
+              class="text-gray-500 hover:text-blue-600  rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
               >Register</a
             >
             <a
               href="#"
+              [routerLink]="['/register-home/home/sale-list']"
+              routerLinkActive="active"
+              class="text-gray-500 hover:text-blue-600  rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
+              aria-current="page"
+              >Sales List</a
+            >            <a
+              href="#"
               [routerLink]="['/register-home/home/design-menu']"
               routerLinkActive="active"
-              class="text-gray-500 hover:bg-blue-400 hover:text-white rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
+              class="text-gray-500 hover:text-blue-600  rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
               >Design Menu</a
+            >
+            <a
+              href="#"
+              [routerLink]="['/register-home/home/analysis']"
+              routerLinkActive="active"
+              class="text-gray-500 hover:text-blue-600  rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
+              >Analysis</a
+            >
+            <a
+              href="#"
+              [routerLink]="['/register-home/home/statistics']"
+              routerLinkActive="active"
+              class="text-gray-500 hover:text-blue-600  rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
+              >Statistics</a
             >
 
             <!-- <a
               href="#"
               [routerLink]="['/register-home/home/about']"
               routerLinkActive="active"
-              class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-xl font-medium"
+              class="text-gray-300 hover:bg-gray-700  rounded-md px-3 py-2 text-xl font-medium"
               >About</a
             > -->
           </div>
@@ -111,7 +125,7 @@
         <!-- Notification -->
         <!-- <button
           type="button"
-          class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+          class="rounded-full bg-gray-800 p-1 text-gray-400  focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
         >
           <span class="sr-only">View notifications</span>
           <svg
@@ -148,38 +162,52 @@
   <!-- Mobile menu, show/hide based on menu state. -->
   <div [ngClass]="{ hidden: mobile_menu }" id="mobile-menu">
     <div class="space-y-1 px-2 pt-2 pb-3">
-      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 " -->
 
-      <a
-        href="#"
-        [routerLink]="['/register-home/home/sale-list']"
-        routerLinkActive="active"
-        class="text-gray-500 hover:bg-blue-400 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-        (click)="mobileMenuOpen()"
-        >Sales List</a
-      >
 
       <a
         href="#"
         [routerLink]="['/register-home/home/register']"
         routerLinkActive="active"
-        class="text-gray-500 hover:bg-blue-400 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        class="text-gray-500 hover:text-blue-600  block rounded-md px-3 py-2 text-base font-medium"
         (click)="mobileMenuOpen()"
         >Register</a
       >
       <a
         href="#"
+        [routerLink]="['/register-home/home/sale-list']"
+        routerLinkActive="active"
+        class="text-gray-500 hover:text-blue-600  block rounded-md px-3 py-2 text-base font-medium"
+        (click)="mobileMenuOpen()"
+        >Sales List</a
+      >
+      <a
+        href="#"
         [routerLink]="['/register-home/home/design-menu']"
         routerLinkActive="active"
-        class="text-gray-500 hover:bg-blue-400 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        class="text-gray-500 hover:text-blue-600  block rounded-md px-3 py-2 text-base font-medium"
         (click)="mobileMenuOpen()"
         >Design Menu</a
       >
-      <!-- <a
+      <a
+      href="#"
+      [routerLink]="['/register-home/home/analysis']"
+      routerLinkActive="active"
+      class="text-gray-500 hover:text-blue-600  rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
+      >Analysis</a
+    >
+    <a
+      href="#"
+      [routerLink]="['/register-home/home/statistics']"
+      routerLinkActive="active"
+      class="text-gray-500 hover:text-blue-600  rounded-md mt-1 px-2 py-1 font-medium border border-blue-400"
+      >Statistics</a
+    >
+<!-- <a
         href="#"
         [routerLink]="['/register-home/home/about']"
         routerLinkActive="active"
-        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        class="text-gray-300 hover:bg-gray-700  block rounded-md px-3 py-2 text-base font-medium"
         (click)="mobileMenuOpen()"
         >About</a
       > -->

@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LoginModule } from './login.module';
 import { Title } from '@angular/platform-browser';
+import { MatIconModule } from '@angular/material/icon';
+import { TippyDirective } from '@ngneat/helipopper';
 
 @Component({
   selector: 'app-login',
@@ -13,15 +15,27 @@ import { Title } from '@angular/platform-browser';
     CommonModule,
     FormsModule,
     RouterModule,
+    MatIconModule,
+    TippyDirective
     // LoginModule
   ],
   template: `
+     <div class="p-3 flex justify-center">
+      <p><span class="text-md text-gray-500">
+        If you want to experience registering sales item from the seller's point of view. Please click the help icon below.
+       </span>
+      </p>
+     </div>
     <div class="flex mx-auto  items-center justify-center min-h-screen">
       <div
         class="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-50 text-gray-800"
       >
         <div class="mb-8 text-center">
-          <h1 class="my-3 text-4xl font-bold">Log in</h1>
+        <h1 class="my-3 text-4xl font-bold">Log in <span>
+            <mat-icon [tp]="tpl" tpVariation="popper" tpPlacement="bottom"
+            class="text-blue-600 text-md cursor-pointer">help</mat-icon>
+          </span>
+        </h1>
         </div>
         <form
           novalidate=""
@@ -102,6 +116,20 @@ import { Title } from '@angular/platform-browser';
         </form>
       </div>
     </div>
+    <ng-template #tpl let-hide>
+  <div class="">
+    <h3 class="text-blue-600">Test user login</h3>
+    <ul class="ml-2">
+      <li>
+        id: wonsup.jung.us@hotmail.com
+      </li>
+      <li>
+        password: wsij@0516
+      </li>
+    </ul>
+    
+  </div>
+</ng-template>
   `,
   styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush,

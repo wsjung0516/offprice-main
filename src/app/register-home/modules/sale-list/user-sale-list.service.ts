@@ -106,7 +106,7 @@ export class UserSaleListService {
   ): Observable<UserSaleList> {
     const url = `${this.baseUrl}/user-sale-list/${id}`;
     return this.http
-      .patch(url, { data }, { observe: 'response' })
+      .patch(url, { data })
       .pipe(map((data: any) => data));
   }
   deleteUserSaleList(id: string): Observable<UserSaleList> {

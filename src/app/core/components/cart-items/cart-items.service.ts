@@ -1,29 +1,30 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable, of, shareReplay, tap } from 'rxjs';
+import { Injectable, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-// import { MatSnackBar } from '@angular/material/snack-bar';
-// import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { CartItems } from 'src/app/core/models/cart-items.model';
 import { filter, switchMap } from 'rxjs/operators';
 import { FindFirstRowService } from 'src/app/core/services/find-first-row.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
-import { SessionStorageService } from './../../services/session-storage.service';
 import { UserTokenService } from '../../services/user-token.service';
+import { SEOService } from './../../services/SEO.service';
 @Injectable({
   providedIn: 'root',
 })
-export class CartItemsService {
+export class CartItemsService implements OnInit {
   baseUrl = environment.url;
   constructor(
     private http: HttpClient,
     private findFirstRowService: FindFirstRowService,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private sessionStorageService: SessionStorageService,
-    private userTokenService: UserTokenService
+    private userTokenService: UserTokenService,
+    private sEOService: SEOService
   ) {}
   headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
-
+  ngOnInit(): void {
+    this.sEOService.updateTitle('Cart Items');
+    this.sEOService.updateDescription('Closeout wholesale clothes cart imtes');
+  }  
   getCartItems(where?: any): Observable<CartItems[]> {
     // To remove cache issue add date to the url
     const date = new Date();
@@ -52,8 +53,10 @@ export class CartItemsService {
         })
       )
       .subscribe((data: any[]) => {
+        console.log('setCartItemsLength:--- ', data);
+        const total = data.reduce((acc, item) => acc + item.quantity, 0);
         this.sharedMenuObservableService.cart_badge_count.next(
-          data.length.toString()
+          total
         );
       });
   }
@@ -97,23 +100,25 @@ export class CartItemsService {
     
       })
     );
-    // return this.isUserCartExist(userId).pipe(
-    //   switchMap((data: any) => {
-    //     const id: string = data.id;
-    //     const params = {
-    //       id: id,
-    //       sale_list_id: cartItem.sale_list_id,
-    //       quantity: cartItem.quantity,
-    //     };
+  }
+  clearCartItems(cartItem: Partial<CartItems>): Observable<CartItems> {
+    return this.isUserCartExist(cartItem.user_id).pipe(
+      switchMap((data: any) => {
+        const id: string = data.id;
+        const params = {
+          id: id,
+          sale_list_id: cartItem.sale_list_id,
+          quantity: 0,
+        };
 
-    //     const url = `${this.baseUrl}/cart/add-item`;
-    //     return this.http
-    //       .post<CartItems>(url, params)
-    //       .pipe
-    //       // tap(data => console.log('addCartItem: ', data)),
-    //       ();
-    //   })
-    // );
+        const url = `${this.baseUrl}/cart/add-item`;
+        return this.http
+          .post<CartItems>(url, params)
+          .pipe
+          // tap(data => console.log('addCartItem: ', data)),
+          ();
+      })
+    );
   }
   updateCart(cartItem: CartItems) {
     const url = `${this.baseUrl}/cart/update`;

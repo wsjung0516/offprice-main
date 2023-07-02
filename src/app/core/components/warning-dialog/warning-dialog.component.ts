@@ -1,13 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SafeHtml } from '@angular/platform-browser';
 import { DialogRef } from '@ngneat/dialog';
-interface Data {
-  title: string;
-  message: string;
- }
 
 @Component({
-  selector: 'app-confirm-dialog',
+  selector: 'app-warnning-dialog',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -18,7 +15,7 @@ interface Data {
       <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
         <!--header-->
         <div class="flex items-start justify-between p-4 border-b border-solid border-blueGray-200 rounded-t">
-          <h3 class="text-2xl font-semibold">
+          <h3 class="text-2xl text-red-600 font-semibold">
             {{title}}
           </h3>
           <button class="" (click)="ref.close()">
@@ -29,31 +26,38 @@ interface Data {
         </div>
         <!--body-->
         <div class="relative p-3 flex-auto">
-          <p class="my-2 text-blueGray-500 text-lg leading-relaxed">{{message}}
-          </p>
+          <div class="my-2 text-blueGray-500 text-sm leading-relaxed">
+            <div [innerHTML]="message"></div>
+          </div>
         </div>
         <!--footer-->
         <div class="flex items-center justify-end p-3 border-t border-solid border-blueGray-200 rounded-b">
-          <button type="button" class="text-blue-600 border border-blue-600 rounded-sm uppercase px-2 py-1 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" (click)="ref.close()">
+          <!-- <button class="text-blue-600 border border-blue-600 rounded-sm uppercase px-2 py-1 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" (click)="ref.close()">
             Close
-          </button>
-          <button  type="button" class="bg-blue-600 text-white uppercase text-sm px-4 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" (click)="onOk()">
+          </button> -->
+          <button class="bg-blue-600 text-white uppercase text-sm px-4 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" (click)="onOk()">
             OK
           </button>
         </div>
       </div>
     </div>
-  </div>  `,
+  </div>
+  `,
   styles: [
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConfirmDialogComponent {
-  // ref: DialogRef<Data> = inject(DialogRef);
-  message: string = this.ref.data.message;
+export class WarningDialogComponent  {
+  message: SafeHtml = this.ref.data.message;
   title: string = this.ref.data.title;
-  constructor(public ref: DialogRef) { }
+  constructor(public ref: DialogRef,
+    private cd: ChangeDetectorRef) { }
   onOk() {
     this.ref.close(true);
   }
-
+  ngAfterViewInit() {
+    // this.message = this.sanitizer.bypassSecurityTrustHtml(this.ref.data.message);
+    this.cd.detectChanges();
+    
+  }
 }

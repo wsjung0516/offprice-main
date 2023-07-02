@@ -30,7 +30,6 @@ import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/con
 import {
   MatDialogModule,
   MatDialog,
-  DialogPosition,
   MatDialogRef,
 } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
@@ -52,15 +51,9 @@ import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-o
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
 import { InputKeywordComponent } from 'src/app/modules/layout/components/sidebar/input-keyword/input-keyword.component';
-import { Category1MenuComponent } from 'src/app/modules/layout/components/sidebar/category1-menu/category1-menu.component';
 import { CategoryMenuComponent } from 'src/app/modules/layout/components/sidebar/category-menu/category-menu.component';
 import { ResetSearchConditionsComponent } from 'src/app/core/components/reset-search-conditions/reset-search-conditions.component';
-import { Meta, Title } from '@angular/platform-browser';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
-import { SaleListService } from './sale-list.service';
-import { UserSaleListService } from './user-sale-list.service';
-import { MakeRegisterWhereConditionService } from '../../core/services/make-register-where-condition.service';
-import { CategorySubmenuComponent } from '../../sidemenu/category-submenu/category-submenu.component';
 import { MyCategoryComponent } from '../../sidemenu/my-category/my-category.component';
 import { SEOService } from 'src/app/core/services/SEO.service';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
@@ -82,15 +75,12 @@ import { SEOService } from 'src/app/core/services/SEO.service';
     MatDialogModule,
     ConfirmDialogComponent,
     MatChipsModule,
-    // ChipListComponent,
     TableListComponent,
     InputKeywordComponent,
     ColorComponent,
-    // Category1MenuComponent,
     CategoryMenuComponent,
     ResetSearchConditionsComponent,
     MyCategoryComponent
-    //CategorySubmenuComponent,
   ],
   templateUrl: './sale-list.component.html',
   styleUrls: ['./sale-list.component.css'],

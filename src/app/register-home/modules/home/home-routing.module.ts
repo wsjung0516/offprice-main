@@ -6,6 +6,8 @@ import { AboutComponent } from '../../about/about.component';
 import { AuthGuard } from '../../../core/auth/auth-guard.';
 import { HomeComponent } from './home.component';
 import { DesignMenuComponent } from '../design-menu/design-menu.component';
+import { AnalysisComponent } from '../analysis/analysis.component';
+import { StatisticsComponent } from '../statistics/statistics.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -17,6 +19,8 @@ export const routes: Routes = [
       { path: 'sale-list', component: SaleListComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'design-menu', component: DesignMenuComponent },
+      { path: 'analysis', component: AnalysisComponent },
+      { path: 'statistics', component: StatisticsComponent },
       { path: 'about', component: AboutComponent },
     ],
   },

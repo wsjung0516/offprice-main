@@ -4,6 +4,7 @@ import { map, Observable, shareReplay, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
+import { CartItems } from 'src/app/core/models/cart-items.model';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,19 @@ export class UserSaleListService {
     // console.log('saleLists', url)
     return this.http
       .get<UserSaleList[]>(url)
+      .pipe (
+        // tap(data => console.log('data: ', data))
+      );
+  }
+  getUserSalesItemQuantity(
+    where?: any,
+  ): Observable<UserSaleList> {
+    // console.log('getUserSaleList', skip, take, orderBy, where, whereOR)
+    
+    let url = `${this.baseUrl}/user-sale-list/quantity?where=${JSON.stringify(where)}`;
+    // console.log('saleLists', url)
+    return this.http
+      .get<UserSaleList>(url)
       .pipe (
         // tap(data => console.log('data: ', data))
       );
@@ -81,7 +95,7 @@ export class UserSaleListService {
   ): Observable<UserSaleList> {
     const url = `${this.baseUrl}/user-sale-list/${id}`;
     return this.http
-      .patch(url, { data }, { observe: 'response' })
+      .patch(url, { data })
       .pipe(map((data: any) => data));
   }
   deleteUserSaleList(id: string): Observable<UserSaleList> {

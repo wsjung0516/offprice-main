@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { HomeComponent } from './home/home.component';
 import { BehaviorSubject } from 'rxjs';
-import { Meta, Title } from '@angular/platform-browser';
+import { SEOService } from './core/services/SEO.service';
+import { Meta } from '@angular/platform-browser';
 import { HelpComponent } from './core/components/help/help.component';
 @Component({
   selector: 'app-root',
@@ -21,18 +22,18 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'offprice-main';
   static isBrowser = new BehaviorSubject<boolean>(null);
   constructor(@Inject(PLATFORM_ID) private platformId: any,
-  private metaTagService: Meta,
-  private titleService: Title,) {
+    private sEOService: SEOService,
+    private metaTagService: Meta,
+  ) {
     AppComponent.isBrowser.next(isPlatformBrowser(platformId));
   }
   async ngOnInit() {
+    this.sEOService.updateTitle('wholesale clothes, off price store');
+    this.sEOService.updateDescription('[Closeout, Clearance, Wholesale, Off price] offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.');
+    this.sEOService.createCanonicalLink('https://offprice.store');
     this.metaTagService.addTags([
       {
         name: 'keywords',
-        content: '[Closeout, Clearance, Wholesale, Off price] offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
-      },
-      {
-        name: 'description',
         content: '[Closeout, Clearance, Wholesale, Off price] offPrice.store is an online wholesale marketplace that sells clothes in bulk at low prices. Customers can easily and quickly search for and purchase products.',
       },
       { name: 'robots', content: 'index, follow' },

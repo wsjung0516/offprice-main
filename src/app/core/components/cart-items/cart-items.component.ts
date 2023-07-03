@@ -22,6 +22,8 @@ import {
   mergeMap,
   tap,
   filter,
+  forkJoin,
+  of,
 } from 'rxjs';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { ConfirmDialogComponent } from 'src/app/core/components/confirm-dialog/confirm-dialog.component';
@@ -36,6 +38,7 @@ import { UserSaleList } from '../../models/user-sale-list.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { WarningDialogComponent } from '../warning-dialog/warning-dialog.component';
 import { SaleListService } from 'src/app/modules/dashboard/components/sale-list/sale-list.service';
+import { SaleList, SoldSaleList } from '../../models/sale-list.model';
 @UntilDestroy()
 @Component({
   selector: 'app-cart-items',
@@ -46,7 +49,7 @@ import { SaleListService } from 'src/app/modules/dashboard/components/sale-list/
     ConfirmDialogComponent,
     FormsModule,
     ReactiveFormsModule,
-    WarningDialogComponent
+    WarningDialogComponent,
   ],
   templateUrl: './cart-items.component.html',
   styles: [
@@ -73,9 +76,9 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     private userSaleListService: UserSaleListService,
     private saleListService: SaleListService,
     private userTokenService: UserTokenService,
-    private sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer
   ) {}
-  checkResult: string[] = [];  
+  checkResult: string[] = [];
   ngOnInit(): void {
     this.sharedMenuObservableService.closeCartItemsDialog$
       .pipe(untilDestroyed(this))
@@ -107,141 +110,222 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     });
   }
   onCheckout() {
-    this.dialogService.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Checkout',
-        message: 'Are you sure you want to checkout?',
-      }
-    })
-    .afterClosed$.subscribe(
-      (result: any) => {
+    this.dialogService
+      .open(ConfirmDialogComponent, {
+        data: {
+          title: 'Checkout',
+          message: 'Are you sure you want to checkout?',
+        },
+      })
+      .afterClosed$.subscribe((result: any) => {
         if (result) {
           this.checkResult = [];
           this.checkIfSalesItemIsAvailable().subscribe((data: string[]) => {
             this.checkResult = data;
-            console.log('checkResult: ', this.checkResult);
+            // console.log('checkResult: ', this.checkResult);
             if (this.checkResult.length > 0) {
               this.displayWarningMessage();
             } else {
               // this.ref.close();
-      
-              // this.processAfterCheckout();
+
+              this.processAfterCheckout();
             }
           });
         }
-      }
-    )
-
+      });
   }
+  soldSaleList: Partial<SoldSaleList>[] = [];
   private processAfterCheckout() {
-    const rdata = this.calculateDeductionQuantity();
-    console.log('deducted data: ', rdata);
-    from(rdata).pipe( // [{sale_list_id: 1, quantity: 1}, {sale_list_id: 2, quantity: 2}]
-      untilDestroyed(this),
-      mergeMap((data:any) =>{
-        return this.saleListService.updateSaleList(data.sale_list_id, {quantity: data.quantity});
-      }),
-      toArray()
-    ).subscribe((data: any) => {
-      this.clearCartItems(data)
-      this.ref.close();
+    const rdata = this.separateSaleListBySoldNSale();
+    // console.log('deducted data: ', rdata);
+    /*  [
+      [{sale_list_id: 54, quantity: 24, status1: 'Sale'},
+       {sale_list_id: 54, quantity: 3, status1: 'Sold'}
+      ],
+      [{sale_list_id: 55, quantity: 26, status1: 'Sale'},
+       {sale_list_id: 55, quantity: 2, status1: 'Sold'}
+      ],
+      [{sale_list_id: 58, quantity: 28, status1: 'Sale'},
+       {sale_list_id: 58, quantity: 1, status1: 'Sold'}
+      ]
+    ]
+ */
+
+    const observables: Observable<[SaleList, SaleList]>[] = [];
+    this.soldSaleList = [];
+    rdata.forEach((item) => {
+      const saleItem = item.find((subItem: any) => subItem.status1 === 'Sale');
+      const soldItem = item.find((subItem: any) => subItem.status1 === 'Sold');
+      if (saleItem && soldItem) {
+        console.log('saleItem: ', saleItem);
+        const data = {
+          user_id: saleItem.user_id,
+          sale_list_id: soldItem.sale_list_id,
+          product_name: saleItem.product_name,
+          image_sm_urls: saleItem.image_sm_urls,
+          vendor: saleItem.vendor,
+          category: saleItem.category,
+          category1: saleItem.category1,
+          quantity: soldItem.quantity,
+          price: saleItem.price,
+          buyer_id: this.profile.user.uid,
+        };
+        this.soldSaleList.push(data);
+        const saleObservable = this.checkIfNeedToCreateSaleList(saleItem);
+        const soldObservable = this.saleListService.updateSaleList(
+          soldItem.sale_list_id,
+          { quantity: soldItem.quantity, status1: 'Sold' }
+        );
+        const combinedObservable = forkJoin([saleObservable, soldObservable]);
+        observables.push(combinedObservable);
+      }
+    });
+
+    forkJoin(observables).subscribe((data: [SaleList, SaleList][]) => {
+      /* 
+      [
+        [{sale_list_id: 54, quantity: 24, status1: 'Sale'},HttpResponse],
+        [{sale_list_id: 65, quantity: 27, status1: 'Sale'},HttpResponse]
+      ],
+      */
+      // console.log('create sale list - data: ', data);
+
+      this.clearCartItems();
+      this.saveSoldRecord(this.soldSaleList);
+      this.cartItemsService.setCartItemsLength(rdata[0][0].user_id);
+      // this.ref.close();
       this.snackBar.open('Checkout completed', 'success', {
         duration: 2000,
       });
     });
   }
-  private clearCartItems(data: any[]) {
-    console.log('write deducted data: ', data)
+  // To skip creating sale list if the quantity is 0.
+  private checkIfNeedToCreateSaleList(saleItem: SaleList): Observable<any> {
+    if (saleItem.quantity > 0) {
+      return this.saleListService.createSaleList(saleItem);
+    } else {
+      return of(null);
+    }
+  }
+  private saveSoldRecord(soldItems: Partial<SoldSaleList>[]) {
+    from(soldItems)
+      .pipe(
+        untilDestroyed(this),
+        mergeMap((item: Partial<SoldSaleList>) => {
+          return this.saleListService.createSoldRecord(item);
+        })
+      )
+      .subscribe((data: any) => {
+        console.log('createSoldRecord: ', data);
+      });
+  }
+  private clearCartItems() {
+    // console.log('write deducted data: ', data)
     this.ref.close();
     // Currently, the quantity is fixed to 0.
-    from(this.items).pipe(
-      untilDestroyed(this),
-      mergeMap((item: CartItems) => {
-        return  this.cartItemsService.clearCartItems(item);
-
-      })
-    ).subscribe((data: any) => {
-    });
+    from(this.items)
+      .pipe(
+        untilDestroyed(this),
+        mergeMap((item: CartItems) => {
+          return this.cartItemsService.clearCartItems(item);
+        })
+      )
+      .subscribe((data: any) => {});
   }
-  private calculateDeductionQuantity() {
+  private separateSaleListBySoldNSale(): any[] {
     return this.items.map((item) => {
-      const correspondingItem = this.tmpUserSaleList.find(
-        (el: any) =>
-          el.sale_list_id === item.sale_list_id && el.user_id === item.user_id
+      // console.log('item: ', item, this.tmpSaleList)
+      const correspondingItem = this.tmpSaleList.find(
+        (el: any) => el.sale_list_id === item.sale_list_id
       );
       if (correspondingItem) {
-        const quantity = correspondingItem.quantity - item.quantity;
-        return {
-          sale_list_id: item.sale_list_id,
-          quantity,
-          // user_id: item.user_id,
-        };
+        const saleQuantity = correspondingItem.quantity - item.quantity;
+        const soldQuantity = item.quantity;
+        delete correspondingItem.created_at; // To create new sale list, created_at should be deleted.
+        delete correspondingItem.sale_list_id; // To create new sale list, sale_list_id should be deleted.
+        return [
+          {
+            ...correspondingItem,
+            ...{ quantity: saleQuantity, status1: 'Sale' },
+          },
+          {
+            sale_list_id: item.sale_list_id,
+            quantity: soldQuantity,
+            status1: 'Sold',
+          },
+        ];
       }
-      return null;
+      return [];
     });
   }
   private displayWarningMessage() {
-    const message = this.sanitizer.bypassSecurityTrustHtml('Some items are not available' + '<br>' + `${this.checkResult.join('<br>')}`);
-    this.dialogService.open(WarningDialogComponent, {
-      data: {
-        title: 'Warning',
-        message: message,
-      },
-    }).afterClosed$.subscribe((result: any) => {
-
-      if (result) {
-        // this.ref.close();
-      }
-    });
+    const message = this.sanitizer.bypassSecurityTrustHtml(
+      'Some items are not available' +
+        '<br>' +
+        `${this.checkResult.join('<br>')}`
+    );
+    this.dialogService
+      .open(WarningDialogComponent, {
+        data: {
+          title: 'Warning',
+          message: message,
+        },
+      })
+      .afterClosed$.subscribe((result: any) => {
+        if (result) {
+          // this.ref.close();
+        }
+      });
     // console.log('checkIfSalesItemIsAvailable: ', message);
   }
-  tmpUserSaleList: UserSaleList[] = [];
+  tmpSaleList: SaleList[] = [];
   checkIfSalesItemIsAvailable(): Observable<string[]> {
-    this.tmpUserSaleList = [];
+    this.tmpSaleList = [];
     return from(this.items).pipe(
       untilDestroyed(this),
       mergeMap((data: CartItems) =>
-        this.getUserSalesItemQuantity(data.sale_list_id, data.user_id).pipe(
-          tap((data: UserSaleList) => {
-            this.tmpUserSaleList.push(data);
+        this.getSalesItemQuantity(data.sale_list_id).pipe(
+          tap((data: SaleList) => {
+            this.tmpSaleList.push(data);
           }),
-          map((userSaleList: UserSaleList | null) => ({
+          map((saleList: SaleList | null) => ({
             ...data,
-            userSaleList,
+            saleList,
           })),
-          toArray(),
+          toArray()
         )
       ),
-      map((data: (CartItems & { userSaleList: UserSaleList | null })[]) =>
+      map((data: (CartItems & { saleList: SaleList | null })[]) =>
         data
-          .filter(
-            (item) =>
-              item.userSaleList !== null &&
-              item.quantity > item.userSaleList.quantity
-          )
+          .filter((item) => {
+            // console.log('item: ----------', item, item.quantity, item.saleList.quantity)
+            return (
+              item.saleList !== null && item.quantity > item.saleList.quantity
+            );
+          })
           .map(
             (item, index) =>
-            `Product Name: ${item.userSaleList.product_name}, Category: ${item.userSaleList.category}, Quantity:  ${item.userSaleList.quantity}`
-        
-            )
+              `Product Name: ${item.saleList.product_name}, Category: ${item.saleList.category}, Quantity:  ${item.saleList.quantity}`
+          )
       ),
+      // tap((data: string[]) => console.log('checkIfSalesItemIsAvailable: ', data)),
       map((data: string[]) => data[0]),
       filter((data: string) => data !== undefined),
       toArray()
     );
   }
-  getUserSalesItemQuantity(
-    sale_list_id: number,
-    user_id: string
-  ): Observable<UserSaleList> {
+  getSalesItemQuantity(
+    sale_list_id: number
+    // user_id: string
+  ): Observable<SaleList> {
     const data = {
       sale_list_id: sale_list_id,
-      user_id: user_id,
+      // user_id: user_id,
     };
-    return this.userSaleListService
-      .getUserSalesItemQuantity(data)
+    return this.saleListService
+      .getSalesItemQuantity(data)
       .pipe
-      // map((data: UserSaleList) => data.quantity)
+      // tap((data: SaleList) => console.log('getUserSalesItemQuantity: ', data))
       ();
   }
   sale_list_id: number;

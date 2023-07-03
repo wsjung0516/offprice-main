@@ -110,11 +110,11 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     ]).subscribe(result => {
       if (result.matches) {
         if (result.breakpoints[Breakpoints.XSmall]) {
-          this.itemSize = 140;
-        } else if (result.breakpoints[Breakpoints.Small]) {
           this.itemSize = 100;
+        } else if (result.breakpoints[Breakpoints.Small]) {
+          this.itemSize = 90;
         } else if (result.breakpoints[Breakpoints.Medium]) {
-          this.itemSize = 80;
+          this.itemSize = 60;
         } else if (result.breakpoints[Breakpoints.Large]) {
           this.itemSize = 60;
         } else if (result.breakpoints[Breakpoints.XLarge]) {

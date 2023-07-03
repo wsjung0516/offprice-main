@@ -281,6 +281,7 @@ export const Status: IStatus[] = [
   { key: 'Pending', value: 'Pending'},
   { key: 'Sold', value: 'Sold'},
   { key: 'Canceled', value: 'Canceled'},
+  { key: 'Returned', value: 'Returned'},
 ]
 export const Sizes = [
   {key: 'All', value: 'All', category: 'All'},

@@ -67,6 +67,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     'category',
     'size',
     'sizeArray',
+    'quantity',
     'material',
     'description',
     'created_at',
@@ -82,6 +83,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     'Color',
     'Category',
     'Size',
+    'Unit',
     'Quantity',
     'Material',
     'Description',
@@ -202,6 +204,20 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       console.log('The dialog was closed', result);
     });
+  }
+  getStatusColor(status: string) {
+    if( status === 'Sale') return 'green';
+    else if( status === 'Sold') return '#fb7185';
+    else if( status === 'Pending') return '#60a5fa';
+    else if( status === 'Returned') return '#facc15';
+    else if( status === 'Canceled') return '#9ca3af';
+    else if( status === 'Reserved') return '#a3e635';
+    else return 'gray';
+  }
+  getQuantityColor(status: number) {
+    if( status > 10 && status < 30) return '#f59e0b';
+    else if( status <= 10) return 'red';
+    else return '#d4d4d8';
   }
   // check if sale_list_id is already reserved in the table of CartItems
   isReserved(sale_list_id: string) {

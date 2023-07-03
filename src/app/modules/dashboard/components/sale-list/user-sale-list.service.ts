@@ -40,19 +40,19 @@ export class UserSaleListService {
         // tap(data => console.log('data: ', data))
       );
   }
-  getUserSalesItemQuantity(
-    where?: any,
-  ): Observable<UserSaleList> {
-    // console.log('getUserSaleList', skip, take, orderBy, where, whereOR)
+  // getUserSalesItemQuantity(
+  //   where?: any,
+  // ): Observable<UserSaleList> {
+  //   console.log('getUserSaleList where',  where)
     
-    let url = `${this.baseUrl}/user-sale-list/quantity?where=${JSON.stringify(where)}`;
-    // console.log('saleLists', url)
-    return this.http
-      .get<UserSaleList>(url)
-      .pipe (
-        // tap(data => console.log('data: ', data))
-      );
-  }
+  //   let url = `${this.baseUrl}/user-sale-list/quantity?where=${JSON.stringify(where)}`;
+  //   // console.log('saleLists', url)
+  //   return this.http
+  //     .get<UserSaleList>(url)
+  //     .pipe (
+  //       tap(data => console.log('result -- data: ', data))
+  //     );
+  // }
 
   private buildWhereData(
     where: any[],

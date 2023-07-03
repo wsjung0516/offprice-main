@@ -53,7 +53,7 @@ export class CartItemsService implements OnInit {
         })
       )
       .subscribe((data: any[]) => {
-        console.log('setCartItemsLength:--- ', data);
+        // console.log('setCartItemsLength:--- ', data);
         const total = data.reduce((acc, item) => acc + item.quantity, 0);
         this.sharedMenuObservableService.cart_badge_count.next(
           total

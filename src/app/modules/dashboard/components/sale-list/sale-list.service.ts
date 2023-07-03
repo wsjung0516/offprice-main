@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SaleList } from 'src/app/core/models/sale-list.model';
+import { SaleList, SoldSaleList } from 'src/app/core/models/sale-list.model';
 import { map, Observable, shareReplay, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -30,20 +30,21 @@ export class SaleListService {
       url += `&where=${JSON.stringify(whereData)}`;
       this.reservedWhere = `?where=${JSON.stringify(whereData)}`;
     } else {
-      const tmp = {AND: [{category1: '1'}]};
+      const tmp = { AND: [{ category1: '1' }] };
       this.reservedWhere = `?where=${JSON.stringify(tmp)}`;
     }
     // console.log('getSaleLists- url', url)
     return this.http
       .get<UserSaleList[]>(url)
       .pipe
-      (
-        // tap(data => console.log('response data: ', data)),
-        // shareReplay(1)
-
-      );
+      // tap(data => console.log('response data: ', data)),
+      // shareReplay(1)
+      ();
   }
-  private buildWhereData(where: any[], whereOR: any[]): { and?: any[]; or?: any[] } | null {
+  private buildWhereData(
+    where: any[],
+    whereOR: any[]
+  ): { and?: any[]; or?: any[] } | null {
     const and = where?.length > 0 ? where : undefined;
     const or = whereOR?.length > 0 ? whereOR : undefined;
     // console.log('build whereData: ', and, or);
@@ -51,7 +52,7 @@ export class SaleListService {
       return null;
     }
     return { and, or };
-}
+  }
 
   getSaleList(id: string): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list/${id}`;
@@ -60,6 +61,25 @@ export class SaleListService {
       map((data: any) => data)
       // shareReplay(1)
     );
+  }
+  getSalesItemQuantity(where?: any): Observable<SaleList> {
+    // console.log('getUserSaleList where',  where)
+
+    let url = `${this.baseUrl}/sale-list/quantity?where=${JSON.stringify(
+      where
+    )}`;
+    // console.log('saleLists', url)
+    return this.http
+      .get<SaleList>(url)
+      .pipe
+      // tap(data => console.log('result -- data: ', data))
+      ();
+  }
+  createSoldRecord(data: Partial<SoldSaleList>): Observable<SaleList> {
+    const url = `${this.baseUrl}/sold-sale-list`;
+    return this.http
+      .post(url, { data }, { headers: this.headers })
+      .pipe(map((data: any) => data));
   }
   // getConditionalSaleListLength(where: any): Observable<SaleList[]> {
   getConditionalSaleListLength(): Observable<number> {
@@ -76,9 +96,7 @@ export class SaleListService {
   }
   updateSaleList(id: string, data: Partial<SaleList>): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list/${id}`;
-    return this.http
-      .patch(url, { data }, { observe: 'response' })
-      .pipe(map((data: any) => data));
+    return this.http.patch(url, { data }).pipe(map((data: any) => data));
   }
   deleteSaleList(id: string): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list/${id}`;

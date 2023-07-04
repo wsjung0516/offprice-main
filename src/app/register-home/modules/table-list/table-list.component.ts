@@ -32,15 +32,15 @@ import { ImageDetailDirective } from 'src/app/core/directives/image-detail.direc
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
-import { Meta, Title } from '@angular/platform-browser';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { SEOService } from 'src/app/core/services/SEO.service';
 
 @UntilDestroy()
 @Component({
   selector: 'app-table-list',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableModule,
@@ -117,18 +117,13 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private sessionStorageService: SessionStorageService,
     private deleteSaleListItemService: DeleteSaleListItemService,
     private localStorageService: LocalStorageService,
-    private metaTagService: Meta,
-    private titleService: Title
+    private sEOService: SEOService,
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
   ngOnInit(): void {
-    this.metaTagService.updateTag({
-      name: 'description',
-      content:
-        'Take advantage of our clearance offers for fantastic deals on a wide range of products',
-    });
-    this.titleService.setTitle('closeout marketplace');
+    this.sEOService.updateTitle('closeout marketplace');
+    this.sEOService.updateDescription('Take advantage of our clearance offers for fantastic deals on a wide range of products');
     // console.log('register-home table-list ngOnInit');
     this.sessionStorageService.setItem('displayMode', 'list');
   }

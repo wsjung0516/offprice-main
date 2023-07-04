@@ -5,6 +5,7 @@ import { RegisterHomeComponent } from './register-home.component';
 import { AuthGuard } from '../core/auth/auth-guard.';
 import { AnalysisComponent } from './modules/analysis/analysis.component';
 import { StatisticsComponent } from './modules/statistics/statistics.component';
+import { SoldRecordsComponent } from './core/components/sold-records/sold-records.component';
 
 export const routes: Routes = [
   {
@@ -27,7 +28,6 @@ export const routes: Routes = [
 @NgModule({
   declarations: [
     AnalysisComponent,
-    StatisticsComponent
   ],
   imports: [CommonModule, RouterModule.forChild(routes)],
 })

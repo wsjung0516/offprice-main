@@ -219,6 +219,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.registerForm.get('vendor').setValue(res.vendor);
             this.registerForm.get('price').setValue(res.price);
             this.registerForm.get('product_name').setValue(res.product_name);
+            this.registerForm.get('quantity').setValue(res.quantity);
             this.imgURLs = res.image_urls.split(',');
             this.imgSmURLs = res.image_sm_urls.split(',');
             this.htmlText = res.description;
@@ -227,7 +228,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
             this.status1 = res.status1;
             this.size = res.size;
             this.sizeArray = res.sizeArray;
-            this.quantity = res.quantity;
+            // this.quantity = res.quantity;
             this.material = res.material.split(',');
             this.color = res.color.split(',');
             this.cd.detectChanges();
@@ -368,24 +369,16 @@ vendor:"bbb"
     console.log('data', data);
     const adata: any = {
       product_name: data.product_name,
-      // user_id: user.user.uid,
       description: data.description !== '' ? data.description : '',
-      // image_urls: image_urls.join(','),
-      // image_sm_urls: image_sm_urls.join(','),
       vendor: data.vendor,
       price: data.price,
       category: data.category,
       category1: this.category1.id,
       size: data.size !== '' ? data.size.size : '',
       sizeArray: data.size !== '' ? data.size.sizeArray : '',
-      // size: data.size !== '' ? data.size.size.join(',') : '',
-      // sizeArray:
-      //   data.size !== ''
-      //     ? data.size.sizeArray.filter((item: any) => item !== '').join(',')
-      //     : '',
       color: data.color !== '' ? data.color.join(',') : '',
       material: data.material !== '' ? data.material.join(',') : '',
-      colorArray: '',
+      quantity: data.quantity,
       status1: data.status !== '' ? data.status : 'Sale',
     };
     if (adata.size === '' || adata.color === '' || adata.material === '') {
@@ -422,7 +415,7 @@ vendor:"bbb"
       size: data.size.size,
       sizeArray: data.size.sizeArray,
       color: data.color.join(','),
-      quantity: 0,
+      quantity: data.quantity,
       material: data.material.join(','),
       status1: data.status,
     };

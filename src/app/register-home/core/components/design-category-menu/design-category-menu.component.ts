@@ -4,8 +4,6 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
-  DestroyRef,
-  inject,
   OnInit,
 } from '@angular/core';
 import {
@@ -25,12 +23,13 @@ import {
   tGroups,
   tProducts,
 } from 'src/app/core/constants/data-define';
-import { Subject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DesignCategoryMenuService } from './design-category-menu.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TippyDirective } from '@ngneat/helipopper';
+import { Store } from '@ngxs/store';
+import { MenuUpdate, RegisterUpdate } from 'src/app/store/register/register.action';
 
 /** @title Google Docs Menu Bar. */
 // @UntilDestroy()
@@ -103,7 +102,8 @@ export class DesignCategoryMenuComponent implements OnInit, AfterViewInit {
   constructor(
     private cd: ChangeDetectorRef,
     private designCategoryMenuService: DesignCategoryMenuService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private store: Store
   ) {
     this.menuTemplates = {
       // Women
@@ -135,13 +135,7 @@ export class DesignCategoryMenuComponent implements OnInit, AfterViewInit {
       // other templates...
     };
   }
-  destroyRef = inject(DestroyRef)
   ngOnInit() {
-    const destroyed = new Subject();
-    this.destroyRef.onDestroy(() => {
-      destroyed.next({});
-      destroyed.complete();
-    });
   }
   ngAfterViewInit() {
     this.designCategoryMenuService.getMyCategory().subscribe((data) => {
@@ -270,7 +264,9 @@ export class DesignCategoryMenuComponent implements OnInit, AfterViewInit {
     // console.log('selectedCategory', this.selectedCategories);
     const categories = JSON.stringify(this.selectedCategories);
     this.designCategoryMenuService.createMyCategory(categories).subscribe((data) => {
-      // console.log('createMyCategory: ', data);
+      // To trigger the state change
+      this.store.dispatch(new MenuUpdate(true));
+      // 
       this.snackBar.open('Category Menu Saved', 'Close', {
         duration: 2000,
       });

@@ -34,6 +34,8 @@ import { SessionStorageService } from 'src/app/core/services/session-storage.ser
 import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { SEOService } from 'src/app/core/services/SEO.service';
+import { Store } from '@ngxs/store';
+import { RegisterState } from 'src/app/store/register/register.state';
 
 @UntilDestroy()
 @Component({
@@ -118,6 +120,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private deleteSaleListItemService: DeleteSaleListItemService,
     private localStorageService: LocalStorageService,
     private sEOService: SEOService,
+    private store: Store
   ) {
     this.dataSource = new MatTableDataSource(this.userSaleLists);
   }
@@ -143,6 +146,13 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getConditionalUserSaleListLength();
         this.cd.detectChanges();
       });
+    this.store.select(RegisterState.getRegisterUpdate).pipe(
+      untilDestroyed(this)
+    ).subscribe((data) => {
+      console.log('registerUpdate$', data);
+      // this.makeRegisterWhereConditionService.refreshObservable.next('');
+    });
+  
   }
   trackByFn(index: number, item: UserSaleList) {
     return item.sale_list_id;

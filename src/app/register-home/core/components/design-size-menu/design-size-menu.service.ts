@@ -26,7 +26,8 @@ export class DesignSizeMenuService {
       return of(null);
     } 
     const id = userId.user_id;
-    const url = `${this.baseUrl}/my-size/${id}`;
+    const date = new Date();
+    const url = `${this.baseUrl}/my-size/${id}` + '?' + date.getTime();
     return this.http.get<any>(url).pipe(
       tap((data) => {
         // console.log('user category: ', data);

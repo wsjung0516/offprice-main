@@ -7,6 +7,8 @@ import {
   SimpleChanges,
   OnChanges,
   ChangeDetectionStrategy,
+  DestroyRef,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -16,12 +18,15 @@ import {
 } from '@angular/forms';
 import { Categories, Product } from 'src/app/core/constants/data-define';
 import { DesignCategoryMenuService } from '../../core/components/design-category-menu/design-category-menu.service';
-
+import { Store } from '@ngxs/store';
+import { RegisterState } from 'src/app/store/register/register.state';
+import { Subject, skip, takeUntil } from 'rxjs';
+import { ca } from 'date-fns/locale';
 @Component({
   selector: 'app-my-category-vca',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
+template: `
   <p><span class="text-md text-gray-500">Value: </span>
   <span class="text-blue-600 font-bold">{{selected_category}}</span>
   </p>
@@ -51,7 +56,7 @@ import { DesignCategoryMenuService } from '../../core/components/design-category
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCategoryVcaComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnChanges
+  implements ControlValueAccessor, OnInit, AfterViewInit, OnChanges, OnDestroy
 {
   @Input() init_category: string;
   @Input() reset_category: boolean;
@@ -60,21 +65,29 @@ export class MyCategoryVcaComponent
   onTouch: any = () => {};
   selected_category = '';
   category_list: Product[] = [];
+  unsubscribe = new Subject();
+  unsubscribe$ = this.unsubscribe.asObservable();
   constructor(
     private cd: ChangeDetectorRef,
-    private designCategoryMenuService: DesignCategoryMenuService
+    private designCategoryMenuService: DesignCategoryMenuService,
+    private store: Store
   ) {}
   ngOnInit(): void {
     // console.log('ngOnInit: ', this.category_list);
+        //
   }
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit: ', this.category_list);
-    this.designCategoryMenuService.getMyCategory().subscribe((data) => {
+    this.updateCategoryMenu();
+
+  }
+  private updateCategoryMenu() {
+    this.designCategoryMenuService.getMyCategory().pipe(takeUntil(this.unsubscribe$)).subscribe((data) => {
       // console.log('getMyCategory: ', data);
       this.selectedCategories = data;
       this.cd.detectChanges();
     });
   }
+
   ngOnChanges(changes: SimpleChanges) {
     // console.log('ngOnChanges: ', changes);
     if (changes['init_category'] && changes['init_category'].currentValue) {
@@ -99,5 +112,9 @@ export class MyCategoryVcaComponent
   }
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
+  }
+  ngOnDestroy(): void {
+    this.unsubscribe.next({});
+    this.unsubscribe.complete();
   }
 }

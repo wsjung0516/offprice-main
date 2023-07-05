@@ -14,6 +14,10 @@ import { GlobalErrorHandler } from './core/services/global-error-handler';
 import { popperVariation, provideTippyConfig, tooltipVariation } from '@ngneat/helipopper';
 import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxsSelectSnapshotModule } from '@ngxs-labs/select-snapshot';
+import { NgxsModule } from '@ngxs/store';
+import { RegisterState } from './store/register/register.state';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,7 +28,10 @@ export const appConfig: ApplicationConfig = {
       AngularFireModule.initializeApp(environment.firebase),
       AngularSvgIconModule.forRoot(),
       MatDialogModule,
-
+      NgxsModule.forRoot([RegisterState]),
+      NgxsSelectSnapshotModule.forRoot(),
+      NgxsStoragePluginModule.forRoot({key: ['Register']})
+  
     ),
     {
       provide: HTTP_INTERCEPTORS,

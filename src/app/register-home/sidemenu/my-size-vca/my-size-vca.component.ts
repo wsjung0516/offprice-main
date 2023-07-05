@@ -19,7 +19,7 @@ import { Sizes } from 'src/app/register-home/core/constants/data-define';
 import { DesignSizeMenuService } from '../../core/components/design-size-menu/design-size-menu.service';
 
 @Component({
-  selector: 'app-select-size-vca',
+  selector: 'app-my-size-vca',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
@@ -41,13 +41,13 @@ import { DesignSizeMenuService } from '../../core/components/design-size-menu/de
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: SelectSizeVcaComponent,
+      useExisting: MySizeVcaComponent,
       multi: true,
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit {
+export class MySizeVcaComponent implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit {
   @Input() init_size: string;
   @Input() init_sizeArray: string;
   @Input() reset_size: boolean;
@@ -71,7 +71,7 @@ export class SelectSizeVcaComponent implements ControlValueAccessor, OnInit, OnC
       // console.log('getMySize: ', data);
       this.selectedSizes = data;
       this.cd.detectChanges();      
-    });    // console.log('this.selectedSizes', this.selectedSizes);
+    });
   }
   ngOnChanges(changes: SimpleChanges): void {
     // console.log('changes', changes);

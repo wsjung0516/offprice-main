@@ -26,7 +26,8 @@ export class DesignCategoryMenuService {
       return of(null);
     } 
     const id = userId.user_id;
-    const url = `${this.baseUrl}/my-category/${id}`;
+    const date = new Date();
+    const url = `${this.baseUrl}/my-category/${id}` + '?' + date.getTime();
     return this.http.get<any>(url).pipe(
       tap((data) => {
         // console.log('user category: ', data);

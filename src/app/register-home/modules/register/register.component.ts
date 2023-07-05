@@ -24,13 +24,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
 import { Categories, Sizes } from '../../core/constants/data-define';
-import { SelectSizeVcaComponent } from '../../sidemenu/select-size-vca/select-size-vca.component';
+import { MySizeVcaComponent } from '../../sidemenu/my-size-vca/my-size-vca.component';
 import { MaterialVcaComponent } from '../../sidemenu/material-vca/material-vca.component';
 // import { ProgressComponent } from 'src/app/core/services/progress.component';
 import { MyCategoryVcaComponent } from '../../sidemenu/my-category-vca/my-category-vca.component';
 import { SaleListService } from '../../modules/sale-list/sale-list.service';
 import { NotificationService } from '../../core/services/notification.service';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule, Routes } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -59,6 +59,8 @@ import { StatusVcaComponent } from '../../sidemenu/status-vca/status-vca.compone
 import { DeleteSaleListItemService } from 'src/app/core/services/delete-sale-list-item.service';
 import { Meta, Title } from '@angular/platform-browser';
 import { MakeRegisterWhereConditionService } from './../../core/services/make-register-where-condition.service';
+import { RegisterUpdate } from 'src/app/store/register/register.action';
+import { Store } from '@ngxs/store';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
@@ -73,7 +75,7 @@ import { MakeRegisterWhereConditionService } from './../../core/services/make-re
     MatInputModule,
     MatIconModule,
     MatRadioModule,
-    SelectSizeVcaComponent,
+    MySizeVcaComponent,
     MaterialVcaComponent,
     MyCategoryVcaComponent,
     ColorVcaComponent,
@@ -118,8 +120,7 @@ import { MakeRegisterWhereConditionService } from './../../core/services/make-re
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
-  // message = '';
-  // imagePath: any;
+
   imgURLs: string[] = [];
   imgSmURLs: string[] = [];
   registerForm: FormGroup;
@@ -174,7 +175,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     private deleteSaleListItemService: DeleteSaleListItemService,
     private metaTagService: Meta,
     private titleService: Title,
-    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService
+    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService,
+    private store: Store
   ) {}
 
   ngOnInit() {
@@ -192,6 +194,11 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     // To edit sale list
     this.calledFromSaleList();
     // Call from table-list.component.ts when complete delete sale list
+    this.deletedSaleList();
+  
+    // this.updateCategoryMenu();  
+  }
+  private deletedSaleList() {
     this.sharedMenuObservableService.resultDeleteSaleListItem$
       .pipe(untilDestroyed(this))
       .subscribe((sale_list_id: any) => {
@@ -206,6 +213,8 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
   }
+
+  // Edit mode, call from table-list.component.ts
   private calledFromSaleList() {
     this._activatedRoute.paramMap
       .pipe(untilDestroyed(this))
@@ -296,6 +305,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
       this._saleListService
         .updateSaleList(this.sale_list_id, finalData)
         .subscribe((res: any) => {
+          
           // If update status is finished, change status to create
           this._notificationService.success('Update successfully');
           this._router.navigate(['/register-home/home/sale-list']);
@@ -461,6 +471,7 @@ vendor:"bbb"
         this.reset_color = true;
         this.reset_category = true;
         this.reset_status = true;
+        this.store.dispatch(new RegisterUpdate(true));
         // To refresh the table.
         this.makeRegisterWhereConditionService.refreshObservable.next('');
       });
@@ -477,3 +488,5 @@ vendor:"bbb"
     this.sessionStorageService.setItem('registerStatus', 'create');
   }
 }
+
+

@@ -46,8 +46,8 @@ export class UserSaleListService {
         const whereData = this.buildWhereData(where, whereOR);
 
         const order = JSON.stringify(orderBy);
-        
-        let url = `${this.baseUrl}/user-sale-list?skip=${skip}&take=${take}&orderBy=${order}`;
+        const date = new Date();
+        let url = `${this.baseUrl}/user-sale-list?skip=${skip}&take=${take}&orderBy=${order}` + '&' + date.getTime();
         if (whereData) {
           url += `&where=${JSON.stringify(whereData)}`;
           this.where = `?where=${JSON.stringify(whereData)}`;

@@ -56,6 +56,9 @@ import { ResetSearchConditionsComponent } from 'src/app/core/components/reset-se
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { MyCategoryComponent } from '../../sidemenu/my-category/my-category.component';
 import { SEOService } from 'src/app/core/services/SEO.service';
+import { Store } from '@ngxs/store';
+import { RegisterState } from 'src/app/store/register/register.state';
+import { MakeRegisterWhereConditionService } from '../../core/services/make-register-where-condition.service';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
 @UntilDestroy()
 @Component({
@@ -117,6 +120,8 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     private removeChipsKeywordService: RemoveChipsKeywordService,
     private seoService: SEOService,
     private localStorageService: LocalStorageService,
+    private store: Store,
+    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService
   ) {
     // Assign the data to the data source for the table to render
     // this.dataSource = new MatTableDataSource(this.saleLists);

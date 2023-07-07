@@ -9,10 +9,6 @@ import { DesignMenuComponent } from './register-home/modules/design-menu/design-
 
 @NgModule({
   declarations: [
-  
-  
-    UserFeedbackComponent,
-            DesignMenuComponent
   ],
   imports: [
     AppComponent,

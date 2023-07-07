@@ -11,10 +11,16 @@ import { BehaviorSubject } from 'rxjs';
 import { SEOService } from './core/services/SEO.service';
 import { Meta } from '@angular/platform-browser';
 import { HelpComponent } from './core/components/help/help.component';
+import { NavigationEnd, Router } from '@angular/router';
+import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
+
+declare const gtag: Function;
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, HomeComponent, HelpComponent],
+  imports: [CommonModule, HomeComponent, HelpComponent,
+    NgxGoogleAnalyticsModule,
+     NgxGoogleAnalyticsRouterModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
@@ -24,6 +30,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(@Inject(PLATFORM_ID) private platformId: any,
     private sEOService: SEOService,
     private metaTagService: Meta,
+    private router: Router,
   ) {
     AppComponent.isBrowser.next(isPlatformBrowser(platformId));
   }
@@ -42,9 +49,17 @@ export class AppComponent implements OnInit, AfterViewInit {
       { name: 'date', content: '2023-06-01', scheme: 'YYYY-MM-DD' },
       { charset: 'UTF-8' },
     ]);
+    this.applyGoogleAnalytics();
   }
   // 
   ngAfterViewInit() {
     // this.titleService.setTitle('wholesale clothes, off price store');
+  }
+  private applyGoogleAnalytics() {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        gtag('config', 'G-DXVCXF9X63', { 'page_path': event.urlAfterRedirects });
+      }      
+    })
   }
 }

@@ -18,6 +18,7 @@ import { NgxsSelectSnapshotModule } from '@ngxs-labs/select-snapshot';
 import { NgxsModule } from '@ngxs/store';
 import { RegisterState } from './store/register/register.state';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,7 +31,9 @@ export const appConfig: ApplicationConfig = {
       MatDialogModule,
       NgxsModule.forRoot([RegisterState]),
       NgxsSelectSnapshotModule.forRoot(),
-      NgxsStoragePluginModule.forRoot({key: ['Register']})
+      NgxsStoragePluginModule.forRoot({key: ['Register']}),
+      NgxGoogleAnalyticsModule.forRoot(environment.ga),
+      NgxGoogleAnalyticsRouterModule
   
     ),
     {

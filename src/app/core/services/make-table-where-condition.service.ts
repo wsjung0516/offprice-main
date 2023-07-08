@@ -258,7 +258,5 @@ export class MakeTableWhereConditionService {
       })
     );
   }
-  resetService() {
-    // this.sharedMenuObservableService.resetService();
-  }
+
 }

@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
   OnInit,
   AfterViewInit,
   ChangeDetectorRef,
@@ -10,7 +9,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { HtmlContentComponent } from 'src/app/core/utils/html-content/html-content.component';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './../confirm-dialog/confirm-dialog.component';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -56,12 +54,9 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
   selectedImage = '';
   userId: string;
   constructor(
-    // public dialogRef: MatDialogRef<DetailsItemComponent>,
-    // @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private cd: ChangeDetectorRef,
     private dialogService: DialogService,
     private cartItemsService: CartItemsService,
-    private sessionStorageService: SessionStorageService,
     private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
     private router: Router,

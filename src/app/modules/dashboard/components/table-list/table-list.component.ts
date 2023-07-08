@@ -216,7 +216,6 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnDestroy(): void {
     console.log('table-list destroy');
-    this.makeTableWhereConditionService.resetService();
   }
 }
 // make example data by using UserSaleList model

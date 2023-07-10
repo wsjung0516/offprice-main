@@ -42,7 +42,6 @@ export interface Data {
       mat-card-content {
         padding: 0 !important;
       }
-
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,7 +119,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
       .addCartItem({ user_id, sale_list_id, quantity })
       .subscribe((data: any) => {
         //console.log('addCartItems', data);
-        this.cartItemsService.setCartItemsLength(this.userId);
+        this.cartItemsService.displayCartItemsLength(this.userId);
         this.snackBar.open('Added to cart', 'Success', { duration: 2000 });
       });
 
@@ -144,7 +143,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
           .addCartItem({ user_id, sale_list_id, quantity })
           .subscribe((data) => {
             // console.log('deletedCartItems', data);
-            this.cartItemsService.setCartItemsLength(this.userId);
+            this.cartItemsService.displayCartItemsLength(this.userId);
             this.snackBar.open('Deleted from cart', 'Success', {
               duration: 2000,
             });

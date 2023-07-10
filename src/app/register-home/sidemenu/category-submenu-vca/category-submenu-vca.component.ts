@@ -6,6 +6,8 @@ import {
   ViewContainerRef,
   ChangeDetectionStrategy,
   Input,
+  DestroyRef,
+  inject,
 } from '@angular/core';
 import {
   CdkMenuItemRadio,
@@ -34,6 +36,7 @@ import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-o
 import { ChangeDetectorRef, OnDestroy, OnChanges } from '@angular/core';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { Subject, take, takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /** @title Google Docs Menu Bar. */
 // @UntilDestroy()
@@ -80,8 +83,9 @@ export class CategorySubmenuVcaComponent implements ControlValueAccessor, AfterV
   tproducts = tProducts;
   onChange: any = () => {};
   onTouch: any = () => {};
-  unsubscribe = new Subject<void>();
-  unsubscribe$ = this.unsubscribe.asObservable();
+  // unsubscribe = new Subject<void>();
+  // unsubscribe$ = this.unsubscribe.asObservable();
+  destroyRef: DestroyRef = inject(DestroyRef);
   // Women
   @ViewChild('Tops', { static: true }) topsTemplate: TemplateRef<any>;
   @ViewChild('Bottoms', { static: true }) bottomsTemplate: TemplateRef<any>;
@@ -154,7 +158,7 @@ export class CategorySubmenuVcaComponent implements ControlValueAccessor, AfterV
   ngAfterViewInit() {
     this.sharedMenuObservableService.category1$
       .pipe(
-        takeUntil(this.unsubscribe$)
+        takeUntilDestroyed(this.destroyRef)
         // untilDestroyed(this)
         )
       .subscribe((id) => {
@@ -291,8 +295,8 @@ export class CategorySubmenuVcaComponent implements ControlValueAccessor, AfterV
     this.onTouch = fn;
   }
   ngOnDestroy() {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+    // this.unsubscribe.next();
+    // this.unsubscribe.complete();
   }
 
 }

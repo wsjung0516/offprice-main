@@ -9,6 +9,7 @@ import {
   ChangeDetectionStrategy,
   DestroyRef,
   OnDestroy,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -16,11 +17,11 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { Categories, Product } from 'src/app/core/constants/data-define';
+import { Product } from 'src/app/core/constants/data-define';
 import { DesignCategoryMenuService } from '../../core/components/design-category-menu/design-category-menu.service';
 import { Store } from '@ngxs/store';
-import { RegisterState } from 'src/app/store/register/register.state';
-import { Subject, skip, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ca } from 'date-fns/locale';
 @Component({
   selector: 'app-my-category-vca',
@@ -65,8 +66,8 @@ export class MyCategoryVcaComponent
   onTouch: any = () => {};
   selected_category = '';
   category_list: Product[] = [];
-  unsubscribe = new Subject();
-  unsubscribe$ = this.unsubscribe.asObservable();
+  destroyRef: DestroyRef = inject(DestroyRef);
+
   constructor(
     private cd: ChangeDetectorRef,
     private designCategoryMenuService: DesignCategoryMenuService,
@@ -81,7 +82,9 @@ export class MyCategoryVcaComponent
 
   }
   private updateCategoryMenu() {
-    this.designCategoryMenuService.getMyCategory().pipe(takeUntil(this.unsubscribe$)).subscribe((data) => {
+    this.designCategoryMenuService.getMyCategory().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe((data) => {
       // console.log('getMyCategory: ', data);
       this.selectedCategories = data;
       this.cd.detectChanges();
@@ -114,7 +117,5 @@ export class MyCategoryVcaComponent
     this.onTouch = fn;
   }
   ngOnDestroy(): void {
-    this.unsubscribe.next({});
-    this.unsubscribe.complete();
   }
 }

@@ -72,7 +72,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     private userService: UserService,
     private router: Router,
     private titleService: Title,
-    private metaService: Meta,
+    private metaService: Meta
   ) {}
 
   ngOnInit(): void {
@@ -96,7 +96,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     // const profile: any = this.sessionStorageService.getItem('token');
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       if (profile) {
-        this.cartItemsService.setCartItemsLength(profile.user.uid ?? '');
+        this.cartItemsService.displayCartItemsLength(profile.user.uid ?? '');
         this.profile = profile;
       }
     });
@@ -106,14 +106,14 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         tap((isLoggedIn: any) => {}),
         untilDestroyed(this),
         switchMap((user_id: string) => {
-          console.log('isLoggedIn - user_id', user_id)
+          console.log('isLoggedIn - user_id', user_id);
           return this.userService.getUser(user_id);
         })
       )
       .subscribe((profile: any) => {
         console.log('isLoggedIn - profile', profile);
         if (profile) {
-          this.cartItemsService.setCartItemsLength(profile.user_id);
+          this.cartItemsService.displayCartItemsLength(profile.user_id);
           this.profile = profile;
         }
         this.cd.detectChanges();
@@ -157,14 +157,14 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   openCart() {
     this.dialogService.open(CartItemsComponent, {
-       // width: auto
+      // width: auto
     });
   }
   onRegister() {
     // this.newWindow = window.open('/register-home');
     // window.focus();
     this.titleService.setTitle('off price wholesale marketplace');
-    this.sessionStorageService.setItem('title','Register');
+    this.sessionStorageService.setItem('title', 'Register');
 
     this.router.navigate(['/register-home']);
   }

@@ -171,6 +171,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
           buyer_id: this.profile.user.uid,
         };
         this.soldSaleList.push(data);
+        // Write deducted data to sale list. each item by separating sale and sold.
         const saleObservable = this.checkIfNeedToCreateSaleList(saleItem);
         const soldObservable = this.saleListService.updateSaleList(
           soldItem.sale_list_id,
@@ -190,12 +191,17 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
       */
       // console.log('create sale list - data: ', data);
 
-      this.clearCartItems();
-      this.saveSoldRecord(this.soldSaleList);
-      this.cartItemsService.setCartItemsLength(rdata[0][0].user_id);
-      // this.ref.close();
-      this.snackBar.open('Checkout completed', 'success', {
-        duration: 2000,
+      const r1 = this.clearCartItems();
+      const r2 = this.saveSoldRecord(this.soldSaleList);
+      forkJoin([r1, r2]).subscribe((data) => {
+        // console.log('clearCartItems: ', data);
+        // 
+        const userId:any = this.sessionStorageService.getItem('userId');
+        this.cartItemsService.displayCartItemsLength(userId.user_id);
+        //
+        this.snackBar.open('Checkout completed', 'success', {
+          duration: 2000,
+        });
       });
     });
   }
@@ -207,30 +213,30 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
       return of(null);
     }
   }
-  private saveSoldRecord(soldItems: Partial<SoldSaleList>[]) {
-    from(soldItems)
-      .pipe(
-        untilDestroyed(this),
-        mergeMap((item: Partial<SoldSaleList>) => {
-          return this.saleListService.createSoldRecord(item);
-        })
-      )
-      .subscribe((data: any) => {
-        console.log('createSoldRecord: ', data);
-      });
+  private saveSoldRecord(soldItems: Partial<SoldSaleList>[]): Observable<any> {
+    return from(soldItems).pipe(
+      untilDestroyed(this),
+      mergeMap((item: Partial<SoldSaleList>) => {
+        return this.saleListService.createSoldRecord(item);
+      })
+    );
+    // .subscribe((data: any) => {
+    //   // console.log('createSoldRecord: ', data);
+    // });
   }
-  private clearCartItems() {
+  private clearCartItems(): Observable<any> {
     // console.log('write deducted data: ', data)
     this.ref.close();
     // Currently, the quantity is fixed to 0.
-    from(this.items)
-      .pipe(
-        untilDestroyed(this),
-        mergeMap((item: CartItems) => {
-          return this.cartItemsService.clearCartItems(item);
-        })
-      )
-      .subscribe((data: any) => {});
+    return from(this.items).pipe(
+      untilDestroyed(this),
+      mergeMap((item: CartItems) => {
+        return this.cartItemsService.clearCartItems(item);
+      })
+    );
+    // .subscribe((data: any) => {
+    //   console.log('clearCartItems: ', data);
+    // });
   }
   private separateSaleListBySoldNSale(): any[] {
     return this.items.map((item) => {
@@ -349,7 +355,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     this.cartItemsService.addCartItem(data).subscribe((data) => {
       this.userTokenService.getUserToken().subscribe((profile: any) => {
         if (profile) {
-          this.cartItemsService.setCartItemsLength(profile.user.uid);
+          this.cartItemsService.displayCartItemsLength(profile.user.uid);
           this.cd.detectChanges();
         }
       });
@@ -398,7 +404,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
         this.cartItemsService.addCartItem(data).subscribe((data) => {
           this.userTokenService.getUserToken().subscribe((profile: any) => {
             if (profile) {
-              this.cartItemsService.setCartItemsLength(profile.user.uid);
+              this.cartItemsService.displayCartItemsLength(profile.user.uid);
               this.snackBar.open('Deleted from cart', 'success', {
                 duration: 2000,
               });

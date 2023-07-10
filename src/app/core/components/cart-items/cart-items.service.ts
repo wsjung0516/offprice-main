@@ -24,28 +24,29 @@ export class CartItemsService implements OnInit {
   ngOnInit(): void {
     this.sEOService.updateTitle('Cart Items');
     this.sEOService.updateDescription('Closeout wholesale clothes cart imtes');
-  }  
+  }
   getCartItems(where?: any): Observable<CartItems[]> {
     // To remove cache issue add date to the url
     const date = new Date();
-    let url = `${this.baseUrl}/cart/get-items?date=${date}&where=${JSON.stringify(where)}`;
+    let url = `${
+      this.baseUrl
+    }/cart/get-items?date=${date}&where=${JSON.stringify(where)}`;
     return this.http
-      .get<CartItems[]>(url )
-      .pipe(
-        // tap(data => console.log('getCartItems:--- ', data)),
-      );
+      .get<CartItems[]>(url)
+      .pipe
+      // tap(data => console.log('getCartItems:--- ', data)),
+      ();
   }
   getCartItemsLength(userId?: string): Observable<number> {
-    return this.getCartItems({ user_id: userId })
-      .pipe(
-        switchMap((data: any[]) => {
-          return this.findFirstRowService.findFirstRows(data);
-        }),
-        tap(data => console.log('getCartItems:--- ', data)),
-        map((data: any[]) => data.length),
-      )
+    return this.getCartItems({ user_id: userId }).pipe(
+      switchMap((data: any[]) => {
+        return this.findFirstRowService.findFirstRows(data);
+      }),
+      tap((data) => console.log('getCartItems:--- ', data)),
+      map((data: any[]) => data.length)
+    );
   }
-  setCartItemsLength(userId?: string) {
+  displayCartItemsLength(userId?: string) {
     this.getCartItems({ user_id: userId })
       .pipe(
         switchMap((data: any[]) => {
@@ -53,11 +54,9 @@ export class CartItemsService implements OnInit {
         })
       )
       .subscribe((data: any[]) => {
-        // console.log('setCartItemsLength:--- ', data);
         const total = data.reduce((acc, item) => acc + item.quantity, 0);
-        this.sharedMenuObservableService.cart_badge_count.next(
-          total
-        );
+        console.log('displayCartItemsLength:--- ', data, total);
+        this.sharedMenuObservableService.cart_badge_count.next(total);
       });
   }
   makeUserCart(userId: string) {
@@ -88,7 +87,7 @@ export class CartItemsService implements OnInit {
               sale_list_id: cartItem.sale_list_id,
               quantity: cartItem.quantity,
             };
-    
+
             const url = `${this.baseUrl}/cart/add-item`;
             return this.http
               .post<CartItems>(url, params)
@@ -97,7 +96,6 @@ export class CartItemsService implements OnInit {
               ();
           })
         );
-    
       })
     );
   }

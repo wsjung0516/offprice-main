@@ -206,7 +206,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
           quantity: 1,
         };
         this.cartItemService.addCartItem(data).subscribe((res: any) => {
-          this.cartItemService.setCartItemsLength(userProfile.user.uid);
+          this.cartItemService.displayCartItemsLength(userProfile.user.uid);
           this.snackBar.open('Added to cart', 'Success', {
             duration: 2000,
           });

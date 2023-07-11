@@ -2,7 +2,7 @@
 	<h2 class="text-xl font-semibold">Your cart</h2>
   <div class="overflow-y-auto">
     <ul class="flex flex-col divide-y divide-gray-700 ">
-      <li class="flex flex-col py-2 sm:flex-row sm:justify-between" *ngFor="let item of items" >
+      <li class="flex flex-col py-2 sm:flex-row sm:justify-between" *ngFor="let item of items()" >
         <div class="flex w-full space-x-2 sm:space-x-4">
           <div class="w-2/5 cursor-pointer" (click)="onSelectDetail(item)">
             <img [src]="item.image_urls.split(',')[0]" alt="{{item.category}}" class="h-auto object-center object-cover  aspect-w-3 aspect-h-4" />
@@ -96,7 +96,7 @@
   </div>
   <div class="space-y-1 text-right">
     <p class="font-semibold">Total amount:
-      <span class="font-semibold text-xl">$ {{totalPrice}}</span>
+      <span class="font-semibold text-xl">$ {{totalPrice()}}</span>
     </p>
     <p class="text-xs ">Not including taxes and shipping costs</p>
   </div>

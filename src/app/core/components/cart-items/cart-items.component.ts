@@ -5,6 +5,10 @@ import {
   OnInit,
   ChangeDetectorRef,
   inject,
+  DestroyRef,
+  Signal,
+  signal,
+  WritableSignal
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItemsService } from './cart-items.service';
@@ -31,7 +35,7 @@ import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service';
 import { DetailsItemComponent } from '../details-item/details-item.component';
-import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+// import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { UserTokenService } from '../../services/user-token.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserSaleList } from '../../models/user-sale-list.model';
@@ -39,6 +43,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { WarningDialogComponent } from '../warning-dialog/warning-dialog.component';
 import { SaleListService } from 'src/app/modules/dashboard/components/sale-list/sale-list.service';
 import { SaleList, SoldSaleList } from '../../models/sale-list.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+
 @UntilDestroy()
 @Component({
   selector: 'app-cart-items',
@@ -62,12 +69,14 @@ import { SaleList, SoldSaleList } from '../../models/sale-list.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartItemsComponent implements OnInit, AfterViewInit {
-  items: CartItems[] = [];
+  // items: CartItems[] = [];
+  items: WritableSignal<CartItems[]> = signal([]);
   ref: DialogRef<any> = inject(DialogRef);
-  totalPrice = 0;
+  totalPrice = signal(0);
+  // destroyRef: DestroyRef = inject(DestroyRef);
   constructor(
     private cartItemsService: CartItemsService,
-    private cd: ChangeDetectorRef,
+    // private cd: ChangeDetectorRef,
     private sharedMenuObservableService: SharedMenuObservableService,
     private findFirstRowService: FindFirstRowService,
     private sessionStorageService: SessionStorageService,
@@ -76,12 +85,17 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     private userSaleListService: UserSaleListService,
     private saleListService: SaleListService,
     private userTokenService: UserTokenService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    // private destroyRef: DestroyRef
   ) {}
   checkResult: string[] = [];
   ngOnInit(): void {
     this.sharedMenuObservableService.closeCartItemsDialog$
-      .pipe(untilDestroyed(this))
+      .pipe(
+        untilDestroyed(this),
+        // takeUntilDestroyed()
+        // takeUntilDestroyed(this.destroyRef)
+        )
       .subscribe(() => {
         this.ref.close();
       });
@@ -100,11 +114,12 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
             })
           )
           .subscribe((data: any[]) => {
-            this.items = data;
-            this.totalPrice = this.items.reduce((acc, item) => {
+            this.items.set(data);
+            const total = this.items().reduce((acc, item) => {
               return acc + item.price * item.quantity;
             }, 0);
-            this.cd.detectChanges();
+            this.totalPrice.set(total);
+            // this.cd.detectChanges();
           });
       }
     });
@@ -137,7 +152,6 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
   soldSaleList: Partial<SoldSaleList>[] = [];
   private processAfterCheckout() {
     const rdata = this.separateSaleListBySoldNSale();
-    // console.log('deducted data: ', rdata);
     /*  [
       [{sale_list_id: 54, quantity: 24, status1: 'Sale'},
        {sale_list_id: 54, quantity: 3, status1: 'Sold'}
@@ -157,7 +171,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
       const saleItem = item.find((subItem: any) => subItem.status1 === 'Sale');
       const soldItem = item.find((subItem: any) => subItem.status1 === 'Sold');
       if (saleItem && soldItem) {
-        console.log('saleItem: ', saleItem);
+        // console.log('saleItem: ', saleItem);
         const data = {
           user_id: saleItem.user_id,
           sale_list_id: soldItem.sale_list_id,
@@ -189,12 +203,10 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
         [{sale_list_id: 65, quantity: 27, status1: 'Sale'},HttpResponse]
       ],
       */
-      // console.log('create sale list - data: ', data);
 
       const r1 = this.clearCartItems();
       const r2 = this.saveSoldRecord(this.soldSaleList);
       forkJoin([r1, r2]).subscribe((data) => {
-        // console.log('clearCartItems: ', data);
         // 
         const userId:any = this.sessionStorageService.getItem('userId');
         this.cartItemsService.displayCartItemsLength(userId.user_id);
@@ -216,6 +228,11 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
   private saveSoldRecord(soldItems: Partial<SoldSaleList>[]): Observable<any> {
     return from(soldItems).pipe(
       untilDestroyed(this),
+      // takeUntilDestroyed(),
+      // takeUntilDestroyed(this.destroyRef),
+      tap((item: Partial<SoldSaleList>) => {
+        // console.log('sold item: ', item);
+      }),
       mergeMap((item: Partial<SoldSaleList>) => {
         return this.saleListService.createSoldRecord(item);
       })
@@ -225,11 +242,16 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     // });
   }
   private clearCartItems(): Observable<any> {
-    // console.log('write deducted data: ', data)
     this.ref.close();
+    // console.log('clear Cart Items ')
     // Currently, the quantity is fixed to 0.
-    return from(this.items).pipe(
+    return from(this.items()).pipe(
       untilDestroyed(this),
+      // takeUntilDestroyed(this.destroyRef),
+      // takeUntilDestroyed(),
+      tap((item: CartItems) => {
+        // console.log('clearCartItems: ', item);
+      }),
       mergeMap((item: CartItems) => {
         return this.cartItemsService.clearCartItems(item);
       })
@@ -239,7 +261,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     // });
   }
   private separateSaleListBySoldNSale(): any[] {
-    return this.items.map((item) => {
+    return this.items().map((item) => {
       // console.log('item: ', item, this.tmpSaleList)
       const correspondingItem = this.tmpSaleList.find(
         (el: any) => el.sale_list_id === item.sale_list_id
@@ -287,7 +309,9 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
   tmpSaleList: SaleList[] = [];
   checkIfSalesItemIsAvailable(): Observable<string[]> {
     this.tmpSaleList = [];
-    return from(this.items).pipe(
+    return from(this.items()).pipe(
+      // takeUntilDestroyed(),
+      // takeUntilDestroyed(this.destroyRef),
       untilDestroyed(this),
       mergeMap((data: CartItems) =>
         this.getSalesItemQuantity(data.sale_list_id).pipe(
@@ -340,10 +364,11 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
       item.quantity = 1;
     }
     this.sale_list_id = item.sale_list_id;
-    this.totalPrice = this.items.reduce((acc, item) => {
+    const total = this.items().reduce((acc, item) => {
       return acc + item.price * item.quantity;
     }, 0);
     this.addCartItem(item.quantity, item.sale_list_id);
+    this.totalPrice.set(total);
     // console.log('this.items: ', this.items);
   }
   private addCartItem(quantity: number, sale_list_id?: number) {
@@ -356,7 +381,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
       this.userTokenService.getUserToken().subscribe((profile: any) => {
         if (profile) {
           this.cartItemsService.displayCartItemsLength(profile.user.uid);
-          this.cd.detectChanges();
+          // this.cd.detectChanges();
         }
       });
     });

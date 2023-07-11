@@ -55,7 +55,7 @@ export class CartItemsService implements OnInit {
       )
       .subscribe((data: any[]) => {
         const total = data.reduce((acc, item) => acc + item.quantity, 0);
-        console.log('displayCartItemsLength:--- ', data, total);
+        // console.log('displayCartItemsLength:--- ', data, total);
         this.sharedMenuObservableService.cart_badge_count.next(total);
       });
   }
@@ -112,9 +112,9 @@ export class CartItemsService implements OnInit {
         const url = `${this.baseUrl}/cart/add-item`;
         return this.http
           .post<CartItems>(url, params)
-          .pipe
-          // tap(data => console.log('addCartItem: ', data)),
-          ();
+          .pipe(
+            tap(data => console.log('addCartItem: ', data)),
+          );
       })
     );
   }
@@ -127,12 +127,15 @@ export class CartItemsService implements OnInit {
       ();
   }
   isUserCartExist(userId: string) {
+    // console.log('isUserCartExist: ', userId);
     const url = `${this.baseUrl}/cart/is-user-cart-exist/?user_id=${userId}`;
     return this.http
       .get(url)
       .pipe
-      // tap((data) => console.log('isUserCartExist: ', data))
-      ();
+      // 
+      (
+        // tap((data) => console.log('isUserCartExist: ', data))
+      );
   }
   // Is there cart item in the cart
   isCartItemExist(userId: string, saleListId: number): Promise<boolean> {

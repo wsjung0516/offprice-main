@@ -1,68 +1,60 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  inject,
-  AfterViewInit,
-  ViewChild,
-  TemplateRef,
-  Inject,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
-  FormGroup,
   FormsModule,
-  MaxLengthValidator,
   ReactiveFormsModule,
   UntypedFormControl,
   UntypedFormGroup,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { User } from 'src/app/core/models/user.model';
 // import { User } from 'src/app/register-home/core/models/user.model';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { format, set } from 'date-fns';
-import { UserService } from 'src/app/user/user.service';
-import { DialogRef, DialogService } from '@ngneat/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DialogService } from '@ngneat/dialog';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { format } from 'date-fns';
 import {
   debounceTime,
   delay,
   distinctUntilChanged,
   filter,
   from,
-  groupBy,
   map,
   Observable,
   skip,
   switchMap,
-  tap,
   toArray,
 } from 'rxjs';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TermsAndConditionsComponent } from 'src/app/core/components/terms-and-condition/terms-and-conditions.component';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { UserTokenService } from 'src/app/core/services/user-token.service';
-import { ar, fi, th } from 'date-fns/locale';
-import { TermsAndConditionsComponent } from 'src/app/core/components/terms-and-condition/terms-and-conditions.component';
+import { UserService } from 'src/app/user/user.service';
 // import { ConfirmDialogComponent } from '../../core/components/confirm-dialog/confirm-dialog.component';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { errorTailorImports } from '@ngneat/error-tailor';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
+import { errorTailorImports } from '@ngneat/error-tailor';
 // import { group } from 'console';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 

@@ -1,42 +1,41 @@
+import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  Component,
   AfterViewInit,
-  ViewChild,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
   OnInit,
+  ViewChild,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
 import { Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service';
-import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { Subject } from 'rxjs';
-import { ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { SearchKeyword } from 'src/app/core/services/chips-keyword.service';
-import { MatIconModule } from '@angular/material/icon';
+import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
+import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service';
 
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/core/components/confirm-dialog/confirm-dialog.component';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 // import { CreatUserComponent } from './../../../../core/components/user-profile-info/user-profile-info.component';
-import { CreateUserComponent } from 'src/app/user/create-user/create-user.component';
-import { DialogConfig, DialogService } from '@ngneat/dialog';
-import { User } from 'src/app/user/models/user.model';
-import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
-import { SessionStorageService } from 'src/app/core/services/session-storage.service';
-import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
-import { CartItems } from 'src/app/core/models/cart-items.model';
-import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../../../core/auth/login/services/auth.service';
-import { UserTokenService } from 'src/app/core/services/user-token.service';
+import { DialogService } from '@ngneat/dialog';
+import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
+import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
+import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
 import { DescriptionDetailDirective } from 'src/app/core/directives/description-detail.directive';
 import { ImageDetailDirective } from 'src/app/core/directives/image-detail.directive';
+import { CartItems } from 'src/app/core/models/cart-items.model';
+import { SessionStorageService } from 'src/app/core/services/session-storage.service';
+import { UserTokenService } from 'src/app/core/services/user-token.service';
+import { User } from 'src/app/user/models/user.model';
 
 @UntilDestroy()
 @Component({
@@ -114,10 +113,8 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private makeTableWhereConditionService: MakeTableWhereConditionService,
     private userSaleListService: UserSaleListService,
     private router: Router,
-    private dialog: MatDialog,
     private cd: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
-    private sessionStorageService: SessionStorageService,
     private cartItemService: CartItemsService,
     private snackBar: MatSnackBar,
     private userTokenService: UserTokenService

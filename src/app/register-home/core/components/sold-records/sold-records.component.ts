@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, AfterViewInit, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, AfterViewInit, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SoldSaleList } from 'src/app/core/models/sale-list.model';
 import { SEOService } from 'src/app/core/services/SEO.service';
+import { SoldRecordsService } from './sold-records.service';
 
 @Component({
   selector: 'app-sold-records',
@@ -52,6 +53,8 @@ export class SoldRecordsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private sEOService: SEOService,
+    private soldRecordsService: SoldRecordsService,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -61,9 +64,21 @@ export class SoldRecordsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
+    const orderBy = { created_at: 'desc' };
+    this.soldRecordsService.getSoldRecords(0, 100, orderBy).subscribe((data) => {
+      // console.log('getSoldRecords: ', data);
+      this.dataSource = new MatTableDataSource<SoldSaleList>(data);
+      this.length = data.length;
+      this.cd.detectChanges();
+    });
   }
   openDetailsItem(item: any): void {
     console.log('openDetailsItem: ', item);
+  }
+  trackByFn(index: number, item: any): any {
+    return item.sold_sale_list_id || index;
   }
 
 }

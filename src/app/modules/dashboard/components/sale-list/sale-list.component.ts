@@ -1,43 +1,41 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ViewChild,
-  OnDestroy,
-  HostListener,
-  signal,
-  Signal,
-  WritableSignal,
-  DoCheck,
-  NgZone,
-} from '@angular/core';
-import { Observable } from 'rxjs';
-import { MatCardModule } from '@angular/material/card';
-import { CommonModule } from '@angular/common';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
   CdkVirtualScrollViewport,
   ScrollingModule,
 } from '@angular/cdk/scrolling';
+import { CommonModule } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  DoCheck,
+  HostListener,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  WritableSignal,
+  signal
+} from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Meta, Title } from '@angular/platform-browser';
+import { DialogService } from '@ngneat/dialog';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Observable } from 'rxjs';
+import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
+import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
+import { SaleList } from 'src/app/core/models/sale-list.model';
+import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import {
   ChipsKeywordService,
   SearchKeyword,
 } from 'src/app/core/services/chips-keyword.service';
-import { SaleListService } from './sale-list.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { MakeWhereConditionService } from 'src/app/core/services/make-where-condition.service';
-import { SaleList } from 'src/app/core/models/sale-list.model';
-import { DetailsItemComponent } from 'src/app/core/components/details-item/details-item.component';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
-import { CartItemsComponent } from 'src/app/core/components/cart-items/cart-items.component';
+import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
-import { DialogService } from '@ngneat/dialog';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Meta, Title } from '@angular/platform-browser';
+import { SaleListService } from './sale-list.service';
 @UntilDestroy()
 @Component({
   standalone: true,

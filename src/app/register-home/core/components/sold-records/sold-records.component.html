@@ -8,7 +8,20 @@
           {{ displayedTitle[i] }}
         </th>
         <!-- </ng-container> -->
+        <ng-container  *ngIf="column !== 'image_sm_urls'">
           <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
+        </ng-container>
+        <ng-container *ngIf="column === 'image_sm_urls'">
+          <td mat-cell *matCellDef="let row">
+            <div class="flex">
+              <ng-container *ngFor="let image of row[column].split(',')">
+                <div class="w-8 h-10 rounded-full" >
+                  <img [src]="image" alt="offprice.store" />
+                </div>
+              </ng-container>
+            </div>
+          </td>
+        </ng-container>
         </ng-container>
       </ng-container>
 

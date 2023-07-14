@@ -100,7 +100,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy, DoCh
     // private cd: ChangeDetectorRef,
     private localStorageService: LocalStorageService,
     private makeWhereConditionService: MakeWhereConditionService,
-    private dialog: MatDialog,
+    // private dialog: MatDialog,
     private sessionStorageService: SessionStorageService,
     private dialogService: DialogService,
     private breakpointObserver: BreakpointObserver,

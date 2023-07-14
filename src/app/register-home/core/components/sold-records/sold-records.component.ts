@@ -64,12 +64,12 @@ export class SoldRecordsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
     const orderBy = { created_at: 'desc' };
     this.soldRecordsService.getSoldRecords(0, 100, orderBy).subscribe((data) => {
       // console.log('getSoldRecords: ', data);
       this.dataSource = new MatTableDataSource<SoldSaleList>(data);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
       this.length = data.length;
       this.cd.detectChanges();
     });

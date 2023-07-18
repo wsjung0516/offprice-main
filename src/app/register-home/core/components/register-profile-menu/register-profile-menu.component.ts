@@ -14,11 +14,10 @@ import { SessionStorageService } from 'src/app/core/services/session-storage.ser
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RegisterAuthService } from 'src/app/register-home/auth/login/services/register-auth.service';
 import { Router } from '@angular/router';
-import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { UserService } from 'src/app/user/user.service';
 import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.directive';
-import { Meta, Title } from '@angular/platform-browser';
 import { AboutComponent } from 'src/app/core/components/about/about.component';
+import { SEOService } from 'src/app/core/services/SEO.service';
 @Component({
   standalone: true,
   imports: [
@@ -56,10 +55,8 @@ export class RegisterProfileMenuComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private router: Router,
-    private sharedMenuObservableService: SharedMenuObservableService,
     private userService: UserService,
-    private titleService: Title,
-    private metaService: Meta
+    private sEOService: SEOService,
   ) {}
 
   ngOnInit(): void {}

@@ -222,9 +222,7 @@ export class AuthService {
       }
     );
   }
-  facebookSignIn() {
-    FB.login((response: any) => {}, { scope: 'small' });
-  }
+
 }
 // function jwt_decode(idToken: any): any {
 //   throw new Error('Function not implemented.');

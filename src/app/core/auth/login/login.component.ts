@@ -180,7 +180,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   async signInWithGoogle() {
     await this.auth.googleSignIn();
   }
-  async signInWithFacebook() {
-    await this.auth.facebookSignIn();
-  }
+  // async signInWithFacebook() {
+  //   await this.auth.facebookSignIn();
+  // }
 }

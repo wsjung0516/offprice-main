@@ -112,7 +112,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
       if (coupon) {
-        console.log('userCoupons', coupon);
+        // console.log('userCoupons', coupon);
         this.userCoupons = coupon;
         this.cd.detectChanges();
       }

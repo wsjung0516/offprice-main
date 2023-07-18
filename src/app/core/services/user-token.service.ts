@@ -62,6 +62,7 @@ export class UserTokenService {
       // tap((data) => console.log('user token updated: ', data))
     );
   }
+  
   deleteUserToken() {
     const userId: any = this.sessionStorageService.getItem('userId');
     if(!userId) return;

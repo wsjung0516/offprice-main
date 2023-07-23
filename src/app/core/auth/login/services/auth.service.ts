@@ -150,7 +150,8 @@ export class AuthService {
     // And return because the register window cleared user token already
     if (!userId) {
       // this.sharedMenuObservableService.displayName.next('Guest');
-      this.sharedMenuObservableService.cart_badge_count.next('0');
+      this.sharedMenuObservableService.cart_badge_count.set('0');
+      // this.sharedMenuObservableService.cart_badge_count.next('0');
       return;
     }
     this.logoutProcess();
@@ -165,7 +166,8 @@ export class AuthService {
             this.sessionStorageService.removeItem('userId');
             localStorage.removeItem('isStartMenuPassed');
             // this.sharedMenuObservableService.displayName.next('Guest');
-            this.sharedMenuObservableService.cart_badge_count.next('0');
+            this.sharedMenuObservableService.cart_badge_count.set('0');
+            // this.sharedMenuObservableService.cart_badge_count.next('0');
             this.sharedMenuObservableService.isLoggedOut.next(true);
           }
         });

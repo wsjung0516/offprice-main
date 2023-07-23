@@ -7,6 +7,7 @@ import {
   ElementRef,
   AfterViewInit,
   OnDestroy,
+  effect,
 } from '@angular/core';
 import { MenuService } from '../../../../core/services/menu.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -61,7 +62,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private menuService: MenuService,
     private screenSizeService: ScreenSizeService,
-    private sharedMenuObservableService: SharedMenuObservableService,
+    public sharedMenuObservableService: SharedMenuObservableService,
     private removeChipsKeywordService: RemoveChipsKeywordService,
     private makeTableWhereConditionService: MakeTableWhereConditionService,
     private cd: ChangeDetectorRef,
@@ -73,7 +74,20 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private titleService: Title,
     private metaService: Meta
-  ) {}
+  ) {
+    effect(() => {
+      if( sharedMenuObservableService.refreshCartItemsButton()) {
+        this.sharedMenuObservableService.refreshCartItemsButton.set(false);
+        this.cartItemsService
+        .getCartItemsLength(this.profile?.user.uid ?? '')
+        .pipe(untilDestroyed(this))
+        .subscribe((val) => {
+          // To prevent from displaying when the cart is empty.
+          if (val > 0) this.refreshButton.nativeElement.click();
+        });
+      }
+    }, {allowSignalWrites: true})
+  }
 
   ngOnInit(): void {
     this.showSideBar$ = this.sharedMenuObservableService.showSideBar$;
@@ -124,26 +138,26 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     //     this.cd.detectChanges();
     //   });
     //
-    this.sharedMenuObservableService.cart_badge_count$
-      .pipe(untilDestroyed(this))
-      .subscribe((val) => {
-        // console.log('cart_badge_count', val);
-        this.cart_badge_count = val;
-        this.cd.detectChanges();
-      });
-    this.sharedMenuObservableService.refreshCartItemsButton$
-      .pipe(untilDestroyed(this))
-      .subscribe((val) => {
-        // console.log('refreshCartItemsButton', val);
-        // To display the cart items in the cart dialog.
-        this.cartItemsService
-          .getCartItemsLength(this.profile?.user.uid ?? '')
-          .pipe(untilDestroyed(this))
-          .subscribe((val) => {
-            // To prevent from displaying when the cart is empty.
-            if (val > 0) this.refreshButton.nativeElement.click();
-          });
-      });
+    // this.sharedMenuObservableService.cart_badge_count$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((val) => {
+    //     // console.log('cart_badge_count', val);
+    //     this.cart_badge_count = val;
+    //     this.cd.detectChanges();
+    //   });
+    // this.sharedMenuObservableService.refreshCartItemsButton$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((val) => {
+    //     // console.log('refreshCartItemsButton', val);
+    //     // To display the cart items in the cart dialog.
+    //     this.cartItemsService
+    //       .getCartItemsLength(this.profile?.user.uid ?? '')
+    //       .pipe(untilDestroyed(this))
+    //       .subscribe((val) => {
+    //         // To prevent from displaying when the cart is empty.
+    //         if (val > 0) this.refreshButton.nativeElement.click();
+    //       });
+    //   });
   }
   public toggleMobileMenu(): void {
     this.menuService.showMobileMenu = true;

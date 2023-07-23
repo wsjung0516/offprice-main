@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, effect } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MenuService } from '../../../../../core/services/menu.service';
 import { CommonModule } from '@angular/common';
@@ -35,12 +35,18 @@ export class NavbarMobileComponent implements OnInit {
   constructor(private menuService: MenuService,
     private sharedMenuObservableService: SharedMenuObservableService) {
     this.showMobileMenu$ = this.menuService.showMobileMenu$;
+    effect(() => {
+      if( this.sharedMenuObservableService.showMobileMenu()){
+        this.menuService.showMobileMenu = false;
+        this.sharedMenuObservableService.showMobileMenu.set(false);
+      }
+    }, { allowSignalWrites : true})
   }
 
   ngOnInit(): void {
-    this.sharedMenuObservableService.showMobileMenu$.pipe(untilDestroyed(this)).subscribe((data) => {
-      this.menuService.showMobileMenu = false;
-    })
+    // this.sharedMenuObservableService.showMobileMenu$.pipe(untilDestroyed(this)).subscribe((data) => {
+    //   this.menuService.showMobileMenu = false;
+    // })
   }
 
   public toggleMobileMenu(): void {

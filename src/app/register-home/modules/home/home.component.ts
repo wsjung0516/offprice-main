@@ -82,12 +82,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
     this.titleService.setTitle('off price wholesale');
     this.resetLogoutTimer();
-    this.sharedMenuObservableService.closeFeedback$
-      .pipe(untilDestroyed(this))
-      .subscribe((close) => {
-        //const dialogOverlay = document.getElementById('dialog-overlay');
-        // dialogOverlay.style.display = 'none';
-      });
+    // this.sharedMenuObservableService.closeFeedback$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((close) => {
+    //     //const dialogOverlay = document.getElementById('dialog-overlay');
+    //     // dialogOverlay.style.display = 'none';
+    //   });
     this.receiveFeedback();
   }
   // Logout after 60 minutes of inactivity

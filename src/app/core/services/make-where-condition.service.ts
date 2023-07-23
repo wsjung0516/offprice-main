@@ -120,7 +120,8 @@ export class MakeWhereConditionService {
         this.displayMode = this.sessionStorageService.getItem('displayMode');
         // console.log('make-where-observable : ', val, this.displayMode);
         // Close the mobile menu after selecting an option from the filter menu
-        this.sharedMenuObservableService.showMobileMenu.next(false);
+        this.sharedMenuObservableService.showMobileMenu.set(false);
+        // this.sharedMenuObservableService.showMobileMenu.next(false);
       }),
       filter(() => this.displayMode === 'grid'),
       // filter(([displayMode]) => displayMode === 'grid'),

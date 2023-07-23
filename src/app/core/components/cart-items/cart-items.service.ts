@@ -42,7 +42,7 @@ export class CartItemsService implements OnInit {
       switchMap((data: any[]) => {
         return this.findFirstRowService.findFirstRows(data);
       }),
-      tap((data) => console.log('getCartItems:--- ', data)),
+      // tap((data) => console.log('getCartItems:--- ', data)),
       map((data: any[]) => data.length)
     );
   }
@@ -56,7 +56,8 @@ export class CartItemsService implements OnInit {
       .subscribe((data: any[]) => {
         const total = data.reduce((acc, item) => acc + item.quantity, 0);
         // console.log('displayCartItemsLength:--- ', data, total);
-        this.sharedMenuObservableService.cart_badge_count.next(total);
+        this.sharedMenuObservableService.cart_badge_count.set(total);
+        // this.sharedMenuObservableService.cart_badge_count.next(total);
       });
   }
   makeUserCart(userId: string) {

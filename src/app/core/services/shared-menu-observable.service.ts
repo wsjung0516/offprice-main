@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { CartItems } from 'src/app/core/models/cart-items.model';
 
@@ -7,14 +7,23 @@ import { CartItems } from 'src/app/core/models/cart-items.model';
 })
 export class SharedMenuObservableService {
   input_keyword = new BehaviorSubject<string>('');
+  input_keyword$ = this.input_keyword.asObservable();
   vendor = new BehaviorSubject<string>('All');
+  vendor$ = this.vendor.asObservable();
   price = new BehaviorSubject<string>('All');
+  price$ = this.price.asObservable();
   category = new BehaviorSubject<string>('All');
+  category$ = this.category.asObservable();
   category1 = new BehaviorSubject<string>('All');
+  category1$ = this.category1.asObservable();
   size = new BehaviorSubject<string>('All');
+  size$ = this.size.asObservable();
   material = new BehaviorSubject<string>('All');
+  material$ = this.material.asObservable();
   search_period = new BehaviorSubject<string>('All');
+  search_period$ = this.search_period.asObservable();
   color = new BehaviorSubject<string>('All');
+  color$ = this.color.asObservable();
   //
   reset_category = new Subject<string>();
   reset_category$ = this.reset_category.asObservable();
@@ -31,19 +40,16 @@ export class SharedMenuObservableService {
   reset_color = new Subject<string>();
   reset_color$ = this.reset_color.asObservable();
   //
-  cart_badge_count = new Subject<string>();
-  cart_badge_count$ = this.cart_badge_count.asObservable();
-  refreshCartItemsButton = new ReplaySubject<boolean>();
-  refreshCartItemsButton$ = this.refreshCartItemsButton.asObservable();
-  closeCartItemsDialog = new Subject<boolean>();
-  closeCartItemsDialog$ = this.closeCartItemsDialog.asObservable();
-  refreshData = new ReplaySubject<string>();
-  refreshData$ = this.refreshData.asObservable();
+  cart_badge_count = signal<string>('');
+  refreshCartItemsButton = signal<boolean>(false);
+  closeCartItemsDialog = signal<boolean>(false);
 
-  showMobileMenu = new Subject<boolean>();
-  showMobileMenu$ = this.showMobileMenu.asObservable();
-  closeFeedback = new Subject<boolean>(); 
-  closeFeedback$ = this.closeFeedback.asObservable();
+  showMobileMenu = signal<boolean>(false);
+  // showMobileMenu = new Subject<boolean>();
+  // showMobileMenu$ = this.showMobileMenu.asObservable();
+  // closeFeedback = signal<boolean>(false); 
+  // closeFeedback = new Subject<boolean>(); 
+  // closeFeedback$ = this.closeFeedback.asObservable();
   reset_register = new Subject<boolean>();
   reset_register$ = this.reset_register.asObservable();
   isLoggedOut = new Subject<boolean>();
@@ -66,32 +72,5 @@ export class SharedMenuObservableService {
   searchResult$ = this.searchResult.asObservable();
   closeSideBar = new Subject<boolean>();
   closeSideBar$ = this.closeSideBar.asObservable();
-  get input_keyword$() {
-    return this.input_keyword.asObservable();
-  }
-  get vendor$() {
-    return this.vendor.asObservable();
-  }
-  get price$() {
-    return this.price.asObservable();
-  }
-  get category$() {
-    return this.category.asObservable();
-  }
-  get category1$() {
-    return this.category1.asObservable();
-  }
-  get size$() {
-    return this.size.asObservable();
-  }
-  get material$() {
-    return this.material.asObservable();
-  }
-  get search_period$() {
-    return this.search_period.asObservable();
-  }
-  get color$() {
-    return this.color.asObservable();
-  }
   resetService() {}
 }

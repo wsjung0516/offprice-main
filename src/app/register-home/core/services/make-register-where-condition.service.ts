@@ -139,7 +139,8 @@ export class MakeRegisterWhereConditionService {
         this.paginator.firstPage();
         // console.log('make-table tap', val,this.displayMode);
         // Close the mobile menu after selecting an option from the filter menu
-        this.sharedMenuObservableService.showMobileMenu.next(false);
+        this.sharedMenuObservableService.showMobileMenu.set(false);
+        // this.sharedMenuObservableService.showMobileMenu.next(false);
       }),
       filter(() => this.displayMode === 'list'),
       // filter(([displayMode]) => displayMode === 'list'),

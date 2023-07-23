@@ -3,12 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  ChangeDetectorRef,
   inject,
-  DestroyRef,
-  Signal,
   signal,
-  WritableSignal
+  WritableSignal,
+  effect
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItemsService } from './cart-items.service';
@@ -16,8 +14,6 @@ import { CartItems } from 'src/app/core/models/cart-items.model';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { FindFirstRowService } from 'src/app/core/services/find-first-row.service';
 import {
-  debounceTime,
-  distinctUntilChanged,
   switchMap,
   map,
   Observable,
@@ -37,13 +33,11 @@ import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-l
 import { DetailsItemComponent } from '../details-item/details-item.component';
 // import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { UserTokenService } from '../../services/user-token.service';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserSaleList } from '../../models/user-sale-list.model';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { WarningDialogComponent } from '../warning-dialog/warning-dialog.component';
 import { SaleListService } from 'src/app/modules/dashboard/components/sale-list/sale-list.service';
 import { SaleList, SoldSaleList } from '../../models/sale-list.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -87,18 +81,25 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     private userTokenService: UserTokenService,
     private sanitizer: DomSanitizer,
     // private destroyRef: DestroyRef
-  ) {}
+  ) {
+    effect(() => {
+      if (sharedMenuObservableService.closeCartItemsDialog()) {
+        this.ref.close();
+        sharedMenuObservableService.closeCartItemsDialog.set(false);
+      }
+    });
+  }
   checkResult: string[] = [];
   ngOnInit(): void {
-    this.sharedMenuObservableService.closeCartItemsDialog$
-      .pipe(
-        untilDestroyed(this),
-        // takeUntilDestroyed()
-        // takeUntilDestroyed(this.destroyRef)
-        )
-      .subscribe(() => {
-        this.ref.close();
-      });
+    // this.sharedMenuObservableService.closeCartItemsDialog$
+    //   .pipe(
+    //     untilDestroyed(this),
+    //     // takeUntilDestroyed()
+    //     // takeUntilDestroyed(this.destroyRef)
+    //     )
+    //   .subscribe(() => {
+    //     this.ref.close();
+    //   });
   }
   profile: any;
 
@@ -434,14 +435,11 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
                 duration: 2000,
               });
               // To maintain the cart item dialog open.
-              this.sharedMenuObservableService.refreshCartItemsButton.next(
-                true
-              );
+              this.sharedMenuObservableService.refreshCartItemsButton.set(true);
+              // this.sharedMenuObservableService.refreshCartItemsButton.next(true);
             }
           });
         });
-
-        // this.dialogRef.close({ status: 'delete', data: this.item});
       }
     });
   }

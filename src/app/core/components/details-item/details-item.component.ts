@@ -148,8 +148,10 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
               duration: 2000,
             });
             // To maintain the cart item dialog.
-            this.sharedMenuObservableService.refreshCartItemsButton.next(true);
-            this.sharedMenuObservableService.closeCartItemsDialog.next(true);
+            this.sharedMenuObservableService.refreshCartItemsButton.set(true);
+            // this.sharedMenuObservableService.refreshCartItemsButton.next(true);
+            this.sharedMenuObservableService.closeCartItemsDialog.set(true);
+            // this.sharedMenuObservableService.closeCartItemsDialog.next(true);
           });
 
         // this.dialogRef.close({ status: 'delete', data: this.item});

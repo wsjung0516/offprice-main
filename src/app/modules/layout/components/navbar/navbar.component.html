@@ -58,7 +58,8 @@
           class="hidden sm:block text-blue-600 -mr-3 mt-3 sm:mr-3 sm:mt-3 cursor-pointer"
           (click)="openCart()"
         >
-          <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent"
+          <!-- <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent" -->
+          <mat-icon [matBadge]="sharedMenuObservableService.cart_badge_count()" matBadgeColor="accent"
             >add_shopping_cart</mat-icon
           >
         </div>
@@ -76,7 +77,8 @@
             class="block sm:hidden text-blue-600 mt-3 mr-3 cursor-pointer"
             (click)="openCart()"
           >
-            <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent"
+            <!-- <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent" -->
+            <mat-icon [matBadge]="sharedMenuObservableService.cart_badge_count()" matBadgeColor="accent"
               >add_shopping_cart</mat-icon
             >
           </div>

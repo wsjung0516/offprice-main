@@ -95,7 +95,7 @@ export class UserFeedbackComponent {
       this.subjectData = '';
       this.textData = null;
       this.cd.detectChanges();
-      this.sharedMenuObservableService.closeFeedback.next(true);
+      // this.sharedMenuObservableService.closeFeedback.next(true);
     });
   }
 }

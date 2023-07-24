@@ -22,12 +22,11 @@ import { NavbarMobileSubmenuComponent } from './../navbar-mobile-submenu/navbar-
 })
 export class NavbarMobileMenuComponent implements OnInit {
   public pagesMenu$: Observable<MenuItem[]> = new Observable<MenuItem[]>();
-  public showSideBar$: Observable<boolean> = new Observable<boolean>();
 
   constructor(private menuService: MenuService) {
-    this.showSideBar$ = this.menuService.showSideBar$;
     this.pagesMenu$ = this.menuService.pagesMenu$;
   }
+  showSideBar = this.menuService.showSideBar;
 
   public toggleMenu(subMenu: SubMenuItem) {
     this.menuService.toggleMenu(subMenu);

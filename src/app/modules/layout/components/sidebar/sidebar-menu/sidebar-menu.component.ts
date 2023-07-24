@@ -25,10 +25,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class SidebarMenuComponent implements OnInit {
   public pagesMenu$: Observable<MenuItem[]> = new Observable<MenuItem[]>();
-  public showSideBar$: Observable<boolean> = new Observable<boolean>();
-
+  showSideBar = this.menuService.showSideBar;
   constructor(private menuService: MenuService) {
-    this.showSideBar$ = this.menuService.showSideBar$;
     this.pagesMenu$ = this.menuService.pagesMenu$;
   }
 

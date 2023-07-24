@@ -13,13 +13,17 @@ import { Meta } from '@angular/platform-browser';
 import { HelpComponent } from './core/components/help/help.component';
 import { NavigationEnd, Router } from '@angular/router';
 import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
+import { SessionStorageService } from './core/services/session-storage.service';
+import { AuthService } from './core/auth/login/services/auth.service';
+import { UserId } from './core/models/user.model';
+import { CartItemsService } from './core/components/cart-items/cart-items.service';
 
 declare const gtag: Function;
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, HomeComponent, HelpComponent,
-    NgxGoogleAnalyticsModule,
+  NgxGoogleAnalyticsModule,
      NgxGoogleAnalyticsRouterModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -31,8 +35,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     private sEOService: SEOService,
     private metaTagService: Meta,
     private router: Router,
+    private sessionStorageService: SessionStorageService,
+    private authService: AuthService,
   ) {
     AppComponent.isBrowser.next(isPlatformBrowser(platformId));
+    const userId: UserId = this.sessionStorageService.getItem('userId');
+    if(userId) {
+      // console.log('userId: ', userId)
+      this.authService.user.set(userId)
+    } else {
+      this.authService.user.set(undefined);
+    }
+
   }
   async ngOnInit() {
     this.sEOService.updateTitle('wholesale clothes, off price store');

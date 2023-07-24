@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, effect } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import {
   GoogleAuthProvider,
@@ -15,6 +15,8 @@ import { Observable, map, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import jwt_decode from 'jwt-decode';
 import { UserCouponsService } from 'src/app/core/services/user-coupons.service';
+import { UserId } from 'src/app/core/models/user.model';
+import { CartItemsService } from './../../../components/cart-items/cart-items.service';
 declare const FB: any;
 @Injectable({
   providedIn: 'root',
@@ -28,8 +30,15 @@ export class AuthService {
     private sessionStorageService: SessionStorageService,
     private userTokenService: UserTokenService,
     private userCouponsService: UserCouponsService,
+    // private cartItemsService: CartItemsService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    effect(() => {
+      // console.log('AuthService effect: ', this.user());
+    });
+  }
+  user = signal<UserId | undefined>(undefined); // ret.user.accessToken, ret.user.uid, ret.user.email
+
   isLoggedIn(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       const userId: any = this.sessionStorageService.getItem('userId');
@@ -76,9 +85,10 @@ export class AuthService {
   login(email: string, password: string) {
     this.fireauth.signInWithEmailAndPassword(email, password).then(
       (res) => {
+        // console.log('createUserTokenFn -1', res);
         this.createUserTokenFn(res).subscribe((ret: any) => {
           // this.sharedMenuObservableService.displayName.next(res.user.displayName);
-          this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
+          // this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
           this.userService.saveUserProfileToDB(res);
 
           if (res.user?.emailVerified == true) {
@@ -115,13 +125,14 @@ export class AuthService {
   private createUserTokenFn(res: any): Observable<any> {
     return this.userTokenService.createUserToken(res).pipe(
       map((ret: any) => {
-        // console.log('createUserTokenFn', ret);
         const value = JSON.parse(ret.token);
+        console.log('createUserTokenFn', value);
         const data = {
           id: ret.token_id,
           user_id: value.user.uid,
         };
         this.sessionStorageService.setItem('userId', data);
+        this.user.set(data);
         return value;
       })
     );
@@ -149,9 +160,11 @@ export class AuthService {
     // Clear display name. and clear cart badge count
     // And return because the register window cleared user token already
     if (!userId) {
-      // this.sharedMenuObservableService.displayName.next('Guest');
-      this.sharedMenuObservableService.cart_badge_count.set('0');
-      // this.sharedMenuObservableService.cart_badge_count.next('0');
+      // 
+      // this.sharedMenuObservableService.cart_badge_count.set('0');
+      // this.cartItemsService.cartItemsCount.set(0);
+      this.user.set(undefined);
+      // 
       return;
     }
     this.logoutProcess();
@@ -165,9 +178,9 @@ export class AuthService {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
             localStorage.removeItem('isStartMenuPassed');
-            // this.sharedMenuObservableService.displayName.next('Guest');
-            this.sharedMenuObservableService.cart_badge_count.set('0');
-            // this.sharedMenuObservableService.cart_badge_count.next('0');
+            // 
+            // this.sharedMenuObservableService.cart_badge_count.set('0');
+            // 
             this.sharedMenuObservableService.isLoggedOut.next(true);
           }
         });
@@ -208,11 +221,12 @@ export class AuthService {
   googleSignIn() {
     return this.fireauth.signInWithPopup(new GoogleAuthProvider()).then(
       (res) => {
+
         this.createUserTokenFn(res).subscribe((ret: any) => {
           console.log('createUserTokenFn -1', ret);
           this.router.navigate(['/']);
           // this.sharedMenuObservableService.displayName.next(res.user?.displayName);
-          this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
+          // this.sharedMenuObservableService.isLoggedIn.next(res.user.uid);
 
           this.userService.saveUserProfileToDB(res);
           // User Coupons

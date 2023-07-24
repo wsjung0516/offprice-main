@@ -47,21 +47,21 @@ export class UserTokenService {
       // tap((data) => console.log('user token created: ', data))
     );
   }
-  updateUserToken(value: any): Observable<any> {
-    const userId: any = this.sessionStorageService.getItem('userId');
-    if(!userId) return of(null);
-    const id = userId.id;
-    const data = {
-      user_id: userId.user_id,
-      token: JSON.stringify(value),
-    };
-    const url = `${this.baseUrl}/user-token/${id}`;
-    // console.log('updateUserToken: ', url);
-    return this.http.patch(url, { data }).pipe(
-      map((data) => data),
-      // tap((data) => console.log('user token updated: ', data))
-    );
-  }
+  // updateUserToken(value: any): Observable<any> {
+  //   const userId: any = this.sessionStorageService.getItem('userId');
+  //   if(!userId) return of(null);
+  //   const id = userId.id;
+  //   const data = {
+  //     user_id: userId.user_id,
+  //     token: JSON.stringify(value),
+  //   };
+  //   const url = `${this.baseUrl}/user-token/${id}`;
+  //   // console.log('updateUserToken: ', url);
+  //   return this.http.patch(url, { data }).pipe(
+  //     map((data) => data),
+  //     // tap((data) => console.log('user token updated: ', data))
+  //   );
+  // }
   
   deleteUserToken() {
     const userId: any = this.sessionStorageService.getItem('userId');

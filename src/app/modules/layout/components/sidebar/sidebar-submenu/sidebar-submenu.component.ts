@@ -15,12 +15,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 })
 export class SidebarSubmenuComponent implements OnInit {
   @Input() public submenu = <SubMenuItem>{};
-  public showSideBar$: Observable<boolean> = new Observable<boolean>();
 
   constructor(private menuService: MenuService) {
-    this.showSideBar$ = this.menuService.showSideBar$;
   }
-
+  showSideBar = this.menuService.showSideBar;
   ngOnInit(): void {}
 
   public toggleMenu(menu: any) {

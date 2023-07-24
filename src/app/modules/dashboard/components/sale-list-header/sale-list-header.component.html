@@ -36,7 +36,7 @@
 <!-- <ng-container *ngIf="currentScreenSize === 'XSmall'"> -->
 <ng-container *ngIf="sSize === 'XSmall'">
   <div class="flex justify-around">
-    <div *ngIf="!(showMobileMenu$ | async)" class="w-4/5">
+    <div *ngIf="!showMobileMenu()" class="w-4/5">
       <div class="relative">
         <ng-container *ngTemplateOutlet="showInputButton"></ng-container>
       </div>
@@ -62,7 +62,7 @@
     <!-- display mode toggle -->
   </div>
 
-  <div *ngIf="showMobileMenu$ | async" class="w-full">
+  <div *ngIf="showMobileMenu()" class="w-full">
     <div class="-mt-12"></div>
   </div>
   <div class="ml-5 mb-4">

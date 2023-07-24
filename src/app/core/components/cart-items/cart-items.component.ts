@@ -4,17 +4,13 @@ import {
   Component,
   OnInit,
   inject,
-  signal,
-  WritableSignal,
   effect
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItemsService } from './cart-items.service';
 import { CartItems } from 'src/app/core/models/cart-items.model';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
-import { FindFirstRowService } from 'src/app/core/services/find-first-row.service';
 import {
-  switchMap,
   map,
   Observable,
   toArray,
@@ -31,16 +27,14 @@ import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service';
 import { DetailsItemComponent } from '../details-item/details-item.component';
-// import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { UserTokenService } from '../../services/user-token.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { WarningDialogComponent } from '../warning-dialog/warning-dialog.component';
 import { SaleListService } from 'src/app/modules/dashboard/components/sale-list/sale-list.service';
 import { SaleList, SoldSaleList } from '../../models/sale-list.model';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
+// @UntilDestroy()
 @Component({
   selector: 'app-cart-items',
   standalone: true,
@@ -63,67 +57,32 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartItemsComponent implements OnInit, AfterViewInit {
-  // items: CartItems[] = [];
-  items: WritableSignal<CartItems[]> = signal([]);
   ref: DialogRef<any> = inject(DialogRef);
-  totalPrice = signal(0);
-  // destroyRef: DestroyRef = inject(DestroyRef);
   constructor(
     private cartItemsService: CartItemsService,
-    // private cd: ChangeDetectorRef,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private findFirstRowService: FindFirstRowService,
     private sessionStorageService: SessionStorageService,
     private dialogService: DialogService,
     private snackBar: MatSnackBar,
     private userSaleListService: UserSaleListService,
     private saleListService: SaleListService,
-    private userTokenService: UserTokenService,
     private sanitizer: DomSanitizer,
-    // private destroyRef: DestroyRef
   ) {
     effect(() => {
       if (sharedMenuObservableService.closeCartItemsDialog()) {
         this.ref.close();
         sharedMenuObservableService.closeCartItemsDialog.set(false);
       }
-    });
+    }, {allowSignalWrites: true});
   }
   checkResult: string[] = [];
-  ngOnInit(): void {
-    // this.sharedMenuObservableService.closeCartItemsDialog$
-    //   .pipe(
-    //     untilDestroyed(this),
-    //     // takeUntilDestroyed()
-    //     // takeUntilDestroyed(this.destroyRef)
-    //     )
-    //   .subscribe(() => {
-    //     this.ref.close();
-    //   });
-  }
   profile: any;
-
+  items = this.cartItemsService.cartItems; // signal<CartItems[]>([]);
+  totalPrice = this.cartItemsService.totalPrice; // signal(0);
+  
+  ngOnInit(): void {
+  }
   ngAfterViewInit(): void {
-    this.userTokenService.getUserToken().subscribe((profile: any) => {
-      if (profile) {
-        this.profile = profile;
-        this.cartItemsService
-          .getCartItems({ user_id: profile.user.uid })
-          .pipe(
-            switchMap((data: any[]) => {
-              return this.findFirstRowService.findFirstRows(data);
-            })
-          )
-          .subscribe((data: any[]) => {
-            this.items.set(data);
-            const total = this.items().reduce((acc, item) => {
-              return acc + item.price * item.quantity;
-            }, 0);
-            this.totalPrice.set(total);
-            // this.cd.detectChanges();
-          });
-      }
-    });
   }
   onCheckout() {
     this.dialogService
@@ -210,7 +169,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
       forkJoin([r1, r2]).subscribe((data) => {
         // 
         const userId:any = this.sessionStorageService.getItem('userId');
-        this.cartItemsService.displayCartItemsLength(userId.user_id);
+        // this.cartItemsService.displayCartItemsLength(userId.user_id);
         //
         this.snackBar.open('Checkout completed', 'success', {
           duration: 2000,
@@ -228,9 +187,9 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
   }
   private saveSoldRecord(soldItems: Partial<SoldSaleList>[]): Observable<any> {
     return from(soldItems).pipe(
-      untilDestroyed(this),
-      // takeUntilDestroyed(),
-      // takeUntilDestroyed(this.destroyRef),
+      // untilDestroyed(this),
+      takeUntilDestroyed(),
+
       tap((item: Partial<SoldSaleList>) => {
         // console.log('sold item: ', item);
       }),
@@ -238,28 +197,23 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
         return this.saleListService.createSoldRecord(item);
       })
     );
-    // .subscribe((data: any) => {
-    //   // console.log('createSoldRecord: ', data);
-    // });
   }
   private clearCartItems(): Observable<any> {
     this.ref.close();
-    // console.log('clear Cart Items ')
+    // 
     // Currently, the quantity is fixed to 0.
+    this.cartItemsService.cartItems.set([]);
+
     return from(this.items()).pipe(
-      untilDestroyed(this),
-      // takeUntilDestroyed(this.destroyRef),
-      // takeUntilDestroyed(),
+      takeUntilDestroyed(),
       tap((item: CartItems) => {
         // console.log('clearCartItems: ', item);
       }),
       mergeMap((item: CartItems) => {
         return this.cartItemsService.clearCartItems(item);
+      
       })
     );
-    // .subscribe((data: any) => {
-    //   console.log('clearCartItems: ', data);
-    // });
   }
   private separateSaleListBySoldNSale(): any[] {
     return this.items().map((item) => {
@@ -305,15 +259,14 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
           // this.ref.close();
         }
       });
-    // console.log('checkIfSalesItemIsAvailable: ', message);
   }
   tmpSaleList: SaleList[] = [];
   checkIfSalesItemIsAvailable(): Observable<string[]> {
     this.tmpSaleList = [];
     return from(this.items()).pipe(
-      // takeUntilDestroyed(),
+      takeUntilDestroyed(),
       // takeUntilDestroyed(this.destroyRef),
-      untilDestroyed(this),
+      // untilDestroyed(this),
       mergeMap((data: CartItems) =>
         this.getSalesItemQuantity(data.sale_list_id).pipe(
           tap((data: SaleList) => {
@@ -364,29 +317,9 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     if (item.quantity <= 0) {
       item.quantity = 1;
     }
-    this.sale_list_id = item.sale_list_id;
-    const total = this.items().reduce((acc, item) => {
-      return acc + item.price * item.quantity;
-    }, 0);
-    this.addCartItem(item.quantity, item.sale_list_id);
-    this.totalPrice.set(total);
-    // console.log('this.items: ', this.items);
+    this.cartItemsService.addCartItem(item).subscribe();
   }
-  private addCartItem(quantity: number, sale_list_id?: number) {
-    const data: Partial<CartItems> = {
-      sale_list_id: sale_list_id,
-      // sale_list_id: this.sale_list_id,
-      quantity: quantity,
-    };
-    this.cartItemsService.addCartItem(data).subscribe((data) => {
-      this.userTokenService.getUserToken().subscribe((profile: any) => {
-        if (profile) {
-          this.cartItemsService.displayCartItemsLength(profile.user.uid);
-          // this.cd.detectChanges();
-        }
-      });
-    });
-  }
+
   onSelectDetail(item: CartItems) {
     const sale_list_id = item.sale_list_id.toString();
     this.userSaleListService.getUserSaleList(sale_list_id).subscribe((data) => {
@@ -422,23 +355,14 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     ret.afterClosed$.subscribe((result: any) => {
       if (result) {
         this.ref.close();
-        // Currently, the quantity is fixed to 0.
-        const data = {
-          sale_list_id: item.sale_list_id,
-          quantity: 0,
-        };
-        this.cartItemsService.addCartItem(data).subscribe((data) => {
-          this.userTokenService.getUserToken().subscribe((profile: any) => {
-            if (profile) {
-              this.cartItemsService.displayCartItemsLength(profile.user.uid);
-              this.snackBar.open('Deleted from cart', 'success', {
-                duration: 2000,
-              });
-              // To maintain the cart item dialog open.
-              this.sharedMenuObservableService.refreshCartItemsButton.set(true);
-              // this.sharedMenuObservableService.refreshCartItemsButton.next(true);
-            }
+        item.quantity = 0;
+        this.cartItemsService.addCartItem(item).subscribe((data) => {
+          // this.cartItemsService.displayCartItemsLength(profile.user.uid);
+          this.snackBar.open('Deleted from cart', 'success', {
+            duration: 2000,
           });
+          // To maintain the cart item dialog open.
+          this.sharedMenuObservableService.refreshCartItemsButton.set(true);
         });
       }
     });

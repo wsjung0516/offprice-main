@@ -42,11 +42,9 @@ import { TippyDirective } from '@ngneat/helipopper';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent implements OnInit, AfterViewInit {
-  public showSideBar$: Observable<boolean> = new Observable<boolean>();
-  // public pagesMenu$: Observable<MenuItem[]> = new Observable<MenuItem[]>();
-  // public appJson: any = packageJson;
   @ViewChildren('details') detailsElements: QueryList<ElementRef>;
-  sideBarStatus = false;
+  // sideBarStatus = false;
+  showSideBar = this.menuService.showSideBar;
   constructor(
     public themeService: ThemeService,
     private menuService: MenuService,
@@ -57,22 +55,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private dialog: MatDialog 
   ) {
-    this.showSideBar$ = this.menuService.showSideBar$;
-    this.sharedMenuObservableService.showSideBar$ = this.showSideBar$;
-    // this.pagesMenu$ = this.menuService.pagesMenu$;
   }
 
   ngOnInit(): void {
-    this.showSideBar$.subscribe((res) => {
-      this.sideBarStatus = res;
-    });
-    
   }
   ngAfterViewInit() {
     this.sharedMenuObservableService.closeSideBar$
     .pipe(untilDestroyed(this)).subscribe((res) => {  
       // console.log('res', res, this.sideBarStatus);
-      if( this.sideBarStatus) {
+      // if( this.sideBarStatus) {
+      if( this.showSideBar()) {
         setTimeout(() => {
           this.toggleSidebar();
           this.cd.detectChanges();
@@ -108,7 +100,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
         });
       }
-    if (!this.sideBarStatus) {
+    if (!this.showSideBar()) {
       this.toggleSidebar();
       //this.menuService.showSideBar = false;
     } else {

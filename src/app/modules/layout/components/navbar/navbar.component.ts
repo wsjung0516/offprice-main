@@ -8,6 +8,8 @@ import {
   AfterViewInit,
   OnDestroy,
   effect,
+  computed,
+  inject,
 } from '@angular/core';
 import { MenuService } from '../../../../core/services/menu.service';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -52,11 +54,11 @@ import { Meta, Title } from '@angular/platform-browser';
 })
 export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   sSize: string;
-  cart_badge_count = '0';
+  // cart_badge_count = '0';
+  cart_badge_count = computed(() => this.cartItemsService.cartItems().reduce((acc, item) => acc + item.quantity, 0));
   // userName: string;
   newWindow: any;
   subscription: Subscription;
-  showSideBar$: Observable<boolean>;
   @ViewChild('openCartButton', { static: false }) refreshButton: ElementRef;
   // public screenSize$: Observable<any>;
   constructor(
@@ -77,20 +79,14 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     effect(() => {
       if( sharedMenuObservableService.refreshCartItemsButton()) {
+        if ( this.cartItemsService.subPrice() > 0) this.refreshButton.nativeElement.click();
         this.sharedMenuObservableService.refreshCartItemsButton.set(false);
-        this.cartItemsService
-        .getCartItemsLength(this.profile?.user.uid ?? '')
-        .pipe(untilDestroyed(this))
-        .subscribe((val) => {
-          // To prevent from displaying when the cart is empty.
-          if (val > 0) this.refreshButton.nativeElement.click();
-        });
       }
     }, {allowSignalWrites: true})
   }
+  showSideBar = this.menuService.showSideBar; // menu.service.ts, showSideBar = signal<boolean>(true);
 
   ngOnInit(): void {
-    this.showSideBar$ = this.sharedMenuObservableService.showSideBar$;
     this.screenSizeService.screenSize$
       .pipe(untilDestroyed(this))
       .subscribe((size) => {
@@ -107,64 +103,13 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   profile: any;
   ngAfterViewInit(): void {
-    // const profile: any = this.sessionStorageService.getItem('token');
-    this.userTokenService.getUserToken().subscribe((profile: any) => {
-      if (profile) {
-        this.cartItemsService.displayCartItemsLength(profile.user.uid ?? '');
-        this.profile = profile;
-      }
-    });
-    // To make condition for showing name and cart badge count.
-    this.sharedMenuObservableService.isLoggedIn$
-      .pipe(
-        tap((isLoggedIn: any) => {}),
-        untilDestroyed(this),
-        switchMap((user_id: string) => {
-          console.log('isLoggedIn - user_id', user_id);
-          return this.userService.getUser(user_id);
-        })
-      )
-      .subscribe((profile: any) => {
-        console.log('isLoggedIn - profile', profile);
-        if (profile) {
-          this.cartItemsService.displayCartItemsLength(profile.user_id);
-          this.profile = profile;
-        }
-        this.cd.detectChanges();
-      });
-    // this.sharedMenuObservableService.displayName$
-    //   .pipe(untilDestroyed(this))
-    //   .subscribe((name) => {
-    //     this.cd.detectChanges();
-    //   });
-    //
-    // this.sharedMenuObservableService.cart_badge_count$
-    //   .pipe(untilDestroyed(this))
-    //   .subscribe((val) => {
-    //     // console.log('cart_badge_count', val);
-    //     this.cart_badge_count = val;
-    //     this.cd.detectChanges();
-    //   });
-    // this.sharedMenuObservableService.refreshCartItemsButton$
-    //   .pipe(untilDestroyed(this))
-    //   .subscribe((val) => {
-    //     // console.log('refreshCartItemsButton', val);
-    //     // To display the cart items in the cart dialog.
-    //     this.cartItemsService
-    //       .getCartItemsLength(this.profile?.user.uid ?? '')
-    //       .pipe(untilDestroyed(this))
-    //       .subscribe((val) => {
-    //         // To prevent from displaying when the cart is empty.
-    //         if (val > 0) this.refreshButton.nativeElement.click();
-    //       });
-    //   });
   }
   public toggleMobileMenu(): void {
-    this.menuService.showMobileMenu = true;
+    this.menuService.showMobileMenu.set(true);
   }
   resetSearchConditions() {
     // To reset the search keyword and positioned selection button to the 'All'.
-    // console.log('resetSearchConditions is called');
+    // 
     this.resetKeyword();
     this.makeTableWhereConditionService.resetSort();
     this.makeTableWhereConditionService.refreshObservable.next('');
@@ -175,8 +120,6 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   onRegister() {
-    // this.newWindow = window.open('/register-home');
-    // window.focus();
     this.titleService.setTitle('off price wholesale marketplace');
     this.sessionStorageService.setItem('title', 'Register');
 

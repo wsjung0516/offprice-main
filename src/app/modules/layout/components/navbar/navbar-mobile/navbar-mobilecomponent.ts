@@ -30,26 +30,21 @@ CommonModule,
   styleUrls: ['./navbar-mobile.component.scss'],
 })
 export class NavbarMobileComponent implements OnInit {
-  public showMobileMenu$: Observable<boolean> = new Observable<boolean>();
 
-  constructor(private menuService: MenuService,
+  constructor(public menuService: MenuService,
     private sharedMenuObservableService: SharedMenuObservableService) {
-    this.showMobileMenu$ = this.menuService.showMobileMenu$;
     effect(() => {
       if( this.sharedMenuObservableService.showMobileMenu()){
-        this.menuService.showMobileMenu = false;
+        this.menuService.showMobileMenu.set(false);
         this.sharedMenuObservableService.showMobileMenu.set(false);
       }
     }, { allowSignalWrites : true})
   }
 
   ngOnInit(): void {
-    // this.sharedMenuObservableService.showMobileMenu$.pipe(untilDestroyed(this)).subscribe((data) => {
-    //   this.menuService.showMobileMenu = false;
-    // })
   }
 
   public toggleMobileMenu(): void {
-    this.menuService.showMobileMenu = false;
+    this.menuService.showMobileMenu.set(false);
   }
 }

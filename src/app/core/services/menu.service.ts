@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Menu } from 'src/app/core/constants/menu';
@@ -8,10 +8,11 @@ import { MenuItem, SubMenuItem } from 'src/app/core/models/menu.model';
   providedIn: 'root',
 })
 export class MenuService implements OnDestroy {
-  private _showSidebar$ = new BehaviorSubject<boolean>(true);
-  private _showMobileMenu$ = new BehaviorSubject<boolean>(false);
   public _pagesMenu$ = new BehaviorSubject<MenuItem[]>([]);
   private subscription = new Subscription();
+
+  showMobileMenu = signal<boolean>(false);
+  showSideBar = signal<boolean>(true);
 
   constructor(private router: Router) {
     /** Set dynamic menu */
@@ -41,29 +42,24 @@ export class MenuService implements OnDestroy {
     this.subscription.add(sub);
   }
 
-  get showSideBar$() {
-    return this._showSidebar$.asObservable();
-  }
-  get showMobileMenu$() {
-    return this._showMobileMenu$.asObservable();
-  }
   get pagesMenu$() {
     return this._pagesMenu$.asObservable();
   }
 
-  set showSideBar(value: boolean) {
-    this._showSidebar$.next(value);
+  setShowSideBar(value: boolean) {
+    this.showSideBar.set(value);
   }
-  set showMobileMenu(value: boolean) {
-    this._showMobileMenu$.next(value);
+  public toggleSidebar() {
+    const sideBar = this.showSideBar();
+    this.showSideBar.set(!sideBar);
+  }
+  setShowMobileMenu(value: boolean) {
+    this.showMobileMenu.set(value);
   }
 
-  public toggleSidebar() {
-    this._showSidebar$.next(!this._showSidebar$.value);
-  }
 
   public toggleMenu(menu: any) {
-    this.showSideBar = true;
+    this.showSideBar.set(true);
     menu.expanded = !menu.expanded;
   }
 

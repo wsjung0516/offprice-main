@@ -1,4 +1,4 @@
-<ng-container *ngIf="this.item?.image_urls">
+<ng-container *ngIf="this.items()?.image_urls">
   <div class="flex flex-col max-h-[calc(100vh-7rem)]">
     <div class="overflow-y-auto p-2">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-green-50">
@@ -7,7 +7,7 @@
           <div class="flex flex-col">
             <div class="flex justify-start space-x-1 mb-1">
               <ng-container
-                *ngFor="let image of item.image_urls.split(','); let i = index"
+                *ngFor="let image of items().image_urls.split(','); let i = index"
               >
                 <div class="flex-shrink-0 w-12 h-16">
                   <img
@@ -21,10 +21,10 @@
               </ng-container>
             </div>
             <div class="w-full h-auto mt-1">
-              <ng-container *ngIf="item.image_urls.length > 0">
+              <ng-container *ngIf="items().image_urls.length > 0">
                 <mat-card-content class="">
                   <img
-                    [src]="selectedImage || item.image_urls.split(',')[0]"
+                    [src]="selectedImage || items().image_urls.split(',')[0]"
                     class="w-auto h-auto object-cover"
                     alt="offprice.store"
                   />
@@ -35,78 +35,81 @@
         </div>
 
         <!-- Right Column: Product Details -->
-        <div class="col-span-1 flex flex-col">
-          <div class="">
+        <div class="col-span-1 flex flex-col h-full">
+          <div class="flex-grow overflow-auto">
             <!-- <div class="flex-grow"> -->
             <h2 class="text-xl font-semibold text-blue-600">
-              {{ item.product_name }}
+              {{ items().product_name }}
             </h2>
             <p class="mt-1">
-              Category: <span class="font-bold">{{ item.category }}</span>
+              Category: <span class="font-bold">{{ items().category }}</span>
             </p>
             <p class="mt-1">
-              Price: <span class="font-bold">${{ item.price }}</span>
+              Price: <span class="font-bold">${{ items().price }}</span>
             </p>
             <p class="mt-1">
-              Size: <span class="font-bold">{{ item.size }}</span>
+              Size: <span class="font-bold">{{ items().size }}</span>
             </p>
             <p class="mt-1">
-              Quantity: <span class="font-bold">{{ item.sizeArray }}</span>
+              Quantity: <span class="font-bold">{{ items().sizeArray }}</span>
             </p>
             <div class="flex justify-start">
               <p class="mt-1">Color:</p>
               <div class="ml-3 flex">
                 <div
-                  *ngFor="let color of item.color.split(',')"
+                  *ngFor="let color of items().color.split(',')"
                   class="w-7 h-7 mr-6"
                   [ngStyle]="{ 'background-color': color.trim() }"
                   [ngClass]="'rounded-full'"
                 >
                   <span class="align-middle text-xs">{{ color.trim() }}</span>
                 </div>
-                <!-- {{item.color}} -->
+                <!-- {{items().color}} -->
               </div>
             </div>
-            <p class="mt-1">
-              Vendor: <span class="font-bold">{{ item.vendor }}</span>
-            </p>
-            <p class="mt-1">
-              Material: <span class="font-bold">{{ item.material }}</span>
-            </p>
-            <p class="mt max-h-24 overflow-y-auto">
-              <app-html-content [content]="item.description"></app-html-content>
-            </p>
-            <p class="text-gray-400">---------------------------------------</p>
-            <p class="mt-1">
-              Store Name: <span class="font-bold">{{ item.store_name }}</span>
-            </p>
-            <p class="mt-1">
-              Register No: <span class="font-bold">{{ item.register_no }}</span>
-            </p>
-            <p class="mt-1">
-              Email: <span class="font-bold">{{ item.email }}</span>
-            </p>
-            <p class="mt-1">
-              Phone No:
-              <span class="font-bold">{{ item.representative_phone_no }}</span>
-            </p>
-            <p class="mt-1">
-              Representative:
-              <span class="font-bold">{{ item.representative_name }}</span>
-            </p>
-            <p class="mt-1">
-              Store Address:
-              <span class="font-bold"
-                >{{ item.store_address1 }} {{ item.store_address2 }}
-                </span
-              >
-            </p>
+            <ng-container *ngIf="authService.user()">
+
+              <p class="mt-1">
+                Vendor: <span class="font-bold">{{ items().vendor }}</span>
+              </p>
+              <p class="mt-1">
+                Material: <span class="font-bold">{{ items().material }}</span>
+              </p>
+              <p class="mt max-h-24 overflow-y-auto">
+                <app-html-content [content]="items().description"></app-html-content>
+              </p>
+              <p class="text-gray-400">---------------------------------------</p>
+              <p class="mt-1">
+                Store Name: <span class="font-bold">{{ items().store_name }}</span>
+              </p>
+              <p class="mt-1">
+                Register No: <span class="font-bold">{{ items().register_no }}</span>
+              </p>
+              <p class="mt-1">
+                Email: <span class="font-bold">{{ items().email }}</span>
+              </p>
+              <p class="mt-1">
+                Phone No:
+                <span class="font-bold">{{ items().representative_phone_no }}</span>
+              </p>
+              <p class="mt-1">
+                Representative:
+                <span class="font-bold">{{ items().representative_name }}</span>
+              </p>
+              <p class="mt-1">
+                Store Address:
+                <span class="font-bold"
+                  >{{ items().store_address1 }} {{ items().store_address2 }}
+                  </span
+                >
+              </p>
+            </ng-container>
           </div>
           <!-- <div class="mt-4 divide-y divide-solid">
             <p class="hidden md:block mt-5">Description</p>
           </div> -->
           <div class="p-4">
-            <ng-container *ngIf="!isCartItemExist">
+            <ng-container *ngIf="isCartItem()">
               <button
                 class="bg-green-600 text-white px-4 py-2 rounded mr-1"
                 (click)="onSave()"
@@ -117,7 +120,7 @@
                 Save to Cart
               </button>
             </ng-container>
-            <ng-container *ngIf="isCartItemExist">
+            <ng-container *ngIf="!isCartItem()">
               <button
                 class="bg-red-400 text-white border-red-600 border text-black px-4 py-2 rounded mr-1"
                 (click)="onDelete()"

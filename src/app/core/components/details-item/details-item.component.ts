@@ -5,6 +5,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   inject,
+  signal,
+  WritableSignal,
+  computed,
+  Signal,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
@@ -13,15 +18,17 @@ import { ConfirmDialogComponent } from './../confirm-dialog/confirm-dialog.compo
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { MatIconModule } from '@angular/material/icon';
 // import { CartItemsService } from 'src/app/core/components/cart-items/cart-items.service';
-import { SessionStorageService } from './../../services/session-storage.service';
+// import { SessionStorageService } from './../../services/session-storage.service';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 // import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { CartItemsService } from '../cart-items/cart-items.service';
 import { SharedMenuObservableService } from '../../services/shared-menu-observable.service';
-import { UserTokenService } from '../../services/user-token.service';
-import { set } from 'date-fns';
+import { AuthService } from '../../auth/login/services/auth.service';
+import { SaleList } from '../../models/sale-list.model';
+import { CartItems } from '../../models/cart-items.model';
+// import { UserTokenService } from '../../services/user-token.service';
 export interface Data {
   data: Partial<UserSaleList>;
 }
@@ -44,82 +51,43 @@ export interface Data {
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailsItemComponent implements OnInit, AfterViewInit {
-  item: any;
+  //item: any;
   ref: DialogRef<Data> = inject(DialogRef);
-  isCartItemExist = false;
+  item: any = { ...this.ref.data.data };
+
+  items = computed(() => this.ref.data.data);
+  isCartItem = computed(() => this.cartItemsService.cartItems().findIndex((item) => item.sale_list_id === this.item.sale_list_id) === -1);
+
   selectedImage = '';
-  userId: string;
   constructor(
-    private cd: ChangeDetectorRef,
     private dialogService: DialogService,
     private cartItemsService: CartItemsService,
     private snackBar: MatSnackBar,
     private sharedMenuObservableService: SharedMenuObservableService,
     private router: Router,
-    private userTokenService: UserTokenService
-  ) {}
+    public authService: AuthService,
+  ) {
+    effect(() => {
+       // console.log('DetailsItemComponent effect: ', this.isCartItem());
+    })
+  }
   ngOnInit(): void {}
   ngAfterViewInit(): void {
-    // const profile: any = this.sessionStorageService.getItem('token');
-    // this.userId = profile?.user.uid;
-    this.item = { ...this.ref.data.data };
-
-    this.userTokenService.getUserToken().subscribe((loggedUser: any) => {
-      if (!loggedUser) {
-        this.clearItemData();
-        // this.item = {...this.data};
-        this.cd.detectChanges();
-      } else {
-        this.userId = loggedUser?.user?.uid;
-
-        this.cartItemsService
-          .isCartItemExist(this.userId, this.item.sale_list_id)
-          .then((data) => {
-            // console.log('isCartItemExist: ret ', data);
-            this.isCartItemExist = data;
-            this.cd.detectChanges();
-          });
-      }
-    });
-    //
-    // To prevent from viewing the vendor's information when the user is not logged in.
-  }
-  private clearItemData() {
-    this.item.store_name = '';
-    this.item.register_no = '';
-    this.item.email = '';
-    this.item.representative_phone_no = '';
-    this.item.representative_name = '';
-    this.item.store_address1 = '';
-    this.item.store_address2 = '';
-    this.item.store_city = '';
-    this.item.store_state = '';
-    this.item.store_country = '';
   }
 
   onSave(): void {
-    // const userProfile:any = this.sessionStorageService.getItem('token');
-    // if (!userProfile?.user) {
-    //   this.ref.close();
-    //   this.router.navigate(['/login']);
-    //   return;
-    // }
-    if (!this.userId) {
+    if (!this.authService.user()) {
       this.ref.close();
       this.router.navigate(['/login']);
       return;
     }
-    const { user_id, sale_list_id } = this.item;
-    // Currently, the quantity is fixed to 1.
-    const quantity = 1;
+    this.item.quantity = 1;
     this.cartItemsService
-      .addCartItem({ user_id, sale_list_id, quantity })
+      .addCartItem(this.item)
       .subscribe((data: any) => {
-        //console.log('addCartItems', data);
-        this.cartItemsService.displayCartItemsLength(this.userId);
         this.snackBar.open('Added to cart', 'Success', { duration: 2000 });
       });
 
@@ -127,6 +95,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     // this.dialogRef.close({ status: 'save', data: this.item});
   }
   onDelete(): void {
+    console.log('onDelete')
     const ret = this.dialogService.open(ConfirmDialogComponent, {
       data: {
         title: 'Delete',
@@ -137,24 +106,18 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
       if (result) {
         this.ref.close({ status: 'delete', data: this.item });
         // Currently, the quantity is fixed to 1.
-        const quantity = 0;
-        const { user_id, sale_list_id } = this.item;
+        this.item.quantity = 0;
+        console.log('user_id, sale_list_id - this.item',  this.item)
         this.cartItemsService
-          .addCartItem({ user_id, sale_list_id, quantity })
+          .addCartItem(this.item)
           .subscribe((data) => {
-            // console.log('deletedCartItems', data);
-            this.cartItemsService.displayCartItemsLength(this.userId);
             this.snackBar.open('Deleted from cart', 'Success', {
               duration: 2000,
             });
             // To maintain the cart item dialog.
             this.sharedMenuObservableService.refreshCartItemsButton.set(true);
-            // this.sharedMenuObservableService.refreshCartItemsButton.next(true);
             this.sharedMenuObservableService.closeCartItemsDialog.set(true);
-            // this.sharedMenuObservableService.closeCartItemsDialog.next(true);
           });
-
-        // this.dialogRef.close({ status: 'delete', data: this.item});
       }
     });
   }
@@ -163,3 +126,7 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     // this.dialogRef.close();
   }
 }
+function compted(arg0: () => boolean): WritableSignal<boolean> {
+  throw new Error('Function not implemented.');
+}
+

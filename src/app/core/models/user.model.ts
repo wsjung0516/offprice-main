@@ -25,3 +25,7 @@ export interface User{
   store_country: string;
   store_zipcode: string;
 }
+export interface UserId {
+  user_id: string;
+  id: any;
+}

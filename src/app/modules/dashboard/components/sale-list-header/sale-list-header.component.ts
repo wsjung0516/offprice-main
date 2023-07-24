@@ -60,7 +60,6 @@ export class SaleListHeaderComponent
   keywords: SearchKeyword[] = [];
   searchItemLength: number = 0;
   private storageItemSubscription: Subscription | undefined;
-  public showMobileMenu$: Observable<boolean> = new Observable<boolean>();
   public screenSize$: Observable<any>;
   constructor(
     private menuService: MenuService,
@@ -74,9 +73,9 @@ export class SaleListHeaderComponent
     private removeChipsKeywordService: RemoveChipsKeywordService,
     private sessionStorageService: SessionStorageService
   ) {
-    this.showMobileMenu$ = this.menuService.showMobileMenu$;
     this.screenSize$ = this.screenSizeService.screenSize$;
   }
+  showMobileMenu = this.menuService.showMobileMenu; // showMobileMenu = signal(false);
   sSize: string;
 
   ngOnInit(): void {

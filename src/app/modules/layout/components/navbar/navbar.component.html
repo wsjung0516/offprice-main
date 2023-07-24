@@ -1,7 +1,7 @@
 <div class="bg-gray-200 dark:bg-night-700">
   <div class="mx-auto px-2 flex justify-between">
     <div class="flex items-center py-2 justify-start">
-      <div class="flex items-center" *ngIf="!(showSideBar$ | async)">
+      <div class="flex items-center" *ngIf="!showSideBar()">
         <div
           class="hidden md:block mr-6 px-2 py-1 border border-blue-600 rounded bg-slate-50"
         >
@@ -58,8 +58,8 @@
           class="hidden sm:block text-blue-600 -mr-3 mt-3 sm:mr-3 sm:mt-3 cursor-pointer"
           (click)="openCart()"
         >
-          <!-- <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent" -->
-          <mat-icon [matBadge]="sharedMenuObservableService.cart_badge_count()" matBadgeColor="accent"
+        <!-- <mat-icon [matBadge]="sharedMenuObservableService.cart_badge_count()" matBadgeColor="accent" -->
+          <mat-icon [matBadge]="cart_badge_count()" matBadgeColor="accent"
             >add_shopping_cart</mat-icon
           >
         </div>
@@ -77,8 +77,8 @@
             class="block sm:hidden text-blue-600 mt-3 mr-3 cursor-pointer"
             (click)="openCart()"
           >
-            <!-- <mat-icon [matBadge]="cart_badge_count" matBadgeColor="accent" -->
-            <mat-icon [matBadge]="sharedMenuObservableService.cart_badge_count()" matBadgeColor="accent"
+          <!-- <mat-icon [matBadge]="sharedMenuObservableService.cart_badge_count()" matBadgeColor="accent" -->
+            <mat-icon [matBadge]="cart_badge_count()" matBadgeColor="accent"
               >add_shopping_cart</mat-icon
             >
           </div>

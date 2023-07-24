@@ -6,24 +6,35 @@ import { CartItems } from 'src/app/core/models/cart-items.model';
   providedIn: 'root',
 })
 export class SharedMenuObservableService {
-  input_keyword = new BehaviorSubject<string>('');
-  input_keyword$ = this.input_keyword.asObservable();
-  vendor = new BehaviorSubject<string>('All');
-  vendor$ = this.vendor.asObservable();
-  price = new BehaviorSubject<string>('All');
-  price$ = this.price.asObservable();
-  category = new BehaviorSubject<string>('All');
-  category$ = this.category.asObservable();
-  category1 = new BehaviorSubject<string>('All');
-  category1$ = this.category1.asObservable();
-  size = new BehaviorSubject<string>('All');
-  size$ = this.size.asObservable();
-  material = new BehaviorSubject<string>('All');
-  material$ = this.material.asObservable();
-  search_period = new BehaviorSubject<string>('All');
-  search_period$ = this.search_period.asObservable();
-  color = new BehaviorSubject<string>('All');
-  color$ = this.color.asObservable();
+  input_keyword = signal<string>('');
+  vendor = signal<string>('All');
+  price = signal<string>('All');
+  category = signal<string>('All');
+  category1 = signal<string>('All');
+  size = signal<string>('All');
+  material = signal<string>('All');
+  search_period = signal<string>('All');
+  color = signal<string>('All');
+
+
+  // input_keyword = new BehaviorSubject<string>('');
+  // input_keyword$ = this.input_keyword.asObservable();
+  // vendor = new BehaviorSubject<string>('All');
+  // vendor$ = this.vendor.asObservable();
+  // price = new BehaviorSubject<string>('All');
+  // price$ = this.price.asObservable();
+  // category = new BehaviorSubject<string>('All');
+  // category$ = this.category.asObservable();
+  // category1 = new BehaviorSubject<string>('All');
+  // category1$ = this.category1.asObservable();
+  // size = new BehaviorSubject<string>('All');
+  // size$ = this.size.asObservable();
+  // material = new BehaviorSubject<string>('All');
+  // material$ = this.material.asObservable();
+  // search_period = new BehaviorSubject<string>('All');
+  // search_period$ = this.search_period.asObservable();
+  // color = new BehaviorSubject<string>('All');
+  // color$ = this.color.asObservable();
   //
   reset_category = new Subject<string>();
   reset_category$ = this.reset_category.asObservable();
@@ -40,16 +51,11 @@ export class SharedMenuObservableService {
   reset_color = new Subject<string>();
   reset_color$ = this.reset_color.asObservable();
   //
-  cart_badge_count = signal<string>('');
+  // cart_badge_count = signal<string>('');
   refreshCartItemsButton = signal<boolean>(false);
   closeCartItemsDialog = signal<boolean>(false);
 
   showMobileMenu = signal<boolean>(false);
-  // showMobileMenu = new Subject<boolean>();
-  // showMobileMenu$ = this.showMobileMenu.asObservable();
-  // closeFeedback = signal<boolean>(false); 
-  // closeFeedback = new Subject<boolean>(); 
-  // closeFeedback$ = this.closeFeedback.asObservable();
   reset_register = new Subject<boolean>();
   reset_register$ = this.reset_register.asObservable();
   isLoggedOut = new Subject<boolean>();
@@ -58,12 +64,8 @@ export class SharedMenuObservableService {
   resultDeleteSaleListItem$ = this.resultDeleteSaleListItem.asObservable();
   userCoupons = new Subject<string>();
   userCoupons$ = this.userCoupons.asObservable();
-  isLoggedIn = new Subject<string>();
-  isLoggedIn$ = this.isLoggedIn.asObservable();
   resetSearchConditions = new Subject<boolean>();
   resetSearchConditions$ = this.resetSearchConditions.asObservable();
-  showSideBar = new Subject<boolean>();
-  showSideBar$ = this.showSideBar.asObservable();
   isImageLoading = new Subject<boolean>();
   isImageLoading$ = this.isImageLoading.asObservable();
   isProfileMenuOpen = new Subject<boolean>();

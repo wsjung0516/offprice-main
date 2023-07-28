@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import {
   BehaviorSubject,
   combineLatest,
@@ -50,6 +50,8 @@ export class MakeRegisterWhereConditionService {
     private sessionStorageService: SessionStorageService
   ) {}
   eventCount = 0;
+  userSaleLists = signal<UserSaleList[]>([]);
+
   searchConditionObservable$: Observable<any>;
 
   get searchResult$(): Observable<UserSaleList[]> {
@@ -65,7 +67,9 @@ export class MakeRegisterWhereConditionService {
         .pipe(takeUntil(this.resetObservable$))
         .subscribe((data: UserSaleList[]) => {
           // console.log('make-table-where', data);
-          this.searchResult.next(data);
+          //this.searchResult.next(data);
+          this.userSaleLists.set(data);
+          this.userSaleListService.getConditionalUserSaleListLength();
         });
       this.localStorageService.storageItem$
         .pipe(tap((item) => {}))

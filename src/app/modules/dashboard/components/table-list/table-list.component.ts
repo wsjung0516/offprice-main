@@ -7,6 +7,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  effect,
   inject,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -105,7 +106,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   refreshObservable = new Subject();
   oldOrderBy: {} = {};
   keywords: SearchKeyword[] = [];
-  userSaleLists: UserSaleList[] = [];
+  // userSaleLists: UserSaleList[] = [];
   userSaleList: UserSaleList;
   private dialogService = inject(DialogService);
 
@@ -113,17 +114,26 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private makeTableWhereConditionService: MakeTableWhereConditionService,
     private userSaleListService: UserSaleListService,
     private router: Router,
-    private cd: ChangeDetectorRef,
-    private localStorageService: LocalStorageService,
     private cartItemService: CartItemsService,
     private snackBar: MatSnackBar,
     private userTokenService: UserTokenService
   ) {
-    this.dataSource = new MatTableDataSource(this.userSaleLists);
+    this.dataSource = new MatTableDataSource(this.userSaleLists());
+    effect(() => {
+      this.dataSource.data = this.userSaleLists();
+      if( this.paginator ) {
+        this.paginator.length = this.conditionalUserSaleListLength();
+      }
+      this.dataSource.sort = this.sort;
+
+    });
   }
   ngOnInit(): void {
     // console.log('table-list init');
   }
+  userSaleLists = this.makeTableWhereConditionService.userSaleLists;
+  conditionalUserSaleListLength = this.userSaleListService.conditionalUserSaleListLength;
+
   ngAfterViewInit(): void {
     // console.log('table-list afterviewinit');
     this.makeTableWhereConditionService.initializeWhereCondition(
@@ -134,36 +144,15 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.refreshObservable
     );
     //
-    this.makeTableWhereConditionService.searchResult$
-      .pipe(untilDestroyed(this))
-      .subscribe((data: UserSaleList[]) => {
-        // console.log('condition$', data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.data = data;
-        this.getConditionalUserSaleListLength();
-        this.cd.detectChanges();
-      });
-  }
-  private getConditionalUserSaleListLength() {
-    this.userSaleListService
-      .getConditionalUserSaleListLength()
-      .subscribe((res: number) => {
-        // console.log('getConditionalSaleListLength', res);
-        // To display the number of search results in the search bar
-        this.localStorageService.setItem('searchItemsLength', res.toString());
-
-        this.paginator.length = res;
-        this.cd.detectChanges();
-      });
   }
   trackByFn(index: number, item: UserSaleList) {
     return item.sale_list_id;
   }
-  getUserSaleList(id: string) {
-    this.userSaleListService.getUserSaleList(id).subscribe((data: any) => {
-      // console.log(data);
-    });
-  }
+  // getUserSaleList(id: string) {
+  //   this.userSaleListService.getUserSaleList(id).subscribe((data: any) => {
+  //     // console.log(data);
+  //   });
+  // }
   selectItem(row: UserSaleList) {
     // console.log('detailSaleItem', row);
 
@@ -215,33 +204,6 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('table-list destroy');
   }
 }
-// make example data by using UserSaleList model
-// export const resetUserSaleList: Partial<UserSaleList> = {
-//   category: 'Tops',
-//   // created_at:"2023-04-13T19:32:54.000Z",
-//   description:
-//     '<h1>Title</h1><p>1.test1</p><p>2.test2</p><p>3.test3</p><p>adkfjdasfkdasfdsafdasfdsafdasfdasfdasfasdfdsafasfasdfdasfasdfdsfdsafdasfsdafsd</p>',
-//   image_url:
-//     'https://offprice_bucket.storage.googleapis.com/263e8818-c66e-11ec-9c47-027098eb172b_E_1681414372510.jpg',
-//   material: 'Polyester',
-//   price: '100',
-//   register_no: '1234567890',
-//   representative_name: 'Junsu',
-//   representative_phone_no: '111-2222-3333',
-//   sale_list_id: '1032',
-//   size: 'XS',
-//   status1: null,
-//   status2: null,
-//   status3: null,
-//   store_address1: '3416 manning ave Apt3813',
-//   store_address2: null,
-//   store_city: '대방동',
-//   store_country: 'KR',
-//   store_name: 'ABC mart',
-//   store_state: '서울특별시',
-//   user_id: '25b85792-ac77-4433-97bb-a622e03f3241',
-//   vendor: 'BBB',
-// };
 
 export const resetUser: User = {
   user_id: '1', // string 1

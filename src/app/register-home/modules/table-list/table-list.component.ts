@@ -4,6 +4,7 @@ import {
   AfterViewInit,
   ViewChild,
   OnInit,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -103,7 +104,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   oldOrderBy: {} = {};
   keywords: SearchKeyword[] = [];
   // saleLists: SaleList[] = [];
-  userSaleLists: UserSaleList[] = [];
+  // userSaleLists: UserSaleList[] = [];
   // saleList: SaleList;
   userSaleList: UserSaleList;
 
@@ -120,10 +121,20 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     private deleteSaleListItemService: DeleteSaleListItemService,
     private localStorageService: LocalStorageService,
     private sEOService: SEOService,
-    private store: Store
   ) {
-    this.dataSource = new MatTableDataSource(this.userSaleLists);
+    this.dataSource = new MatTableDataSource(this.userSaleLists());
+    effect(() => {
+      this.dataSource.data = this.userSaleLists();
+      if( this.paginator ) {
+        this.paginator.length = this.conditionalUserSaleListLength();
+        this.localStorageService.setItem('searchItemsLength', this.conditionalUserSaleListLength().toString());
+      }
+      this.dataSource.sort = this.sort;
+
+    });
   }
+  userSaleLists = this.makeRegisterWhereConditionService.userSaleLists;
+  conditionalUserSaleListLength = this.userSaleListService.conditionalUserSaleListLength;
   ngOnInit(): void {
     this.sEOService.updateTitle('closeout marketplace');
     this.sEOService.updateDescription('Take advantage of our clearance offers for fantastic deals on a wide range of products');
@@ -137,38 +148,32 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.paginator
     );
 
-    this.makeRegisterWhereConditionService.searchResult$
-      .pipe(untilDestroyed(this))
-      .subscribe((data: UserSaleList[]) => {
-        // console.log('searchResult$', data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.data = data;
-        this.getConditionalUserSaleListLength();
-        this.cd.detectChanges();
-      });
-    this.store.select(RegisterState.getRegisterUpdate).pipe(
-      untilDestroyed(this)
-    ).subscribe((data) => {
-      console.log('registerUpdate$', data);
-      // this.makeRegisterWhereConditionService.refreshObservable.next('');
-    });
-  
+    // this.makeRegisterWhereConditionService.searchResult$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((data: UserSaleList[]) => {
+    //     // console.log('searchResult$', data);
+    //     this.dataSource.sort = this.sort;
+    //     this.dataSource.data = data;
+    //     this.getConditionalUserSaleListLength();
+    //     this.cd.detectChanges();
+    //   });
+
   }
   trackByFn(index: number, item: UserSaleList) {
     return item.sale_list_id;
   }
-  private getConditionalUserSaleListLength() {
-    this.userSaleListService
-      .getConditionalUserSaleListLength()
-      .subscribe((res: number) => {
-        // console.log('register-home getConditionalSaleListLength', res);
-        // To display the number of search results in the search bar
-        this.localStorageService.setItem('searchItemsLength', res.toString());
+  // private getConditionalUserSaleListLength() {
+  //   this.userSaleListService
+  //     .getConditionalUserSaleListLength()
+  //     .subscribe((res: number) => {
+  //       // console.log('register-home getConditionalSaleListLength', res);
+  //       // To display the number of search results in the search bar
+  //       this.localStorageService.setItem('searchItemsLength', res.toString());
 
-        this.paginator.length = res;
-        this.cd.detectChanges();
-      });
-  }
+  //       this.paginator.length = res;
+  //       this.cd.detectChanges();
+  //     });
+  // }
 
   getUserSaleList(id: string) {
     this.userSaleListService.getUserSaleList(id).subscribe((data: any) => {

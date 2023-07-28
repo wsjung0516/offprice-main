@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
   map,
@@ -28,6 +28,7 @@ export class UserSaleListService {
     private userTokenService: UserTokenService
   ) {}
   headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
+  conditionalUserSaleListLength = signal<number>(0);
   getUserSaleLists(
     skip: number,
     take: number,
@@ -88,11 +89,17 @@ export class UserSaleListService {
     );
   }
   // getConditionalSaleListLength(where: any): Observable<UserSaleList[]> {
-  getConditionalUserSaleListLength(): Observable<number> {
+  getConditionalUserSaleListLength(){
     let url: string;
     url = `${this.baseUrl}/user-sale-list/length` + this.where;
     // console.log('url', url);
-    return this.http.get(url).pipe(map((data: any) => data));
+    this.http.get(url).pipe(
+      tap((data: any) => {
+        // console.log('data', data);
+        this.conditionalUserSaleListLength.set(data);
+      })
+      ).subscribe();;
+    // return this.http.get(url).pipe(map((data: any) => data));
   }
   createUserSaleList(data: Partial<UserSaleList>): Observable<UserSaleList> {
     const url = `${this.baseUrl}/user-sale-list`;

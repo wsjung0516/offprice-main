@@ -2,7 +2,7 @@ import {
   BreakpointObserver,
   Breakpoints,
 } from '@angular/cdk/layout';
-import { Injectable, signal } from '@angular/core';
+import { Injectable, effect, signal } from '@angular/core';
 import { filter, from, map, Observable, Subject, switchMap, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 @UntilDestroy()
@@ -24,7 +24,7 @@ export class ScreenSizeService {
 
   constructor(private breakpointObserver: BreakpointObserver) {
     this._screenSize$ = this.breakpointObserver
-    //this.breakpointObserver
+    // this.breakpointObserver
       .observe([
         Breakpoints.XSmall,
         Breakpoints.Small,
@@ -59,6 +59,10 @@ export class ScreenSizeService {
           );
         })
       );
+    effect(() => {
+      // console.log('screenSize: ', this.itemSize());
+      // console.log('screenSize -2: ', this.takeImage());
+    });
   }
   get screenSize$() {
     return this._screenSize$;

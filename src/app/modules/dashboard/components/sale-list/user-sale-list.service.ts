@@ -1,19 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, shareReplay, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
-import { CartItems } from 'src/app/core/models/cart-items.model';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserSaleListService {
   baseUrl = environment.url;
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
+  constructor(private http: HttpClient, 
+    private localStorageService: LocalStorageService
+    ) {}
   headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
   where: string;
+  conditionalUserSaleListLength = signal<number>(0);
+
   getUserSaleLists(
     skip: number,
     take: number,
@@ -40,19 +43,6 @@ export class UserSaleListService {
         // tap(data => console.log('data: ', data))
       );
   }
-  // getUserSalesItemQuantity(
-  //   where?: any,
-  // ): Observable<UserSaleList> {
-  //   console.log('getUserSaleList where',  where)
-    
-  //   let url = `${this.baseUrl}/user-sale-list/quantity?where=${JSON.stringify(where)}`;
-  //   // console.log('saleLists', url)
-  //   return this.http
-  //     .get<UserSaleList>(url)
-  //     .pipe (
-  //       tap(data => console.log('result -- data: ', data))
-  //     );
-  // }
 
   private buildWhereData(
     where: any[],
@@ -77,11 +67,17 @@ export class UserSaleListService {
     );
   }
   // getConditionalSaleListLength(where: any): Observable<UserSaleList[]> {
-  getConditionalUserSaleListLength(): Observable<number> {
+  getConditionalUserSaleListLength() {
     let url: string;
     url = `${this.baseUrl}/user-sale-list/length` + this.where;
     // console.log('getConditionalSaleListLength', url, this.where);
-    return this.http.get(url).pipe(map((data: any) => data));
+    this.http.get(url).pipe(
+      tap((data: any) => {
+        this.localStorageService.setItem('searchItemsLength', data.toString())
+        this.conditionalUserSaleListLength.set(data);
+      })
+    ).subscribe();
+    // return this.http.get(url).pipe(map((data: any) => data));
   }
   createUserSaleList(data: Partial<UserSaleList>): Observable<UserSaleList> {
     const url = `${this.baseUrl}/user-sale-list`;

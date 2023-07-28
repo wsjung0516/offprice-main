@@ -86,26 +86,17 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   currentScreenSize: string;
   screenSize$: Observable<any>;
   sSize: string;
-  // keywords: SearchKeyword[] = [];
   showScrollToTop = true;
-  // images: WritableSignal<any[]> = signal([]); 
-  ///itemSize =: number; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   // itemSize: number; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
-  // itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   isLoggedIn: boolean;
 
 
   constructor(
     public screenSizeService: ScreenSizeService,
     private chipsKeywordService: ChipsKeywordService,
-    private saleListService: SaleListService,
-    // private cd: ChangeDetectorRef,
-    private localStorageService: LocalStorageService,
     private makeWhereConditionService: MakeWhereConditionService,
-    // private dialog: MatDialog,
     private sessionStorageService: SessionStorageService,
     private dialogService: DialogService,
-    private breakpointObserver: BreakpointObserver,
     private titleService: Title,
     private metaTagService: Meta,
     private ngZone: NgZone,

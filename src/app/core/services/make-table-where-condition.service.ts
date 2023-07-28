@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import {
   BehaviorSubject,
   combineLatest,
@@ -42,11 +42,13 @@ export class MakeTableWhereConditionService {
     private sessionStorageService: SessionStorageService
   ) {}
   eventCount = 0;
+  userSaleLists = signal<UserSaleList[]>([]);
+  
   searchConditionObservable$: Observable<any>;
 
-  get searchResult$(): Observable<UserSaleList[]> {
-    return this.searchResult.asObservable();
-  }
+  // get searchResult$(): Observable<UserSaleList[]> {
+  //   return this.searchResult.asObservable();
+  // }
   initializeWhereCondition(sort: MatSort, paginator: MatPaginator) {
     this.sort = sort;
     this.paginator = paginator;
@@ -58,7 +60,10 @@ export class MakeTableWhereConditionService {
         .pipe(untilDestroyed(this))
         .subscribe((data: UserSaleList[]) => {
           // console.log('make-table-where', data);
-          this.searchResult.next(data);
+          // this.searchResult.next(data);
+          this.userSaleLists.set(data);
+          this.userSaleListService.getConditionalUserSaleListLength();
+
         });
       this.localStorageService.storageItem$
         .pipe(tap((item) => {}))

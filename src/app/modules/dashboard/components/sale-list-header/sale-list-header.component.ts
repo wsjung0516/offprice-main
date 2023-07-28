@@ -5,6 +5,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   AfterViewInit,
+  computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -57,7 +58,7 @@ export class SaleListHeaderComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   displayMode = '';
-  keywords: SearchKeyword[] = [];
+  // keywords: SearchKeyword[] = [];
   searchItemLength: number = 0;
   private storageItemSubscription: Subscription | undefined;
   public screenSize$: Observable<any>;
@@ -93,9 +94,12 @@ export class SaleListHeaderComponent
       this.cd.markForCheck();
     });
   }
-
+  keywords = computed(() => this.chipsKeywordService.searchKeyword().filter(
+    (obj: any) => (obj.value !== '' && obj.key === 'input_keyword') ||
+                  (obj.value !== 'All' && obj.key !== 'input_keyword')
+  ))
   subscribeToSearchKeywords(): void {
-    this.chipsKeywordService.searchKeyword$
+/*     this.chipsKeywordService.searchKeyword$
       .pipe(untilDestroyed(this))
       .subscribe((result: any[]) => {
         this.keywords = result.filter(
@@ -104,7 +108,7 @@ export class SaleListHeaderComponent
             (obj.value !== 'All' && obj.key !== 'input_keyword')
         );
         this.cd.markForCheck();
-      });
+      }); */
   }
 
   subscribeToLocalStorageItem(): void {

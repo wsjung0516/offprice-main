@@ -15,6 +15,7 @@ import {
   OnInit,
   ViewChild,
   WritableSignal,
+  computed,
   signal
 } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
@@ -78,17 +79,18 @@ import { SaleListService } from './sale-list.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MakeWhereConditionService, SaleListService],
 })
-export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck {
+export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('viewport', { static: false }) viewport: CdkVirtualScrollViewport;
   //
   viewportHeight: string;
   currentScreenSize: string;
   screenSize$: Observable<any>;
   sSize: string;
-  keywords: SearchKeyword[] = [];
+  // keywords: SearchKeyword[] = [];
   showScrollToTop = true;
-  images: WritableSignal<any[]> = signal([]); 
-  itemSize: number; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
+  // images: WritableSignal<any[]> = signal([]); 
+  ///itemSize =: number; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
+  // itemSize: number; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   // itemSize: number = 60; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   isLoggedIn: boolean;
 
@@ -108,40 +110,14 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy, DoCh
     private metaTagService: Meta,
     private ngZone: NgZone,
   ) {
-    this.screenSize$ = this.screenSizeService.screenSize$;
     this.updateViewportHeight();
-    breakpointObserver.observe([
-      Breakpoints.XSmall,
-      Breakpoints.Small,
-      Breakpoints.Medium,
-      Breakpoints.Large,
-      Breakpoints.XLarge
-    ]).subscribe(result => {
-      if (result.matches) {
-        if (result.breakpoints[Breakpoints.XSmall]) {
-          this.itemSize = 100;
-        } else if (result.breakpoints[Breakpoints.Small]) {
-          this.itemSize = 90;
-        } else if (result.breakpoints[Breakpoints.Medium]) {
-          this.itemSize = 60;
-        } else if (result.breakpoints[Breakpoints.Large]) {
-          this.itemSize = 60;
-        } else if (result.breakpoints[Breakpoints.XLarge]) {
-          this.itemSize = 60;
-        }
-      }
-    });
   }
-  // images: any[] = [];
 
-  @HostListener('window:resize', ['$event']) onResize(event: Event) {
-    this.updateViewportHeight();
-  }
-  ngDoCheck() {
-    // console.log('sale list do check');
-  }
   trackByFn(index: number, item: SaleList ) {
     return item.sale_list_id;
+  }
+  @HostListener('window:resize', ['$event']) onResize(event: Event) {
+    this.updateViewportHeight();
   }
   updateViewportHeight() {
     // 높이를 계산하고 "viewportHeight" 속성에 할당합니다.
@@ -149,6 +125,14 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy, DoCh
     // const headerHeight = 209; // 헤더 높이를 원하는 값으로 변경합니다.
     this.viewportHeight = `calc(100vh - ${headerHeight}px)`;
   }
+  itemSize = this.screenSizeService.itemSize; // itemSize = signal<number | undefined>(undefined);
+  takeImage = this.screenSizeService.takeImage; // takeImage = signal<number>(20);
+  images = this.makeWhereConditionService.images; // images = signal<SaleList[]>([]);
+
+  keywords = computed(() => this.chipsKeywordService.searchKeyword().filter(
+    (obj: any) => (obj.value !== '' && obj.key === 'input_keyword') ||
+                  (obj.value !== 'All' && obj.key !== 'input_keyword')
+  ))
   ngOnInit(): void {
     //
     this.metaTagService.updateTag(
@@ -160,79 +144,19 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy, DoCh
     // make chips for display in the DOM
     this.sessionStorageService.setItem('displayMode', 'grid');
     // Keyword that is filtered from ChipsKeywordService, then displayed in the DOM
-    this.chipsKeywordService.searchKeyword$
-      .pipe(untilDestroyed(this))
-      .subscribe((result: any[]) => {
-        this.keywords = [];
-        result.forEach((obj) => {
-          if (obj.value !== '' && obj.key === 'input_keyword')
-            this.keywords.push(obj);
-          if (obj.value !== 'All' && obj.key !== 'input_keyword')
-            this.keywords.push(obj);
-          // this.cd.detectChanges();
-        });
-      });
-    //
-    this.setScreenSize();
   }
   ngAfterViewInit() {
     //
     this.titleService.setTitle('off price closeout marketplace');
     this.sessionStorageService.setItem('title', 'offPrice');
-
-    this.makeWhereConditionService.condition$
-      .pipe(untilDestroyed(this))
-      .subscribe((data: SaleList[]) => {
-        this.images.set( [...this.images(), ...data]);
-        // There may be different searchItemsLength value of showing images because of omitted images,
-        // which has the status1 as 'Canceled', 'Sold','Reserved'.
-        // this.cd.detectChanges();
-        this.getConditionalSaleListLength();
-      });
-    //
-    this.makeWhereConditionService.resetImages$
-      .pipe(untilDestroyed(this))
-      .subscribe((data: any) => {
-        // console.log('resetImages: ', data);
-        this.images.set([]);
-      });
-  }
-  private getConditionalSaleListLength() {
-    this.saleListService
-      .getConditionalSaleListLength()
-      .subscribe((res: number) => {
-        // This value is used to display the number of items, which is searched.
-        // And used at the sale-list-header.component.ts
-        this.localStorageService.setItem('searchItemsLength', res.toString());
-      });
-  }
-  takeImage = 20;
-  setScreenSize() {
-    this.screenSizeService.screenSize$
-      .pipe(untilDestroyed(this))
-      .subscribe((result) => {
-        if ( result === 'XSmall') { // xs
-          this.takeImage = 6;
-        } else if ( result === 'Small') { // sm 
-          this.takeImage = 12;
-        } else if ( result === 'Medium') { // md
-          this.takeImage = 16;
-        } else if ( result === 'Large') { // lg
-          this.takeImage = 20;
-        } else if ( result === 'XLarge') { // xl  
-          this.takeImage = 24;
-        }
-        this.sessionStorageService.setItem('takeImageCount', this.takeImage.toString());
-
-      });
   }
   onScroll(index: number) {
     // console.log('scroll index: ', index, this.takeImage);
     this.ngZone.runOutsideAngular(() => {
-      if (index + this.takeImage > this.images().length) {
+      if (index + this.takeImage() > this.images().length) {
         this.makeWhereConditionService.scrollObservable.next({
           skip: this.images().length,
-          take: this.takeImage,
+          take: this.takeImage(),
         });
       }
       index > 1 ? (this.showScrollToTop = true) : (this.showScrollToTop = false);

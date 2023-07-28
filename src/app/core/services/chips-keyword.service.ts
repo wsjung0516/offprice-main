@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, filter, from, toArray } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SharedMenuObservableService } from './shared-menu-observable.service';
@@ -13,8 +13,9 @@ export interface SearchKeyword {
 export class ChipsKeywordService {
   keywords: SearchKeyword[] = [];
   // keywords: {[key:string]:string}[] = [];
-  private searchKeyword = new BehaviorSubject<SearchKeyword[]>([]);
-  searchKeyword$ = this.searchKeyword.asObservable();
+  // private searchKeyword = new BehaviorSubject<SearchKeyword[]>([]);
+  // searchKeyword$ = this.searchKeyword.asObservable();
+  searchKeyword = signal<SearchKeyword[]>([]);
 
   constructor(
     private sharedMenuObservableService: SharedMenuObservableService
@@ -27,7 +28,8 @@ export class ChipsKeywordService {
         key: searchKeyword.key,
         value: searchKeyword.value,
       });
-      this.searchKeyword.next(this.keywords);
+      this.searchKeyword.set(this.keywords);
+      // this.searchKeyword.next(this.keywords);
     }
   }
   // remove keyword from search keyword array because new keyword is added 
@@ -44,7 +46,8 @@ export class ChipsKeywordService {
         .subscribe((obj) => {
           // console.log('obj: ', obj)
           this.keywords = obj;
-          this.searchKeyword.next(obj);
+          this.searchKeyword.set(obj);
+          // this.searchKeyword.next(obj);
         });
     }
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import {
   BehaviorSubject,
   combineLatest,
@@ -52,7 +52,9 @@ export class MakeWhereConditionService {
     setTimeout(() => {
       this.makeSortNWhereCondition().subscribe((data: any) => {
         // console.log('makeSortNWhereCondition data: ', data.length)
-        this.condition.next(data);
+        // this.condition.next(data);
+        this.images.set([...this.images(), ...data]);
+        this.saleListService.getConditionalSaleListLength();
       });
       this.localStorageService.storageItem$.pipe(untilDestroyed(this)).subscribe((item: any) => {
         if (item && item.key === 'displayMode') {
@@ -62,6 +64,8 @@ export class MakeWhereConditionService {
     }, 500);
   }
   eventCount = 0;
+  images = signal<SaleList[]>([]); 
+
   searchConditionObservable$: Observable<any>;
 
   get condition$(): Observable<any> {
@@ -84,7 +88,7 @@ export class MakeWhereConditionService {
   private makeWhereObservable() {
     let andArray: any[] = [];
     let orArray: any[] = [];
-    const displayMode$ = of(this.sessionStorageService.getItem('displayMode'));
+    // const displayMode$ = of(this.sessionStorageService.getItem('displayMode'));
     /**
      * 1. display dialog menu (category, size, price, material, search period)
      * 2. select one item and call the behavior subject, which is at the service( show-menu-dialog.service)
@@ -132,9 +136,10 @@ export class MakeWhereConditionService {
         // console.log('make-where-observable eventCount: ', this.eventCount)
         if (this.eventCount > 0) {
           // this.images = [];
-          this.resetImages.next({
-            images: [],
-          });
+          // this.resetImages.next({
+          //   images: [],
+          // });
+          this.images.set([]);
           this.scrollObservable.next({
             skip: 0,
             take: 20,

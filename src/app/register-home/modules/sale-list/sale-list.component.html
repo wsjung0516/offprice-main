@@ -91,7 +91,7 @@
 <ng-template #showChips>
   <mat-chip-listbox class="mat-chip-list-wrapper">
     <mat-chip
-      *ngFor="let keyword of keywords"
+      *ngFor="let keyword of keywords()"
       (removed)="removeChipsKeyword(keyword)"
     >
       {{ keyword["value"] }}

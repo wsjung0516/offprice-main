@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
   AfterViewInit,
+  computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -94,7 +95,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   searchValue: FormControl;
   inputKeyword = '';
   searchItemLength: number = 0;
-  keywords: SearchKeyword[] = [];
+  //keywords: SearchKeyword[] = [];
   dialogRef: MatDialogRef<ShowMenuDialogComponent> = null;
 
   // userForm: FormGroup;
@@ -166,18 +167,23 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       '450px'
     );
   }
+  keywords = computed(() => this.chipsKeywordService.searchKeyword().filter(
+    (obj: any) => (obj.value !== '' && obj.key === 'input_keyword') ||
+                  (obj.value !== 'All' && obj.key !== 'input_keyword')
+  ))
   subscribeToSearchKeywords(): void {
-    this.chipsKeywordService.searchKeyword$
-      .pipe(untilDestroyed(this))
-      .subscribe((result: any[]) => {
-        // console.log('subscribeToSearchKeywords', result);
-        this.keywords = result.filter(
-          (obj) =>
-            (obj.value !== '' && obj.key === 'input_keyword') ||
-            (obj.value !== 'All' && obj.key !== 'input_keyword')
-        );
-        this.cd.detectChanges();
-      });
+      this.cd.detectChanges();
+    // this.chipsKeywordService.searchKeyword$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((result: any[]) => {
+    //     // console.log('subscribeToSearchKeywords', result);
+    //     this.keywords = result.filter(
+    //       (obj) =>
+    //         (obj.value !== '' && obj.key === 'input_keyword') ||
+    //         (obj.value !== 'All' && obj.key !== 'input_keyword')
+    //     );
+    //     this.cd.detectChanges();
+    //   });
   }
   subscribeToLocalStorageItem(): void {
     this.localStorageService.storageItem$

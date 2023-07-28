@@ -3,7 +3,7 @@
     <!-- Mobile Device -->
     <ng-container *ngIf="sSize === 'XSmall'">
       <!-- If chips are exist, space is expended to show -->
-        <div *ngIf="keywords.length > 0">
+        <div *ngIf="keywords().length > 0">
           <div class="xsmall_box">
           </div>
         </div>
@@ -28,7 +28,7 @@
   <div >
     <cdk-virtual-scroll-viewport
       (scrolledIndexChange)="onScroll($event)"
-      [itemSize]="itemSize"
+      [itemSize]="itemSize()"
       class="viewport" #viewport [ngStyle]="{'height': viewportHeight}"
     >
     <div class="grid grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">

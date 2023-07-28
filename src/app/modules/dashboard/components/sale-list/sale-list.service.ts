@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SaleList, SoldSaleList } from 'src/app/core/models/sale-list.model';
 import { map, Observable, shareReplay, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
+import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,9 @@ import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 export class SaleListService {
   reservedWhere = '';
   baseUrl = environment.url;
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
+  constructor(private http: HttpClient, 
+    private localStorageService: LocalStorageService
+    ) {}
   headers = { 'content-type': 'application/json' }; // 'Accept': 'application/json'
   getSaleLists(
     skip: number,
@@ -82,12 +85,22 @@ export class SaleListService {
       .pipe(map((data: any) => data));
   }
   // getConditionalSaleListLength(where: any): Observable<SaleList[]> {
-  getConditionalSaleListLength(): Observable<number> {
+  // conditionalSaleListLength = signal<number>(0);  
+  getConditionalSaleListLength() {
     let url: string;
     url = `${this.baseUrl}/user-sale-list/length` + this.reservedWhere;
     // console.log('getConditionalSaleListLength url: ', url);
-    return this.http.get(url).pipe(map((data: any) => data));
+    this.http.get(url).pipe(
+      // map((data: any) => data),
+      tap((data: any) => this.localStorageService.setItem('searchItemsLength', data.toString()))
+      ).subscribe();
   }
+  // getConditionalSaleListLength(): Observable<number> {
+  //   let url: string;
+  //   url = `${this.baseUrl}/user-sale-list/length` + this.reservedWhere;
+  //   // console.log('getConditionalSaleListLength url: ', url);
+  //   return this.http.get(url).pipe(map((data: any) => data));
+  // }
   createSaleList(data: Partial<SaleList>): Observable<SaleList> {
     const url = `${this.baseUrl}/sale-list`;
     return this.http

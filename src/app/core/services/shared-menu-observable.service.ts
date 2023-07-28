@@ -6,35 +6,35 @@ import { CartItems } from 'src/app/core/models/cart-items.model';
   providedIn: 'root',
 })
 export class SharedMenuObservableService {
-  input_keyword = signal<string>('');
-  vendor = signal<string>('All');
-  price = signal<string>('All');
-  category = signal<string>('All');
-  category1 = signal<string>('All');
-  size = signal<string>('All');
-  material = signal<string>('All');
-  search_period = signal<string>('All');
-  color = signal<string>('All');
+  // input_keyword = signal<string>('');
+  // vendor = signal<string>('All');
+  // price = signal<string>('All');
+  // category = signal<string>('All');
+  // category1 = signal<string>('All');
+  // size = signal<string>('All');
+  // material = signal<string>('All');
+  // search_period = signal<string>('All');
+  // color = signal<string>('All');
 
 
-  // input_keyword = new BehaviorSubject<string>('');
-  // input_keyword$ = this.input_keyword.asObservable();
-  // vendor = new BehaviorSubject<string>('All');
-  // vendor$ = this.vendor.asObservable();
-  // price = new BehaviorSubject<string>('All');
-  // price$ = this.price.asObservable();
-  // category = new BehaviorSubject<string>('All');
-  // category$ = this.category.asObservable();
-  // category1 = new BehaviorSubject<string>('All');
-  // category1$ = this.category1.asObservable();
-  // size = new BehaviorSubject<string>('All');
-  // size$ = this.size.asObservable();
-  // material = new BehaviorSubject<string>('All');
-  // material$ = this.material.asObservable();
-  // search_period = new BehaviorSubject<string>('All');
-  // search_period$ = this.search_period.asObservable();
-  // color = new BehaviorSubject<string>('All');
-  // color$ = this.color.asObservable();
+  input_keyword = new BehaviorSubject<string>('');
+  input_keyword$ = this.input_keyword.asObservable();
+  vendor = new BehaviorSubject<string>('All');
+  vendor$ = this.vendor.asObservable();
+  price = new BehaviorSubject<string>('All');
+  price$ = this.price.asObservable();
+  category = new BehaviorSubject<string>('All');
+  category$ = this.category.asObservable();
+  category1 = new BehaviorSubject<string>('All');
+  category1$ = this.category1.asObservable();
+  size = new BehaviorSubject<string>('All');
+  size$ = this.size.asObservable();
+  material = new BehaviorSubject<string>('All');
+  material$ = this.material.asObservable();
+  search_period = new BehaviorSubject<string>('All');
+  search_period$ = this.search_period.asObservable();
+  color = new BehaviorSubject<string>('All');
+  color$ = this.color.asObservable();
   //
   reset_category = new Subject<string>();
   reset_category$ = this.reset_category.asObservable();

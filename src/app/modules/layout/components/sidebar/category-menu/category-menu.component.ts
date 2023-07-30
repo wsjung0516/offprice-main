@@ -18,6 +18,7 @@ import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   selector: 'app-category-menu',
@@ -26,13 +27,19 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   template: `
     <div class="bg-gray-200 px-1 py-1 flex items-center">
       <!-- <div class="flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide"> -->
-      <div class="flex-1 overflow-x-auto hover:overflow-scroll whitespace-nowrap">
+      <div
+        class="flex-1 overflow-x-auto hover:overflow-scroll whitespace-nowrap"
+      >
         <div class="inline-flex" [style.margin-left.px]="scrollOffset">
           <ng-container *ngFor="let button of categories">
             <button
               mat-button-toggle
               class="border border-transparent rounded-full py-1 px-2 mx-1 text-gray-500 hover:text-gray-800 focus:outline-none focus:border-blue-500 active:text-blue-500 button-group"
-              [ngClass]="{ selected: selected_category.key === button.key, group1: button.group === '1', group2: button.group === '2' }"
+              [ngClass]="{
+                selected: selected_category.key === button.key,
+                group1: button.group === '1',
+                group2: button.group === '2'
+              }"
               [value]="button"
               (click)="onSelect(button)"
             >
@@ -87,41 +94,42 @@ export class CategoryMenuComponent implements OnInit, AfterViewInit {
     private chipsKeywordService: ChipsKeywordService,
     private localStorageService: LocalStorageService,
     private cd: ChangeDetectorRef
-  ) {}
-  ngOnInit() {
-    this.onSelect(this.selected_category);
-    this.subscribeToLocalStorageItem();
-    this.sharedMenuObservableService.reset_category$
+  ) {
+    toObservable(this.reset_category)
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
       });
+
   }
-  // onScroll(distance: number) {
-  //   const scrollEl = document.querySelector('.scroll-container') as HTMLElement;
-  //   const direction = distance > 0 ? 1 : -1;
-  //   const currentOffset = scrollEl.scrollLeft;
-  //   const newOffset = currentOffset + direction * this.buttonWidth;
-  //   scrollEl.scrollTo({
-  //     left: newOffset,
-  //     behavior: 'smooth',
-  //   });
-  // }
+  reset_category = this.sharedMenuObservableService.reset_category;
+  ngOnInit() {
+    this.onSelect(this.selected_category);
+    this.subscribeToLocalStorageItem();
+  }
+  category1 = this.sharedMenuObservableService.category1;
   ngAfterViewInit() {
     let cat = '';
-    this.sharedMenuObservableService.category1$
+    toObservable(this.category1)
       .pipe(untilDestroyed(this))
       .subscribe((id) => {
         cat = id;
         this.categories = Categories2.filter((item) => item.categoryId === cat);
         this.cd.detectChanges();
       });
+    // this.sharedMenuObservableService.category1$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((id) => {
+    //     cat = id;
+    //     this.categories = Categories2.filter((item) => item.categoryId === cat);
+    //     this.cd.detectChanges();
+    //   });
   }
   onSelect(category: any) {
     this.selected_category = category;
     const value = { key: 'category', value: category.key };
     // this.selected_category = value.key;
-    this.sharedMenuObservableService.category.next(category.key);
+    this.sharedMenuObservableService.category.set(category.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }

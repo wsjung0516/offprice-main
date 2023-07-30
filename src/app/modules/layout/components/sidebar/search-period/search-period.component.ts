@@ -10,6 +10,7 @@ import { ESearchPeriod } from 'src/app/core/constants/data-define';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @UntilDestroy()
 @Component({
@@ -54,21 +55,22 @@ export class SearchPeriodComponent {
     private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
     private cd: ChangeDetectorRef
-  ) {}
-  ngOnInit() {
-    this.sharedMenuObservableService.reset_search_period$
+  ) {
+    toObservable(this.reset_search_period)
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
       });
   }
+  reset_search_period = this.sharedMenuObservableService.reset_search_period;
+  ngOnInit() {}
 
   selectValue(data: any) {
     const value = { key: 'search_period', value: data.key };
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
-    this.sharedMenuObservableService.search_period.next(data.value);
-    this.sharedMenuObservableService.closeSideBar.next(true);
+    this.sharedMenuObservableService.search_period.set(data.value);
+    this.sharedMenuObservableService.closeSideBar.set(true);
     if (data.key === 'All') {
       this.reset();
     }

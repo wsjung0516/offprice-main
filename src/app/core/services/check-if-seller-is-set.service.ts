@@ -23,32 +23,36 @@ export class CheckIfSellerSetService {
     private dialog: MatDialog,
     private userCouponsService: UserCouponsService,
     private sharedMenuObservableService: SharedMenuObservableService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
   isSeller(ret: any, res: any) {
-    this.isSellerChecked(ret.user.uid).pipe(untilDestroyed(this)).subscribe((isSeller: boolean) => {
-      // console.log('isSeller', isSeller);
-      if (isSeller) {
-        this.router.navigate(['/register-home']);
-        this.userService.saveUserProfileToDB(res);
+    this.isSellerChecked(ret.user.uid)
+      .pipe(untilDestroyed(this))
+      .subscribe((isSeller: boolean) => {
+        // console.log('isSeller', isSeller);
+        if (isSeller) {
+          this.router.navigate(['/register-home']);
+          this.userService.saveUserProfileToDB(res);
 
-        // User Coupons
-        this.checkIfUserCouponsAvailable().pipe(untilDestroyed(this)).subscribe((ret: any) => {});
-      } else {
-        // Input profile information
-        this.inputProfileInfo(res).pipe(
-          untilDestroyed(this)
-          ).subscribe((ret: any) => {
-          // console.log('inputProfileInfo', ret);
-          if (ret?.body.seller === true) {
-            this.router.navigate(['/register-home']);
-            return;
-          } else {
-            this.authService.logout();
-          }
-        });
-      }
-    });
+          // User Coupons
+          this.checkIfUserCouponsAvailable()
+            .pipe(untilDestroyed(this))
+            .subscribe((ret: any) => {});
+        } else {
+          // Input profile information
+          this.inputProfileInfo(res)
+            .pipe(untilDestroyed(this))
+            .subscribe((ret: any) => {
+              // console.log('inputProfileInfo', ret);
+              if (ret?.body.seller === true) {
+                this.router.navigate(['/register-home']);
+                return;
+              } else {
+                this.authService.logout();
+              }
+            });
+        }
+      });
   }
   isChecked(uid: string, res?: any): Observable<boolean> {
     return this.isSellerChecked(uid).pipe(
@@ -64,14 +68,14 @@ export class CheckIfSellerSetService {
             map((ret: any) => {
               // console.log('inputProfileInfo', ret.body.seller);
               return ret?.body.seller === true;
-            }),
+            })
           );
         }
       }),
       catchError(() => of(false))
     );
   }
-  
+
   private isSellerChecked(uid: string): Observable<boolean> {
     return this.userService.getUser(uid).pipe(
       tap((user: any) => {
@@ -81,21 +85,21 @@ export class CheckIfSellerSetService {
       catchError(() => of(false))
     );
   }
-  
+
   private inputProfileInfo(res?: any): Observable<any> {
     const dialogRef = this.dialog.open(UserProfileComponent, {});
-  
+
     return dialogRef.afterClosed();
   }
-  
+
   public checkIfUserCouponsAvailable(): Observable<boolean> {
     return this.userCouponsService.getUserCoupons().pipe(
       tap((ret: any) => {
         // console.log('user coupon', ret.quantity);
-        this.sharedMenuObservableService.userCoupons.next(
+        this.sharedMenuObservableService.userCoupons.set(
           ret.quantity.toString()
         );
-  
+
         if (ret.quantity >= 0) {
           if (ret.quantity <= 5) {
             this.matSnackBar.open(
@@ -119,16 +123,18 @@ export class CheckIfSellerSetService {
           }
         } else {
           // This function is used only limited period.
-          this.userCouponsService.createUserCoupon(300).subscribe((ret: any) => {
-             console.log('createUserCoupon', ret);
-          });
+          this.userCouponsService
+            .createUserCoupon(300)
+            .subscribe((ret: any) => {
+              console.log('createUserCoupon', ret);
+            });
         }
       }),
       map((ret: any) => ret.quantity >= 0),
       catchError(() => of(false))
     );
   }
-  
+
   // isChecked(uid: string, res?: any): boolean{
   //   // return new Promise((resolve, reject) => {
 
@@ -144,7 +150,7 @@ export class CheckIfSellerSetService {
   //           // } else {
   //           //   this.authService.logout();
   //           // }
-  
+
   //         });
   //       } else {
   //         // Input profile information
@@ -183,7 +189,7 @@ export class CheckIfSellerSetService {
 
   //     this.userCouponsService.getUserCoupons().subscribe((ret: any) => {
   //       console.log('user coupon', ret.quantity);
-  //       this.sharedMenuObservableService.userCoupons.next(
+  //       this.sharedMenuObservableService.userCoupons.set(
   //         ret.quantity.toString()
   //       );
 

@@ -4,7 +4,8 @@ import {
   Component,
   OnInit,
   inject,
-  effect
+  effect,
+  DestroyRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItemsService } from './cart-items.service';
@@ -20,6 +21,7 @@ import {
   filter,
   forkJoin,
   of,
+  finalize,
 } from 'rxjs';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { ConfirmDialogComponent } from 'src/app/core/components/confirm-dialog/confirm-dialog.component';
@@ -33,6 +35,7 @@ import { WarningDialogComponent } from '../warning-dialog/warning-dialog.compone
 import { SaleListService } from 'src/app/modules/dashboard/components/sale-list/sale-list.service';
 import { SaleList, SoldSaleList } from '../../models/sale-list.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../auth/login/services/auth.service';
 
 // @UntilDestroy()
 @Component({
@@ -58,6 +61,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class CartItemsComponent implements OnInit, AfterViewInit {
   ref: DialogRef<any> = inject(DialogRef);
+  soldSaleList: Partial<SoldSaleList>[] = [];
+  authService = inject(AuthService);
+  checkResult: string[] = [];
+  profile: any;
+  items = this.cartItemsService.cartItems; // signal<CartItems[]>([]);
+  totalPrice = this.cartItemsService.totalPrice; // signal(0);
+  user = this.authService.user; // user = signal<UserId | undefined>(undefined);
+
   constructor(
     private cartItemsService: CartItemsService,
     private sharedMenuObservableService: SharedMenuObservableService,
@@ -73,12 +84,9 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
         this.ref.close();
         sharedMenuObservableService.closeCartItemsDialog.set(false);
       }
+      console.log('items---', this.items())
     }, {allowSignalWrites: true});
   }
-  checkResult: string[] = [];
-  profile: any;
-  items = this.cartItemsService.cartItems; // signal<CartItems[]>([]);
-  totalPrice = this.cartItemsService.totalPrice; // signal(0);
   
   ngOnInit(): void {
   }
@@ -101,15 +109,13 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
             if (this.checkResult.length > 0) {
               this.displayWarningMessage();
             } else {
-              // this.ref.close();
-
               this.processAfterCheckout();
             }
           });
         }
       });
   }
-  soldSaleList: Partial<SoldSaleList>[] = [];
+
   private processAfterCheckout() {
     const rdata = this.separateSaleListBySoldNSale();
     /*  [
@@ -142,7 +148,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
           category1: saleItem.category1,
           quantity: soldItem.quantity,
           price: saleItem.price,
-          buyer_id: this.profile.user.uid,
+          buyer_id: this.user().user_id,
         };
         this.soldSaleList.push(data);
         // Write deducted data to sale list. each item by separating sale and sold.
@@ -188,7 +194,7 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
   private saveSoldRecord(soldItems: Partial<SoldSaleList>[]): Observable<any> {
     return from(soldItems).pipe(
       // untilDestroyed(this),
-      takeUntilDestroyed(),
+      takeUntilDestroyed(this.destroyRef),
 
       tap((item: Partial<SoldSaleList>) => {
         // console.log('sold item: ', item);
@@ -199,19 +205,19 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
     );
   }
   private clearCartItems(): Observable<any> {
-    this.ref.close();
-    // 
-    // Currently, the quantity is fixed to 0.
-    this.cartItemsService.cartItems.set([]);
 
     return from(this.items()).pipe(
-      takeUntilDestroyed(),
+      takeUntilDestroyed(this.destroyRef),
       tap((item: CartItems) => {
         // console.log('clearCartItems: ', item);
       }),
       mergeMap((item: CartItems) => {
         return this.cartItemsService.clearCartItems(item);
       
+      }),
+      finalize(() => {
+        this.ref.close();
+        this.cartItemsService.cartItems.set([]);
       })
     );
   }
@@ -261,10 +267,11 @@ export class CartItemsComponent implements OnInit, AfterViewInit {
       });
   }
   tmpSaleList: SaleList[] = [];
+  destroyRef = inject(DestroyRef);
   checkIfSalesItemIsAvailable(): Observable<string[]> {
     this.tmpSaleList = [];
     return from(this.items()).pipe(
-      takeUntilDestroyed(),
+      takeUntilDestroyed(this.destroyRef),
       // takeUntilDestroyed(this.destroyRef),
       // untilDestroyed(this),
       mergeMap((data: CartItems) =>

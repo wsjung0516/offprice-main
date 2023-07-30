@@ -5,6 +5,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ChangeDetectionStrategy,
+  effect,
 } from '@angular/core';
 import {
   CdkMenuItemRadio,
@@ -33,6 +34,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import * as e from 'express';
 import { el } from 'date-fns/locale';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 /** @title Google Docs Menu Bar. */
 @UntilDestroy()
@@ -69,29 +71,33 @@ export class CategorySubmenuComponent implements AfterViewInit {
   @ViewChild('Bottoms', { static: true }) bottomsTemplate: TemplateRef<any>;
   @ViewChild('Dresses', { static: true }) dressesTemplate: TemplateRef<any>;
   @ViewChild('Outerwear', { static: true }) outerwearTemplate: TemplateRef<any>;
-  @ViewChild('Activewear', { static: true }) activewearTemplate: TemplateRef<any>;
-  @ViewChild('Jumpsuits', { static: true }) jumpsuitsTemplate: TemplateRef<any>; 
-  @ViewChild('Swimwear', { static: true }) swimwearTemplate: TemplateRef<any>; 
-  @ViewChild('Plussize', { static: true }) plussizeTemplate: TemplateRef<any>; 
-  @ViewChild('Sweaters', { static: true }) sweatersTemplate: TemplateRef<any>; 
-  @ViewChild('Lingerie', { static: true }) lingerieTemplate: TemplateRef<any>; 
-  @ViewChild('Loungewear', { static: true }) loungewearTemplate: TemplateRef<any>; 
-  @ViewChild('Suits', { static: true }) suitsTemplate: TemplateRef<any>; 
+  @ViewChild('Activewear', { static: true })
+  activewearTemplate: TemplateRef<any>;
+  @ViewChild('Jumpsuits', { static: true }) jumpsuitsTemplate: TemplateRef<any>;
+  @ViewChild('Swimwear', { static: true }) swimwearTemplate: TemplateRef<any>;
+  @ViewChild('Plussize', { static: true }) plussizeTemplate: TemplateRef<any>;
+  @ViewChild('Sweaters', { static: true }) sweatersTemplate: TemplateRef<any>;
+  @ViewChild('Lingerie', { static: true }) lingerieTemplate: TemplateRef<any>;
+  @ViewChild('Loungewear', { static: true })
+  loungewearTemplate: TemplateRef<any>;
+  @ViewChild('Suits', { static: true }) suitsTemplate: TemplateRef<any>;
   @ViewChild('Partywear', { static: true }) partywearTemplate: TemplateRef<any>;
   // Men
-  @ViewChild('m_Activewear', { static: true }) m_activewearTemplate: TemplateRef<any>; 
-  @ViewChild('m_Jeans', { static: true }) m_jeansTemplate: TemplateRef<any>; 
-  @ViewChild('m_Outerwear', { static: true }) m_outerwearTemplate: TemplateRef<any>;
-  @ViewChild('m_Casual', { static: true }) m_casualTemplate: TemplateRef<any>; 
-  @ViewChild('m_Shorts', { static: true }) m_shortsTemplate: TemplateRef<any>; 
-  @ViewChild('m_Sweater', { static: true }) m_sweaterTemplate: TemplateRef<any>; 
-  @ViewChild('m_Swimwear', { static: true }) m_swimwearTemplate: TemplateRef<any>; 
+  @ViewChild('m_Activewear', { static: true })
+  m_activewearTemplate: TemplateRef<any>;
+  @ViewChild('m_Jeans', { static: true }) m_jeansTemplate: TemplateRef<any>;
+  @ViewChild('m_Outerwear', { static: true })
+  m_outerwearTemplate: TemplateRef<any>;
+  @ViewChild('m_Casual', { static: true }) m_casualTemplate: TemplateRef<any>;
+  @ViewChild('m_Shorts', { static: true }) m_shortsTemplate: TemplateRef<any>;
+  @ViewChild('m_Sweater', { static: true }) m_sweaterTemplate: TemplateRef<any>;
+  @ViewChild('m_Swimwear', { static: true })
+  m_swimwearTemplate: TemplateRef<any>;
   @ViewChild('m_Tops', { static: true }) m_topsTemplate: TemplateRef<any>;
 
   // Kids
-  @ViewChild('k_Girls', { static: true }) k_girlsTemplate: TemplateRef<any>; 
-  @ViewChild('k_Boys', { static: true }) k_boysTemplate: TemplateRef<any>; 
-
+  @ViewChild('k_Girls', { static: true }) k_girlsTemplate: TemplateRef<any>;
+  @ViewChild('k_Boys', { static: true }) k_boysTemplate: TemplateRef<any>;
 
   menuTemplates: { [key: string]: TemplateRef<any> };
 
@@ -132,9 +138,7 @@ export class CategorySubmenuComponent implements AfterViewInit {
       k_boys: this.k_boysTemplate,
       // other templates...
     };
-  }
-  ngAfterViewInit() {
-    this.sharedMenuObservableService.category1$
+    toObservable(this.category1)
       .pipe(untilDestroyed(this))
       .subscribe((id) => {
         // console.log(id);
@@ -142,8 +146,10 @@ export class CategorySubmenuComponent implements AfterViewInit {
         this.tgroups = this.getGroupIdsByCategoryId();
         this.cd.detectChanges();
       });
-
-    this.categories = Categories1;
+      this.categories = Categories1;
+  }
+  category1 = this.sharedMenuObservableService.category1;
+  ngAfterViewInit() {
   }
 
   getProducts(): Prod[] {
@@ -178,7 +184,8 @@ export class CategorySubmenuComponent implements AfterViewInit {
   }
   getTemplate(groupId: string): TemplateRef<any> {
     let ret: TemplateRef<any>;
-    if (this.category === '1') { // Women
+    if (this.category === '1') {
+      // Women
       // women
       if (groupId === '1') {
         ret = this.topsTemplate;
@@ -206,12 +213,12 @@ export class CategorySubmenuComponent implements AfterViewInit {
         ret = this.suitsTemplate;
       } else if (groupId === '13') {
         ret = this.partywearTemplate;
-      } 
+      }
       // else if (groupId === '14') {
       //   ret = this.dummyTemplate;
       // }
-
-    } else if( this.category === '2' ) { // Men
+    } else if (this.category === '2') {
+      // Men
       if (groupId === '1') {
         ret = this.m_activewearTemplate;
       } else if (groupId === '2') {
@@ -229,8 +236,8 @@ export class CategorySubmenuComponent implements AfterViewInit {
       } else if (groupId === '8') {
         ret = this.m_topsTemplate;
       }
-
-    } else if( this.category === '3' ) { // Kids
+    } else if (this.category === '3') {
+      // Kids
       if (groupId === '1') {
         ret = this.k_girlsTemplate;
       } else if (groupId === '2') {
@@ -256,7 +263,7 @@ export class CategorySubmenuComponent implements AfterViewInit {
     this.selected_category = category;
     const value = { key: 'category', value: category.key };
     // this.selected_category = value.key;
-    this.sharedMenuObservableService.category.next(category.key);
+    this.sharedMenuObservableService.category.set(category.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }

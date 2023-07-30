@@ -65,7 +65,7 @@ export class CategoryComponent {
     // console.log('category: ', value);
     const value = { key: 'category', value: category.key };
     this.selected_category = value.key;
-    this.sharedMenuObservableService.category.next(category.key);
+    this.sharedMenuObservableService.category.set(category.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     this.dialogRef.close();

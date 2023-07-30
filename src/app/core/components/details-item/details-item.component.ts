@@ -126,7 +126,5 @@ export class DetailsItemComponent implements OnInit, AfterViewInit {
     // this.dialogRef.close();
   }
 }
-function compted(arg0: () => boolean): WritableSignal<boolean> {
-  throw new Error('Function not implemented.');
-}
+
 

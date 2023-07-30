@@ -21,6 +21,7 @@ import { ClickOutsideDirective } from 'src/app/core/directives/click-outside.dir
 import { Meta, Title } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AboutComponent } from '../about/about.component';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -64,20 +65,23 @@ export class ProfileMenuComponent implements OnInit, AfterViewInit {
     private userService: UserService,
     private titleService: Title,
     private metaService: Meta
-  ) {}
+  ) {
+    // toObservable(this.isLoggedOut)
+    // .pipe(untilDestroyed(this))
+    // .subscribe((isLoggedOut: boolean) => {
+    //   if (isLoggedOut) {
+    //     this.initials = 'Guest';
+    //     this.authService.logout();
+    //     this.cd.detectChanges();
+    //   }
+    // });
+
+  }
 
   ngOnInit(): void {}
   initials = '';
+  // isLoggedOut = this.sharedMenuObservableService.isLoggedOut;
   ngAfterViewInit(): void {
-    this.sharedMenuObservableService.isLoggedOut$
-      .pipe(untilDestroyed(this))
-      .subscribe((isLoggedOut: boolean) => {
-        if (isLoggedOut) {
-          this.initials = 'Guest';
-          this.authService.logout();
-          this.cd.detectChanges();
-        }
-      });
     const userId: any = this.sessionStorageService.getItem('userId');
     if (userId) {
       this.isLoggedIn = true;

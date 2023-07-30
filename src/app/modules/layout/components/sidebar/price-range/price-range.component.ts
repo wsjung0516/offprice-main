@@ -10,6 +10,7 @@ import { APrice } from 'src/app/core/constants/data-define';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   selector: 'app-price',
@@ -57,20 +58,21 @@ export class PriceRangeComponent {
     private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService,
     private cd: ChangeDetectorRef
-  ) {}
-  ngOnInit() {
-    this.sharedMenuObservableService.reset_price$
+  ) {
+    toObservable(this.reset_price)
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
       });
   }
+  reset_price = this.sharedMenuObservableService.reset_price;
+  ngOnInit() {}
 
   selectValue(price: any) {
     const value = { key: 'price', value: price.key };
     this.priceRange = price.value;
-    this.sharedMenuObservableService.price.next(price.value);
-    this.sharedMenuObservableService.closeSideBar.next(true);
+    this.sharedMenuObservableService.price.set(price.value);
+    this.sharedMenuObservableService.closeSideBar.set(true);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     // this.favoriteSeason = data;

@@ -33,6 +33,7 @@ import { UserTokenService } from 'src/app/core/services/user-token.service';
 import { switchMap, tap, Subscription, interval, Observable, of } from 'rxjs';
 import { UserService } from 'src/app/user/user.service';
 import { Meta, Title } from '@angular/platform-browser';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   standalone: true,
@@ -83,9 +84,21 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sharedMenuObservableService.refreshCartItemsButton.set(false);
       }
     }, {allowSignalWrites: true})
+    toObservable(this.resetSearchConditions)
+    .pipe(untilDestroyed(this))
+    .subscribe((data) => {
+      if( data === true ) {
+        this.resetKeyword();
+        this.makeTableWhereConditionService.resetSort();
+        this.makeTableWhereConditionService.refreshObservable.next('');
+    // To reset the search keyword and positioned selection button to the 'All'.
+         this.sharedMenuObservableService.resetSearchConditions.set(false);
+      }
+    });
+
   }
   showSideBar = this.menuService.showSideBar; // menu.service.ts, showSideBar = signal<boolean>(true);
-
+  resetSearchConditions = this.sharedMenuObservableService.resetSearchConditions;
   ngOnInit(): void {
     this.screenSizeService.screenSize$
       .pipe(untilDestroyed(this))
@@ -94,12 +107,6 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sSize = size;
         this.cd.detectChanges();
       });
-    this.sharedMenuObservableService.resetSearchConditions$
-      .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        // console.log('resetSearchConditions is called');
-        this.resetSearchConditions();
-      });
   }
   profile: any;
   ngAfterViewInit(): void {
@@ -107,13 +114,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   public toggleMobileMenu(): void {
     this.menuService.showMobileMenu.set(true);
   }
-  resetSearchConditions() {
-    // To reset the search keyword and positioned selection button to the 'All'.
-    // 
-    this.resetKeyword();
-    this.makeTableWhereConditionService.resetSort();
-    this.makeTableWhereConditionService.refreshObservable.next('');
-  }
+
   openCart() {
     this.dialogService.open(CartItemsComponent, {
       // width: auto
@@ -177,7 +178,8 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
       const { subject, defaultValue, name } = filter;
       // console.log('subject', subject.value, name)
       if (subject.value !== defaultValue) {
-        filter.reset.next({});
+        filter.reset.set('');
+        // filter.reset.next({});
         this.removeChipsKeywordService.resetSearchKeyword({
           key: name,
           value: '',

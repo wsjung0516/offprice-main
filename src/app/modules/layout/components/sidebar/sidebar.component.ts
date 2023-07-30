@@ -20,6 +20,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AboutComponent } from 'src/app/core/components/about/about.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TippyDirective } from '@ngneat/helipopper';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   selector: 'app-sidebar',
@@ -55,12 +56,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private dialog: MatDialog 
   ) {
-  }
-
-  ngOnInit(): void {
-  }
-  ngAfterViewInit() {
-    this.sharedMenuObservableService.closeSideBar$
+    toObservable(this.closeSideBar)
     .pipe(untilDestroyed(this)).subscribe((res) => {  
       // console.log('res', res, this.sideBarStatus);
       // if( this.sideBarStatus) {
@@ -72,6 +68,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   
       }
     });
+
+  }
+
+  ngOnInit(): void {
+  }
+  closeSideBar = this.sharedMenuObservableService.closeSideBar;
+  ngAfterViewInit() {
 
   }
   public toggleSidebar() {

@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   selector: 'app-material',
@@ -66,24 +67,25 @@ export class MaterialComponent implements OnInit {
   constructor(
     private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService
-  ) {}
-  ngOnInit() {
-    this.sharedMenuObservableService.reset_material$
+  ) {
+    toObservable(this.reset_material)
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
       });
   }
+  reset_material = this.sharedMenuObservableService.reset_material;
+  ngOnInit() {}
   selectValue(material: any) {
     const value = { key: 'material', value: material.key };
     this.selected_material = material.key;
-    this.sharedMenuObservableService.input_keyword.next(material.key);
-    this.sharedMenuObservableService.material.next(material.key);
-    this.sharedMenuObservableService.closeSideBar.next(true);
+    this.sharedMenuObservableService.input_keyword.set(material.key);
+    this.sharedMenuObservableService.material.set(material.key);
+    this.sharedMenuObservableService.closeSideBar.set(true);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
   }
   reset() {
-    this.buttonRefs.get(0)?.nativeElement.click();
+    this.buttonRefs?.get(0)?.nativeElement.click();
   }
 }

@@ -8,12 +8,11 @@ import { MatDialogRef } from '@angular/material/dialog';
 // import { ShowMenuDialogComponent } from '../show-menu-dialog/show-menu-dialog.component';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 
-
 @Component({
   selector: 'app-color',
   standalone: true,
   imports: [CommonModule, MatRadioModule, FormsModule],
-template: `
+  template: `
     <div class="p-4 flex flex_wrap">
       <ng-container *ngFor="let color of colors">
         <button
@@ -51,7 +50,7 @@ template: `
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorComponent {
   colors: typeof Colors = Colors;
@@ -63,12 +62,11 @@ export class ColorComponent {
   selectValue(data: any) {
     const value = { key: 'color', value: data.key };
     this.selected_color = data.key;
-    this.sharedMenuObservableService.input_keyword.next(data.key);
-    this.sharedMenuObservableService.color.next(data.key);
-    this.sharedMenuObservableService.closeSideBar.next(true);
+    this.sharedMenuObservableService.input_keyword.set(data.key);
+    this.sharedMenuObservableService.color.set(data.key);
+    this.sharedMenuObservableService.closeSideBar.set(true);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
-
   }
   hexToRgb(hex: string) {
     const bigint = parseInt(hex.slice(1), 16);

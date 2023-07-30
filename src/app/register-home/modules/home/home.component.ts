@@ -58,8 +58,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   userName = '';
   userEmail = '';
   private logoutTimer: any;
-  isProfileMenuOpen = false;
-  userCoupons = '';
+  // isProfileMenuOpen = false;
+  // userCoupons = '';
   constructor(
     public dialog: MatDialog,
     private sharedMenuObservableService: SharedMenuObservableService,
@@ -105,18 +105,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     }, 120 * 60 * 1000); // 120분
   }
+  userCoupons = this.sharedMenuObservableService.userCoupons;
+  isProfileMenuOpen = this.sharedMenuObservableService.isProfileMenuOpen;
   ngAfterViewInit() {
     //
     this.titleService.setTitle('off price wholesale marketplace register');
     this.sessionStorageService.setItem('title', 'Register');
 
-    this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
-      if (coupon) {
-        // console.log('userCoupons', coupon);
-        this.userCoupons = coupon;
-        this.cd.detectChanges();
-      }
-    });
+    // this.sharedMenuObservableService.userCoupons$.subscribe((coupon) => {
+    //   if (coupon) {
+    //     // console.log('userCoupons', coupon);
+    //     this.userCoupons = coupon;
+    //     this.cd.detectChanges();
+    //   }
+    // });
     this.userTokenService.getUserToken().subscribe((profile: any) => {
       if (profile) {
         this.userName = profile?.user.displayName;
@@ -129,12 +131,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     //     this.userName = name;
     //     this.cd.detectChanges();
     //   });
-    this.sharedMenuObservableService.isProfileMenuOpen$
-      .pipe(untilDestroyed(this))
-      .subscribe((isOpen) => {
-        this.isProfileMenuOpen = isOpen;
-        this.cd.detectChanges();
-      });
+    // this.sharedMenuObservableService.isProfileMenuOpen$
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((isOpen) => {
+    //     this.isProfileMenuOpen = isOpen;
+    //     this.cd.detectChanges();
+    //   });
   }
 
   dropdown = false;

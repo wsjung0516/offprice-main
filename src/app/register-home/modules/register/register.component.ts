@@ -61,6 +61,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { MakeRegisterWhereConditionService } from './../../core/services/make-register-where-condition.service';
 import { RegisterUpdate } from 'src/app/store/register/register.action';
 import { Store } from '@ngxs/store';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   selector: 'app-register',
@@ -141,7 +142,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   quantity = 0;
   material: string[] = [];
   color: string[] = [];
-  isLoading = false;
+  // isLoading = false;
   selectedUnit = 'USD';
   nSizes: { name: string; value: number }[] = [];
   jsonString = '';
@@ -187,7 +188,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.titleService.setTitle('closeout sale');
 
-    this.isLoading = false;
+    // this.isLoading = false;
     this.registerStatus =
       this.sessionStorageService.getItem('registerStatus') ?? 'create';
     this.initRegisterForm();
@@ -198,6 +199,7 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
   
     // this.updateCategoryMenu();  
   }
+  // resultDeleteSaleListItem = this.sharedMenuObservableService.resultDeleteSaleListItem;
   private deletedSaleList() {
     this.sharedMenuObservableService.resultDeleteSaleListItem$
       .pipe(untilDestroyed(this))
@@ -245,15 +247,16 @@ export class RegisterComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
   }
-
+  isLoading = this.sharedMenuObservableService.isImageLoading;
+  // isImageLoading = this.sharedMenuObservableService.isImageLoading;
   ngAfterViewInit() {
     this.selectedUnit = 'USD';
     this.getImageUrls();
-    this.sharedMenuObservableService.isImageLoading$
-      .pipe(untilDestroyed(this))
-      .subscribe((val: boolean) => {
-        this.isLoading = val;
-      });
+    // toObservable(this.isImageLoading)
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe((val: boolean) => {
+    //     this.isLoading = val;
+    //   });
   }
 
   private getImageUrls() {

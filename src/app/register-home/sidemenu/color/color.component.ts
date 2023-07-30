@@ -62,8 +62,8 @@ export class ColorComponent {
   ) {}
   selectValue(data: any) {
     const value = { key: 'color', value: data.key };
-    this.sharedMenuObservableService.input_keyword.next(data.key);
-    this.sharedMenuObservableService.color.next(data.key);
+    this.sharedMenuObservableService.input_keyword.set(data.key);
+    this.sharedMenuObservableService.color.set(data.key);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
 

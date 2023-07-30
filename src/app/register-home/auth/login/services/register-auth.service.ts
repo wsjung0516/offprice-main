@@ -23,9 +23,8 @@ export class RegisterAuthService {
     private sessionStorageService: SessionStorageService,
     private userService: UserService,
     private userTokenService: UserTokenService,
-    private checkIfSellerSetService: CheckIfSellerSetService
-  ) // private dialog: MatDialog,
-  // private matSnackBar: MatSnackBar,
+    private checkIfSellerSetService: CheckIfSellerSetService // private dialog: MatDialog,
+  ) // private matSnackBar: MatSnackBar,
   // private userCouponsService: UserCouponsService
   {}
   isLoggedIn(): boolean {
@@ -122,7 +121,7 @@ export class RegisterAuthService {
           if (profile) {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
-            this.sharedMenuObservableService.isLoggedOut.next(true);
+            // this.sharedMenuObservableService.isLoggedOut.set(true);
 
             this.router.navigate(['/']);
             // this.router.navigate(['/register-home/login']);

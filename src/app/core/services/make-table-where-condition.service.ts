@@ -18,6 +18,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { LocalStorageService } from './local-storage.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @UntilDestroy()
 @Injectable({
@@ -40,7 +41,9 @@ export class MakeTableWhereConditionService {
     private userSaleListService: UserSaleListService,
     private localStorageService: LocalStorageService,
     private sessionStorageService: SessionStorageService
-  ) {}
+  ) {
+    this.makeWhereObservable();
+  }
   eventCount = 0;
   userSaleLists = signal<UserSaleList[]>([]);
   
@@ -54,7 +57,6 @@ export class MakeTableWhereConditionService {
     this.paginator = paginator;
     // Because of the timing issue, we need to use setTimeout.
     setTimeout(() => {
-      this.makeWhereObservable();
 
       this.makeTableWhereCondition()
         .pipe(untilDestroyed(this))
@@ -108,28 +110,28 @@ export class MakeTableWhereConditionService {
      * 4. combine all the behavior subject and make the where condition.
      */
     const {
-      vendor$,
-      price$,
-      category$,
-      category1$,
-      size$,
-      material$,
-      search_period$,
-      input_keyword$,
-      color$,
+      vendor,
+      price,
+      category,
+      category1,
+      size,
+      material,
+      search_period,
+      input_keyword,
+      color,
     } = this.sharedMenuObservableService;
 
     this.searchConditionObservable$ = combineLatest([
       // this.displayMode$,
-      vendor$,
-      price$,
-      category$,
-      category1$,
-      size$,
-      material$,
-      search_period$,
-      input_keyword$,
-      color$,
+      toObservable(vendor),
+      toObservable(price),
+      toObservable(category),
+      toObservable(category1),
+      toObservable(size),
+      toObservable(material),
+      toObservable(search_period),
+      toObservable(input_keyword),
+      toObservable(color),
     ]).pipe(
       untilDestroyed(this),
       tap((val) => {

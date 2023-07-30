@@ -74,6 +74,6 @@ export class Category1MenuComponent implements AfterViewInit {
   onSelect(category: any) {
     this.selected_category = category;
     const value = { key: 'category1', value: category.key };
-    this.sharedMenuObservableService.category1.next(category.id);
+    this.sharedMenuObservableService.category1.set(category.id);
   }
 }

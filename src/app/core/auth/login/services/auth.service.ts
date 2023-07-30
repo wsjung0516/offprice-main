@@ -115,7 +115,7 @@ export class AuthService {
           // console.log('createUserCoupon', ret);
         });
       } else {
-        this.sharedMenuObservableService.userCoupons.next(
+        this.sharedMenuObservableService.userCoupons.set(
           ret.quantity.toString()
         );
       }
@@ -160,11 +160,11 @@ export class AuthService {
     // Clear display name. and clear cart badge count
     // And return because the register window cleared user token already
     if (!userId) {
-      // 
+      //
       // this.sharedMenuObservableService.cart_badge_count.set('0');
       // this.cartItemsService.cartItemsCount.set(0);
       this.user.set(undefined);
-      // 
+      //
       return;
     }
     this.logoutProcess();
@@ -178,10 +178,10 @@ export class AuthService {
             this.userTokenService.deleteUserToken();
             this.sessionStorageService.removeItem('userId');
             localStorage.removeItem('isStartMenuPassed');
-            // 
+            //
             // this.sharedMenuObservableService.cart_badge_count.set('0');
-            // 
-            this.sharedMenuObservableService.isLoggedOut.next(true);
+            //
+            // this.sharedMenuObservableService.isLoggedOut.set(true);
           }
         });
         // this.router.navigate(['/login']);
@@ -221,7 +221,6 @@ export class AuthService {
   googleSignIn() {
     return this.fireauth.signInWithPopup(new GoogleAuthProvider()).then(
       (res) => {
-
         this.createUserTokenFn(res).subscribe((ret: any) => {
           console.log('createUserTokenFn -1', ret);
           this.router.navigate(['/']);
@@ -238,7 +237,6 @@ export class AuthService {
       }
     );
   }
-
 }
 // function jwt_decode(idToken: any): any {
 //   throw new Error('Function not implemented.');

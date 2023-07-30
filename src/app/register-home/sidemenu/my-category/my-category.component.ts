@@ -9,9 +9,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormsModule,
-} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Categories, Product } from 'src/app/core/constants/data-define';
 import { DesignCategoryMenuService } from '../../core/components/design-category-menu/design-category-menu.service';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
@@ -62,12 +60,12 @@ export class MyCategoryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  selectValue(value: {group: string, category: string}) {
+  selectValue(value: { group: string; category: string }) {
     console.log('category: ', value);
     // this.selected_category = value.category;
     const value1 = { key: 'category', value: value.category };
     // this.selected_category = value.key;
-    this.sharedMenuObservableService.category.next(value.category);
+    this.sharedMenuObservableService.category.set(value.category);
     this.chipsKeywordService.removeChipKeyword(value1);
     this.chipsKeywordService.addChipKeyword(value1);
     // this.onChange(value.category);

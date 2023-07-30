@@ -59,7 +59,7 @@ export class PriceRangeComponent {
     // console.log('priceRange: ', price.value);
     const value = { key: 'price', value: price.key };
     this.priceRange = price.value;
-    this.sharedMenuObservableService.price.next(price.value);
+    this.sharedMenuObservableService.price.set(price.value);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     this.dialogRef.close();

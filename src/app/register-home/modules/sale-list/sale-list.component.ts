@@ -10,12 +10,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  fromEvent,
-  Subscription,
-} from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -46,7 +40,6 @@ import {
   SearchKeyword,
   ChipsKeywordService,
 } from 'src/app/core/services/chips-keyword.service';
-// import { ChipListComponent } from './chip-list/chip-list.component';
 import { TableListComponent } from '../table-list/table-list.component';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
@@ -57,16 +50,14 @@ import { ResetSearchConditionsComponent } from 'src/app/core/components/reset-se
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
 import { MyCategoryComponent } from '../../sidemenu/my-category/my-category.component';
 import { SEOService } from 'src/app/core/services/SEO.service';
-import { Store } from '@ngxs/store';
-import { RegisterState } from 'src/app/store/register/register.state';
-import { MakeRegisterWhereConditionService } from '../../core/services/make-register-where-condition.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 // import { ChipListComponent } from 'src/app/core/components/chip-list/chip-list.component';
 @UntilDestroy()
 @Component({
   selector: 'app-sale-list',
   standalone: true,
   imports: [
-    CommonModule,
+  CommonModule,
     HttpClientModule,
     MatFormFieldModule,
     MatInputModule,
@@ -113,6 +104,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   @ViewChild('search_period') search_period: ElementRef;
   @ViewChild('color') color: ElementRef;
 
+
   constructor(
     private dialog: MatDialog,
     private sharedMenuObservableService: SharedMenuObservableService,
@@ -121,22 +113,25 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     private removeChipsKeywordService: RemoveChipsKeywordService,
     private seoService: SEOService,
     private localStorageService: LocalStorageService,
-    private store: Store,
-    private makeRegisterWhereConditionService: MakeRegisterWhereConditionService
   ) {
-    // Assign the data to the data source for the table to render
-    // this.dataSource = new MatTableDataSource(this.saleLists);
+    toObservable(this.resetSearchConditions)
+    .pipe(untilDestroyed(this))
+    .subscribe((data) => {
+      if( data === true) {
+        this.resetAllConditions();
+        this.sharedMenuObservableService.resetSearchConditions.set(false);
+      }
+    });
   }
+  resetSearchConditions = this.sharedMenuObservableService.resetSearchConditions;
+  keywords = computed(() => this.chipsKeywordService.searchKeyword().filter(
+    (obj: any) => (obj.value !== '' && obj.key === 'input_keyword') ||
+                  (obj.value !== 'All' && obj.key !== 'input_keyword')
+  ))
+
   ngOnInit(): void {
     this.seoService.updateTitle('clearance sale');
     this.seoService.updateDescription('Get ready for big savings with our clearance sale event.');
-    
-    this.sharedMenuObservableService.resetSearchConditions$
-      .pipe(untilDestroyed(this))
-      .subscribe((data) => {
-        this.resetAllConditions();
-      });
-    this.subscribeToSearchKeywords();
     this.subscribeToLocalStorageItem();
   }
   ngAfterViewInit() {
@@ -166,24 +161,6 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       '300px',
       '450px'
     );
-  }
-  keywords = computed(() => this.chipsKeywordService.searchKeyword().filter(
-    (obj: any) => (obj.value !== '' && obj.key === 'input_keyword') ||
-                  (obj.value !== 'All' && obj.key !== 'input_keyword')
-  ))
-  subscribeToSearchKeywords(): void {
-      this.cd.detectChanges();
-    // this.chipsKeywordService.searchKeyword$
-    //   .pipe(untilDestroyed(this))
-    //   .subscribe((result: any[]) => {
-    //     // console.log('subscribeToSearchKeywords', result);
-    //     this.keywords = result.filter(
-    //       (obj) =>
-    //         (obj.value !== '' && obj.key === 'input_keyword') ||
-    //         (obj.value !== 'All' && obj.key !== 'input_keyword')
-    //     );
-    //     this.cd.detectChanges();
-    //   });
   }
   subscribeToLocalStorageItem(): void {
     this.localStorageService.storageItem$
@@ -268,9 +245,8 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     ];
     filters.forEach((filter) => {
       const { subject, defaultValue, name } = filter;
-      // console.log('subject', subject.value, name)
       if (subject.value !== defaultValue) {
-        filter.reset.next({});
+        filter.reset.set('');
         this.removeChipsKeywordService.resetSearchKeyword({
           key: name,
           value: '',

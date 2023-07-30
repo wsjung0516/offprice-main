@@ -19,6 +19,7 @@ import {
   pluck,
 } from 'rxjs';
 import { RemoveChipsKeywordService } from 'src/app/core/services/remove-chips-keyword.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @UntilDestroy()
 @Component({
@@ -62,19 +63,21 @@ export class InputKeywordComponent implements OnInit, AfterViewInit {
     private chipsKeywordService: ChipsKeywordService,
     private cd: ChangeDetectorRef,
     private removeChipsKeywordService: RemoveChipsKeywordService
-  ) {}
-  ngOnInit(): void {
-    this.sharedMenuObservableService.reset_input_keyword$
+  ) {
+    toObservable(this.reset_input_keyword)
       .pipe(untilDestroyed(this))
       .subscribe((data) => {
         this.reset();
       });
   }
+  reset_input_keyword = this.sharedMenuObservableService.reset_input_keyword;
+  ngOnInit(): void {
+  }
   ngAfterViewInit(): void {
-     this.inputKeyword.valueChanges 
+    this.inputKeyword.valueChanges
       .pipe(untilDestroyed(this), debounceTime(400), distinctUntilChanged())
       .subscribe((value: string) => {
-        console.log('data.target.value',value);
+        console.log('data.target.value', value);
         this.onInputSearchKeyword(value);
       });
   }
@@ -90,7 +93,7 @@ export class InputKeywordComponent implements OnInit, AfterViewInit {
     // }
     const value = { key: 'input_keyword', value: data };
     // To make observable value change, which will be used make-where-condition.service.ts
-    this.sharedMenuObservableService.input_keyword.next(data);
+    this.sharedMenuObservableService.input_keyword.set(data);
     // this.favoriteSeason = data;
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);

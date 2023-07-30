@@ -152,7 +152,7 @@ export class ImageUploadComponent
   ngAfterViewInit(): void {}
   ngOnChanges(changes: SimpleChanges): void {
     // console.log('ngOnChanges ---',changes);
-    if( changes['imageUrls'] && changes['imageUrls'].currentValue) {
+    if (changes['imageUrls'] && changes['imageUrls'].currentValue) {
       this.imgURLs = changes['imageUrls'].currentValue;
       this.count = 0;
       this.cd.detectChanges();
@@ -200,7 +200,7 @@ export class ImageUploadComponent
       .pipe(
         tap(() => {
           this.isLoading = true;
-          this.sharedMenuObservableService.isImageLoading.next(true);
+          this.sharedMenuObservableService.isImageLoading.set(true);
         }),
         takeUntil(this.destroy$),
         concatMap((file: File) =>
@@ -216,11 +216,11 @@ export class ImageUploadComponent
           this.tempArr = [];
           this.compressedFiles = [];
           this.isLoading = false;
-          this.sharedMenuObservableService.isImageLoading.next(false);
+          this.sharedMenuObservableService.isImageLoading.set(false);
           this.onChange(res);
         },
         (err) => {
-          this.sharedMenuObservableService.isImageLoading.next(false);
+          this.sharedMenuObservableService.isImageLoading.set(false);
           this.isLoading = false;
           this.snackBar.open(err.message, 'Close', {
             duration: 2000,

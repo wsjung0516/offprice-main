@@ -80,7 +80,7 @@ export class Category1VcaComponent implements ControlValueAccessor {
   selectValue(category: Category) {
     this.selected_category = category;
     // console.log('category1-vca.component.ts: category: ', category);
-    this.sharedMenuObservableService.category1.next(category.id);
+    this.sharedMenuObservableService.category1.set(category.id);
     this.onChange(this.selected_category);
   }
   writeValue(value: any): void {

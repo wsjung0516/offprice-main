@@ -94,12 +94,17 @@ export class SaleListHeaderComponent
       this.cd.markForCheck();
     });
   }
-  keywords = computed(() => this.chipsKeywordService.searchKeyword().filter(
-    (obj: any) => (obj.value !== '' && obj.key === 'input_keyword') ||
-                  (obj.value !== 'All' && obj.key !== 'input_keyword')
-  ))
+  keywords = computed(() =>
+    this.chipsKeywordService
+      .searchKeyword()
+      .filter(
+        (obj: any) =>
+          (obj.value !== '' && obj.key === 'input_keyword') ||
+          (obj.value !== 'All' && obj.key !== 'input_keyword')
+      )
+  );
   subscribeToSearchKeywords(): void {
-/*     this.chipsKeywordService.searchKeyword$
+    /*     this.chipsKeywordService.searchKeyword$
       .pipe(untilDestroyed(this))
       .subscribe((result: any[]) => {
         this.keywords = result.filter(
@@ -141,7 +146,7 @@ export class SaleListHeaderComponent
     }
     this.sessionStorageService.setItem('displayMode', this.displayMode);
     // this.localStorageService.setItem('displayMode', this.displayMode);
-    this.sharedMenuObservableService.resetSearchConditions.next(true);
+    this.sharedMenuObservableService.resetSearchConditions.set(true);
     this.cd.detectChanges();
   }
 

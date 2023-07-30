@@ -51,7 +51,7 @@ export class SearchPeriodComponent {
     const value = { key: 'search_period', value: data.key };
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
-    this.sharedMenuObservableService.search_period.next(data.value);
+    this.sharedMenuObservableService.search_period.set(data.value);
     this.dialogRef.close();
   }
 }

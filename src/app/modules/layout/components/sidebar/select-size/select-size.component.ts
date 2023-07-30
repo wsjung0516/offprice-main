@@ -10,6 +10,7 @@ import { Sizes } from 'src/app/core/constants/data-define';
 import { SharedMenuObservableService } from 'src/app/core/services/shared-menu-observable.service';
 import { ChipsKeywordService } from 'src/app/core/services/chips-keyword.service';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   selector: 'app-select-size',
@@ -68,22 +69,23 @@ export class SelectSizeComponent {
   constructor(
     private sharedMenuObservableService: SharedMenuObservableService,
     private chipsKeywordService: ChipsKeywordService
-  ) {}
-  ngOnInit() {
-    this.sharedMenuObservableService.reset_size$
+  ) {
+    toObservable(this.reset_size)
       .pipe(untilDestroyed(this))
       .subscribe(() => {
         this.reset();
       });
   }
+  reset_size = this.sharedMenuObservableService.reset_size;
+  ngOnInit() {}
 
   selectSize(size: any) {
     // console.log('selectSize', size);
     const value = { key: 'size', value: size.key };
     this.selected_size = size.key;
-    this.sharedMenuObservableService.input_keyword.next(size.key);
-    this.sharedMenuObservableService.size.next(size.key);
-    this.sharedMenuObservableService.closeSideBar.next(true);
+    this.sharedMenuObservableService.input_keyword.set(size.key);
+    this.sharedMenuObservableService.size.set(size.key);
+    this.sharedMenuObservableService.closeSideBar.set(true);
     this.chipsKeywordService.removeChipKeyword(value);
     this.chipsKeywordService.addChipKeyword(value);
     if (size.key === 'All') {
@@ -92,6 +94,6 @@ export class SelectSizeComponent {
   }
   reset() {
     // console.log('reset size', this.buttonRefs);
-    this.buttonRefs.get(0)?.nativeElement.click();
+    this.buttonRefs?.get(0)?.nativeElement.click();
   }
 }

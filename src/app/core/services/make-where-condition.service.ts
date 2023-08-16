@@ -20,6 +20,7 @@ import { SaleList } from '../models/sale-list.model';
 import { LocalStorageService } from './local-storage.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { ScreenSizeService } from './screen-size.service';
 
 @UntilDestroy()
 @Injectable({
@@ -36,9 +37,11 @@ export class MakeWhereConditionService {
   //scrollObservable: BehaviorSubject<any>;
   // scrollObservable$: Observable<any>;
 
+  images = signal<SaleList[]>([]);
+  takeImage = this.screenSize.takeImage; 
   scrollObservable = new BehaviorSubject<any>({
     skip: 0,
-    take: 20,
+    take: this.takeImage(),
   });
   scrollObservable$ = this.scrollObservable.asObservable();
 
@@ -46,7 +49,8 @@ export class MakeWhereConditionService {
     private saleListService: SaleListService,
     private sharedMenuObservableService: SharedMenuObservableService,
     private localStorageService: LocalStorageService,
-    private sessionStorageService: SessionStorageService
+    private sessionStorageService: SessionStorageService,
+    private screenSize: ScreenSizeService
   ) {
     // this.makeObservableService.makeWhereObservable();
     this.makeWhereObservable();
@@ -65,7 +69,6 @@ export class MakeWhereConditionService {
     }, 500);
   }
   eventCount = 0;
-  images = signal<SaleList[]>([]); 
 
   searchConditionObservable$: Observable<any>;
 
@@ -143,7 +146,7 @@ export class MakeWhereConditionService {
           this.images.set([]);
           this.scrollObservable.next({
             skip: 0,
-            take: 20,
+            take: this.takeImage(),
           }); // this.oldScroll = { skip: 0, take: 20 };
         }
       })
@@ -216,10 +219,10 @@ export class MakeWhereConditionService {
   }
 
   private makeSortNWhereCondition(): Observable<any> {
-    const takeImageCount = this.sessionStorageService.getItem('takeImageCount');
+    //const takeImageCount = this.sessionStorageService.getItem('takeImageCount');
     return combineLatest([
       this.scrollObservable$.pipe(
-        startWith({ skip: 0, take: +takeImageCount }),
+        startWith({ skip: 0, take: this.takeImage() }),
         distinctUntilKeyChanged('skip'),
         // tap((val) => console.log('scrollObservable: ', val))
         ),

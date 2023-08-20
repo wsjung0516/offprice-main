@@ -16,6 +16,7 @@ import {
   ViewChild,
   WritableSignal,
   computed,
+  effect,
   signal
 } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
@@ -33,15 +34,17 @@ import {
   SearchKeyword,
 } from 'src/app/core/services/chips-keyword.service';
 import { LocalStorageService } from 'src/app/core/services/local-storage.service';
+import { MakeWhereConditionService2 } from 'src/app/core/services/make-where-condition.service2';
 import { MakeWhereConditionService } from 'src/app/core/services/make-where-condition.service';
 import { ScreenSizeService } from 'src/app/core/services/screen-size.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { SaleListService } from './sale-list.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 @UntilDestroy()
 @Component({
   standalone: true,
   imports: [
-  CommonModule,
+CommonModule,
     MatCardModule,
     ScrollingModule,
     MatDialogModule,
@@ -89,19 +92,28 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   showScrollToTop = true;
   // itemSize: number; // 이미지의 높이를 설정합니다. 적절한 값을 선택하십시오.
   isLoggedIn: boolean;
+  itemSize = this.screenSizeService.itemSize; // itemSize = signal<number | undefined>(undefined);
+  takeImage = this.screenSizeService.takeImage; // takeImage = signal<number>(20);
+  images = this.makeWhereConditionService.images; // images = signal<SaleList[]>([]);
 
 
   constructor(
     public screenSizeService: ScreenSizeService,
     private chipsKeywordService: ChipsKeywordService,
-    private makeWhereConditionService: MakeWhereConditionService,
+    private makeWhereConditionService: MakeWhereConditionService2,
     private sessionStorageService: SessionStorageService,
     private dialogService: DialogService,
     private titleService: Title,
     private metaTagService: Meta,
     private ngZone: NgZone,
+    private saleListService: SaleListService,
   ) {
     this.updateViewportHeight();
+    effect(() => {
+      // console.log('searchItemsLength -2 ', this.searchItemsLength());
+  
+    });
+
   }
 
   trackByFn(index: number, item: SaleList ) {
@@ -116,9 +128,6 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     // const headerHeight = 209; // 헤더 높이를 원하는 값으로 변경합니다.
     this.viewportHeight = `calc(100vh - ${headerHeight}px)`;
   }
-  itemSize = this.screenSizeService.itemSize; // itemSize = signal<number | undefined>(undefined);
-  takeImage = this.screenSizeService.takeImage; // takeImage = signal<number>(20);
-  images = this.makeWhereConditionService.images; // images = signal<SaleList[]>([]);
 
   keywords = computed(() => this.chipsKeywordService.searchKeyword().filter(
     (obj: any) => (obj.value !== '' && obj.key === 'input_keyword') ||
@@ -126,6 +135,7 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   ))
   ngOnInit(): void {
     //
+    // this.searchItemsLength.set(this.takeImage())
     this.metaTagService.updateTag(
       {
         name: 'description',
@@ -142,13 +152,22 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sessionStorageService.setItem('title', 'offPrice');
   }
   onScroll(index: number) {
-    // console.log('scroll index: ', index, this.takeImage);
+    this.saleListService.getConditionalSaleListLength();
+    console.log('scroll index: ', index, this.takeImage(), this.images().length);
     this.ngZone.runOutsideAngular(() => {
-      if (index + this.takeImage() > this.images().length) {
-        this.makeWhereConditionService.scrollObservable.next({
+      let takeImage = this.takeImage();
+      if (index + takeImage > this.images().length ) {
+        // if( this.searchItemsLength() !== 0 && this.images().length + takeImage > this.searchItemsLength() ) {
+        //   takeImage = (this.searchItemsLength() - this.images().length);
+        // }
+        this.makeWhereConditionService.scrollData.set({
           skip: this.images().length,
-          take: this.takeImage(),
+          take: takeImage,
         });
+        // this.makeWhereConditionService.scrollObservable.next({
+        //   skip: this.images().length,
+        //   take: takeImage,
+        // });
       }
       index > 1 ? (this.showScrollToTop = true) : (this.showScrollToTop = false);
     });

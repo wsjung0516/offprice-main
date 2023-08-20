@@ -211,10 +211,7 @@ export class MakeTableWhereConditionService {
   }
 
   oldOrderBy: any = {};
-  private makeTableWhereCondition(): Observable<any> {
-    let where: any[] = [];
-    let whereOR: any[] = [];
-    let orderBy: {} = null;
+  private makeTableWhereCondition(): Observable<UserSaleList[]> {
     return merge(
       this.sort.sortChange,
       this.paginator.page,
@@ -222,46 +219,52 @@ export class MakeTableWhereConditionService {
       this.refreshObservable$
     ).pipe(
       untilDestroyed(this),
-      // skip(1),
-      // startWith({}),
-      map((data: any) => {
-        // where and condition event is triggered. (price, category, size, material, search_period)
-        if (data.where && data.where['and'].length > 0) {
-          where = data.where['and'];
-        } else if (data.where && data.where['and'].length === 0) {
-          where = [];
-        }
-        // where or condition event is triggered. (vendor, description)
-        if (data.where && data.where['or'].length > 0) {
-          whereOR = data.where['or'];
-        } else if (data.where && data.where['or'].length === 0) {
-          whereOR = [];
-        }
-        // sort event is triggered.
-        if (data.active && data.direction) {
-          orderBy = { [data.active]: data.direction };
-          this.oldOrderBy = orderBy;
-        } else {
-          if (Object.keys(this.oldOrderBy).length > 0) {
-            // if there is old order
-            orderBy = this.oldOrderBy; // keep the old order
-          } else {
-            orderBy = { created_at: 'desc' };
-          }
-        }
-        return { where, whereOR, orderBy };
-      }),
+      map((data) => this.makeCondition(data)),
       switchMap((data: any) => {
         const { where, orderBy, whereOR } = data;
-        return this.userSaleListService.getUserSaleLists(
-          this.paginator.pageIndex * this.paginator.pageSize, // skip
-          this.paginator.pageSize, // take
-          orderBy,
-          where, // where is used for AND condition (price, category, size, material, search_period)
-          whereOR // whereOR is used for OR condition (vendor, description)
-        );
+        return this.fetchUserSaleList( orderBy, where, whereOR)
       })
     );
+  }
+  private fetchUserSaleList(orderBy: any, where: any, whereOR: any): Observable<UserSaleList[]> {
+    return this.userSaleListService.getUserSaleLists(
+      this.paginator.pageIndex * this.paginator.pageSize,
+      this.paginator.pageSize,
+      orderBy,
+      where,
+      whereOR
+    );
+  }
+  private makeCondition(data: any) {
+    let where: any[] = [];
+    let whereOR: any[] = [];
+    let orderBy: {} = null;
+
+    // where and condition event is triggered. (price, category, size, material, search_period)
+    if (data.where && data.where['and'].length > 0) {
+      where = data.where['and'];
+    } else if (data.where && data.where['and'].length === 0) {
+      where = [];
+    }
+    // where or condition event is triggered. (vendor, description)
+    if (data.where && data.where['or'].length > 0) {
+      whereOR = data.where['or'];
+    } else if (data.where && data.where['or'].length === 0) {
+      whereOR = [];
+    }
+    // sort event is triggered.
+    if (data.active && data.direction) {
+      orderBy = { [data.active]: data.direction };
+      this.oldOrderBy = orderBy;
+    } else {
+      if (Object.keys(this.oldOrderBy).length > 0) {
+        // if there is old order
+        orderBy = this.oldOrderBy; // keep the old order
+      } else {
+        orderBy = { created_at: 'desc' };
+      }
+    }
+    return { where, whereOR, orderBy };
   }
 
 }

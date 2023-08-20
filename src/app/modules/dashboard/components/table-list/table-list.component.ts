@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Injector,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -20,6 +21,7 @@ import { Subject } from 'rxjs';
 import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { SearchKeyword } from 'src/app/core/services/chips-keyword.service';
 import { MakeTableWhereConditionService } from 'src/app/core/services/make-table-where-condition.service';
+import { MakeTableWhereConditionService2 } from 'src/app/core/services/make-table-where-condition.service2';
 import { UserSaleListService } from 'src/app/modules/dashboard/components/sale-list/user-sale-list.service';
 
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -59,7 +61,7 @@ import { User } from 'src/app/user/models/user.model';
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MakeTableWhereConditionService, UserSaleListService],
+  providers: [MakeTableWhereConditionService2, UserSaleListService],
 })
 export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -111,7 +113,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   private dialogService = inject(DialogService);
 
   constructor(
-    private makeTableWhereConditionService: MakeTableWhereConditionService,
+    private makeTableWhereConditionService: MakeTableWhereConditionService2,
     private userSaleListService: UserSaleListService,
     private router: Router,
     private cartItemService: CartItemsService,
@@ -122,7 +124,7 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     effect(() => {
       this.dataSource.data = this.userSaleLists();
       if( this.paginator ) {
-        this.paginator.length = this.conditionalUserSaleListLength();
+        // this.paginator.length = this.conditionalUserSaleListLength();
       }
       this.dataSource.sort = this.sort;
 
@@ -130,9 +132,11 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnInit(): void {
     // console.log('table-list init');
+    // this.makeTableWhereConditionService.sort.set(this.sort);
+    // this.makeTableWhereConditionService.paginator.set(this.paginator);
   }
   userSaleLists = this.makeTableWhereConditionService.userSaleLists;
-  conditionalUserSaleListLength = this.userSaleListService.conditionalUserSaleListLength;
+  // conditionalUserSaleListLength = this.userSaleListService.conditionalUserSaleListLength;
 
   ngAfterViewInit(): void {
     // console.log('table-list afterviewinit');

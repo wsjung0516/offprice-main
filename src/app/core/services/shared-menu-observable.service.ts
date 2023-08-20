@@ -9,7 +9,7 @@ export class SharedMenuObservableService {
   vendor = signal<string>('All');
   price = signal<string>('All');
   category = signal<string>('All');
-  category1 = signal<string>('All');
+  category1 = signal<string>('1');
   size = signal<string>('All');
   material = signal<string>('All');
   search_period = signal<string>('All');

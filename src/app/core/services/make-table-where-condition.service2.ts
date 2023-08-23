@@ -1,12 +1,9 @@
-import { Injectable, WritableSignal, computed, inject, signal, Injector } from '@angular/core';
+import { Injectable, WritableSignal, computed, inject, signal, Injector, effect } from '@angular/core';
 import {
   BehaviorSubject,
-  combineLatest,
-  filter,
   map,
   merge,
   Observable,
-  of,
   Subject,
   switchMap,
   tap,
@@ -20,7 +17,6 @@ import { UserSaleList } from 'src/app/core/models/user-sale-list.model';
 import { LocalStorageService } from './local-storage.service';
 import { SessionStorageService } from 'src/app/core/services/session-storage.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { Data } from './../../register-home/core/components/details-item/details-item.component';
 
 @UntilDestroy()
 @Injectable({
@@ -29,8 +25,6 @@ import { Data } from './../../register-home/core/components/details-item/details
 export class MakeTableWhereConditionService2 {
   searchResult = new Subject<any>();
 
-  // sort: WritableSignal<MatSort> = signal(undefined);
-  // paginator: WritableSignal<MatPaginator> = signal(undefined);
   sort: MatSort;
   paginator: MatPaginator;
   refreshObservable = new Subject<any>();
@@ -41,82 +35,10 @@ export class MakeTableWhereConditionService2 {
   //
   sharedMenuObservableService = inject(SharedMenuObservableService);
   userSaleListService = inject( UserSaleListService);
-  userSaleLists: any;
+  // userSaleLists: any;
 
   injector = inject(Injector);
-  
-
-
-  constructor(
-    //private makeObservableService: MakeObservableService,
-    // private sharedMenuObservableService: SharedMenuObservableService,
-    // private userSaleListService: UserSaleListService,
-    private localStorageService: LocalStorageService,
-    private sessionStorageService: SessionStorageService
-  ) {
-    // this.makeWhereObservable();
-    if( this.sort && this.paginator) {
-      const rData = toObservable(this.makeWhereCondition).pipe(
-        switchMap((data: any) => {
-          const { where, orderBy, whereOR } = data;
-          return this.fetchUserSaleList(orderBy, where, whereOR);
-        })
-  
-      )
-      this.userSaleLists = toSignal(rData, {initialValue: [] as UserSaleList[]})
-
-    } else {
-      this.userSaleLists = signal([])
-    }
-  }
-  eventCount = 0;
-  // userSaleLists = signal<UserSaleList[]>([]);
-  
-  searchConditionObservable$: Observable<any>;
-
-  // get searchResult$(): Observable<UserSaleList[]> {
-  //   return this.searchResult.asObservable();
-  // }
-  initializeWhereCondition(sort: MatSort, paginator: MatPaginator) {
-    this.sort = sort;
-    this.paginator = paginator;
-    // Because of the timing issue, we need to use setTimeout.
-    setTimeout(() => {
-
-      this.makeTableWhereCondition()
-        .pipe(untilDestroyed(this))
-        .subscribe((data: UserSaleList[]) => {
-          // console.log('make-table-where', data);
-          // 
-          // this.userSaleLists.set(data);
-          // this.userSaleListService.getConditionalUserSaleListLength();
-
-        });
-      this.localStorageService.storageItem$
-        .pipe(tap((item) => {}))
-        .subscribe((item) => {
-          if (item && item.key === 'displayMode') {
-            // console.log('item', item);
-            this.displayModeSubject.next(item.value);
-          }
-        });
-    }, 0);
-  }
-  setRefreshObservable(refreshObservable: Observable<any>) {
-    this.refreshObservable$ = refreshObservable;
-  }
-  resetSort() {
-    if (!!this.sort) {
-      this.sort.active = 'created_at';
-      this.sort.direction = 'desc';
-      this.sort.sortChange.emit({
-        active: this.sort.active,
-        direction: this.sort.direction,
-      });
-    }
-  }
-
-  /**
+    /**
   0:{vendor: 'All'}
   1:{price: '10, 25'}
   2:{category: 'Tops'}
@@ -153,9 +75,52 @@ export class MakeTableWhereConditionService2 {
   searchCondition = computed(() => {
     return this.buildWhereCondition(this.searchCond());
   })
-  makeWhereCondition = computed(() => {
-    return this.makeTableWhereCondition()
-  })
+
+  constructor(
+    private localStorageService: LocalStorageService,
+    private sessionStorageService: SessionStorageService
+  ) {
+  }
+  eventCount = 0;
+  userSaleLists = signal<UserSaleList[]>([]);
+  
+  initializeWhereCondition() {
+    // Because of the timing issue, we need to use setTimeout.
+    setTimeout(() => {
+
+      this.makeTableWhereCondition()
+        .pipe(untilDestroyed(this))
+        .subscribe((data: UserSaleList[]) => {
+          // console.log('make-table-where', data);
+          // 
+          this.userSaleLists.set(data);
+          this.userSaleListService.getConditionalUserSaleListLength();
+          
+        });
+      this.localStorageService.storageItem$
+        .pipe(tap((item) => {}))
+        .subscribe((item) => {
+          if (item && item.key === 'displayMode') {
+            // console.log('item', item);
+            this.displayModeSubject.next(item.value);
+          }
+        });
+    }, 0);
+  }
+  setRefreshObservable(refreshObservable: Observable<any>) {
+    this.refreshObservable$ = refreshObservable;
+  }
+  resetSort() {
+    if (!!this.sort) {
+      this.sort.active = 'created_at';
+      this.sort.direction = 'desc';
+      this.sort.sortChange.emit({
+        active: this.sort.active,
+        direction: this.sort.direction,
+      });
+    }
+  }
+
 
 
   /**
@@ -169,57 +134,19 @@ export class MakeTableWhereConditionService2 {
 
   oldOrderBy: any = {};
   private makeTableWhereCondition(): Observable<any> {
-    // let where: any[] = [];
-    // let whereOR: any[] = [];
-    // let orderBy: {} = null;
-    console.log('sort pagenator', this.sort, this.paginator)
     return merge(
       this.sort.sortChange,
       this.paginator.page,
       toObservable(this.searchCondition, {injector: this.injector}),
-      // this.searchConditionObservable$,
       this.refreshObservable$
     ).pipe(
       untilDestroyed(this),
-      // skip(1),
-      // startWith({}),
-      map((data) =>this.makeCondition(data)),
-      // switchMap((data: any) => {
-      //   const { where, orderBy, whereOR } = data;
-      //   return this.fetchUserSaleList(orderBy, where, whereOR);
-      // })
+      map((data) => this.makeCondition(data)),
+      switchMap((data: any) => {
+        const { where, orderBy, whereOR } = data;
+        return this.fetchUserSaleList( orderBy, where, whereOR)
+      })
     );
-  }
-  private makeCondition(data: any) {
-    let where: any[] = [];
-    let whereOR: any[] = [];
-    let orderBy: {} = null;
-
-    // where and condition event is triggered. (price, category, size, material, search_period)
-    if (data.where && data.where['and'].length > 0) {
-      where = data.where['and'];
-    } else if (data.where && data.where['and'].length === 0) {
-      where = [];
-    }
-    // where or condition event is triggered. (vendor, description)
-    if (data.where && data.where['or'].length > 0) {
-      whereOR = data.where['or'];
-    } else if (data.where && data.where['or'].length === 0) {
-      whereOR = [];
-    }
-    // sort event is triggered.
-    if (data.active && data.direction) {
-      orderBy = { [data.active]: data.direction };
-      this.oldOrderBy = orderBy;
-    } else {
-      if (Object.keys(this.oldOrderBy).length > 0) {
-        // if there is old order
-        orderBy = this.oldOrderBy; // keep the old order
-      } else {
-        orderBy = { created_at: 'desc' };
-      }
-    }
-    return { where, whereOR, orderBy };
   }
   //
   private buildWhereCondition(source: any): {
@@ -272,4 +199,36 @@ export class MakeTableWhereConditionService2 {
       whereOR
     );
   }
+  private makeCondition(data: any) {
+    let where: any[] = [];
+    let whereOR: any[] = [];
+    let orderBy: {} = null;
+
+    // where and condition event is triggered. (price, category, size, material, search_period)
+    if (data.where && data.where['and'].length > 0) {
+      where = data.where['and'];
+    } else if (data.where && data.where['and'].length === 0) {
+      where = [];
+    }
+    // where or condition event is triggered. (vendor, description)
+    if (data.where && data.where['or'].length > 0) {
+      whereOR = data.where['or'];
+    } else if (data.where && data.where['or'].length === 0) {
+      whereOR = [];
+    }
+    // sort event is triggered.
+    if (data.active && data.direction) {
+      orderBy = { [data.active]: data.direction };
+      this.oldOrderBy = orderBy;
+    } else {
+      if (Object.keys(this.oldOrderBy).length > 0) {
+        // if there is old order
+        orderBy = this.oldOrderBy; // keep the old order
+      } else {
+        orderBy = { created_at: 'desc' };
+      }
+    }
+    return { where, whereOR, orderBy };
+  }
+
 }

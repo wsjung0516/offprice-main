@@ -8,16 +8,13 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  DoCheck,
   HostListener,
   NgZone,
   OnDestroy,
   OnInit,
   ViewChild,
-  WritableSignal,
   computed,
   effect,
-  signal
 } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -153,21 +150,14 @@ export class SaleListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   onScroll(index: number) {
     this.saleListService.getConditionalSaleListLength();
-    console.log('scroll index: ', index, this.takeImage(), this.images().length);
+    // console.log('scroll index: ', index, this.takeImage(), this.images().length);
     this.ngZone.runOutsideAngular(() => {
       let takeImage = this.takeImage();
       if (index + takeImage > this.images().length ) {
-        // if( this.searchItemsLength() !== 0 && this.images().length + takeImage > this.searchItemsLength() ) {
-        //   takeImage = (this.searchItemsLength() - this.images().length);
-        // }
         this.makeWhereConditionService.scrollData.set({
           skip: this.images().length,
           take: takeImage,
         });
-        // this.makeWhereConditionService.scrollObservable.next({
-        //   skip: this.images().length,
-        //   take: takeImage,
-        // });
       }
       index > 1 ? (this.showScrollToTop = true) : (this.showScrollToTop = false);
     });

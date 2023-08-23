@@ -124,26 +124,22 @@ export class TableListComponent implements OnInit, AfterViewInit, OnDestroy {
     effect(() => {
       this.dataSource.data = this.userSaleLists();
       if( this.paginator ) {
-        // this.paginator.length = this.conditionalUserSaleListLength();
+        this.paginator.length = this.conditionalUserSaleListLength();
       }
       this.dataSource.sort = this.sort;
 
     });
   }
   ngOnInit(): void {
-    // console.log('table-list init');
-    // this.makeTableWhereConditionService.sort.set(this.sort);
-    // this.makeTableWhereConditionService.paginator.set(this.paginator);
   }
   userSaleLists = this.makeTableWhereConditionService.userSaleLists;
-  // conditionalUserSaleListLength = this.userSaleListService.conditionalUserSaleListLength;
-
+  conditionalUserSaleListLength = this.userSaleListService.conditionalUserSaleListLength;
+  
   ngAfterViewInit(): void {
+    this.makeTableWhereConditionService.sort = this.sort;
+    this.makeTableWhereConditionService.paginator = this.paginator;
     // console.log('table-list afterviewinit');
-    this.makeTableWhereConditionService.initializeWhereCondition(
-      this.sort,
-      this.paginator
-    );
+    this.makeTableWhereConditionService.initializeWhereCondition();
     this.makeTableWhereConditionService.setRefreshObservable(
       this.refreshObservable
     );
